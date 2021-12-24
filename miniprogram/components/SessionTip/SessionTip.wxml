@@ -1,0 +1,14 @@
+<view class="session-tip">
+  <view class="tip-button" bind:tap="handleShow">
+    <iconfont class="btn-icon" name="tishi" size="{{40}}"></iconfont>
+    <view class="red-icon">
+      
+    </view>
+  </view>
+
+  <RssDialog wx:if="{{showDialog}}" title="请注意" commitText="前往" cancelText="结束" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
+    <view class="dialog-content">您有一条通话记录未正常结束，是否继续前往？</view>
+  </RssDialog>
+      
+</view>
+  

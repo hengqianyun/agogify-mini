@@ -1,0 +1,135 @@
+@import url(../../style/global.less);
+
+.point-earned-page {
+  padding: 0 48rpx;
+
+  .info-container {
+    margin: 46rpx 0;
+    background: @defaultColor;
+    border-radius: 8rpx;
+    padding: 0 64rpx;
+    display: flex;
+    justify-content: space-around;
+    width: 645rpx;
+    height: 180rpx;
+    align-items: center;
+    box-sizing: border-box;
+
+    .info-text-box {
+      // fl
+      .hello {
+        font-size: 22rpx;
+        color: #fff;
+      }
+
+      .desc {
+        font-size: 24rpx;
+        color: #fff;
+      }
+    }
+
+    .surplus-box {
+      font-size: 48rpx;
+      color: #fff;
+    }
+
+  }
+
+  .banner-container {
+    width: 654rpx;
+    height: 240rpx;
+    position: relative;
+    box-sizing: border-box;
+    padding: 36rpx 48rpx;
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .text-1 {
+      font-size: 36rpx;
+      color: #131418;
+      font-weight: bold;
+    }
+
+    .text-2 {
+      font-size: 28rpx;
+      color: #131418;
+      font-weight: 300;
+      letter-spacing: 8rpx;
+    }
+
+    .text-3 {
+      color: @defaultColor3;
+      font-size: 22rpx;
+      font-weight: 300;
+    }
+  }
+
+  .earn-container {
+    width: 654rpx;
+    padding-top: 16rpx;
+    box-sizing: border-box;
+
+
+    .e-c-title {
+      margin: 32rpx auto;
+      font-size: 36rpx;
+      color: @defaultColor;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .card-box {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .card {
+        width: 206rpx;
+        height: 256rpx;
+        border-radius: 8rpx;
+        color: #161616;
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        background: #f5f5f5;
+        padding: 50rpx 0;
+        box-sizing: border-box;
+
+        .c-top-text {
+          font-size: 28rpx;
+          
+        }
+
+        .c-center-text {
+          font-size: 64rpx;
+        }
+
+        .c-bottom-text {
+          font-size: 28rpx;
+          font-weight: 300;
+        }
+      }
+
+      .card-active {
+        background: @defaultColor;
+        color: #F4d1b2;
+      }
+    }
+  }
+
+  .btn-container {
+    margin-top: 64rpx;
+  }
+}

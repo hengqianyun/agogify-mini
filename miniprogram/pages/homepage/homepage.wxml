@@ -1,0 +1,39 @@
+<view class="homepage page-content">
+  <view class='search-container'>
+    <view class="search-border" bind:tap="handleSearchTab">
+      <iconfont name="search12x12_b" size="{{26}}" />
+      <text class="search-placeholder">搜索品牌、类目或商品</text>
+    </view>
+  </view>
+  <view class='banner-container'>
+    <swiper style="height: 100%;" circular="{{true}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{bannerList}}" wx:key="*this">
+        <swiper-item style="background-color: {{item}};" bindtap="handleSwiperClick">
+          <view class="swiper-item"></view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+  <view class='store-container'>
+    <view class="s-c-title">
+      <view class="s-c-bar">
+        <view class="text-big">新店推荐</view>
+        <view class="text-small">New Store</view>
+      </view>
+    </view>
+    <view class="store-list-container">
+      <block wx:for="{{newStoreList}}" wx:key="*this">
+        <view class="store-item-box">
+          <StoreItem store="{{item}}"></StoreItem>
+        </view>
+      </block>
+    </view>
+  </view>
+  <RssDialog wx:if="{{showDialog}}" title="title" commitText="commit" cancelText="cancel" showCancel="{{true}}" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
+    <text class="" selectable="false" space="false" decode="false">
+      content
+    </text>
+      
+  </RssDialog>
+  <SessionTip wx:if="{{showIcon}}"></SessionTip>
+</view>

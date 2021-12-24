@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "StoreItem": "../../components/StoreItem/StoreItem",
+    "RssDialog": "../../components/RssDialog/RssDialog",
+    "SessionTip": "../../components/SessionTip/SessionTip"
+  },
+  "navigationBarTitleText": "RSS",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
+}

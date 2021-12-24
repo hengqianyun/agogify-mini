@@ -1,0 +1,110 @@
+@import url(../../style/global.less);
+
+.address-page {
+  
+
+  .address-item-box {
+    padding: 0 48rpx 182rpx;
+  }
+
+  .address-item {
+    height: 270rpx;
+    border-bottom: 2rpx solid @borderColor;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 46rpx 0;
+    box-sizing: border-box;
+
+    .user-info {
+      font-size: 36rpx;
+      font-weight: 400;
+      color: @defaultColor;
+
+      .user-name {
+        margin-right: 32rpx;
+      }
+    }
+
+    .address-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      height: 74rpx;
+
+      .address-box {
+        font-size: 24rpx;
+        color: @defaultColor2;
+        width: 562rpx;
+        height: 100%;
+      }
+
+    }
+
+    .controller {
+      display: flex;
+      justify-content: space-between;
+      
+      .default-box {
+        color: @defaultColor2;
+        font-size: 22rpx;
+        font-weight: 300;
+        display: flex;
+        align-items: center;
+
+        .radio-box {
+          margin-right: 16rpx;
+
+          .big-circle {
+            width: 24rpx;
+            height: 24rpx;
+            border-radius: 50%;
+            border: 2rpx solid @defaultColor2;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .small-circle {
+            width: 16rpx;
+            height: 16rpx;
+            border-radius: 50%;
+            background: @defaultColor;
+          }
+
+          .radio-checked {
+            border: 2rpx solid @defaultColor;
+          }
+        }
+      }
+
+      .delete-icon-box {
+        color: @defaultColor2;
+        font-size: 22rpx;
+        font-weight: 300;
+      }
+    }
+  }
+
+  .insert-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 94rpx;
+    width: 100%;
+    height: 88rpx;
+    background: @defaultColor;
+    color: #fff;
+  }
+
+  .cover {
+    position: fixed;
+    bottom: 0;
+    height: 94rpx;
+    width: 100%;
+    background: rgba(0, 0, 0, 0);
+    z-index: 9999;
+  }
+}

@@ -1,0 +1,67 @@
+@import url(../../style/global.less);
+
+.product-page {
+  .product-images {
+    .image-container {
+      width: 100%;
+      height: 664rpx;
+
+      .swiper-item {
+        width: 100%;
+        height: 100%;
+
+        .swiper-image {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  .product-info {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 64rpx;
+
+    .product-name {
+      font-size: 36rpx;
+      font-weight: 500;
+      color: @defaultColor;
+    }
+
+    .product-category {
+      font-size: 28rpx;
+      font-weight: 400;
+      color: @defaultColor3;
+      margin-top: 10rpx;
+    }
+
+    .product-desc {
+      font-size: 28rpx;
+      font-weight: 400;
+      color: @defaultColor2;
+    }
+
+    .product-price {
+      font-size: 36rpx;
+      font-weight: 400;
+      color: @defaultColor;
+      margin: 48rpx 0;
+    }
+  }
+
+  .controllers {
+    background: #FFF;
+    display: flex;
+    width: 424rpx;
+    margin: 0 auto;
+    justify-content: space-around;
+
+    .product-btn {
+      background: #FFF;
+      width: 196px;
+    }
+  }
+}

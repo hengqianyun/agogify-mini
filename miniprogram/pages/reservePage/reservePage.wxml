@@ -1,0 +1,75 @@
+<view class="reserve-page border-top">
+  <view class="choose-container">
+    <view class="store-choose">
+      <view class="store-controller {{currentStoreIndex === 0 ? 'store-controller-disable' : ''}}" wx:if="{{stores.length > 1}}" bind:tap="handlePreStore">
+        <iconfont name="zuo" size="{{20}}" color="{{currentStoreIndex === 0 ? '#C5C5C5' : '#353535'}}"></iconfont>
+        <view>上一家</view>
+      </view>
+      <view wx:else></view>
+      <view class="store-info">
+        <image class="store-avatar" src="{{stores[currentStoreIndex].src}}" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+        <view>{{stores[currentStoreIndex].name}}</view>
+      </view>
+      <view class="store-controller {{currentStoreIndex === stores.length - 1 ? 'store-controller-disable' : ''}}" wx:if="{{stores.length > 1}}" bind:tap="handleNextStore">
+        <view>下一家</view>
+        <iconfont name="you" size="{{20}}" color="{{currentStoreIndex === stores.length - 1 ? '#C5C5C5' : '#353535'}}"></iconfont>
+      </view>
+      <view wx:else></view>
+    </view>
+    <view class="choose-tabs {{stores.length > 0 ? 'half-tabs' : ''}}">
+      <van-tabs color="#353535" custom-class="" active="{{ sale }}" swipeable="{{true}}" ellipsis="{{false}}" bind:change="handleSaleChange">
+        <van-tab wx:for="{{sales[stores[currentStoreIndex].code]}}" wx:key="@id" title="{{item.firstName + ' ' + item.lastName}}" name="{{item.username}}" data-value="{{item.username}}"></van-tab>
+      </van-tabs>
+    </view>
+    <!-- <view class="choose-menu">
+      <van-dropdown-menu wx:if="{{stores.length > 0}}" custom-class="dropdown-box">
+        <van-dropdown-item value="{{ chooseStore }}" options="{{ stores }}" bind:change="handleCityChange" />
+      </van-dropdown-menu>
+    </view> -->
+  </view>
+  <view class="sale-info-container text-ellipsis">{{saleLanguage}}</view>
+  <view class="table-container">
+    <view class="time-list">
+      <view class="duration-choose">
+        <view class="duration-30 duration" bind:tap="handleCheckBoxChange" data-duration="{{30}}">
+          <rss-checkbox status="{{duration === 30 ? 1 : 0}}" length="{{24}}"></rss-checkbox>
+          <text>{{' '}}30分钟</text>
+        </view>
+        <view class="duration-45 duration" bind:tap="handleCheckBoxChange" data-duration="{{45}}">
+          <rss-checkbox status="{{duration === 45 ? 1 : 0}}" length="{{24}}"></rss-checkbox>
+          <text>{{' '}}45分钟</text>
+        </view>
+      </view>
+      <view class="date-container">
+        <block wx:for="{{times}}" wx:key="*this">
+          <view class="date-item">{{item}}</view>
+        </block>
+      </view>
+    </view>
+    <scroll-view scroll-x="{{true}}" class="table-body">
+      <view class="scroll-title">
+        <block wx:for="{{scrollTitles}}" wx:key="date">
+          <view class="title-box">
+            <view class="deta">{{item.date}}</view>
+            <view class="title-week">{{item.week}}</view>
+          </view>
+        </block>
+      </view>
+      <view class="scroll-body">
+        <block wx:for="{{tableItems}}" wx:key="*this">
+          <view class="table-line">
+            <block wx:for="{{tableItems[index]}}" wx:for-item="tItem" wx:for-index="i" wx:key="id">
+              <view class="table-item {{tItem.className}} {{tItem.checked ? 'table-item-checked' : ''}} {{tItem.disabled ? 'table-item-disabled' : ''}}" data-x="{{tItem.x}}" data-y="{{tItem.y}}" data-id="{{tItem.id}}" bind:tap="handleTap">
+                {{tItem.text}}
+              </view>
+            </block>
+          </view>
+        </block>
+        <!-- <canvas type="2d" id="canvasTable"></canvas> -->
+      </view>
+    </scroll-view>
+  </view>
+  <view class="btn-continer">
+    <rss-button label="预约" className="fill-btn" width="{{750}}" height="{{88}}" borderRadius="{{0}}" fontWeight="{{300}}" bind:tap="handleCommitReserve"></rss-button>
+  </view>
+</view>

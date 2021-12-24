@@ -1,0 +1,88 @@
+@import url(../../style/global.less);
+
+.address-detail-page {
+  padding: 0 48rpx;
+  .input-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 48rpx 0;
+
+    .input-label {
+      font-size: 36rpx;
+      width: 144rpx;
+      color: @defaultColor;
+      font-weight: 400;
+      height: 68rpx;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-area {
+      width: 478rpx;
+      height: 68rpx;
+      border: 2rpx solid @defaultColor3;
+      border-radius: 8rpx;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      padding: 18rpx 32rpx;
+      position: relative;
+
+      .placeholder-class {
+        font-size: 28rpx;
+        font-weight: 300;
+        color: @defaultColor3;
+      }
+
+      .phone-prefix {
+        font-size: 24rpx;
+        color: @defaultColor;
+      }
+
+      .input {
+        font-size: 28rpx;
+        color: @defaultColor;
+      }
+
+      .error-msg {
+        position: absolute;
+        color: @errorColor;
+        font-size: 22rpx;
+        bottom: -20px;
+        left: 0;
+      }
+    }
+
+    .focus-area {
+      border-color: @defaultColor;
+    }
+
+    .error-area {
+      border-color: @errorColor;
+    }
+
+    .textarea-input {
+      height: 136rpx;
+
+      .input-textarea {
+        height: 100%;
+      }
+    }
+
+    .icon-input {
+      justify-content: space-between;
+    }
+
+  }
+
+  .map-cover {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    z-index: 999999999999;
+  }
+}

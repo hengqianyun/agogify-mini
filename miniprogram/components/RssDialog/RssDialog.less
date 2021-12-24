@@ -1,0 +1,56 @@
+.rss-dialog {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background: #000000CC;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .dialog-container {
+    width: 640rpx;
+    min-height: 282rpx;
+    background: #fff;
+    border-radius: 16rpx;
+
+    .dialog-content {
+      padding: 64rpx 48rpx;
+      display: flex;
+      flex-direction: column;
+
+      .dialog-title {
+        display: flex;
+        justify-content: center;
+        font-size: 34rpx;
+        font-weight: bold;
+      }
+
+      .dialog-slot {
+        margin-top: 32rpx;
+      }
+    }
+    .btns {
+      height: 110rpx;
+      border-top: 2rpx solid #00000010;
+      display: flex;
+  
+      .btn {
+        font-size: 34rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #576B95;
+        width: 318rpx;
+      }
+  
+      .cancel-btn {
+        color: #000;
+        border-right: 2rpx solid #00000010;
+        width: 318rpx;
+      }
+    }
+  }
+
+}

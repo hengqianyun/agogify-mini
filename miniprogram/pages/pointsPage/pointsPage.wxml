@@ -1,0 +1,47 @@
+<view class="points-page border-top">
+  <view class="info-container">
+    <view class="info-box">
+      <view class="right-box">
+        <text class="info-text">当前剩余积分</text>
+        <text class="info-number">{{point}}</text>
+      </view>
+
+      <rss-button className="fill-btn" label="获取积分" width="{{196}}" height="{{76}}" bind:onTap="handleTap" fontSize="{{28}}"></rss-button>
+        
+        
+    </view>
+      
+  </view>
+
+  <view class="detail-container">
+    <view class="title">
+      积分变动明细
+    </view>
+
+    <view class="detail-list-contianer">
+      <block wx:for="{{details}}" wx:key="id">
+        <view class="detail-item">
+            <view class="d-top">
+              <view class="behavior" wx:if="{{item.state === 0}}">购买积分</view>
+              <view class="behavior" wx:elif="{{item.state === 1}}">预约</view>
+              <view class="behavior" wx:elif="{{item.state === 2}}">实时呼叫</view>
+              <view class="behavior" wx:elif="{{item.state === 3}}">积分抵扣</view>
+              <view class="count">{{item.state === 0 ? '+' : "-"}}{{item.num}}</view>
+            </view>
+            <view class="d-bottom">
+              <view>{{item.date}}</view>
+              <view>余额{{item.surplus}}</view>
+            </view>
+              
+              
+        </view>
+          
+      </block>
+    </view>
+      
+      
+  </view>
+    
+    
+</view>
+  

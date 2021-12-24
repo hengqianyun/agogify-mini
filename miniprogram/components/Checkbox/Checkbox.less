@@ -1,0 +1,32 @@
+@import url(../../style/global.less);
+
+.checkbox {
+  border-radius: 50%;
+  box-sizing: border-box;
+  height: 40rpx;
+  width: 40rpx;
+  border: 2rpx solid @defaultColor;
+  background: #fff;
+}
+
+.checkbox-active {
+  border-color: @defaultColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .checkbox-inside {
+    width: 24rpx;
+    height: 24rpx;
+    background: @defaultColor;
+    border-radius: 50%;
+  }
+}
+
+.checkbox-disable {
+  border-color: @defaultColor3;
+
+  .checkbox-inside-disable {
+    background: @defaultColor3;
+  }
+}

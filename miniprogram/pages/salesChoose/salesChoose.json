@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "rss-button": "../../components/RssButton/RssButton",
+    "RssDialog": "../../components/RssDialog/RssDialog"
+  }
+}

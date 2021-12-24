@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "rss-button": "../RssButton/RssButton"
+  },
+  "styleIsolation": "apply-shared"
+}

@@ -1,0 +1,286 @@
+<view class="protocol-page">
+  <view class="protocol-title">
+    <view class="protocol-title-title">
+      隐私政策
+    </view>
+    <view class="protocol-title-date">
+      最新版本生效日期：2021年12月18日
+    </view>
+  </view>
+  <view class="size-28 color-default">
+      <text class="inline color-7f">欢迎您使用我们的服务！我们深知个人信息对您的重要性，您的信赖对我们非常重要，我们将严格遵守法律法规要求采取相应的安全保护措施，致力于保护您的个人信息安全可控。基于此，AGOGIFY小程序服务提供者（下称“我们”，“本平台”）制定本《隐私政策》（下称“本政策”，“本隐私政策”），帮助您充分了解在您使用我们的服务的过程中，我们会如何收集、使用、共享、存储和保护您的个人信息以及您可以如何管理您的个人信息，以便您更好地作出适当的选择。</text>
+    </view>
+  <view class="size-28 color-default">
+    <text class="inline color-7f">在您开始使用我们的产品和服务前，请您务必先仔细阅读和理解本政策，特别应重点阅读我们以粗体/粗体下划线标识的条款，确保您充分理解和同意之后再开始使用。</text>
+  </view>
+  <view class="size-28 color-default">
+    <text class="inline color-7f">您同意隐私政策表示您已了解应用提供的功能，以及功能运行所需的必要个人信息，并给予相应的收集使用授权。</text>
+    <text class="inline">如对本政策内容有任何疑问、意见或建议，请与我们联系。</text>
+  </view>
+    <view class="title">1.信息的收集和使用</view>
+    <text class="size-28 color-7f">个人信息是指以电子或者其他方式记录的与已识别或者可识别的自然人有关的各种信息，不包括匿名化处理后的信息。在您使用我们的产服务时，我们需要或可能需要收集和使用的您的个人信息包括如下两种：</text>
+    <text class="size-28 color-7f">1）为实现向您提供我们的服务的基本功能，您须授权我们收集、使用的必要的信息。如您拒绝提供相应信息，您将无法正常使用我们的服务；</text>
+    <text class="size-28 color-7f">2）为实现向您提供我们的服务的附加功能，您可选择提供不提供，或者同意不同意我们收集、使用的信息。如您拒绝提供，您将无法正常使用相关附加功能或无法达到我们拟达到的功能效果，不会影响您使用我们的基本功能。</text>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">我们收集和使用的个人信息有可能包括以下您与我们互动时主动提供的信息、IT系统收集的信息以及其他合作伙伴向我们提供的信息。您提供的信息主要包括：当您在本平台注册个人帐户、在与本平台签约合作的海外实体零售店（下称“合作实体店”）通过本平台协助购买商品、选择接收我们的电子报和特别优惠通知、参加促销活动，或（通过电邮、电话、客服端即时通讯、社交媒体或其他方式）与我们联系时所提供的个人信息，若您提供的信息中含有其他用户的个人信息，在向我们提供这些个人信息之前，您需确保您已经取得合法的授权；IT系统收集的信息包括：每次您访问本平台，我们的IT系统将接收并可能存储包括设备信息在内的某些信息；在法律允许的范围内，市场合作伙伴会向我们提供您的个人信息。</text>
+      <text class="inline">上述信息具体可能包括您的姓名、地址或所在地区、电话号码和电邮地址、账号信息、支付信息、身份信息、出生日期、性别和图片、设备信息、偏好信息、浏览记录、交互信息、视频信息、预约信息、推荐好友信息及其它相关信息。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">作为一家为您提供浏览、选择合作实体店，帮助您完成远程购物的服务平台，我们需要收集、保存和使用下列与您有关的信息才能实现上述功能，具体包括：</text>
+    </view>
+    <view class="title-med">1.1 信息展示</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在您使用我们服务过程中，为了让您快速地找到目标合作实体店，我们可能会收集您使用我们服务的设备信息，</text>
+      <text class="inline">包括您所拥有的设备类型、设备的IP地址、、移动网络提供商、您所处的时区和国家/地区，</text>
+      <text class="inline color-7f">以及系统崩溃或下载错误报告。</text>
+    </view>
+    <view class="title-med">1.2 注册用户</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">如果您希望从合作实体店通过远程购物购买商品，则首先需要注册一个帐户，在帐户创建过程中，您至少需要提交以下信息：</text>
+      <text class="inline">您的昵称和手机号码。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline">通过社交媒体平台登录我们的移动应用程序，即代表您允许我们从这些帐户中获取登录所需的信息和内容。</text>
+      <text class="inline color-7f">我们可能获取信息的具体类型取决于您的相关帐户或平台设置，并将遵循它们的隐私政策，在您授权同意的范围内使用您的相关信息。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline">在您浏览我们平台的过程中，您可以选择对感兴趣的合作实体店进行收藏、通过我们提供的功能组件向其他第三方分享信息或链接。在您使用上述功能的过程中，我们会收集包括</text>
+      <text class="inline color-7f">您的收藏记录、分享历史</text>
+      <text class="inline">在内的服务日志信息用于实现上述功能。</text>
+    </view>
+    <view class="title-med">1.3 远程购物</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在您通过预约或即时呼叫方式选择与合作实体店进行沟通时，我们需要获取您的身份信息及配送信息，具体包括：</text>
+      <text class="inline">您个人的实名信息（姓名、身份证号码、身份证正反面照片和您的人脸照片）</text>
+      <text class="inline color-7f">以便进行实名认证及商品清关；</text>
+      <text class="inline">您的收货信息（收货人姓名、收货地址、收货人联系电话）。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">您知悉并同意授权我们使用您的身份信息（姓名、身份证号码）查询</text>
+      <text class="inline">您的跨境电子商务年度个人额度，</text>
+      <text class="inline color-7f">以协助合作实体店尽量减少在您海外远程购物时因超过跨境电子商务零售进口商品的年度交易限值给您或相应合作实体店造成的损失。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在合作实体店店员为您提供视频购物服务时，</text>
+      <text class="inline">我们需要保存您和店员的视频和信息交互完整记录，</text>
+      <text class="inline color-7f">用于协助您与合作实体店解决争议。在您通过预约方式要求合作实体店店员提供远程购物服务时，</text>
+      <text class="inline">我们需要保留您的预约记录，</text>
+      <text class="inline color-7f">用于提醒您完成预约及助您与合作实体店解决争议。</text>
+    </view>
+    <view class="title-med">1.4 进口清关</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在您购物时，我们经合作实体店授权，通过与其合作的第三方支付机构（包括微信支付、支付宝、银联）协助您完成支付服务。为满足有关法律法规对于支付机构就交易真实性进行核验的要求，支付机构可能需要取得您的订单相关配送信息（包括支付人姓名、收货人姓名、银行账户、寄送地址、电话号码）（以下统称“支付核验信息”），因此</text>
+      <text class="inline">我们需要将您的支付核验信息，连同您的交易金额信息与这些支付机构共享以实现其确认您的支付指令并完成支付。</text>
+      <text class="inline color-7f">为使我们及时获悉并确认您的支付进度及状态，协助提供售后及协助您解决争议，您同意</text>
+      <text class="inline">我们可自您购买商品的合作实体店和第三方支付机构处收集与支付进度相关信息。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">为保证您从合作实体店购买的商品能够顺利、安全、准确送达，</text>
+      <text class="inline">我们会代表合作实体店向提供物流配送服务的第三方配送公司披露你所购商品相关配送信息以完成商品的配送。</text>
+      <text class="inline color-7f">为使我们及时获悉并确认物流进度及状态，协助提供售后及协助您解决争议，</text>
+      <text class="inline">您同意我们可自合作实体店和物流相关服务主体处收集与物流交付进度相关的信息。</text>
+    </view>
+    <view class="title-med">1.5 支付与配送</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">根据中国相关的进口商品清关政策，对于您购买的境外商品，您需要提供身份证相关信息：</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">1）与收货人姓名相同的身份证信息用于跨境电子商务物品申报；或</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">2）与收货人姓名相同的身份证信息和身份证照片用于个人物品入境申报。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline">您在此授权为您提供配送服务的服务商作为您的代理人，为您所购商品办理申报和清关并据此上传身份证相关信息。</text>
+    </view>
+    <view class="title-med">1.6 客户服务</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">如果您出于任何原因通过即时通讯工具或其他方式与我们的客户服务团队联系或提供反馈，我们将使用您的信息（包括您的姓名、电话号码）帮助我们对沟通内容进行分类、回复、进行适当调查，以解决您可能遇到的任何问题或情况，</text>
+      <text class="inline">我们将会基于上述目的保存您与我们的通信/通话记录及相关内容（包括联系方式、账户信息、购买记录、合作实体店信息及您为了证明相关事实提供的其他信息）。我们还可能使用上述信息以及视频交互记录，代表您与合作实体店沟通，提供售后及解决争议。</text>
+    </view>
+    <view class="title-med">1.7 设备功能访问</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在使用平台进行远程交互时，</text>
+      <text class="inline">我们需要访问您的相机和麦克风功能，</text>
+      <text class="inline color-7f">以完成您与合作实体店的视频交互服务。当您上传身份证照片、人脸照片和商品信息照片时，</text>
+      <text class="inline">您需要允许我们访问您设备上的相机功能和图片功能，</text>
+      <text class="inline color-7f">并读取上传您设备上所选择的图片。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline">您可以允许我们开启您的社交媒体订阅权限，</text>
+      <text class="inline color-7f">以接收包括预约提醒在内的推送消息。</text>
+    </view>
+
+    <view class="title">2.对外提供信息</view>
+    <view class="title-med">2.1 共享</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">我们不会与本平台以外的公司、组织和个人共享您的个人信息，但以下情况除外：</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">1）履行法定义务所必需的共享：我们可能会根据法律法规规定、诉讼、争议解决的必要，或按行政、司法机关依法提出的要求，以及其他法定义务履行的必需，共享您的个人信息。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">2）取得您同意的情况下共享：获得您的明确同意后，我们会与其他方共享您的个人信息。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">3）</text>
+      <text class="inline">完成远程购物流程所必需的的共享：</text>
+      <text class="inline color-7f">您通过本平台服务完成从合作实体店的远程购物，我们会根据您的选择，将您的必要信息共享给相关合作实体店或配套服务的提供者，以实现您的购物、配送及售后服务需求。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">4）</text>
+      <text class="inline">与关联公司间共享：</text>
+      <text class="inline color-7f">为便于我们与关联公司共同向您提供服务，</text>
+      <text class="inline">您的个人信息可能会与我们的国内或境外关联公司共享。</text>
+      <text class="inline color-7f">我们只会共享必要的个人信息，且受本隐私权政策中所声明目的的约束。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">请注意，您在使用</text>
+      <text class="inline">我们服务时自愿共享甚至公开分享的信息，可能会涉及您或他人的个人信息甚至敏感个人信息。请您更加谨慎地考虑并做出决定。</text>
+    </view>
+    <view class="title-med">2.2 转让</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">如果我们因合并、分立、解散、被宣告破产的原因需要转移个人信息的，我们会向您告知接收方的名称或者姓名和联系方式。接收方将继续履行本政策及其他法定义务。接收方变更原先的处理目的、处理方式的，会重新取得您的同意。</text>
+    </view>
+    <view class="title-med">2.3 公开披露</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">我们仅会在以下情况下，公开披露您的个人信息：</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">1）基于您的主动选择及其它单独同意的情况下，我们可能会公开披露您的个人信息；</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">2）</text>
+      <text class="inline">如果我们确定您出现违反法律法规或严重违反本平台相关协议及规则的情况，或为保护本平台用户或公众的人身财产安全免遭侵害，我们可能披露关于您的个人信息，包括相关违规行为以及本平台已对您采取的措施。</text>
+    </view>
+    <view class="title-med">2.4 转移</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">由于我们通过遍布全球的资源和服务器提供产品或服务，</text>
+      <text class="inline">我们可能必须对您的信息进行跨境转移才能完成对您远程购物的支持服务。</text>
+      <text class="inline color-7f">在中华人民共和国法律允许范围内以及为您提供服务所必须的限度内，我们可能会将收集的个人信息转移出境或者分享给我们的关联公司、供应商、合作伙伴以及合作实体店进行处理。我们将采取一切合理必要的步骤，以确保您的个人信息得到安全处理，并符合此份隐私政策和相关适用法律的规定。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">如需进行超出本隐私政策规定的范围进行跨境传输，我们将会单独征得您的授权同意并根据个人信息保护相关法律法规的要求完成跨境传输的前提条件。</text>
+    </view>
+
+    <view class="title">3.您的权利</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">我们将依据相关的中华人民共和国法律收集、储存和使用您提供给我们的个人信息。根据相关法律，我们保障您对自己的个人信息行使以下权利：</text>
+    </view>
+    <view class="title-med">3.1 访问个人信息</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">您有权访问您的个人信息，法律法规规定的例外情况除外。如果您想行使数据访问权，您可以在“我的”中执行此类操作，联系客服，或发送电子邮件至pip@agogify.com。我们将在15个工作日内回复您的访问请求。</text>
+    </view>
+    <view class="title-med">3.2 更正个人信息</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">当您发现我们处理的关于您的个人信息有错误时，您有权要求我们做出更正。您可以通过发送电子邮件至 pip@agogify.com，或联系客服操作。我们将在15个工作日内回复您的更正请求。</text>
+    </view>
+    <view class="title-med">3.3 删除个人信息</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在以下情形中，您可以向我们提出删除个人信息的请求：
+        	•	如果我们处理个人信息的行为违反法律法规；
+        	•	如果我们收集、使用您的个人信息，却未征得您的同意；
+        	•	如果我们处理个人信息的行为违反了与您的约定；
+        	•	如果您不再使用我们的产品或服务，或您注销了账号；
+        	•	如果我们不再为您提供产品或服务。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">您可以联系客服，或通过发送电子邮件至 pip@agogify.com提出您的请求。我们将在15个工作日内回复您的删除请求。若我们决定响应您的删除请求，我们还将同时尽可能通知从我们处获得您的个人信息的主体，并要求其及时删除（除非法律法规另有规定，或这些主体已独立获得您的授权）。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">当您或我们协助您删除相关信息后，因为适用的法律和安全技术，我们可能无法立即从备份系统中删除相应的信息，我们将安全地存储您的个人信息并限制对其的任何进一步处理，直到备份可以清除或实现匿名化。</text>
+    </view>
+    <view class="title-med">3.4 改变授权范围</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">每个业务功能需要一些基本的个人信息才能得以完成，如您撤回以上授权或同意，将导致我们无法正常向您提供服务。您可以发送请求至pip@agogify.com，或通过联系我们的客服具体实现。</text>
+      <text class="inline">当您收回同意后，我们将不再处理相应的个人信息。但您收回同意的决定，不会影响此前基于您的授权而开展的个人信息处理。</text>
+    </view>
+    <view class="title-med">3.5 注销账户</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">您随时可注销此前注册的帐户，您可以通过联系我们的客服操作，我们将在十五天内完成核查和处理。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在您主动注销账号之后，我们将停止为您提供产品或服务，根据适用法律的要求删除或匿名化处理您的个人信息。</text>
+    </view>
+    <view class="title-med">3.6 约束信息系统自动决策</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在某些业务功能中，我们可能仅依据信息系统、算法在内的非人工自动决策机制做出决定。如果这些决定显著影响您的合法权益，您可以通过客服联系我们。</text>
+    </view>
+    <view class="title-med">3.7 响应您的上述请求</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">对于您或可能的您的监护人、近亲属及其他有权主体向我们提出的上述请求，以及中华人民共和国法律与其他适用法律规定的您的相关个人信息权利，您可以通过在线客服；发送邮件至pip@agogify.com；或写信寄到：上海市宝山区三门路561号8幢1A01室与我们联系，我们将在15天内做出答复。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">为保障您的账户安全和您的个人信息安全，您向我们提出上述请求时，我们可能会先验证您的身份（如增加账户核验、要求您提供书面请求或其他合理方式），然后再处理您的请求。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">对于您合理的请求，我们原则上不收取费用，但对多次重复、超出合理限度的请求，我们将酌情收取一定费用。对于与您的身份不直接关联的信息、无合理理由重复申请的信息，或者需要过多技术手段（如需要开发新系统或从根本上改变现行惯例）、给他人合法权益带来风险或者不切实际的请求，我们可能会予以拒绝。</text>
+    </view>
+
+    <view class="title">4.信息的存储</view>
+    <view class="title-med">4.1 存储期限</view>
+    <view class="size-28 color-default">
+      <text class="inline">我们只会在达成本政策所述目的所需的期限内保留您的个人信息，</text>
+      <text class="inline color-7f">除非法律有强制的存留要求。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">我们判断个人信息的存储期限主要依据以下标准：</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">1）完成与您相关的交易目的、维护相应交易及业务记录、应对您可能的查询或投诉；</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">2）保证我们为您提供服务的安全和质量；</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">3）您是否同意更长的留存期间；</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">4）是否存在保留期限的其他特别约定或法律法规规定。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">在超出保留期间后，我们会根据适用法律的要求删除或匿名化处理您的个人信息。</text>
+    </view>
+    <view class="title-med">4.2 存储位置</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">我们在中华人民共和国境内运营中收集和产生的个人信息，将存储在中国境内。以下情形下，我们会在履行了法律规定的义务后，</text>
+      <text class="inline">向境外关联公司提供您的个人信息，这些信息可能会被存储在境外：</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">1、适用的法律有明确规定；</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">2、获得您的明确授权；或</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">3、</text>
+      <text class="inline">您在合作实体店远程购买商品合同订立和履行（包括退税、支付、配送和报关清关）所必需的。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">针对以上情形，我们会按照本政策依法保护您的个人信息安全。</text>
+    </view>
+    <view class="title-med">4.3 存储安全</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">我们已采取符合业界标准、合理可行的安全防护措施保护您的信息，防止个人信息遭到未经授权访问、公开披露、使用、修改、损坏或丢失。我们会部署访问控制机制，尽力确保只有授权人员才可访问个人信息。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">尽管如此，网络上的信息传输都不能完全保证安全。我们将尽力确保或担保您发送给我们的任何信息的安全，但我们不能保证您通过我们网站传输的个人数据的绝对安全性，任何此类传输的风险均需由您自负。</text>
+      <text class="inline">如您担心自己的个人信息尤其是您的账号或密码发生泄露，请您立即联络在线客服以便我们根据您的申请采取相应措施。</text>
+    </view>
+
+    <view class="title">5.政策的更新</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">为给您带来更好的服务体验，我们持续努力改进我们的服务及技术。在新的服务及业务流程变更时，我们可能会更新我们的隐私权政策。每当我们修改政策时，我们将在此页显示更新的隐私政策。</text>
+      <text class="inline">我们会在重大变更情况下通知您并根据个人信息保护法律法规要求重新征得您的同意。</text>
+      <text class="inline color-7f">请定期访阅此隐私政策以了解更新内容和变动。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">本隐私政策所指的重大变更包括但不限于：
+	•	我们的服务模式发生重大变化。如处理个人信息的目的、处理的个人信息类型、个人信息的使用方式等；
+	•	我们在所有权结构、组织架构等方面发生重大变化。如业务调整、破产并购等引起的所有权变更等；
+	•	个人信息共享、转让或公开披露的主要对象发生变化；
+	•	您参与个人信息处理方面的权利及其行使方式发生重大变化；
+	•	我们负责处理个人信息安全的责任部门、联络方式及投诉渠道发生变化时；
+	•	个人信息安全影响评估报告表明存在高风险时。</text>
+    </view>
+</view>

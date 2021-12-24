@@ -1,0 +1,69 @@
+<!-- pages/classification/classification.wxml -->
+<view class="classification-page">
+  <!-- select -->
+  <van-row>
+    <van-col span="12">
+      <van-dropdown-menu custom-class="dropdown-box">
+        <van-dropdown-item value="{{ location }}" options="{{ locationList }}" bind:change="handleCityChange" />
+      </van-dropdown-menu>
+      <view class="menu-text">City</view>
+    </van-col>
+    <van-col span="12">
+      <van-dropdown-menu custom-class="dropdown-box">
+        <van-dropdown-item value="{{ shopClassification }}" options="{{ shopClassificationList }}" bind:change="handleShopClassificationChange" />
+      </van-dropdown-menu>
+      <view class="menu-text">Store</view>
+    </van-col>
+  </van-row>
+  <!-- scroll tab -->
+  <!-- TODO scroll-tab 显示异常 -->
+  <van-row custom-class="scroll-tab">
+    <van-tabs color="#353535" active="{{ classification }}" bind:change="handleClassifictionChange">
+      <van-tab wx:for="{{classificationList}}" wx:key="id" title="{{item.name}}" name="{{item.id}}" data-value="{{item.id}}"></van-tab>
+    </van-tabs>
+  </van-row>
+  <view class="category-children">
+    <block wx:for="{{classificationChildList}}" wx:key="code">
+      <view class="category-child {{item.name === classificationChild ? '.category-child-actived' : ''}}" bind:tap="handleChildCategoryChange" data-name="{{item.name}}" data-index='{{index}}'>
+        {{item.name}}
+      </view>
+    </block>
+  </view>
+  <view class="content">
+    <view class="left-container">
+      <van-sidebar custom-class="scroll-sidebar" active-key="{{ brandActiveKey }}" bind:change="handleBrandChange">
+        <van-sidebar-item wx:for="{{brandList}}" id="{{item.name}}" wx:key="id" title="{{item.name}}" />
+      </van-sidebar>
+      <view class="sort-container">
+        <view class="sort-btn" bind:tap="handleSortBtnTap">{{sortList[sortValue]}}</view>
+        <view class="sort-list" wx:if="{{showSort}}">
+          <block wx:for="{{sortList}}" wx:key="*this">
+            <view class="sort-item {{index === sortValue ? 'sort-active' : ''}}" data-index="{{index}}" bind:tap="handleSortTap">
+              {{item}}
+            </view>
+          </block>
+          <view class="sort-cover" bind:tap="handleHideSortList"></view>
+        </view>
+      </view>
+    </view>
+    <view class="right-container">
+      <view class="shop-container">
+        <cover-view wx:if="{{loading}}" class="loading">
+          <van-loading>加载中...</van-loading>
+        </cover-view>
+        <block wx:for="{{shopList}}" wx:key="id">
+          <view class="store-item">
+            <CheckboxStoreItem status="{{item.status}}" name="{{item.name}}" code="{{item.code}}" address="{{item.address}}" desc="{{item.desc}}" image="{{item.logo.path}}" data-index="{{index}}" bind:onTap="handleCheckboxChange" />
+          </view>
+        </block>
+      </view>
+      <view class="buttons">
+        <view class="call-btn btn" bind:tap="handleChatTap">立即通话</view>
+        <view class="reserve-btn btn" bind:tap="handleReserveTap">预约</view>
+      </view>
+    </view>
+  </view>
+  <RssDialog wx:if="{{showDialog}}" title="请注意" commitText="同意并继续" cancelText="不同意" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
+    <view class="dialog-content">因海外实体专柜远程购物的特殊性原因，商品一经购买无法取消或退货</view>
+  </RssDialog>
+</view>

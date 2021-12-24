@@ -1,0 +1,55 @@
+<view class="order-item-comp">
+  <view class="top-container">
+    <view class="store-info">
+      <view class="store-info-avatar">
+        <image class="store-avatar" mode="heightFix" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
+      </view>
+      <view class="store-info-name">{{storeName}}</view>
+      <view class="store-info-icon">
+        <iconfont name="jiantou" size="{{24}}"></iconfont>
+      </view>
+      <view wx:if="{{showStatus}}">
+        <rss-button fontSize="{{22}}" width="{{98}}" height="{{34}}" className="{{className}}" label="{{state}}"></rss-button>
+      </view>
+        
+    </view>
+    <view class="controller">
+      <iconfont wx:if="{{collected}}" name="collection_g" size="{{40}}"></iconfont>
+      <iconfont wx:else name="collection" size="{{40}}"></iconfont>
+      <iconfont name="share" size="{{40}}"></iconfont>
+    </view>
+  </view>
+  <view class="bottom-container">
+    <view class="avatar-box">
+      <image class="product-avatar" src="{{productAvatar}}" mode="heightFix" lazy-load="false" binderror="" bindload=""></image>
+    </view>
+    <view class="order-info">
+      <view class="line">
+        <view class="product-name text-ellipsis">
+          {{productName}}
+        </view>
+        <view class="product-price">
+          € {{productPrice}}
+        </view>
+      </view>
+      <view class="line">
+        <view class="product-desc text-ellipsis-2">
+          {{productDesc}}
+        </view>
+        <view class="product-num">
+          &times; {{num}}
+        </view>
+      </view>
+      <view class="line">
+        <view class="product-order-date">
+          下单时间{{orderDate}}
+        </view>
+        <view wx:if="{{showMore}}" class="product-order-more">
+          更多
+        </view>
+          
+      </view>
+        
+    </view>
+  </view>
+</view>

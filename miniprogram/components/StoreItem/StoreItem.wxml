@@ -1,0 +1,25 @@
+<view class="store-item" bind:tap="handleClick">
+  <view class="store-avatar">
+    <image 
+      class="shop-image" 
+      mode="aspectFit|aspectFill|widthFix" 
+      src="{{imageUrl}}"
+      alt="商家头像" 
+      binderror="imageError"
+    />
+      <!-- src="{{store.logo.path ? baseUrl + store.logo.path : '../../assets/image/avatar.jpg'}}"  -->
+  </view>
+  <view class="store-item-info">
+    <view class="store-item-name text-ellipsis">{{store.name}}</view>
+    <view class="store-item-desc text-ellipsis">{{store.desc}}</view>
+    <view class="store-item-address text-ellipsis">
+      <iconfont name="dingwei_g" size="{{24}}" />
+      <!-- <view class="s-i-address-text text-ellipsis">{{store.billingData}}</view>  -->
+      <view class="s-i-address-text text-ellipsis">{{address}}</view> 
+      </view>
+  </view>
+  <view class="controller">
+    <iconfont name="store_yishoucang" size="{{40}}"></iconfont>
+    <iconfont name="share" size="{{40}}"></iconfont>
+  </view>
+</view>

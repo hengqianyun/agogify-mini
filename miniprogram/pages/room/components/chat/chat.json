@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "rss-btn": "../../../../components/RssButton/RssButton",
+    "RssDialog": "../../../../components/RssDialog/RssDialog"
+  }
+}

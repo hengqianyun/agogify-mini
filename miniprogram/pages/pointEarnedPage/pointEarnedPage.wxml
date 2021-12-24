@@ -1,0 +1,34 @@
+<view class="point-earned-page border-top">
+  <view class="info-container">
+    <view class="icon-box">
+      <iconfont name="huoqujifen_jifenicon" size="{{44}}" color="#fff"></iconfont>
+    </view>
+    <view class="info-text-box">
+      <view class="hello">你好！用户{{userName}}</view>
+      <view class="desc">当前剩余可以用积分：</view>
+    </view>
+    <view class="surplus-box">{{surplus}}</view>
+  </view>
+  <view class="banner-container">
+    <image class="banner" src="{{src}}" lazy-load="false" binderror="" bindload=""></image>
+    <view class="text-1">使用积分抵扣</view>
+    <view class="text-2">购物更划算</view>
+    <view class="text-3">积分可在付款时抵扣付款金额，按交</view>
+    <view class="text-3">易当日的汇率兑换成欧元</view>
+  </view>
+  <view class="earn-container">
+    <view class="e-c-title">获取积分</view>
+    <view class="card-box">
+      <block wx:for="{{cards}}" wx:key="coast">
+        <view class="card {{index === activeKey ? 'card-active': ''}}" data-index="{{index}}" bind:tap="handleCardTap">
+          <view class="c-top-text">积分</view>
+          <view class="c-center-text">{{item.count}}</view>
+          <view class="c-bottom-text">￥{{item.coast}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+  <view class="btn-container">
+    <rss-button width="{{654}}" height="{{104}}" className="fill-btn" fontColor="#F4D1B2" label="￥{{coast}} 获取积分"></rss-button>
+  </view>
+</view>

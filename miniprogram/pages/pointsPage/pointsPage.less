@@ -1,0 +1,97 @@
+@import url(../../style/global.less);
+
+.points-page {
+  display:  flex;
+  flex-direction: column;
+
+  .info-container {
+    display: flex;
+    height: 292rpx;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
+    .info-box {
+      width: 654rpx;
+      height: 180rpx;
+      background: #FFFFFF;
+      box-shadow: 0 16rpx 40rpx 0 rgba(139, 174, 217, 0.27);
+      border-radius: 8rpx;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 48rpx;
+      align-items: center;
+      box-sizing: border-box;
+      text-align: center;
+
+      .right-box {
+        padding: 0 32rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: @defaultColor;
+
+        .info-text {
+          font-size: 22rpx;
+        }
+
+        .info-number {
+          font-size: 48rpx;
+        }
+      }
+    }
+  }
+
+  .detail-container {
+    padding: 0 48rpx;
+
+    .title {
+      font-size: 36rox;
+      color: @defaultColor;
+      border-bottom: 2rpx solid @borderColor;
+      padding-bottom: 32rpx;
+      box-sizing: border-box;
+    }
+
+    .detail-list-contianer {
+      display: flex;
+      flex-direction: column;
+
+      .detail-item {
+        width: 100%;
+        height: 150rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        padding: 40rpx 0;
+        box-sizing: border-box;
+
+        .d-top, .d-bottom {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .d-top {
+          color: @defaultColor;
+          font-size: 32rpx;
+
+          .behavior {
+            font-weight: 300;
+          }
+
+          .count {
+            font-weight: 400;
+          }
+        }
+
+        .d-bottom {
+          font-size: 22rpx;
+          color: @defaultColor3;
+        }
+        
+      }
+    }
+  }
+}

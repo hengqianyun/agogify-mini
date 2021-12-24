@@ -1,0 +1,108 @@
+@import url(../../style/global.less);
+
+.phone-login-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  }
+
+  .login-content {
+    width: 100%;
+    padding: 0 48rpx;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .title {
+      font-size: 42rpx;
+      color: @defaultColor;
+      text-align: center;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 654rpx;
+      margin: 132rpx 0;
+
+      .input {
+        height: 88rpx;
+        border: 2rpx solid @defaultColor3;
+        box-sizing: border-box;
+        border-radius: 4rpx;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        padding: 30rpx 32rpx;
+
+        .placeholder-style {
+          color: @defaultColor3;
+          font-size: 28rpx;
+        }
+
+        .native-input {
+          font-size: 28rpx;
+          width: 600rpx;
+        }
+      }
+
+      .phone-number {
+        width: 100%;
+      }
+
+      .verify-arae {
+        width: 100%;
+        margin: 48rpx 0 80rpx 0;
+        display: flex;
+        justify-content: space-between;
+
+        .verify-code, .verify-btn {
+          width: 310rpx;
+        }
+
+        .verify-btn {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: @defaultColor;
+          font-size: 28rpx;
+        }
+
+        .btn-disable {
+          color: @defaultColor3;
+        }
+      }
+    }
+  }
+
+  .regulations {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .regulations-text {
+      color: @defaultColor2;
+      font-size: 22rpx;
+      margin-left: 4rpx;
+
+      .regulation-link {
+        color: @defaultColor;
+      }
+    }
+  }
+}

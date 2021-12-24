@@ -1,0 +1,149 @@
+@import url(../../style/global.less);
+
+.order-detail-page {
+  padding: 46rpx 48rpx 0;
+  box-sizing: border-box;
+
+  .coast-card {
+    padding: 34rpx 32rpx 58rpx;
+    box-sizing: border-box;
+    background: @backgroundColor;
+    border-radius: 8rpx;
+    margin-bottom: 48rpx;
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40rpx;
+
+      .image-box {
+        height: 40rpx;
+        width: 40rpx;
+        margin-right: 16rpx;
+        
+        .store-avatar {
+          border-radius: 4rpx;
+          height: 100%;
+          width: 100%;
+        }
+      }
+      
+      .store-name {
+        font-size: 36rpx;
+        color: @defaultColor;
+      }
+      
+    }
+
+    .product-info {
+      display: flex;
+      // justify-content: space-between;
+      height: 136rpx;
+      margin-bottom: 42rpx;
+
+      .product-avatar-box {
+        height: 136rpx;
+        width: 136rpx;
+        margin-right: 32rpx;
+        
+        .product-avatar {
+          border-radius: 8rpx;
+          height: 100%;
+          width: 100%;
+        }
+      }
+
+      .product-text-info {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 168rpx);
+
+        .product-name {
+          height: 50%;
+          color: @defaultColor;
+          font-size: 28rpx;
+        }
+
+        .product-desc-box {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+
+          .product-avatar {
+            font-size: 24rpx;
+            color: @defaultColor2;
+          }
+
+          .product-price {
+            color: @defaultColor;
+            font-size: 28rpx;
+          }
+        }
+      }
+    }
+
+    .coast-details {
+      .coast-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 8rpx;
+        box-sizing: border-box;
+
+        .coast-label, .coast-count {
+          font-size: 24rpx;
+          color: @defaultColor;
+        }
+
+        &:last-child {
+          margin-top: 30rpx;
+
+          .coast-label {
+            font-size: 28rpx;
+            color: @defaultColor;
+          }
+
+          .coast-count {
+            font-size: 36rpx;
+          }
+        }
+      }
+    }
+  }
+  
+  .info-card {
+    padding: 38rpx 32rpx 50rpx;
+    box-sizing: border-box;
+    background: @backgroundColor;
+    border-radius: 8rpx;
+    margin-bottom: 48rpx;
+
+    .info-title {
+      padding: 0 16rpx;
+      border-left: 4rpx solid @defaultColor;
+      box-sizing: border-box;
+      font-size: 36rpx;
+      color: #000;
+      margin-bottom: 40rpx;
+    }
+
+    .order-text-info {
+      .order-item {
+        display: flex;
+        
+        .order-label {
+          width: 120rpx;
+          font-size: 28rpx;
+          color: @defaultColor;
+          margin-right: 32rpx;
+        }
+
+        .text-info {
+          font-size: 24rpx;
+          color: @defaultColor;
+        }
+      }
+    }
+  }
+}

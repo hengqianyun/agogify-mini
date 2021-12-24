@@ -1,0 +1,98 @@
+@import url(../../style/global.less);
+
+.sales-choose-page {
+  padding-top: 20rpx;
+
+  .store-choose {
+    padding: 0 48rpx;
+    height: 118rpx;
+    width: calc(100% - 96rpx);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .store-controller {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .store-controller-disable {
+      color: @defaultColor2
+    }
+
+    .store-info {
+      font-size: 36rpx;
+      color: @defaultColor;
+      display: flex;
+      align-items: center;
+
+      .store-avatar {
+        height: 44rpx;
+        width: 44rpx;
+        border-radius: 2rpx;
+      }
+    }
+  }
+
+  .sales-container {
+    padding-bottom: 182rpx;
+
+    .sales-item {
+      width: 100%;
+      height: 152rpx;
+      padding: 18rpx 48rpx;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+
+      .left-box {
+        width: 88rpx;
+        position: relative;
+
+        .sales-avatar {
+          width: 100%;
+          height: 88rpx;
+          border-radius: 50%;
+        }
+
+        .sales-state {
+          position: absolute;
+          width: 100%;
+          height: 36rpx;
+          font-size: 24rpx;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          bottom: 0;
+          left: 0;
+          border-radius: 8rpx;
+          color: #fff;
+        }
+
+        .sales-state-free {
+          background: #69E192;
+        }
+ 
+        .sales-state-busy {
+          background: #F57376;
+        }
+      }
+
+      .center-box {
+        width: 398rpx;
+        padding-left: 32rpx;
+        box-sizing: border-box;
+
+        .sales-name {
+          font-size: 32rpx;
+        }
+
+        .sales-language {
+          color: #c5c5c5;
+          font-size: 24rpx;
+        }
+      }
+    }
+  }
+}

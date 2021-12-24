@@ -1,0 +1,39 @@
+<view class="address-page border-top">
+  <view class="address-item-box">
+    <block wx:for="{{addressList}}" wx:key="id">
+      <view class="address-item">
+        <view class="user-info">
+          <text class="user-name">{{item.firstName + item.lastName}}</text>
+          <text>{{item.phoneNumber}}</text>
+        </view>
+        <view class="address-info">
+          <view class="address-box text-ellipsis-2">{{item.provinceName + ' ' + item.city + ' ' + item.street}}</view>
+          <view class="edit-icon-box" data-id="{{item.id}}" bind:tap="handleEditTap">
+            <iconfont name="my_bianjiziliao" size="{{40}}"></iconfont>
+          </view>
+        </view>
+        <view class="controller">
+          <view class="default-box" data-id="{{item.id}}" bind:tap="handleRadioTap">
+            <view class="radio-box">
+              <view wx:if="{{item.isDefault}}">
+                <view class="big-circle radio-checked">
+                  <view class="small-circle"></view>
+                </view>
+              </view>
+              <view wx:else>
+                <view class="big-circle"></view>
+              </view>
+            </view>
+            <view>设为默认地址</view>
+          </view>
+          <view class="delete-icon-box" data-index="{{index}}" catch:tap="handelDelete">
+            <text>删除</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view class="insert-btn" bind:tap="navigateTo">新增收货地址</view>
+  <view class="cover"></view>
+    
+</view>

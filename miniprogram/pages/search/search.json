@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "StoreItem": "../../components/StoreItem/StoreItem"
+  },
+  "onReachBottomDistance": 50,
+  "navigationBarTitleText": "搜索"
+}

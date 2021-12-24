@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "rss-button": "../../components/RssButton/RssButton"
+  }
+}

@@ -1,0 +1,60 @@
+@import url(../../style/global.less);
+
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  }
+
+  .login-content {
+    width: 100%;
+    padding: 0 48rpx;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .title {
+      font-size: 42rpx;
+      color: @defaultColor;
+      text-align: center;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .btns {
+      margin: 132rpx 0;
+      height: 224rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  .regulations {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .regulations-text {
+      color: @defaultColor2;
+      font-size: 22rpx;
+      margin-left: 4rpx;
+
+      .regulation-link {
+        color: @defaultColor;
+      }
+    }
+  }
+}

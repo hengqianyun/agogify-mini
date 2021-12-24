@@ -1,0 +1,119 @@
+@import url(../../style/global.less);
+
+.reserve-list-page {
+  padding: 6px 48rpx;
+  box-sizing: border-box;
+
+  .list-container {
+    margin-top: 30rpx;
+
+    .reserve-item {
+      width: 654rpx;
+      height: 282rpx;
+      background: @backgroundColor;
+      padding: 28rpx 32rpx 32rpx; 
+      box-sizing: border-box;
+      border-radius: 8rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .item-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .i-t-left {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .reserve-duration {
+            color: @defaultColor;
+            font-size: 48rpx;
+            font-weight: 400;
+          }
+
+          .reserve-status {
+            background: @defaultColor;
+            color: #fff;
+            border-radius: 4rpx;
+            font-size: 22rpx;
+            font-weight: 400;
+            width: 98rpx;
+            height: 34rpx;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 16rpx;
+          }
+        }
+
+        .i-t-right {
+          font-size: 32rpx;
+          color: @defaultColor3;
+        }
+      }
+
+      .item-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+
+        .content-left {
+          width: 136rpx;
+          height: 136rpx;
+          margin-right: 32rpx;
+
+          .store-avatar {
+            height: 100%;
+            width: 100%;
+          }
+        }
+
+        .content-right {
+          width: 422rpx;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
+
+          .store-name {
+            font-size: 28rpx;
+            color: @defaultColor;
+          }
+
+          .saler-name {
+            font-size: 24rpx;
+            color: @defaultColor2;
+            width: 238rpx;
+          }
+
+          .store-address {
+            display: flex;
+            // justify-content: space-between;
+            align-items: center;
+
+            .store-address-text {
+              font-size: 24rpx;
+              font-weight: 200;
+              color: @defaultColor3;
+            }
+          }
+        }
+
+        .content-controller {
+          display: flex;
+          align-items: center;
+          position: absolute;
+          right: 0;
+          top: 50%;
+          width: 184rpx;
+          justify-content: space-between;
+          transform: translateY(-50%);
+        }
+      }
+    }
+  }
+}

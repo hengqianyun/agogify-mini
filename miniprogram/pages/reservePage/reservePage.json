@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "rss-button": "../../components/RssButton/RssButton",
+    "rss-checkbox": "../../components/Checkbox/Checkbox"
+  }
+}

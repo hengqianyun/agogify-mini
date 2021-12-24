@@ -1,0 +1,44 @@
+<view class="order-detail-page border-top">
+  <view class="coast-card">
+    <view class="card-title">
+      <view class="image-box">
+        <image class="store-avatar" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
+      </view>
+      <view class="store-name">{{storeName}}</view>
+    </view>
+    <view class="product-info">
+      <view class="product-avatar-box">
+        <image class="product-avatar" src="{{productAvatar}}" lazy-load="false" binderror="" bindload=""></image>
+      </view>
+      <view class="product-text-info">
+        <view class="product-name">{{productName}}</view>
+        <view class="product-desc-box">
+          <view class="product-desc">{{productDesc}}</view>
+          <view class="product-price">{{productPrice}}</view>
+        </view>
+      </view>
+    </view>
+      <view class="coast-details">
+        <block wx:for="{{coasts}}" wx:key="label">
+          <view class="coast-item">
+            <view class="coast-label">{{item.label}}</view>
+            <view class="coast-count">{{item.value}}</view>
+          </view>
+        </block>
+      </view>
+  </view>
+  <view class="info-card">
+    <view class="info-title">订单信息</view>
+    <view class="order-text-info">
+      <block wx:for="{{textInfo}}" wx:key="label">
+        <view class="order-item">
+          <view class="order-label">{{item.label}}</view>
+          <view class="text-info">{{item.value}}</view>
+        </view>
+      </block>
+    </view>
+  </view>
+  <view class="btn">
+    <rss-button label="扫二维码" icon="dingdanxiangqing-saomiao" bind:tap="handelScan" className="fill-btn" width="{{654}}" height="{{88}}"></rss-button>
+  </view>
+</view>

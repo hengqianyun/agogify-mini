@@ -1,0 +1,48 @@
+@import url(../../style/global.less);
+
+.search-page {
+  font-family: @fontFamily;
+  padding-top: 100rpx;
+
+  .search-container {
+    position: fixed;
+    top: 0;
+    padding: 16rpx 48rpx;
+    height: 100rpx;
+    box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    z-index: 100;
+
+    .search-border {
+      border: 2rpx solid #C5C5C5;
+      box-sizing: border-box;
+      border-radius: 8rpx;
+      width: 100%;
+      height: 68rpx;
+      display: flex;
+      align-items: center;
+      padding: 0 16rpx;
+      justify-content: space-around;
+
+      .search-input {
+        width: 85%;
+        margin-left: 8rpx;
+        height: 66rpx;
+      }
+    }
+  }
+
+  .store-container {
+    margin-top: 126rpx;
+
+    .store-list-container {
+      padding: 0 48rpx;
+
+      // .store-item {
+      //   padding: 16rpx 0;
+      //   width: 100%;
+      // }
+    }
+  }
+}

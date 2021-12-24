@@ -1,0 +1,16 @@
+<view class="language-setting-page border-top">
+  <block wx:for="{{options}}" wx:key="value">
+    <view class="option-item" data-index="{{index}}" bind:tap="handleChange">
+      <view class="option-label">
+        {{item.label}}
+      </view>
+      <view class="option-checkbox">
+        <rss-checkbox status="{{item.status}}"></rss-checkbox>
+      </view>
+        
+        
+    </view>
+      
+  </block>
+</view>
+  

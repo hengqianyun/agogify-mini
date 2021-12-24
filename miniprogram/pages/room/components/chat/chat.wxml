@@ -1,0 +1,160 @@
+<view class="controllers-page" bind:longpress="handleRecording" bind:touchend="handleTouchEnd">
+  <view class="page-body" wx:if="{{!isWaiting}}">
+    <view class="top-container">
+      <view class="shop-info">
+        <view class="store-avatar-box">
+          <image class="store-avatar" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
+        </view>
+        <view class="store-name">{{storeName}}</view>
+      </view>
+      <view class="time-and-exit">
+        <view class="time-left border-radius-8">23:45</view>
+        <view class="exit-icon border-radius-8" bind:tap="handleExitTab">
+          <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
+        </view>
+      </view>
+    </view>
+    <view class="bottom-container" wx:if="{{!isWaiting}}">
+      <scroll-view class="chat-content" scroll-y="{{true}}">
+        <block wx:for="{{chatHistory}}" wx:key="id">
+          <view wx:if="{{item.flow === 'in'}}" class="left-message">
+            <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
+              {{item.payload.text}}
+            </view>
+            <view wx:else class="message image-message-box border-radius-8">
+              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+            </view>
+          </view>
+          <view wx:else class="right-message">
+            <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
+              {{item.payload.text}}
+            </view>
+            <view wx:else class="message image-message-box border-radius-8">
+              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+      <view class="bottom-controllers">
+        <view class="input-area border-radius-8">
+          <iconfont name="zhibojian_shurukuangicon" size="{{40}}"></iconfont>
+          <input type="text" bindconfirm="sendMessage" value="{{inputValue}}" confirm-type="发送" bindinput="handleInput" class="live-input" placeholder="询问想了解的" placeholder-class="input-placeholder" />
+        </view>
+        <view class="icons border-radius-8">
+          <iconfont name="zhibojian_yuyin_bai" size="{{40}}" id="record"></iconfont>
+        </view>
+        <view class="icons border-radius-8" bind:tap="chooseImage">
+          <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+        </view>
+        <button class="icons border-radius-8 share-button" open-type="share">
+          <iconfont name="zhibojian_yaoqing" size="{{40}}"></iconfont>
+        </button>
+        <view class="invite-tips border-radius-8">
+          邀请好友参谋
+          <view class="tri"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{showPopup}}" class="pay-popup">
+    
+      
+    <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
+      <view class="popup-title">确认订单</view>
+      <view class="popup-container">
+        <view wx:if="{{showPayWaiting}}" class="pay-waiting">
+          请稍后。。。
+        </view>
+        <view class="address-item" bind:tap="handleShowMoreAddress">
+          <view class="left-box">
+            <view class="icon-box">
+              <iconfont name="my_dizhibu" size="{{36}}"></iconfont>
+            </view>
+            <view class="message-box">
+              <view class="user-info">
+                <view class="user-name text-ellipsis">
+                  {{address.firstName + address.lastName}}
+                </view>
+                <view class="user-phone">{{address.phoneNumber}}</view>
+              </view>
+              <view class="address-detail text-ellipsis-2">
+                {{address.provinceName + ' ' + address.cityName + ' ' + address.street}}
+              </view>
+            </view>
+          </view>
+          <view class="right-box">
+            <iconfont wx:if="{{!showMoreAddress}}" name="xia" size="{{40}}"></iconfont>
+            <iconfont wx:else name="shang" size="{{40}}"></iconfont>
+          </view>
+          <scroll-view scroll-y="{{true}}" wx:if="{{showMoreAddress}}" class="more-address">
+            <block wx:for="{{addressList}}" wx:key="id" wx:for-item="address">
+              <view class="message-box" data-index="{{index}}" bind:tap="handleChoose">
+                <view class="user-info">
+                  <view class="user-name text-ellipsis">
+                    {{address.firstName + address.lastName}}
+                  </view>
+                  <view class="user-phone">{{address.phoneNumber}}</view>
+                </view>
+                <view class="address-detail text-ellipsis-2">
+                  {{address.provinceName + ' ' + address.cityName + ' ' + address.street}}
+                </view>
+              </view>
+            </block>
+          </scroll-view >
+        </view>
+        <view class="product-item">
+          <view class="product-title">
+            <iconfont name="my_order" size="{{36}}"></iconfont>
+            <text>商品信息</text>
+          </view>
+          <view class="product-card">
+            <!-- <view class="product-name">{{orderInfo.items[0].productName}}</view> -->
+            <view class="product-info">
+              <view class="product-info-item text-ellipsis-2">类别：{{productCategory1 + ' ' + productCategory2 + ' ' + productCategory3}}</view>
+              <view class="product-info-item text-ellipsis-2">名称：{{productBrand + ' ' + productName}}</view>
+              <view class="product-info-item text-ellipsis-2">尺寸：{{orderInfo.size}}</view>
+              <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view>
+            </view>
+          </view>
+        </view>
+        <view class="order-details">
+          <view class="detail">
+            <view class="detail-label">商品含关税价</view>
+            <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view>
+          </view>
+          <!-- <view class="detail">
+            <view class="detail-label">返税</view>
+            <view class="detail-number">€{{counts.taxBack}}</view>
+            <view class="detail-number">TODO：字段缺失</view>
+          </view> -->
+          <!-- <view class="detail">
+            <view class="detail-label">平台服务费</view>
+            <view class="detail-number">€{{counts.service}}</view>
+            <view class="detail-number">TODO：字段缺失</view>
+          </view> -->
+          <!-- <view class="detail">
+            <view class="detail-label">海关关税</view>
+            <view class="detail-number">€{{orderInfo.taxTotal / 100}}</view>
+          </view> -->
+          <view class="detail">
+            <view class="detail-label">运费</view>
+            <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view>
+          </view>
+          <view class="detail">
+            <view class="detail-label">运营服务费（限时免费）</view>
+            <view class="detail-number">0</view>
+          </view>
+          <view class="detail sum">
+            <view class="detail-label">合计</view>
+            <view class="detail-number">€{{orderInfo.total / 100}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="btn-area">
+        <rss-btn label="确认支付" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
+      </view>
+    </van-popup>
+  </view>
+  <RssDialog wx:if="{{showHandUpDialog}}" title="确认挂断通话？" commitText="取消" cancelText="挂断" bind:handleCommit="handleHangUpCancel" bind:handleCancel="handleHangUp"></RssDialog>
+  <RssDialog wx:if="{{showBusyDialog}}" title="销售忙碌中，请稍后再拨" commitText="确定" showCancel="{{true}}" bind:handleCommit="handleBusy"></RssDialog>
+</view>

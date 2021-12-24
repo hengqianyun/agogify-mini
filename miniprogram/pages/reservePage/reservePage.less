@@ -1,0 +1,199 @@
+@import url(../../style/global.less);
+
+.reserve-page {
+  padding-top: 20rpx;
+  .choose-container {
+    padding: 0 48rpx;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    // position: relative;
+    flex-direction: column;
+
+    .store-choose {
+      height: 118rpx;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .store-controller {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .store-controller-disable {
+        color: @defaultColor2
+      }
+
+      .store-info {
+        font-size: 36rpx;
+        color: @defaultColor;
+        display: flex;
+        align-items: center;
+
+        .store-avatar {
+          height: 44rpx;
+          width: 44rpx;
+          border-radius: 2rpx;
+        }
+      }
+    }
+
+    .choose-tabs {
+      width: 654rpx;
+    }
+
+    .half-tabs {
+      width: 454rpx;
+    }
+
+    .choose-menu {
+      width: 200rpx;
+      position: absolute;
+      right: 48rpx;
+      z-index: 10;
+      top: 0;
+    }
+  }
+
+  .sale-info-container {
+    padding: 0 48rpx;
+    height: 56rpx;
+    padding: 0 32rpx;
+    display: flex;
+    align-items: center;
+    margin-top: 16rpx;
+    background: @backgroundColor;
+    color: @defaultColor2;
+    font-size: 24rpx;
+    box-sizing: border-box;
+  }
+
+  .table-container {
+    padding-bottom: 182rpx;
+    box-sizing: border-box;
+    display: flex;
+    height: 3738rpx;
+    width: 1312rpx;
+
+    .time-list {
+      width: 164rpx;
+
+      .duration-choose {
+        height: 138rpx;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .duration {
+          display: flex;
+          font-size: 22rpx;
+          color: @defaultColor2;
+          align-items: center;
+          height: 69rpx;
+        }
+      }
+
+      .date-container {
+        .date-item {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 22rpx;
+          color: @defaultColor;
+          font-weight: 300;
+          height: 90rpx;
+
+          &:nth-child(odd) {
+            background: @backgroundColor;
+          }
+        }
+      }
+    }
+
+    .table-body {
+      width: 586rpx;
+
+      .scroll-title {
+        height: 138rpx;
+        display: flex;
+        display: flex;
+        font-size: 28rpx;
+        color: @defaultColor;
+
+        .title-box {
+          height: 100%;
+          width: 164rpx;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          flex: none;
+        }
+      }
+
+      .scroll-body {
+        display: flex;
+        .table-line {
+
+          
+          .table-item {
+            height: 90rpx;
+            width: 164rpx;            
+            &:nth-child(odd) {
+              background: @backgroundColor;
+            }
+          }
+
+          .table-item-checked {
+            background: #8BAED9 !important;
+            color: #fff;
+            font-size: 22rpx;
+          }
+
+          .table-item-disabled {
+            background: #DBE6F3 !important;
+            color: @defaultColor2;
+            font-size: 22rpx;
+          }
+
+          .top {
+            display: flex;
+            justify-content: center;
+          }
+
+          .bottom {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+          }
+
+          .center {
+            display: flex;
+            justify-content: center;
+            line-height: 120rpx;
+          }
+
+          .bottom-center {
+            display: flex;
+            justify-content: center;
+            line-height: 240rpx;
+          }
+        }
+      }
+    }
+
+  }
+
+  .btn-continer {
+    position: fixed;
+    bottom: 0;
+    width: 750rpx;
+    height: 182rpx;
+    left: 0;
+    padding-bottom: 94rpx;
+    box-sizing: border-box;
+    background: #fff;
+  }
+}

@@ -1,0 +1,60 @@
+@import url(../../style/global.less);
+
+.store-item {
+  width: 100%;
+  height: 200rpx;
+  background: @backgroundColor;
+  border-radius: 8rpx;
+  padding: 32rpx 36rpx;
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+
+  .store-avatar {
+    height: 136rpx;
+    width: 136rpx;
+  }
+
+  .shop-image {
+    height: 136rpx;
+    width: 136rpx;
+    border-radius: 8rpx;
+  }
+  &-info {
+    height: 100%;
+    margin-left: 32rpx;
+    width: calc(100% - 168rpx);
+  }
+
+  &-name {
+    color: @defaultColor;
+    font-size: 32rpx;
+    font-weight: 400;
+    width: calc(100% - 96rpx);
+  }
+  
+  &-desc {
+    color: @defaultColor2;
+    font-size: 24rpx;
+    font-weight: 300;
+    height: 50rpx;
+  }
+  &-address {
+    color: @defaultColor3;
+    font-size: 24rpx;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    .s-i-address-text {
+      width: 100%;
+    }
+  }
+
+  .controller {
+    display: flex;
+    position: absolute;
+    right: 36rpx;
+    width: 96rpx;
+    justify-content: space-around;
+  }
+}

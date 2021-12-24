@@ -1,0 +1,14 @@
+<view class="checkbox-store-item">
+  <Checkbox status="{{status}}" bind:onCheckBoxChange="handleCheckboxTap" />
+  <view class="store-item" bind:tap="handleClick">
+    <image class="store-avatar" src="{{path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+    <view class="store">
+      <view class="store-name">
+        <text>{{name}}</text>
+        <iconfont name="my_collection" size="{{40}}" />
+      </view>
+      <view class="store-desc">{{desc}}</view>
+      <view class="store-address">{{address}}</view>
+    </view>
+  </view>
+</view>

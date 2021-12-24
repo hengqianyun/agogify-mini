@@ -1,0 +1,18 @@
+<view class="rss-dialog">
+  <view class="dialog-container">
+    <view class="dialog-content">
+      
+      <view class="dialog-title">{{_title}}</view>
+      <view class="dialog-slot">
+        <slot></slot>
+        
+      </view>
+        
+    </view>
+      
+    <view class="btns">
+      <view wx:if="{{!_showCancel}}" bind:tap="handleCancel" class="cancel-btn btn">{{_cancelText}}</view>
+      <view class="commit-btn btn" bind:tap="handleCommit" style="{{_showCancel ? 'width: 100%' : ''}}">{{_commitText}}</view>
+    </view>
+  </view>
+</view>

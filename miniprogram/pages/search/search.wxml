@@ -1,0 +1,32 @@
+<view class="search-page border-top">
+  <view class='search-container'>
+    <view class="search-border">
+      <iconfont name="search12x12_b" size="{{26}}" />
+      <!-- <van-field custom-class="search-input-view" input-class="search-input" value="{{keyword}}" placeholder="{{placeholder}}" border="{{false}}" auto-focus="{{true}}" clearable></van-field> -->
+      <input class="search-input" 
+        type="text" 
+        value="{{keyword}}" 
+        placeholder="{{placeholder}}" 
+        bindinput="handleInput" 
+        confirm-type="search"
+        placeholder-style="font-size: 28rpx; font-weight: 300; color: #c5c5c5"
+        bindconfirm="handleSearch"/>
+      <!-- <text wx:el class="search-placeholder">{{placeholder}}</text> -->
+      <iconfont wx:if="{{showClearIcon}}" name="shanchuwenzineirongicon" size="{{26}}" />
+    </view>
+  </view>
+  <van-row custom-class="scroll-tab" wx:if="{{showClassification}}">
+    <van-tabs color="#353535" active="{{ classification }}" bind:change="handleClassifictionChange">
+      <van-tab wx:for="{{classificationList}}" wx:key="id" title="{{item.name}}" name="{{item.id}}" data-value="{{item.id}}"></van-tab>
+    </van-tabs>
+  </van-row>
+  <view class='store-container'>
+    <view class="store-list-container">
+      <block wx:for="{{storeList}}" wx:key="id">
+        <view class="store-item">
+          <StoreItem store="{{item}}"></StoreItem>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

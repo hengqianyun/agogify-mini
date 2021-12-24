@@ -1,0 +1,46 @@
+<view class="store-page">
+  <view class="info-container">
+    <view class="position-container">
+      <image class="store-banner" src="{{details.images[0].path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+      <view class="store-avatar">
+        <image class="avatar" src="{{details.logo.path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="imageError" bindload=""></image>
+      </view>
+        
+    </view>
+    <view class="text-info">
+      <view class="store-name">{{details.name}}</view>
+      <view class="store-desc">{{details.description}}</view>
+      <view class="store-address">
+        <view class="store-address-icon">
+          <iconfont name="dingwei_g" size="{{24}}" />
+        </view>
+          <view class="store-address-text text-ellipsis">
+            <!-- TODO 店铺地址 -->
+            <!-- {{details.address}} -->
+            {{details.billingData.countryCode + ' ' + details.billingData.city + ' ' + details.billingData.street}}
+          </view>
+      </view>
+    </view>
+      
+  </view>
+  <view class="controller">
+    <block wx:for="{{btns}}" wx:key="label">
+      <view class="btn {{item.class}}" data-event="{{item.event}}" bind:tap="handleIconButtonTap">
+        <iconfont name="{{item.icon}}" size="{{item.size}}" color="{{item.color}}" />
+        <text>{{item.label}}</text>
+      </view>
+    </block>
+      
+  </view>
+  <view class="product-container">
+    <block wx:for="{{products}}" wx:key="id">
+      <view class="product-card" bind:tap="handleProductTap" data-code="{{item.code}}" data-name="{{item.translations.zh_Hans_CN.name}}">
+        <image class="product-image" src="{{item.images[0].path}}" mode="aspectFit|aspectFill|heightFix" lazy-load="false" binderror="" bindload=""></image>
+        <view class="product-name text-ellipsis">{{item.translations.zh_Hans_CN.name}}</view>
+        <view class="product-category text-ellipsis">{{item.mainTaxon}}</view>
+      </view>
+        
+    </block>
+  </view>
+</view>
+  

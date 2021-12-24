@@ -1,0 +1,162 @@
+<view class="protocol-page">
+  <view class="protocol-title">
+    <view class="protocol-title-title">
+      用户服务协议
+    </view>
+    <view class="protocol-title-date">
+      最新版本生效日期：2021年12月18日
+    </view>
+      
+      
+  </view>
+
+  <view class="color-7f size-28">
+    欢迎您与AGOGIFY小程序（下称“我们”，“本平台”）共同签署本《用户服务协议》（下称“本协议”）并使用我们提供的全球实体店远程购物客户服务。
+  </view>
+
+  <view class="size-28 color-default">
+    <text class="inline color-7f">请在使用本平台之前，仔细阅读并且确保您完全了解本使用条款及条件。</text>
+    <text class="inline">请注意，浏览或使用本平台的任何服务，即代表您接受本协议全部条款；如果您不同意本协议或其中任何条款约定，您应立即停止注册、停止登录、停止任何浏览或使用平台服务的行为，离开本平台。</text>
+  </view>
+
+  <!-- <rich-text nodes="{{htmlSnip}}"></rich-text> -->
+    
+    <view class="title">1.关于我们</view>
+    <text class="size-28 color-7f">本平台是由上海品宋信息科技有限公司负责运营。上海品宋信息科技有限公司是一家在中华人民共和国（下称为“中国”）注册的公司，注册办公所在地位于上海市宝山区三门路561号8幢1A01室。</text>
+    <view class="title">2.我们的服务</view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">本平台提供的服务包括浏览及搜索与本平台签约合作的海外实体零售店（下称“合作实体店”），使能合作实体店店员通过视频等手段为用户提供远程交互服务，协助用户在远程完成商品购买，以及与前述相关的附加服务，包括但不限于跟踪显示合作实体店订单与配送信息。</text>
+      <text class="inline">仅有年满 18 周岁的顾客可使用本平台提供的服务。</text>
+    </view>
+    <view class="title">3.合作实体店及其商品</view>
+    <view class="size-28 color-default">
+      <text class="inline">我们的合作实体店将直接销售商品给您。请注意，当您使用本平台提供的远程购物交互功能时，任何由此产生的商品销售是您与相关合作实体店之间的协议，由此产生的争议、危害、损失或者其它风险，本平台不承担责任。</text>
+      <text class="inline color-7f">相关合作实体店虽然通过本平台提供的服务与您产生了商品销售订单，但我们并非此协议的一方；而您购买的商品也并非由我们直接出售。如果您对接收的商品或服务感到不满，欢迎您与我们联系；我们将联系相关合作实体店并尽能力为您解决问题。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline">我们的合作实体店将直接销售商品给您。请注意，当您使用本平台提供的远程购物交互功能时，任何由此产生的商品销售是您与相关合作实体店之间的协议，由此产生的争议、危害、损失或者其它风险，本平台不承担责任。</text>
+      <text class="inline color-7f">相关合作实体店虽然通过本平台提供的服务与您产生了商品销售订单，但我们并非此协议的一方；而您购买的商品也并非由我们直接出售。如果您对接收的商品或服务感到不满，欢迎您与我们联系；我们将联系相关合作实体店并尽能力为您解决问题。</text>
+    </view>
+    <view class="size-28 color-default">
+      <text class="inline color-7f">就本平台发布的包括合作实体店所售商品在内的信息而言，我们将尽力确保其描述的准确性，但由于该等资料来自我们的合作实体店，我们不保证任何商品描述准确、完整、可靠，或无错误。本平台采用的图片仅属参考和说明作用。</text>
+    </view>
+      <view class="size-28 color-default">
+        <text class="inline">您在本平台上通过远程交互购买的商品等同于在境外的原销售地购买，适用原销售地的法律、法规、标准、规范和惯例</text>
+        <text class="inline color-7f">，且所有商品均由我们位于境外的合作实体店从海外直接发售，故无法提供中国的增值税发票。</text>
+      </view>
+      <view class="size-28 color-default">
+        <text class="inline">通过本平台完成出售的商品仅适用于个人非商业用途。您同意不以商业或转售为目的使用该商品。</text>
+        <text class="inline color-7f">如果我们发现您有转售从我们平台购买的商品的情况，我们将立即停止您访问并使用本平台，同时保留要求您赔偿由此对本平台运营主体造成的一切损失的权利。</text>
+      </view>
+    <view class="title">4.订单与支付</view>
+      <view class="size-28 color-default">
+        <text class="inline color-7f">在与合作实体店的远程交互过程中，合作实体店的店员通过本平台向您发送您想要购买的商品的信息，包括但不限于商品名称、价格和尺码，</text>
+        <text class="inline">您通过微信支付功能完成支付，即构成了您和相对应合作实体店的商品购买订单协议，该协议在您支付完成时立即生效。</text>
+        <text class="inline color-7f">建议您在支付之前仔细检查商品的品质，包括但不限于商品的材料、整体及部分是否有残次、使用功能是否正常、颜色尺码是否正确、是否有污渍。</text>
+      </view>
+      <view class="size-28 color-default">
+        <text class="inline">请注意：本平台上合作实体店商品的价格均由相关合作实体店自主定价,不同的合作实体店可能会就同一商品制定不同的销售价格。</text>
+        <text class="inline color-7f">为进出口报关所需，我们的合作实体店可能会在包裹内附上一份单据，列明商品的价格、折扣（如有）、折后或退税后商品价值。请注意，该等报关之商品价值有可能与您支付的价格不一致，并未包含卖方的运营成本和相关税费。配送费以及本平台收取的服务费不包括在商品价格内，必须额外收取。配送费将因您选购的商品及配送地址而异。</text>
+      </view>
+      <view class="size-28 color-default">
+        <text class="inline color-7f">您同意委托合作实体店及其代理人、本平台、物流商、支付机构办理申报、代缴税款等通关事宜，并承诺提供（或通过授权的第三方提供）真实、准确及有效的身份信息（如姓名、身份证影印件）供上述企业依法办理实名审核、商品清关等手续。</text>
+      </view>
+        <view class="size-28 color-default">
+          <text class="inline">您承诺所购买商品系个人合理自用，不会进行二次销售。您同意遵守《海关法》等国家相关法律法规，保证所提供的收件人身份信息和收货信息真实完整，无侵犯他人权益的行为，愿意接受海关及其他监管部门的监管并承担相应法律责任。因您提供的信息不合法、不真实或不完整等您自身原因所造成的法律责任和损失由您自行承担。</text>
+        </view>
+        <view class="size-28 color-default">
+          <text class="inline">您理解和同意按照《财付通代理购结汇协议》授权微信收集（或从第三方获得）并保留您的身份信息（如姓名、身份证影印件），并根据监管、报关或合作银行要求，将您的身份信息、交易信息、购结汇明细信息同步给办理涉汇业务的合作银行、海关或为了向您提供购结汇服务而必须获得以上信息的机关。</text>
+        </view>
+    <view class="title">5.商品配送</view>
+        <view class="size-28 color-default">
+          <text class="inline">如果您所购买的商品在中国贸易禁运范围之内，合作实体店将无法为您完成配送，需要您本人至合作实体店自提。</text>
+        </view>
+      <view class="size-28 color-default">
+        <text class="inline color-7f">所有使用本平台提供的远程购物功能完成的订购商品由相关合作实体店通过物流承运商进行国际配送。您可在本平台查看物流状态信息。</text>
+        <text class="inline">我们将会尽所能协助合作实体店按时将商品配送给您，但配送可能因为不受合理控制的突发情况，包括但不限于没有航班仓位、工人罢工、海关通关审核而延迟。本平台和合作实体店不对因为这类配送延误所造成的损失负责。</text>
+      </view>
+      <view class="size-28 color-default">
+        <text class="inline">如果因为您提供的地址不正确或无法找到能够签收邮件包裹的人，本平台和合作实体店不对因为这类配送所造成的包括包裹遗失或损坏的损失负责。</text>
+        <text class="inline color-7f">但我们将协助合作实体店和物流配送服务伙伴尽可能联系您并重新安排配送，并尽力保证您包裹的安全。由此产生的额外费用可能需要您承担。</text>
+      </view>
+    <view class="title">6.关于退换货</view>
+      <view class="size-28 color-default">
+        <text class="inline">因海外远程购物的特殊性原因，请知晓通过本平台在海外合作实体店购买的商品，除非特殊说明，否则不可取消，不可退货</text>
+        <text class="inline color-7f">。不便之处 敬请谅解。建议您在购买之前仔细核验商品尺码、颜色及品质。</text>
+      </view>
+      <view class="size-28 color-default">
+        <text class="inline color-7f">通过本平台在合作实体店购买的每件商品都会附有一枚唯一流水码。</text>
+        <text class="inline">如果遇到任何产品售后问题，请保留流水码标签不得撕毁，否则本平台和对应的合作实体店无法提供对应的产品售后服务。</text>
+      </view>
+    <view class="title">7.使用本平台服务</view>
+      <view class="size-28 color-default">
+        <text class="inline color-7f">使用本平台，即表示您同意遵守以下条款，如果您不同意，请勿使用本平台。</text>
+        <text class="inline">如果您在使用本平台期间违反以下条款中的任何一项或多项，本平台有权要求您赔偿由此对本平台造成的所有损失。</text>
+      </view>
+    <view class="title-med">7.1 访问许可</view>
+      <view class="size-28 color-default">
+        <text class="inline color-7f">本平台及其合作实体店授予您对本平台基于个人非商业目的使用的访问许可，该许可为非排他的、不可转让的且不可再许可的许可。您不可进行任何商业使用，包括但不限于：任何对我们的服务或其内容的复制、再销售；任何对合作实体店及其对应展示商品、说明或价格的收集和使用；任何对我们的服务或其内容的衍生利用；为任何第三方利益的任何下载、拷贝，或者使用任何“网络爬虫“、“数据挖掘”、“机器人”或相似的数据收集和萃取程序取得或复制（不管是一次性或多次）本平台任何实质性内容。</text>
+        <text class="inline">未经我们的明确书面同意，不得以任何商业目的对我们的服务或其任何部分进行转载、复制、拷贝、出售、转售、访问或以其他方式加以利用。</text>
+      </view>
+      <view class="size-28 color-default">
+        <text class="inline">我们可在未通知您的情况下随时对本平台软件自动更新或者手动更新。由此对您产生的影响我们将不承担责任。</text>
+      </view>
+    <view class="title-med">7.2 个人账户</view>
+        <text class="size-28 color-default">
+          <text class="inline color-7f">当您按照注册页面提示填写信息和/或使用第三方账号授权登录，阅读并同意本协议及隐私政策，且完成全部注册和/或登录程序后，您可获得本平台账号并成为注册用户。您须负责维护您的帐户和密码的保密性，并限制第三方使用/访问您的帐户。</text>
+          <text class="inline">并且，您同意对基于您帐户和密码下发生的所有活动承担责任。</text>
+          <text class="inline color-7f">本平台保留自行合理决定拒绝提供服务、关闭帐户、终止您使用本平台服务的权利。若您知晓或怀疑任何其他人掌握您的帐户或密码，请立即通知本平台。</text>
+        </text>
+    <view class="title-med">7.3 行为规范于责任</view>
+        <view class="size-28 color-default">
+          <text class="inline color-7f">您不可使用本平台做出试图或可能干扰他人使用本平台或能够导致本平台系统受损的行为。您承诺仅为合法目的使用本平台。您不可为以下任何用途使用本平台：用于违犯当地、国家或国际法令和条款的行为；用于任何犯法或欺诈的行为或具有犯法或欺诈目的或效果的行为；发送、使用或制作附有软件病毒、政治宣传、商业征求、连锁信、群发邮件和任何“垃圾”邮件的行为。为遵循任何可执行法律或公共秩序，本平台会将违反者举报给相关的执法部门，并向它们披露您的身份。</text>
+        </view>
+        <view class="size-28 color-default">
+          <text class="inline">您声明并保证：您对在本平台所发布的内容拥有所有权；您发布的内容是准确的；对您所提供内容的使用不违反国家法规政策并不会对任何个人和实体造成伤害；并且您将对于因您所提供的内容引起的对我们的损害进行赔偿。</text>
+          <text class="inline color-7f">本平台有权（但非义务）监控和编辑或清除任何您发布的内容。</text>
+          <text class="inline">本平台对您或任何第三方所发布的内容不承担责任。</text>
+          <text class="inline color-7f">本平台不会对您因使用或无法使用本平台而造成的损失，无论是合约、侵权行为(包括疏忽)、商业和业务行为、触犯法令行为或其他行为负责。本平台不对因为您使用本平台或从本平台和其他链接网站下载内容时遭到病毒、分布式拒绝服务攻击(DDoS)或下载技术上有害的资料，从而可能感染或毁坏您的电子设备、程序、数据或其他专有资料导致的损失或损害负责。</text>
+        </view>
+    <view class="title-med">7.4 知识产权</view>
+        <view class="size-28 color-default">
+          <text class="inline color-7f">本平台及其内容（例如文字、图表、商标、标识、图片、音频、视频、数字下载内容、数据汇编，及软件包括界面外观和汇编）（合称为“内容”），均属本平台和相关知识产权人所有。本平台和相关知识产权人保留所有相关权利。</text>
+          <text class="inline">未经授权，您不可以任何形式取得、分发、复制、或重制本平台全部或部分内容。</text>
+          <text class="inline color-7f">如果您发布内容或提交材料，除非另行说明，您同意授予本平台非独有的、免费的、永久的、不可撤销的和完全的再许可权的下述许可：在全世界范围内任何媒体上使用、转载、修改、改编、出版、翻译、创作衍生作品、分发和展示这些内容。</text>
+          <text class="inline">您授予本平台根据需要使用您所提交的全部或部分内容，及与这些内容有关的名字的权利。</text>
+          <text class="inline color-7f">除非有本平台的明确表示，所有显示在本平台的人物（包括他们的姓名及肖像）、包括合作实体店在内的第三方商标、以及其商品和服务完全与本平台无关联。</text>
+        </view>
+        <view class="size-28 color-default">
+          <text class="inline">本平台所有软件为本平台或其软件供应商的财产，受相关法律的保护。</text>
+          <text class="inline color-7f">您不得将本平台软件的任何部分合并到其它程序中，或结合其它程序编辑本平台软件的任何部分，或对本平台软件全部或副本进行复制、修改、生成衍生作品、分发、转让任何权利、或许可。您不得鼓励、协助或授权任何其他人复制、修改、反向工程、反向编译或反汇编、拆解或者试图篡改全部或部分的本平台软件，或利用本平台软件创设衍生产品。在本平台软件和第三方条款（比如开放源码授权条款）有冲突的情况下，就该等冲突以及涉及本平台软件的部分，以该等其它条款为准。</text>
+        </view>
+    <view class="title">8.其他条款</view>
+    <view class="title-med">8.1</view>
+        <view class="size-28 color-default">
+          <text class="inline color-7f">本平台可根据国家法律法规变化及自身需要不时变更本协议并通过页面公告、消息或使用提示的方式通知您。如您不同意变更事项，您应当于变更事项确定的生效之日起停止使用本平台，变更事项对您不产生效力；</text>
+          <text class="inline">如您在变更事项生效后仍继续使用本平台，则视为您同意已生效的变更事项。</text>
+        </view>
+    <view class="title-med">8.2</view>
+        <view class="size-28 color-default">
+          <text class="inline color-7f">本协议任一条款被视为废止、无效或不可执行，该条应视为可分割的且并不影响本协议其余条款的有效性及可执行性。</text>
+        </view>
+    <view class="title-med">8.3</view>
+        <view class="size-28 color-default">
+          <text class="inline">您通过本平台在合作实体店购买的海外发售商品等同于境外购买，适用原销售地的法律。</text>
+          <text class="inline color-7f">除前述约定外，本协议适用中华人民共和国法律，如法律无相关规定的，参照商业惯例及行业惯例。</text>
+        </view>
+    <view class="title-med">8.4</view>
+        <view class="size-28 color-default">
+          <text class="inline color-7f">如您因使用本平台服务所产生的与本平台相关的争议，由上海品宋信息科技有限公司与您协商解决，</text>
+          <text class="inline">协商不成时，任何一方均可将争议提交上海仲裁委员会由三名仲裁员根据其现行有效的仲裁规则进行仲裁。</text>
+        </view>
+    <view class="title-med">8.5</view>
+        <view class="size-28 color-default">
+          <text class="inline">本平台及对其合作实体店对于因不可抗力导致的未能或延迟履行任何义务的情况将不承担任何责任。</text>
+          <text class="inline color-7f">这些不可抗力包括但不限于：天灾、疫情、战争、恐怖分子攻击、封港令、暴动、罢工、停工、商议争议、火灾、水灾、地震或其他自然灾害、塌方、恶劣天气、交通干扰、政府行动、车辆及飞机运输交通事故、和公共及私人电信或交通网络故障。</text>
+        </view>
+    
+    
+    
+    
+</view>
+  

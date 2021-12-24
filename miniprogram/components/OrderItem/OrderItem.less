@@ -1,0 +1,111 @@
+@import url(../../style/global.less);
+
+.order-item-comp {
+  width: 100%;
+  height: 282rpx;
+  background: @backgroundColor2;
+  padding: 32rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .top-container {
+    display: flex;
+    justify-content: space-between;
+
+    .store-info {
+      display: flex;
+      align-items: center;
+      height: 40rpx;
+      justify-content: space-around;
+
+      &-avatar {
+        height: 100%;
+        margin-right: 16rpx;
+
+        .store-avatar {
+          height: 100%;
+          border-radius: 4rpx;
+        }
+      }
+
+      &-name {
+        margin-right: 16rpx;
+        font-size: 36rpx;
+        color: @defaultColor;
+      }
+
+      &-icon {
+        margin-right: 16rpx;
+      }
+    }
+
+    .controller {
+      display: flex;
+      align-items: center;
+      width: 100rpx;
+      justify-content: space-between;
+    }
+  }
+
+  .bottom-container {
+    display: flex;
+    height: 136rpx;
+
+    .avatar-box {
+      height: 100%;
+      margin-right: 32rpx;
+      width: 136rpx;
+
+      .product-avatar {
+        height: 100%;
+        width: 100%;
+        border-radius: 8rpx;
+      }
+    }
+
+    .order-info {
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      width: calc(100% - 164rpx);
+
+      .line {
+        display: flex;
+        justify-content: space-between;
+
+        .product {
+          &-name {
+            font-size: 28rpx;
+            color: @defaultColor;
+          }
+
+          &-price {
+            font-size: 28rpx;
+            font-weight: 500;
+            margin-left: 10rpx;
+            white-space: nowrap;
+          }
+
+          &-desc, &-num {
+            font-size: 24rpx;
+            color: @defaultColor2;
+          }
+
+          &-num {
+            margin-left: 10rpx;
+            height: 50%;
+            white-space: nowrap;
+          }
+
+          &-order-date, &-order-more {
+            color: @defaultColor3;
+            font-size: 22rpx;
+          }
+        }
+
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+<view class="person-page" style="padding-top: {{height * 2 + 20}}px">
+  <view class="custom-navbar" style="height: {{height * 2 + 20}}px">
+    <view wx:if='{{!!$state.user.userName}}' class="custom-icon" data-url="setting" bind:tap="navigateTo">
+      <iconfont name="my_shezhi" size="{{62}}"></iconfont>
+    </view>
+    <view class="custom-title">我的</view>
+    <view></view>
+  </view>
+  <view class="user-container">
+    <view class="avatar-box">
+      <image class="avatar" src="{{$state.user.avatarUrl || '../../assets/image/userAvatar.png'}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+    </view>
+    <view class="user-simple-info" data-url="loginPage" bind:tap="navigateTo">
+      {{$state.user.userName || '账号登录'}}
+    </view>
+  </view>
+  <view class="tools-container">
+    <block wx:for="{{tools}}" wx:key="icon">
+      <view class="tool-item" data-url="{{item.url}}" bind:tap="navigateTo">
+        <iconfont name="{{item.icon}}" size="{{item.size}}"></iconfont>
+        <view class="tool-name">{{item.label}}</view>
+      </view>
+    </block>
+  </view>
+  <view class="invite-banner">
+    <image class="invite-image" src="../../assets/image/invite.png" lazy-load="false" binderror="" bindload=""></image>
+  </view>
+  <view class="person-center-container">
+    <view class="p-c-title">个人中心</view>
+    <view class="p-c-tools tools-container">
+      <block wx:for="{{personTools}}" wx:key="icon">
+        <view class="tool-item" data-url="{{item.url}}" bind:tap="navigateTo">
+          <iconfont name="{{item.icon}}" size="{{item.size}}"></iconfont>
+          <view class="tool-name">{{item.label}}</view>
+        </view>
+      </block>
+      <button class="tool-item kefu-item" open-type="contact">
+        <iconfont name="my_kefu" size="58"></iconfont>
+        <view class="tool-name">客服</view>
+      </button>
+    </view>
+  </view>
+</view>

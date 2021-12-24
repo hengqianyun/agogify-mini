@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "CheckboxStoreItem": "../../components/CheckboxStoreItem/CheckboxStoreItem"
+  },
+  "navigationBarTitleText": "分类",
+  "disableScroll": true
+}

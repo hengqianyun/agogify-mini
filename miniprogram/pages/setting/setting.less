@@ -1,0 +1,38 @@
+@import url(../../style/global.less);
+
+.setting-page {
+  box-sizing: border-box;
+  border-top: 2rpx solid @borderColor;
+
+  .menu {
+    padding: 0 48rpx;
+    margin-bottom: 70rpx;
+
+    &-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2rpx solid @borderColor;
+      box-sizing: border-box;
+      height: 132rpx;
+
+      &-name {
+        font-size: 32rpx;
+        color: @defaultColor;
+      }
+    }
+  }
+
+  .btn {
+    margin: 70rpx 48rpx;
+    border: 2rpx solid @borderColor;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: @defaultColor3;
+    font-size: 28rxp;
+    height: 88rpx;
+    border-radius: 8rpx;
+  }
+}

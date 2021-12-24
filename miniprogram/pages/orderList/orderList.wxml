@@ -1,0 +1,31 @@
+<view class="order-list-page border-top">
+  <view class="switch-bar">
+    <van-tabs active="{{ active }}" bind:change="onChange">
+      <block wx:for="{{tabList}}" wx:key="status">
+        <van-tab title="{{item.label}}">
+          <view class="list-container">
+            <block wx:for="{{orderLists[index]}}" wx:for-item="order" wx:for-index="index2" wx:key="index2">
+              <view class="order-itme" data-token="{{order.tokenValue}}" bind:tap="handleOrderTap">
+                <!-- collected="{{order.collected}}" -->
+                <order-item
+                  storeAvatar="{{order.store.logo.path}}"
+                  storeName="{{order.store.name}}"
+                  productAvatar="{{order.items[0].productAvatar}}"
+                  productName="{{order.items[0].variant.translations.en_us.name}}"
+                  showMore="{{true}}"
+                  productPrice="{{order.items[0].unitPrice / 100}}"
+                  num="{{order.total/ 100}}"
+                  productDesc="{{order.productDesc}}"
+                  orderDate="{{order.updatedAt}}"
+                  orderStatus="{{order.shippingState === 'ready' ? 2 : 1}}"
+                ></order-item>
+              </view>
+            </block>
+          </view>
+        </van-tab>
+      </block>
+    </van-tabs>
+  </view>
+    
+</view>
+  

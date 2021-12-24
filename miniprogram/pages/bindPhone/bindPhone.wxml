@@ -1,0 +1,37 @@
+<view class="phone-login-page">
+  <image class="bg" src="../../assets/image/loginBg.png" mode="aspectFill" lazy-load="false" binderror="" bindload=""></image>
+  <view class="login-content">
+    <view class="title">
+      {{title}}
+    </view>
+    <view class="form">
+      <view class="phone-number input">
+        <input class="native-input" value="{{phoneNumber}}" type="number" placeholder-class="placeholder-style" placeholder="请输入手机号" bindinput="handlePhoneNumberInput" />
+      </view>
+      <view class="verify-arae">
+        <view class="verify-code input">
+          <input class="native-input" value="{{verifyCode}}" type="number" placeholder-class="placeholder-style" placeholder="请输入验证码" bindinput="handleVerifyCodeInput" />
+        </view>
+        <view class="verify-btn input {{btnDisable ? 'btn-disable' : ''}}" bind:tap="handleGetCode">
+          {{verifyText}}
+        </view>
+      </view>
+      <rss-button label="{{btnText}}" data-funname="phoneLogin" bind:onTap="handleLogin" className="fill-btn" fontSize="{{28}}" height="{{88}}" width="{{654}}" fontWeight="{{400}}"></rss-button>
+    </view>
+    <view wx:if="{{showReguration}}" class="regulations" bind:tap="handleCheckRegulation">
+      <rss-checkbox status="{{status}}" length="{{20}}"></rss-checkbox>
+      <view class="regulations-text">
+        已阅读并同意
+        <text class="regulation-link" catch:tap="showProtocol">《用户服务协议》</text>
+        、
+        <text class="regulation-link" catch:tap="showPrivacy">《隐私政策》</text>
+      </view>
+        
+    </view>
+      
+      
+      
+  </view>
+    
+</view>
+  

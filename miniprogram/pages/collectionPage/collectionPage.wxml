@@ -1,0 +1,11 @@
+<view class="cellotion-page border-page">
+  <block wx:for="{{collections}}" wx:key="id">
+    <view class="store-card">
+      <store-item
+        store="{{item}}"
+      ></store-item>
+    </view>
+      
+  </block>
+</view>
+  

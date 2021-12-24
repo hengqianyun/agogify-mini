@@ -1,0 +1,50 @@
+<view class="address-detail-page border-top">
+  <view class="input-box">
+    <view class="input-label">收货人</view>
+    <view class="input-area icon-input {{form.name.focus ? 'focus-area' : ''}} {{form.name.error ? 'error-area' : ''}}">
+      <input class="input" type="text" value="{{form.name.value}}" data-key="name" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="姓名" placeholder-class="placeholder-class" />
+      <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
+      <iconfont wx:else />
+      <text class="error-msg" wx:if="{{form.name.error}}">{{form.name.errorMsg}}</text>
+    </view>
+  </view>
+  <view class="input-box">
+    <view class="input-label">手机号码</view>
+    <view class="input-area icon-input {{form.phone.focus ? 'focus-area' : ''}} {{form.phone.error ? 'error-area' : ''}}">
+      <view class="phone-prefix">+86</view>
+      <input class="input" type="number" value="{{form.phone.value}}" data-key="phone" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="手机号" placeholder-class="placeholder-class" />
+      <text class="error-msg" wx:if="{{form.phone.error}}">{{form.phone.errorMsg}}</text>
+    </view>
+  </view>
+  <view class="input-box">
+    <view class="input-label">邮政编码</view>
+    <view class="input-area icon-input {{form.postcode.focus ? 'focus-area' : ''}} {{form.postcode.error ? 'error-area' : ''}}">
+      <input class="input" type="number" value="{{form.postcode.value}}" data-key="postcode" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="邮政编码" placeholder-class="placeholder-class" />
+      <text class="error-msg" wx:if="{{form.postcode.error}}">{{form.postcode.errorMsg}}</text>
+    </view>
+  </view>
+  <view class="input-box">
+    <view class="input-label">所在地区</view>
+    <picker class="" mode="region" value="{{region}}" bindchange="handleRegionChange">
+      <view class="input-area icon-input {{form.region.focus ? 'focus-area' : ''}} {{form.region.error ? 'error-area' : ''}}">
+        <input class="input" type="text" disabled="{{true}}" value="{{form.region.value}}" data-key="region" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="省、市、区" placeholder-class="placeholder-class" />
+        <iconfont name="dingwei_g" size="{{24}}" catch:tap="handleShowMap"></iconfont>
+      <text class="error-msg" wx:if="{{form.region.error}}">{{form.region.errorMsg}}</text>
+      </view>
+    </picker>
+  </view>
+  <view class="input-box">
+    <view class="input-label">详细地址</view>
+    <view class="input-area textarea-input {{show}} {{form.address.focus ? 'focus-area' : ''}} {{form.address.error ? 'error-area' : ''}}">
+      <textarea class="input-textarea input" value="{{form.address.value}}" data-key="address" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="小区楼栋等" placeholder-style="color: #C5C5C5; font-size: 28rpx; font-weight: 300;" />
+      <text class="error-msg" wx:if="{{form.address.error}}">{{form.address.errorMsg}}</text>
+    </view>
+  </view>
+  <view class="btn-box">
+    <rss-button width="{{654}}" height="{{88}}" label="保存" className="fill-btn" fontSize="{{28}}" bind:onTap="handleSubmit"></rss-button>
+  </view>
+  <!-- <view class="map-cover">
+    <rss-map></rss-map>
+  </view> -->
+    
+</view>
