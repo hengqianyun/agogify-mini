@@ -138,7 +138,29 @@ Page({
     })
   },
 
-  handleCall() {
-    
+  handleCall({currentTarget}: WechatMiniprogram.TouchEvent) {
+    const {index} = currentTarget.dataset as {index: number}
+    const reserveItem = this.data.reserveLists[0][index]
+    console.log(reserveItem)
+    const {startTime, endTime} = reserveItem
+    if (Date.now() > Date.parse(startTime)) {
+      wx.showToast({
+        title: '还未到预约时间',
+        icon: 'error'
+      })
+      return
+    } else if (Date.now() < Date.parse(endTime)) {
+      wx.showToast({
+        title: '预约时间已过，请重新预约或直接沟通',
+        icon: 'error'
+      })
+      return
+    } else {
+      const {'@id': saleId, store} = reserveItem.sales
+      const {code} = store
+      wx.navigateTo({
+        url: `../room/room?storeId=${code}&saleId=${saleId}&type=2`
+      })
+    }
   }
 })

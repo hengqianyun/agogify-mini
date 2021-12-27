@@ -5,7 +5,7 @@
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
 import store from "../../store/index"
-import { checkSessionAsync, querySessionAsync } from "../../utils/querySession"
+import { checkSessionAsync, clearSessuibAsync, querySessionAsync } from "../../utils/querySession"
 import { getIdFromString } from "../../utils/util"
 
 // 获取应用实例
@@ -95,15 +95,12 @@ Page({
       })
     }
   },
-
-  handleDialogCommit() {
-    this.setData({
-      showDialog: false
-    })
-  },
-  handleDialogCancel() {
-    this.setData({
-      showDialog: false
-    })
+  handleDialogCancel(e: WechatMiniprogram.TouchEvent) {
+    const {detail} = e
+    if (!!detail) {
+      this.setData({
+        showIcon: false
+      })
+    }
   }
 })

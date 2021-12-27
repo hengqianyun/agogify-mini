@@ -1,3 +1,5 @@
+import sessionModule from "../../http/module/session"
+import { clearSessuibAsync } from "../../utils/querySession"
 import { getIdFromString } from "../../utils/util"
 
 // components/SessionTip/SessionTip.ts
@@ -40,10 +42,29 @@ Component({
         url: `../room/room?storeId=${code}&saleId=${salesId}&type=${1}`
       })
     },
-    handleDialogCancel() {
-      this.setData({
-        showDialog: false
-      })
+    async handleDialogCancel() {
+      const session = wx.getStorageSync<sessionDesign.session>('session')
+      const {code} = session
+      console.log(code)
+      try {
+        wx.showLoading({title: '处理中...'})
+        await sessionModule.putSession({
+          endTime: (new Date()).toISOString(),
+          state: 'ended',
+        }, code)
+        wx.hideLoading()
+        this.setData({
+          showDialog: false
+        })
+        clearSessuibAsync()
+        this.triggerEvent('handleCancel', true)
+      } catch {
+        wx.hideLoading()
+        wx.showToast({
+          title: '处理失败，请重试',
+          icon: 'error'
+        })
+      }
     },
   }
 })

@@ -29,11 +29,5 @@
       </block>
     </view>
   </view>
-  <RssDialog wx:if="{{showDialog}}" title="title" commitText="commit" cancelText="cancel" showCancel="{{true}}" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
-    <text class="" selectable="false" space="false" decode="false">
-      content
-    </text>
-      
-  </RssDialog>
-  <SessionTip wx:if="{{showIcon}}"></SessionTip>
+  <SessionTip wx:if="{{showIcon}}" bind:handleCancel="handleDialogCancel"></SessionTip>
 </view>

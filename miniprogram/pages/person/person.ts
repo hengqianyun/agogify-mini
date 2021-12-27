@@ -47,7 +47,8 @@ Page({
       //   size: 58
       // },
     ],
-    height: 0
+    height: 0,
+    position: {}
   },
 
   store: store,
@@ -57,8 +58,10 @@ Page({
    */
   onLoad() {
     this.setData({
-      height: getApp().globalData.height * 2
+      height: getApp().globalData.height,
+      position: getApp().globalData.position
     })
+    console.log(this.data.position)
     const {user} = this.store.getState()
     console.log(user)
   },

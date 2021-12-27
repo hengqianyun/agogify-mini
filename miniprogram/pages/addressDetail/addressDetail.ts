@@ -27,7 +27,7 @@ Page({
    */
   onLoad() {
     const {id} = this.options
-    if (id) {
+    if (!!id) {
       this.queryAddress(id)
     }
   },
@@ -91,8 +91,8 @@ Page({
     wx.getLocation({
       type: 'wgs84',
       success(res) {
-        const key = 'TP6BZ-J4DKU-U6ZVF-2J7YL-QYSKS-EZF34'; //使用在腾讯位置服务申请的key
-        const referer = 'RSS'; //调用插件的app的名称
+        const key = '66MBZ-3PZWF-OCGJC-NXKSG-DUQ3O-WVFZL'; //使用在腾讯位置服务申请的key
+        const referer = 'agogify'; //调用插件的app的名称
         const location = JSON.stringify({
           latitude: res.latitude,
           longitude: res.longitude
@@ -164,9 +164,10 @@ Page({
     const { customer } = userInfo
     try {
       const params = {
+        type: 'customer',
         customer: customer,
-        firstName: name.value.substr(0, 2),
-        lastName: name.value.substr(2),
+        firstName: name.value.substr(0, 1),
+        lastName: name.value.substr(1),
         phoneNumber: phone.value,
         countryCode: 'CN',
         provinceCode: 'CN-sh',

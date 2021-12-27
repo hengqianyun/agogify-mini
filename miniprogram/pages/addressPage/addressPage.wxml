@@ -33,7 +33,7 @@
       </view>
     </block>
   </view>
-  <view class="insert-btn" bind:tap="navigateTo">新增收货地址</view>
+  <view class="insert-btn" bind:tap="handleEditTap">新增收货地址</view>
   <view class="cover"></view>
     
 </view>

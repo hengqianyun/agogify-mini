@@ -18,7 +18,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    this.queryAddressList()
+    // this.queryAddressList()
   },
 
   /**
@@ -122,13 +122,14 @@ Page({
   },
 
   navigateTo(id?: string) {
+    debugger
     wx.navigateTo({
       url: `../addressDetail/addressDetail${id ? '?id=' + id : ''}`
     })
   },
 
   async queryAddressList() {
-    const resData = await addressModule.queryAddressList(this.data.pageInfo)
+    const resData = await addressModule.queryAddressList({...this.data.pageInfo, type: 'customer'})
     const { 'hydra:member': list } = resData.data
     this.setData({
       // addressList: [...this.data.addressList, ...list]

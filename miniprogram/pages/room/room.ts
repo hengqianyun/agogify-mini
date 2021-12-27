@@ -38,6 +38,8 @@ Page({
       this.setData({
         isReconnect: true,
       })
+    } else if (type === '2') {
+      
     }
     await this.queryStore(storeId)
     // debugger

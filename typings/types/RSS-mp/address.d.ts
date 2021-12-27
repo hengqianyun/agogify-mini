@@ -5,6 +5,7 @@ declare namespace addressDesign {
   }
 
   interface createAddressParams {
+    type: 'customer'
     customer: string
     firstName: string
     lastName: string
@@ -15,6 +16,10 @@ declare namespace addressDesign {
     street: string
     city: string
     postcode: string
+  }
+
+  interface queryAddressParams extends swaggerI.pageRequestParams {
+    type: 'customer'
   }
 
   interface createAddressRes extends swaggerI.requestBase {

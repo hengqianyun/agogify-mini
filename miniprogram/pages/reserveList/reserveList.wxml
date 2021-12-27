@@ -22,15 +22,14 @@
                     <view class="saler-name text-ellipsis">预约店员：{{reserve.sales.username}}</view>
                     <view class="store-address">
                       <iconfont name="dingwei_g" size="{{24}}"></iconfont>
-                      <view class="store-address-text text-ellipsis">{{reserve.sales.store.billingData.city + ' ' + reserve.sales.store.billingData.street}}</view>
+                      <view class="store-address-text text-ellipsis">
+                        {{reserve.sales.store.billingData.city + ' ' + reserve.sales.store.billingData.street}}
+                      </view>
                     </view>
                   </view>
                   <view class="content-controller">
-                    <iconfont wx:if="{{reserve.tag === '待进行'}}" name="store_hujiao" size="{{40}}" bind:tap="handleCall"></iconfont>
-                    <view wx:else>
-                      
-                    </view>
-                      
+                    <iconfont wx:if="{{reserve.tag === '待进行'}}" name="store_hujiao" data-index="{{index}}" size="{{40}}" bind:tap="handleCall"></iconfont>
+                    <view wx:else></view>
                     <iconfont name="collection_g" size="{{40}}"></iconfont>
                     <iconfont name="share" size="{{40}}"></iconfont>
                   </view>

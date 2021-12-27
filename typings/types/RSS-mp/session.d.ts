@@ -20,8 +20,15 @@ declare namespace sessionDesign {
     'state[]': sessionStateTypes[]
   }
 
+  interface putSessionParams {
+    endTime: string
+    state: sessionStateTypes
+  }
+
   interface querySessionRes extends swaggerI.requsetListBase<session>  {
 
   }
+
+  interface putSessionRes extends session {}
 
 }

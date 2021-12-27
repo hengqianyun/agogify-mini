@@ -9,7 +9,8 @@ App<RSSDesign.RSSAppOptions<Store>>({
   globalData: {
     isIOS: false,
     hasLaunched: false,
-    height: 1
+    height: 1,
+    position: null as unknown as WechatMiniprogram.Rect
   },
   store,
   async onLaunch() {
@@ -18,6 +19,8 @@ App<RSSDesign.RSSAppOptions<Store>>({
     this.globalData.height = statusBarHeight
     wx.setStorageSync('category', undefined)
     wx.setStorageSync('categoryMap', undefined)
+    this.globalData.position = wx.getMenuButtonBoundingClientRect()
+    console.log(statusBarHeight)
 
     await autoLogin()
 

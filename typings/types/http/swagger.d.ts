@@ -104,6 +104,8 @@ declare namespace swaggerI {
 
   // type addressListResult = RequestType<addressDesign.address[]>
   type addressListResult = addressDesign.queryAddressedRes
+  
+  type queryAddressListParams = addressDesign.queryAddressParams
 
   type createAddressResult = addressDesign.createAddressRes
 
@@ -128,4 +130,6 @@ declare namespace swaggerI {
   type oauthRecordsRes = userDesign.oauthRecordsRes
 
   type querySessionRes = sessionDesign.querySessionRes
+
+  type putSessionRes = sessionDesign.putSessionRes
 } 

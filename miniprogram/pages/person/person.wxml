@@ -1,10 +1,10 @@
-<view class="person-page" style="padding-top: {{height * 2 + 20}}px">
-  <view class="custom-navbar" style="height: {{height * 2 + 20}}px">
+<view class="person-page" style="padding-top: {{height}}px">
+  <view class="custom-navbar" style="height: {{(position.top - height) * 2 + position.height}}px; top: {{height}}px">
     <view wx:if='{{!!$state.user.userName}}' class="custom-icon" data-url="setting" bind:tap="navigateTo">
       <iconfont name="my_shezhi" size="{{62}}"></iconfont>
     </view>
     <view class="custom-title">我的</view>
-    <view></view>
+    <!-- <view wx:if='{{!!$state.user.userName}}'></view> -->
   </view>
   <view class="user-container">
     <view class="avatar-box">

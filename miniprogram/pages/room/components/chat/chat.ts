@@ -8,6 +8,7 @@ import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
 import { HmacSHA256, enc } from 'crypto-js'
 import { getIdFromString, sortByCharCode } from '../../../../utils/util'
+import { clearSessuibAsync } from '../../../../utils/querySession'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -73,6 +74,7 @@ Component({
     productCategory1: '',
     productCategory2: '',
     productCategory3: '',
+    productSize: '',
     showHandUpDialog: false,
     showBusyDialog: false,
     showMoreAddress: false,
@@ -92,8 +94,8 @@ Component({
           const data = res.data[0]
           let payloadData: any;
           try {
-             payloadData = JSON.parse(data.payload.data)
-          } catch(err) {}
+            payloadData = JSON.parse(data.payload.data)
+          } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
             switch (payloadData.type) {
@@ -103,8 +105,8 @@ Component({
                 break
               case CustomMessageTypes.PAY:
                 const that = this
-                const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3 } = payloadData
-                if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3) {
+                const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size } = payloadData
+                if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3 || !size) {
                   wx.showToast({ title: '订单信息获取异常，联系销售人员重新发起支付', icon: 'error' })
                   return
                 }
@@ -118,11 +120,13 @@ Component({
                   productCategory1,
                   productCategory2,
                   productCategory3,
+                  productSize: size,
                 })
                 this.queryOrder(tokenValue)
                 // this.queryOrderDetail(tokenValue)
                 break
               case CustomMessageTypes.DISPOSE:
+                clearSessuibAsync()
                 wx.navigateBack()
                 break
               case CustomMessageTypes.NOW_BUSY:
@@ -415,6 +419,7 @@ Component({
               self.data.percent = percent
             }
           })
+          console.log(message)
           // self.$store.commit('sendMessage', message)
           tim.sendMessage(message).then(() => {
             self.data.percent = 0
@@ -477,8 +482,21 @@ Component({
         wx.showToast({ title: '支付失败，请重新尝试' })
         return
       }
-      // const completeRes = await orderModule.orderComplete(tokenValue, { notes: 'finished' })
-      // return
+      const notes = {
+        brand: this.data.productBrand,
+        category1: this.data.productCategory1,
+        category2: this.data.productCategory2,
+        category3: this.data.productCategory3,
+        size: this.data.productSize,
+      }
+      const completeRes = await orderModule.orderComplete(tokenValue, { notes: JSON.stringify(notes) });
+      this.sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" })
+      this.setData({
+        showPopup: false,
+        showPayWaiting: false,
+      })
+      this.resetOrder()
+      return
       const paymentRes = await this.payment()
       const _that = this
       wx.requestPayment({
@@ -505,7 +523,7 @@ Component({
 
     },
     async queryAddressList() {
-      const resData = await addressModule.queryAddressList(this.data.pageInfo)
+      const resData = await addressModule.queryAddressList({...this.data.pageInfo, type: 'customer'})
       const { 'hydra:member': list } = resData.data
       this.setData({
         // addressList: [...this.data.addressList, ...list]
