@@ -11,11 +11,11 @@
                   storeAvatar="{{order.store.logo.path}}"
                   storeName="{{order.store.name}}"
                   productAvatar="{{order.items[0].productAvatar}}"
-                  productName="{{order.items[0].variant.translations.en_us.name}}"
+                  productName="{{order.productName}}"
                   showMore="{{true}}"
                   productPrice="{{order.items[0].unitPrice / 100}}"
                   num="{{order.total/ 100}}"
-                  productDesc="{{order.productDesc}}"
+                  productDesc="{{order.jsonNotes.size}}"
                   orderDate="{{order.updatedAt}}"
                   orderStatus="{{order.shippingState === 'ready' ? 2 : 1}}"
                 ></order-item>

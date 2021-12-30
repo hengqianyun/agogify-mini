@@ -34,6 +34,8 @@ declare namespace orderDesign {
     shippingState: shippingStateTypes // '运输状态'
     store: storeDesign.storeItem
     updatedAt: string
+    createdAt: string
+    notes: string
   }
 
   interface orderItem extends swaggerI.requestSimpleBase {
@@ -44,6 +46,7 @@ declare namespace orderDesign {
     total: number
     unitPrice: number
     variant: string
+  units: unit[]
   }
 
   interface orderSimpleItem extends swaggerI.requestSimpleBase {
@@ -51,6 +54,31 @@ declare namespace orderDesign {
     itemsTotal: number
     number: string
     tokenValue: string
+  }
+
+  interface unit extends swaggerI.requestSimpleBase {
+    height?: string
+    id: number
+    length?: string
+    serialNumber?: string
+    size?: string
+    weight?: string
+    width?: string
+    adjustments: any[]
+    shippable: shippable
+  }
+
+  interface shippable extends swaggerI.requestSimpleBase {
+    code: string
+    id: number
+    isStock: boolean
+    optionValues: any[]
+    proce: number
+    translations: {
+      en_US: {
+        name: string
+      }
+    }
   }
 
   interface putOrderAddressParams {

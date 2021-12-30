@@ -1,9 +1,9 @@
 <view class="order-item-comp">
   <view class="top-container">
     <view class="store-info">
-      <!-- <view class="store-info-avatar">
+      <view class="store-info-avatar">
         <image class="store-avatar" mode="heightFix" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
-      </view> -->
+      </view>
       <view class="store-info-name">{{storeName}}</view>
       <view class="store-info-icon">
         <iconfont name="jiantou" size="{{24}}"></iconfont>
@@ -20,9 +20,9 @@
     </view>
   </view>
   <view class="bottom-container">
-    <view class="avatar-box">
+    <!-- <view class="avatar-box">
       <image class="product-avatar" src="{{productAvatar}}" mode="heightFix" lazy-load="false" binderror="" bindload=""></image>
-    </view>
+    </view> -->
     <view class="order-info">
       <view class="line">
         <view class="product-name text-ellipsis">
@@ -35,9 +35,6 @@
       <view class="line">
         <view class="product-desc text-ellipsis-2">
           {{productDesc}}
-        </view>
-        <view class="product-num">
-          &times; {{num}}
         </view>
       </view>
       <view class="line">

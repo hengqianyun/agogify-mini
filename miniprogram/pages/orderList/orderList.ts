@@ -2,6 +2,11 @@ import { IMAGEBASEURL } from "../../http/index"
 import orderModule from "../../http/module/order"
 import { formatTime } from "../../utils/util"
 
+interface PageOrders extends orderDesign.orderBasic {
+  jsonNotes: {brand: string, category1: string, category2: string, category3: string, size: string}
+  productName: string
+}
+
 // pages/orderList/orderList.ts
 Page({
 
@@ -14,7 +19,7 @@ Page({
       {label: '待发货', status: '1'},
       {label: '已发货', status: '2'},            
     ],
-    orderLists: [] as  orderDesign.orderBasic[][],
+    orderLists: [] as  PageOrders[][],
     pageInfo: {
       page: 1,
       itemsPerPage: 99
@@ -85,22 +90,36 @@ Page({
   },
 
   async queryOrderList() {
-    const resData = await orderModule.queryOrderList(this.data.pageInfo)
+    try {
+      wx.showLoading({
+        title: '加载中...'
+      })
+      const resData = await orderModule.queryOrderList(this.data.pageInfo)
     const {"hydra:member": list} = resData.data
-    const [readyList, shipedList] = [[] as orderDesign.orderBasic[], [] as orderDesign.orderBasic[]]
+    const [readyList, shipedList] = [[] as PageOrders[], [] as PageOrders[]]
     for (let item of list) {
       if (item.store.logo?.path) {
         item.store.logo.path = IMAGEBASEURL + item.store.logo.path
       }
       item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt))) 
+      
       if (item.shippingState === 'ready') {
-        readyList.push(item)
+        readyList.push({...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
       } else {
-        shipedList.push(item)
+        shipedList.push({...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
       }
     }
     this.setData({
       orderLists: [readyList, shipedList]
     })
+    } catch(err) {
+      wx.showToast({
+        title: '网络错误，请重试',
+        icon: 'error'
+      })
+    } finally {
+      wx.hideLoading()
+    }
+    
   }
 })

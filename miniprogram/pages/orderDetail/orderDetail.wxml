@@ -7,9 +7,9 @@
       <view class="store-name">{{storeName}}</view>
     </view>
     <view class="product-info">
-      <view class="product-avatar-box">
+      <!-- <view class="product-avatar-box">
         <image class="product-avatar" src="{{productAvatar}}" lazy-load="false" binderror="" bindload=""></image>
-      </view>
+      </view> -->
       <view class="product-text-info">
         <view class="product-name">{{productName}}</view>
         <view class="product-desc-box">
