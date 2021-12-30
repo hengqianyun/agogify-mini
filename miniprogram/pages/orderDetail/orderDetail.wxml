@@ -11,11 +11,22 @@
         <image class="product-avatar" src="{{productAvatar}}" lazy-load="false" binderror="" bindload=""></image>
       </view> -->
       <view class="product-text-info">
-        <view class="product-name">{{productName}}</view>
+        <!-- <view class="product-name">{{productName}}</view> -->
         <view class="product-desc-box">
-          <view class="product-desc">{{productDesc}}</view>
-          <view class="product-price">{{productPrice}}</view>
+          <view class="product-desc">{{productName}}</view>
+          <view class="product-price">€ {{productPrice}}</view>
         </view>
+        <view class="product-replenish-box">
+          
+          <view class="product-replenish">
+            类别：{{category}}
+          </view>
+          <view class="product-replenish">
+            尺寸：{{productDesc}}
+          </view>
+        </view>
+          
+          
       </view>
     </view>
       <view class="coast-details">

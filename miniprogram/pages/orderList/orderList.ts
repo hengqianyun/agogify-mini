@@ -3,7 +3,7 @@ import orderModule from "../../http/module/order"
 import { formatTime } from "../../utils/util"
 
 interface PageOrders extends orderDesign.orderBasic {
-  jsonNotes: {brand: string, category1: string, category2: string, category3: string, size: string}
+  jsonNotes: {brand: string, category1: string, category2: string, category3: string, size: string, category1CnName: string, category2CnName: string, category3CnName: string,}
   productName: string
 }
 

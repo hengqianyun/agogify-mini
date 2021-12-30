@@ -33,6 +33,7 @@ Page({
       { label: '发货时间', value: '' },
     ],
     tokenValue: '',
+    category: '',
   },
 
   /**
@@ -132,10 +133,11 @@ Page({
       ]
       const textInfo = [
         { label: '订单号', value: data.tokenValue },
-        { label: '流水号', value: '暂无' },
+        { label: '流水号', value: data.items[0].units[0].serialNumber! },
         { label: '创建时间', value: formatTime(new Date(Date.parse(data.createdAt))) },
         { label: '发货时间', value: formatTime(new Date(Date.parse(data.updatedAt))) },
       ]
+      const notes = JSON.parse(data.notes)
       this.setData({
         coasts,
         textInfo,
@@ -143,7 +145,8 @@ Page({
         productPrice: (data.items[0].unitPrice / 100).toLocaleString(),
         storeAvatar: IMAGEBASEURL + data.store.logo.path,
         storeName: data.store.name,
-        productDesc: JSON.parse(data.notes).size
+        productDesc: notes.size,
+        category: `${notes.productCategory1CnName} - ${notes.productCategory2CnName} - ${notes.productCategory3CnName}`
       })
     } catch (err) {
       throw err

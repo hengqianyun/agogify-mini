@@ -75,6 +75,9 @@ Component({
     productCategory1: '',
     productCategory2: '',
     productCategory3: '',
+    productCategory1CnName: '',
+    productCategory2CnName: '',
+    productCategory3CnName: '',
     productSize: '',
     showHandUpDialog: false,
     showBusyDialog: false,
@@ -107,8 +110,8 @@ Component({
                 break
               case CustomMessageTypes.PAY:
                 const that = this
-                const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size } = payloadData
-                if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3 || !size) {
+                const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
+                if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3 || !size || !productCategory1CnName || !productCategory2CnName || !productCategory3CnName) {
                   wx.showToast({ title: '订单信息获取异常，联系销售人员重新发起支付', icon: 'error' })
                   return
                 }
@@ -123,6 +126,9 @@ Component({
                   productCategory2,
                   productCategory3,
                   productSize: size,
+                  productCategory1CnName,
+                  productCategory2CnName,
+                  productCategory3CnName,
                 })
                 this.queryOrder(tokenValue)
                 // this.queryOrderDetail(tokenValue)
@@ -212,6 +218,10 @@ Component({
         productCategory1: '',
         productCategory2: '',
         productCategory3: '',
+        productCategory1CnName: '',
+        productCategory2CnName: '',
+        productCategory3CnName: '',
+        productSize: '',
       })
     },
 
@@ -286,7 +296,7 @@ Component({
       const message = await tim.createCustomMessage({
         to: groupid || this.properties.groupId,
         conversationType: "GROUP",
-        payload: {...options, description: JSON.stringify({ userID: this.properties.userId, saleId: this.properties.saleId })}
+        payload: { ...options, description: JSON.stringify({ userID: this.properties.userId, saleId: this.properties.saleId }) }
       })
       const res = await tim.sendMessage(message)
       console.log(res)
@@ -511,6 +521,9 @@ Component({
         category1: this.data.productCategory1,
         category2: this.data.productCategory2,
         category3: this.data.productCategory3,
+        productCategory1CnName: this.data.productCategory1CnName,
+        productCategory2CnName: this.data.productCategory2CnName,
+        productCategory3CnName: this.data.productCategory3CnName,
         size: this.data.productSize,
       }
       const completeRes = await orderModule.orderComplete(tokenValue, { notes: JSON.stringify(notes) });

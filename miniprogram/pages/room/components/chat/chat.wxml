@@ -107,7 +107,7 @@
           <view class="product-card">
             <!-- <view class="product-name">{{orderInfo.items[0].productName}}</view> -->
             <view class="product-info">
-              <view class="product-info-item text-ellipsis-2">类别：{{productCategory1 + ' ' + productCategory2 + ' ' + productCategory3}}</view>
+              <view class="product-info-item text-ellipsis-2">类别：{{productCategory1CnName + ' ' + productCategory2CnName + ' ' + productCategory3CnName}}</view>
               <view class="product-info-item text-ellipsis-2">名称：{{productBrand + ' ' + productName}}</view>
               <view class="product-info-item text-ellipsis-2">尺寸：{{orderInfo.size}}</view>
               <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view>
