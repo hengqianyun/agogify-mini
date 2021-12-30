@@ -3,6 +3,10 @@ import { IMAGEBASEURL } from '../../http/index'
 import { checkloginAsync } from "../../utils/checkLogin";
 const DEFAULT_IMAGE = '../../assets/image/avatar.jpg'
 
+interface PageStore extends storeDesign.QueryStoreDetailRes {
+  address: string
+}
+
 // pages/storePage/storePage.ts
 Page({
 
@@ -10,7 +14,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    details: {} as storeDesign.QueryStoreDetailRes,
+    details: {} as PageStore,
     products: [] as storeDesign.product[],
     storeId: '',
     btns: [{
@@ -139,8 +143,10 @@ Page({
     if (resData.data.images.length > 0) {
       resData.data.images[0].path = IMAGEBASEURL + resData.data.images[0].path
     }
+    const { country, city } = resData.data.billingData
+    const address = `${country?.name} ${city?.name}`
     this.setData({
-      details: resData.data
+      details: {...resData.data, address}
     })
   },
 

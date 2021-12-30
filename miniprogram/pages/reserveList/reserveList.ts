@@ -8,6 +8,7 @@ interface pageReserve extends reserveDesign.salesReserveItem {
   date: string
   duration: string
   tag: reserveTagType
+  address: string
 }
 
 // pages/reserveList/reserveList.ts
@@ -107,7 +108,8 @@ Page({
         ...e,
         date: timeFormat(new Date(e.startTime), 'yyyy-MM-dd'),
         duration: `${timeFormat(new Date(e.startTime), 'hh:mm')}~${timeFormat(new Date(e.endTime), 'hh:mm')}`,
-        tag: '待进行'
+        tag: '待进行',
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
       }
     })
 
@@ -129,7 +131,8 @@ Page({
         ...e,
         date: timeFormat(new Date(e.startTime), 'yyyy-MM-dd'),
         duration: `${timeFormat(new Date(e.startTime), 'hh:mm')}~${timeFormat(new Date(e.endTime), 'hh:mm')}`,
-        tag: '已结束'
+        tag: '已结束',
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
       }
     })
 

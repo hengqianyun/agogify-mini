@@ -17,7 +17,7 @@
           <view class="store-address-text text-ellipsis">
             <!-- TODO 店铺地址 -->
             <!-- {{details.address}} -->
-            {{details.billingData.countryCode + ' ' + details.billingData.city + ' ' + details.billingData.street}}
+            {{details.address}}
           </view>
       </view>
     </view>

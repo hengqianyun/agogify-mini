@@ -7,17 +7,31 @@ declare namespace storeDesign {
     logo: Logo
   }
 
+  interface addressSimpleData extends swaggerI.requestSimpleBase {
+    name: string
+    code: string
+  }
+
+  interface addressSimpleDataProvince extends addressSimpleData {
+    localizedName: string
+  }
+
   interface storeBillingData extends swaggerI.requestSingleDataBase {
-    city: string
-    company: string
-    countryCode: string
-    email: string
-    phoneNumber: string
-    postcode: string
-    provinceCode: string
-    street: string
-    taxId: string
-    website: string
+    city?: addressSimpleData
+    country?: addressSimpleData
+    county?: addressSimpleData
+    id: number
+    province?: addressSimpleDataProvince
+    taxID: string
+    // company: string
+    // countryCode: string
+    // email: string
+    // phoneNumber: string
+    // postcode: string
+    // provinceCode: string
+    // street: string
+    // taxId: string
+    // website: string
   }
 
   interface Logo extends swaggerI.requestSingleDataBase {

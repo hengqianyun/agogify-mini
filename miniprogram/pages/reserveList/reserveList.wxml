@@ -23,7 +23,7 @@
                     <view class="store-address">
                       <iconfont name="dingwei_g" size="{{24}}"></iconfont>
                       <view class="store-address-text text-ellipsis">
-                        {{reserve.sales.store.billingData.city + ' ' + reserve.sales.store.billingData.street}}
+                        {{reserve.address}}
                       </view>
                     </view>
                   </view>
