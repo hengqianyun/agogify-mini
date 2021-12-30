@@ -8,8 +8,12 @@
   <view class='banner-container'>
     <swiper style="height: 100%;" circular="{{true}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{bannerList}}" wx:key="*this">
-        <swiper-item style="background-color: {{item}};" bindtap="handleSwiperClick">
-          <view class="swiper-item"></view>
+        <swiper-item bindtap="handleSwiperClick">
+          <view class="swiper-item">
+            <image class="banner-image" src="{{item}}" mode="aspectFit|aspectFill|heightFix" lazy-load="false" binderror="" bindload="">
+              
+            </image>
+          </view>
         </swiper-item>
       </block>
     </swiper>

@@ -7,6 +7,7 @@ import storeModule from "../../http/module/store"
 import store from "../../store/index"
 import { checkSessionAsync, clearSessuibAsync, querySessionAsync } from "../../utils/querySession"
 import { getIdFromString } from "../../utils/util"
+import { BANNERS } from '../../serviceStaticResource/index'
 
 // 获取应用实例
 const app = getApp()
@@ -14,11 +15,11 @@ const app = getApp()
 
 Page({
   data: {
-    bannerList: ['#1AAD19', '#2782D7', '#F1F1F1'],
+    bannerList: BANNERS,
     indicatorDots: true,
     vertical: false,
     autoplay: true,
-    interval: 3000,
+    interval: 5000,
     duration: 300,
     newStoreList: [] as storeDesign.storeItem[],
     pageInfo: {
