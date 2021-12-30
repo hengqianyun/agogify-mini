@@ -26,5 +26,13 @@ declare namespace userDesign {
     provider: loginProviderTypes
   }
 
+  interface putUserInfoParams {
+    "identityType"?: string,
+    "identityNumber"?: string,
+    "defaultAddress"?: string,
+    "firstName"?: string,
+    "lastName"?: string
+  }
+
 
 }

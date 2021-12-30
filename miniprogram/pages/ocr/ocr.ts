@@ -1,6 +1,8 @@
 import { BASEURL } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
+import userModule from "../../http/module/user"
 import store from "../../store/index"
+import { getIdFromString } from "../../utils/util"
 
 // pages/ocr/ocr.ts
 Page({
@@ -211,6 +213,7 @@ Page({
         await this.uploadImage(this.data.passportPath, 'identity-back')
         await this.uploadImage(this.data.identityPath, 'identity-front')
         await this.uploadImage(this.data.portraitPath, 'portrait')
+        await this.putUserInfo()
       } catch {
         wx.showModal({
           title: "网络错误",
@@ -233,12 +236,14 @@ Page({
   },
 
   async uploadImage(path: string, type: string) {
+    const token: string = wx.getStorageSync('oauth.data').token
     return new Promise((resove, rej) => {
       const { user } = store.getState()
       wx.uploadFile({
         filePath: path,
         name: 'file',
         url: BASEURL + 'store/customer-images',
+        header: {Authorization: 'Bearer ' + token},
         formData: {
           type: type,
           owner: user.customer
@@ -257,5 +262,19 @@ Page({
       })
     })
 
-  }
+  },
+
+  async putUserInfo() {
+    try {
+      await userModule.putCustomerInfo({
+        // firstName: this.data.userName.substr(0, 1),
+        // lastName: this.data.userName.substr(1),
+        firstName: 'firstName',
+        lastName: 'lastName',
+        identityNumber: this.data.userNumber.toString(),
+      }, getIdFromString(wx.getStorageSync('oauth.data').customer))
+    } catch(err) {
+      throw err;
+    }
+  } 
 })
