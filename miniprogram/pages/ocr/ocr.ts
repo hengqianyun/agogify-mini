@@ -12,6 +12,7 @@ Page({
     userName: '',
     userNumber: '' as unknown as number,
     base64: '' as string | ArrayBuffer,
+    portraitPath: '',
     access_token: '',
     passportBase64: '' as string | ArrayBuffer,
     passportPath: '',
@@ -89,6 +90,7 @@ Page({
       async success(res) {
         let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
         var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
+        console.log(base64)
         that.setData({
           identityBase64: base64,
           identityPath: tempPath,
@@ -158,6 +160,7 @@ Page({
         const base64 = await wx.getFileSystemManager().readFileSync(tempPath, 'base64');
         that.setData({
           base64: base64,
+          portraitPath: tempPath,
         })
       }
     })
@@ -186,6 +189,7 @@ Page({
     })
     const { result, error_code } = res.data
     if (error_code === 222356) {
+      wx.hideLoading()
       wx.showModal({
         title: "图片无法识别",
         showCancel: false,
@@ -196,6 +200,7 @@ Page({
       //   icon: "error"
       // })
     } else if (result.score < 80) {
+      wx.hideLoading()
       wx.showModal({
         title: "认证失败",
         showCancel: false,
@@ -203,9 +208,9 @@ Page({
       })
     } else {
       try {
-        await this.uploadImage(this.data.passportPath, 'passport')
-        await this.uploadImage(this.data.identityPath, 'identity')
-        await this.uploadImage(this.data.identityPath, 'identity')
+        await this.uploadImage(this.data.passportPath, 'identity-back')
+        await this.uploadImage(this.data.identityPath, 'identity-front')
+        await this.uploadImage(this.data.portraitPath, 'portrait')
       } catch {
         wx.showModal({
           title: "网络错误",
@@ -228,7 +233,7 @@ Page({
   },
 
   async uploadImage(path: string, type: string) {
-    return new Promise((res, rej) => {
+    return new Promise((resove, rej) => {
       const { user } = store.getState()
       wx.uploadFile({
         filePath: path,
@@ -238,14 +243,15 @@ Page({
           type: type,
           owner: user.customer
         },
-        success() {
-          res(true)
+        success(res) {
+          if (res.statusCode === 500) {
+            rej(res)
+          }
+          console.log('success')
+          resove(res)
         },
         fail() {
-          wx.showToast({
-            title: "网络错误",
-            icon: "error"
-          })
+          console.log('fail')
           rej()
         }
       })

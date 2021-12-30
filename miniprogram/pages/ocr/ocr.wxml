@@ -5,7 +5,8 @@
   </view>
   <view class="image-choose-1">
     <image wx:if="{{!identityBase64}}" class="image" bindtap="chooseImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
-    <image wx:else class="image" bindtap="chooseImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image>
+    <!-- <image wx:else class="image" bindtap="chooseImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image> -->
+    <image wx:else class="image" bindtap="chooseImage" src="{{identityPath}}" lazy-load="false" binderror="" bindload=""></image>
   </view>
   <view class="tips">上传身份证照片后，身份证号、姓名，自动识别</view>
   <view class="user-input">
@@ -19,8 +20,9 @@
     <view class="step-text">上传身份证反面照片</view>
   </view>
   <view class="image-choose-1">
-    <image wx:if="{{!identityBase64}}" class="image" bindtap="chooseBackImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
-    <image wx:else class="image" bindtap="chooseBackImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image>
+    <image wx:if="{{!passportBase64}}" class="image" bindtap="chooseBackImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
+    <!-- <image wx:else class="image" bindtap="chooseBackImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image> -->
+    <image wx:else class="image" bindtap="chooseBackImage" src="{{passportPath}}" lazy-load="false" binderror="" bindload=""></image>
   </view>
   <view class="step">
     <view class="step-icon">3</view>
@@ -28,8 +30,8 @@
   </view>
   <view class="image-choose-2">
     <view class="image-box">
-      <image wx:if="{{!passportBase64}}" class="image" src="../../assets/image/chooseImage-2.png" lazy-load="false" binderror="" bindload=""></image>
-      <image wx:else class="image" src="data:image/png;base64,{{passportBase64}}" lazy-load="false" binderror="" bindload=""></image>
+      <image wx:if="{{!base64}}" class="image" src="../../assets/image/chooseImage-2.png" lazy-load="false" binderror="" bindload=""></image>
+      <image wx:else class="image" src="{{portraitPath}}" lazy-load="false" binderror="" bindload=""></image>
     </view>
     <view class="image-box">
       <image class="image" bind:tap="handleChooseImage" src="../../assets/image/chooseImage-3.png" lazy-load="false" binderror="" bindload=""></image>
