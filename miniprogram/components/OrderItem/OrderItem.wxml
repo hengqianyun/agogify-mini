@@ -1,9 +1,9 @@
 <view class="order-item-comp">
   <view class="top-container">
     <view class="store-info">
-      <view class="store-info-avatar">
+      <!-- <view class="store-info-avatar">
         <image class="store-avatar" mode="heightFix" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
-      </view>
+      </view> -->
       <view class="store-info-name">{{storeName}}</view>
       <view class="store-info-icon">
         <iconfont name="jiantou" size="{{24}}"></iconfont>
