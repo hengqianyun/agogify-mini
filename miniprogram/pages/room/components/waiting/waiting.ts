@@ -1,3 +1,5 @@
+import { $emit } from "../../../../utils/event.js"
+
 // pages/room/components/waiting/waiting.ts
 Component({
   /**
@@ -18,6 +20,8 @@ Component({
    * 组件的方法列表
    */
   methods: {
-
+    handleHangUp() {
+      $emit({name: 'hang_up'})
+    }
   }
 })

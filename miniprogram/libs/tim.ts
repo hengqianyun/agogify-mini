@@ -9,7 +9,7 @@ let _userID = ''
 let _saleId = ''
 let _AVChatGroupId = '' // 直播群id
 let _StoreMeetingGroupId = '' // 店铺meeting group id
-let _isReady = false 
+let _isReady = false
 let _hasSendNeedService = false
 let _timer = 0
 
@@ -33,22 +33,30 @@ export class CustomMessageTypes {
   static LEAVED_ROOM = "LEAVED_ROOM"
 
   static NOW_BUSY = 'NOW_BUSY'
+
+  /// 客户通知销售取消通话
+  static HANG_UP = 'HANG_UP'
+
+  /// 客户通知销售自己已经通过预约进入房间
+  static  RESERVE_ENTER_ROOM = 'RESERVE_ENTER_ROOM';
+
+  /// 是否ready 进入房间
+  static READY_ENTER_ROOM = 'READY_ENTER_ROOM';
+   
 }
 
-export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReconnect?: boolean) => {
+export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {
   _hasSendNeedService = false
-
+  debugger
   _StoreMeetingGroupId = `${storeId}_Meeting`
 
   _saleId = saleId
-
-  // debugger
-
   if (_tim) {
-    if (isReconnect) neetService()
+    if (!isReconnect) neetService()
+    if (isReserve) joinReserve()
     return _tim
   }
-
+  debugger
   // 创建IM实例
   const tim = TIM.create({
     SDKAppID
@@ -56,7 +64,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
   // 设置日志等级
   tim.setLogLevel(0)
 
- 
+
 
   // wx.defineProperty
   Object.defineProperty(wx, 'tim', tim)
@@ -73,7 +81,16 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
   })
   _userID = userID
 
-  if (!isReconnect) {
+  if (isReserve) {
+    _timer = setInterval(() => {
+      if (_isReady && !_hasSendNeedService) {
+        debugger
+        _hasSendNeedService = true
+        joinReserve()
+        clearInterval(_timer)
+      }
+    }, 500)
+  } else if (!isReconnect) {
     _timer = setInterval(() => {
       if (_isReady && !_hasSendNeedService) {
         _hasSendNeedService = true
@@ -117,9 +134,10 @@ function logoutEvent(): void {
 
 async function onReadyStateUpdate({ name }: TIMEvent) {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
+  debugger
   if (isSDKReady) {
     _isReady = isSDKReady
-    
+
   }
 }
 
@@ -207,11 +225,7 @@ function clearHistort(historyList: TIMHistory) {
   return historyList
 }
 
-const joinStoreGroup = () => {
-
-}
-
-const neetService = async () => {
+const joinStoreGroup = async () => {
   try {
     // 加入店铺Meeting 群
     const res = await _tim.joinGroup({ groupID: _StoreMeetingGroupId, type: 'ChatRoom' })
@@ -220,6 +234,18 @@ const neetService = async () => {
     // 加入异常处理
     console.log('加入群聊失败')
   }
+}
+
+const neetService = async () => {
+  await joinStoreGroup()
+  // try {
+  //   // 加入店铺Meeting 群
+  //   const res = await _tim.joinGroup({ groupID: _StoreMeetingGroupId, type: 'ChatRoom' })
+  //   console.log(res)
+  // } catch {
+  //   // 加入异常处理
+  //   console.log('加入群聊失败')
+  // }
   // 创建自定义信息
   const message = await _tim.createCustomMessage({
     to: _StoreMeetingGroupId,
@@ -231,6 +257,31 @@ const neetService = async () => {
   })
   console.log(message);
   // 发送信息
+  try {
+    const res = await _tim.sendMessage(message)
+    console.log(res)
+  } catch (err) {
+    console.log(err)
+    console.log('发送消息失败')
+  }
+}
+
+const joinReserve = async () => {
+  await joinStoreGroup()
+
+  debugger
+
+  const message = await _tim.createCustomMessage({
+    to: _StoreMeetingGroupId,
+    conversationType: "GROUP",
+    payload: {
+      data: CustomMessageTypes.RESERVE_ENTER_ROOM,
+      description: JSON.stringify({ userID: _userID, saleId: _saleId })
+    }
+  })
+
+  console.log(message)
+
   try {
     const res = await _tim.sendMessage(message)
     console.log(res)

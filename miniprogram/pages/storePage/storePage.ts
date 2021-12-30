@@ -113,7 +113,6 @@ Page({
     checkloginAsync()
   },
   handleCall() {
-    debugger
     checkloginAsync()
     wx.setStorageSync('reserveStores', [this.data.details]);
     wx.navigateTo({url: '../salesChoose/salesChoose'})

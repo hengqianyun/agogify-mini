@@ -62,7 +62,9 @@ declare namespace orderDesign {
       "provinceName"?: string,
       "street"?: string,
       "city"?: string,
-      "postcode"?: string
+      "postcode"?: string,
+      'county': string
+      mobileNumber: string
     }
   }
 

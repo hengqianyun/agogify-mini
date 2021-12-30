@@ -15,15 +15,16 @@ Page({
       userSig: '', // 必要参数 身份签名，相当于登录密码的作用
     },
     groupId: '',
-    userId: 'user0',
+    userId: '',
     roomId: null as unknown as number,
     pusher: null as any,
     playerList: [] as PlayerListItem[],
     // store
     store: { name: 'alsjdlkasjdlsaj', avatar: 'http://dummyimage.com/200x200/50B347/FFF&text=avatar', id: '1' },
-    isWaiting: true,
+    isWaiting: false,
     showDialog: true,
     isReconnect: false,
+    isReserve: false,
     showChat: false,
     saleId: '',
   },
@@ -33,13 +34,16 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    const {storeId, saleId, type} = this.options as {storeId: string, saleId: string, type: string}
+    const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
     if (type === '1') {
       this.setData({
         isReconnect: true,
       })
     } else if (type === '2') {
-      
+      debugger
+      this.setData({
+        isReserve: true
+      })
     }
     await this.queryStore(storeId)
     // debugger
@@ -106,9 +110,12 @@ Page({
   },
 
   handleDialogCommit() {
+    let flag = true
+    if (this.data.isReserve && this.data.isReconnect) flag = false
     this.setData({
       showDialog: false,
-      showChat: true
+      showChat: true,
+      isWaiting: flag
     })
   },
 
@@ -124,7 +131,7 @@ Page({
       resData.data.images[0].path = IMAGEBASEURL + resData.data.images[0].path
     }
     this.setData({
-      store: {id: code, avatar: resData.data.images[0].path, name: resData.data.name},
+      store: { id: code, avatar: resData.data.images[0].path, name: resData.data.name },
     })
   },
 

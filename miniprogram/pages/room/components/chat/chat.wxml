@@ -62,9 +62,6 @@
     <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
       <view class="popup-title">确认订单</view>
       <view class="popup-container">
-        <view wx:if="{{showPayWaiting}}" class="pay-waiting">
-          请稍后。。。
-        </view>
         <view class="address-item" bind:tap="handleShowMoreAddress">
           <view class="left-box">
             <view class="icon-box">

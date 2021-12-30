@@ -1,2 +1,30 @@
-<!--pages/room/components/waiting/waiting.wxml-->
-<text>pages/room/components/waiting/waiting.wxml</text>
+<view class="waitting-page">
+  <view class="top-content">
+    <view class="avatar-box">
+      <image class="avatar" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+        
+      </image>
+    </view>
+    <view class="text-1">
+      正在呼叫中……
+    </view>
+    <view class="text-2">
+      正在等待店员接入，请稍后
+    </view>
+      
+      
+      
+  </view>
+  <view class="bottom-content">
+    <view class="hang-up" bind:tap="handleHangUp">
+      <iconfont name="guaduan" size="{{136}}"></iconfont>
+    </view>
+    <view class="text-3">
+      取消
+    </view>
+      
+  </view>
+    
+    
+</view>
+  

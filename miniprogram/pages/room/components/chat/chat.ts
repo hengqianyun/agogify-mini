@@ -33,7 +33,8 @@ Component({
     groupId: String,
     isWaiting: Boolean,
     saleId: String,
-    isReconnect: Boolean
+    isReconnect: Boolean,
+    isReserve: Boolean,
   },
 
   /**
@@ -78,14 +79,14 @@ Component({
     showHandUpDialog: false,
     showBusyDialog: false,
     showMoreAddress: false,
-    showPayWaiting: false,
   },
 
   lifetimes: {
     async ready() {
       const userID = this.properties.userId
       const { userSig, sdkAppID } = genTestUserSig(userID)
-      tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.data.isReconnect)
+      debugger
+      tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
       // tim = initTim(userID, { sdkAppID, userSig }, 'qianduanceshi')
       $on({
         name: "onMessageEvent",
@@ -97,6 +98,7 @@ Component({
             payloadData = JSON.parse(data.payload.data)
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
+            debugger
             // 判断消息是否发给自己
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
@@ -134,6 +136,9 @@ Component({
                   showBusyDialog: true
                 })
                 break
+              case CustomMessageTypes.READY_ENTER_ROOM:
+                this.sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM, description: "succesee" }, `${this.properties.storeId}_Meeting`)
+                break
             }
           }
           console.log(data)
@@ -161,6 +166,15 @@ Component({
           this.queryAddressList()
         }
       })
+      $on({
+        name: 'hang_up',
+        tg: this,
+        success() {
+          this.sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`)
+          clearSessuibAsync()
+          wx.navigateBack()
+        }
+      })
       // debugger
       if (this.properties.isReconnect) {
         const id = `${this.properties.storeId}_Meeting-${getIdFromString(this.properties.saleId)}`
@@ -175,6 +189,10 @@ Component({
       })
       $remove({
         name: "joined_room",
+        tg: this,
+      })
+      $remove({
+        name: "hang_up",
         tg: this,
       })
     }
@@ -200,8 +218,9 @@ Component({
     async joinGroup(groupId: string, tim: TIMSKD) {
       try {
         await tim.joinGroup({ groupID: groupId, type: 'AVChatRoom' })
-      } catch {
-        this.joinGroup(groupId, tim)
+      } catch (err) {
+        console.log(err)
+        // this.joinGroup(groupId, tim)
       }
 
     },
@@ -267,7 +286,7 @@ Component({
       const message = await tim.createCustomMessage({
         to: groupid || this.properties.groupId,
         conversationType: "GROUP",
-        payload: options
+        payload: {...options, description: JSON.stringify({ userID: this.properties.userId, saleId: this.properties.saleId })}
       })
       const res = await tim.sendMessage(message)
       console.log(res)
@@ -425,6 +444,10 @@ Component({
             self.data.percent = 0
           }).catch((err) => {
           })
+          self.setData({
+            chatHistory: [...self.data.chatHistory, message],
+            inputValue: ''
+          })
         }
       })
     },
@@ -470,15 +493,16 @@ Component({
       this.resetOrder()
     },
     async _handleCommit() {
-      this.setData({
-        showPayWaiting: true
-      })
-      const { tokenValue, addressList, shipmentId, paymentId } = this.data
+      wx.showLoading({ title: '正在请求...' })
+      debugger
+      const { tokenValue, address, shipmentId, paymentId } = this.data
+      console.log(address)
       try {
-        const putAddressRes = await this.putAddress(tokenValue, addressList[0])
+        const putAddressRes = await this.putAddress(tokenValue, address)
         const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
         const putPaymentRes = await this.putPayment(tokenValue, paymentId)
       } catch {
+        wx.hideLoading()
         wx.showToast({ title: '支付失败，请重新尝试' })
         return
       }
@@ -493,9 +517,9 @@ Component({
       this.sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" })
       this.setData({
         showPopup: false,
-        showPayWaiting: false,
       })
       this.resetOrder()
+      wx.hideLoading()
       return
       const paymentRes = await this.payment()
       const _that = this
@@ -512,7 +536,6 @@ Component({
           _that.sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" })
           _that.setData({
             showPopup: false,
-            showPayWaiting: false,
           })
           _that.resetOrder()
         },
@@ -523,7 +546,7 @@ Component({
 
     },
     async queryAddressList() {
-      const resData = await addressModule.queryAddressList({...this.data.pageInfo, type: 'customer'})
+      const resData = await addressModule.queryAddressList({ ...this.data.pageInfo, type: 'customer' })
       const { 'hydra:member': list } = resData.data
       this.setData({
         // addressList: [...this.data.addressList, ...list]
@@ -540,8 +563,8 @@ Component({
       })
     },
     async putAddress(tokenValue: string, address: addressDesign.address) {
-      const { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode } = address
-      const res = await orderModule.putAddress(tokenValue, { billingAddress: { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode } })
+      const { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
+      const res = await orderModule.putAddress(tokenValue, { billingAddress: { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
       // TODO 设置用户地址
     },
     async putShipment(tokenValue: string, shipmentId: string) {

@@ -69,10 +69,9 @@ Page({
       params.page = 1
     }
     if (this.data.location !== 'all') {
-      // TODO location params
+      params['billingData.city.code'] = this.data.location
     }
     if (this.data.shopClassification !== 'all') {
-      // TODO shopClassification params
       params["storeTaxons.taxon.code"] = this.data.shopClassification
     } 
     if (this.data.brandActiveKey !== 0) {
@@ -80,7 +79,6 @@ Page({
     }
     let strParamsList = []
     if (this.data.classification !== '全部') {
-      // TODO classification params
       if (this.data.classificationChild !== '全部') {
         const child = this.data.classificationChildList.find(e => e.name === this.data.classificationChild)
         strParamsList.push(child?.code.toString())
@@ -237,12 +235,12 @@ Page({
   },
 
   async queryCities() {
-    const resData = await storeModule.queryCities()
-    const { data: list } = resData.data
+    const resData = await storeModule.queryCities({page: 1, itemsPerPage: 999})
+    const { "hydra:member": list } = resData.data
     const optionList = list.map(item => {
       return {
         text: item.name,
-        value: item.id
+        value: item.code
       }
     })
     optionList.push({ value: 'all', text: '全部城市' })

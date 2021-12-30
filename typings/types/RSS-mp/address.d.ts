@@ -9,13 +9,14 @@ declare namespace addressDesign {
     customer: string
     firstName: string
     lastName: string
-    phoneNumber: string
+    mobileNumber: string
     countryCode: 'CN'
     provinceCode: string
     provinceName: string
     street: string
     city: string
     postcode: string
+    county: string
   }
 
   interface queryAddressParams extends swaggerI.pageRequestParams {

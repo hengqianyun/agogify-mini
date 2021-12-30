@@ -166,14 +166,17 @@ Page({
       const params = {
         type: 'customer',
         customer: customer,
+        // firstName: name.value.substr(0, 1),
+        // lastName: name.value.substr(1),
         firstName: name.value.substr(0, 1),
         lastName: name.value.substr(1),
-        phoneNumber: phone.value,
+        mobileNumber: phone.value,
         countryCode: 'CN',
         provinceCode: 'CN-sh',
         provinceName: this.data.region[0],
         street: address.value,
         city: this.data.region[1],
+        county: this.data.region[2],
         postcode: postcode.value,
       } as addressDesign.createAddressParams
       if (this.data.id) {
@@ -200,9 +203,9 @@ Page({
     try {
       const res = await addressModule.queryAddress(addressId)
       console.log(res)
-      const {id, lastName, firstName, provinceName, city, street, postcode, phoneNumber} = res.data
+      const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber} = res.data
       this.setData({
-        'form.phone.value': phoneNumber,
+        'form.phone.value': mobileNumber,
         'form.name.value': firstName + lastName,
         'form.postcode.value': postcode,
         'form.region.value': provinceName + ' ' + city,

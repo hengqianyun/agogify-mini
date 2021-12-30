@@ -79,7 +79,8 @@ declare namespace swaggerI {
 
   type categoryListResult = storeDesign.QueryCategorys
 
-  type citiesListResult = RequestType<storeDesign.cities[]>
+  // type citiesListResult = RequestType<storeDesign.city[]>
+  type citiesListResult = storeDesign.queryCitiesRes
 
   type storeDetailResult = storeDesign.QueryStoreDetailRes
 

@@ -1,4 +1,6 @@
+import { BASEURL } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
+import store from "../../store/index"
 
 // pages/ocr/ocr.ts
 Page({
@@ -10,7 +12,11 @@ Page({
     userName: '',
     userNumber: '' as unknown as number,
     base64: '' as string | ArrayBuffer,
-    access_token: ''
+    access_token: '',
+    passportBase64: '' as string | ArrayBuffer,
+    passportPath: '',
+    identityBase64: '' as string | ArrayBuffer,
+    identityPath: '',
   },
 
   /**
@@ -84,7 +90,8 @@ Page({
         let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
         var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
         that.setData({
-          src: base64
+          identityBase64: base64,
+          identityPath: tempPath,
         })
         const wxTokenRes = await ocrModule.getAssessToken()
         wx.uploadFile({
@@ -121,6 +128,25 @@ Page({
     })
   },
 
+  chooseBackImage() {
+    const that = this
+
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      async success(res) {
+        let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
+        var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
+        that.setData({
+          passportBase64: base64,
+          passportPath: tempPath,
+        })
+
+      }
+    })
+  },
+
   handleChooseImage() {
     const that = this
     wx.chooseImage({
@@ -131,7 +157,7 @@ Page({
         let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
         const base64 = await wx.getFileSystemManager().readFileSync(tempPath, 'base64');
         that.setData({
-          base64: base64
+          base64: base64,
         })
       }
     })
@@ -139,21 +165,26 @@ Page({
 
   async handleCommit() {
     if (!this.data.userName || !this.data.userNumber) {
-      wx.showToast({title: "请选择身份证照片", icon: "error"})
+      wx.showToast({ title: "请选择身份证照片", icon: "error" })
+      return
+    }
+    if (!this.data.passportBase64) {
+      wx.showToast({ title: "请选择身份证背面照", icon: "error" })
       return
     }
     if (!this.data.base64) {
-      wx.showToast({title: "请选择人像照片", icon: "error"})
+      wx.showToast({ title: "请选择人像照片", icon: "error" })
       return
     }
+
+    wx.showLoading({ title: '正在对比人像...' })
 
     const res = await ocrModule.baiduOCR(this.data.access_token, {
       image: this.data.base64,
       id_card_number: this.data.userNumber,
       name: this.data.userName
     })
-    const {result, error_code} = res.data
-    console.log(res.data)
+    const { result, error_code } = res.data
     if (error_code === 222356) {
       wx.showModal({
         title: "图片无法识别",
@@ -171,6 +202,20 @@ Page({
         confirmText: "我知道了"
       })
     } else {
+      try {
+        await this.uploadImage(this.data.passportPath, 'passport')
+        await this.uploadImage(this.data.identityPath, 'identity')
+        await this.uploadImage(this.data.identityPath, 'identity')
+      } catch {
+        wx.showModal({
+          title: "网络错误",
+          showCancel: false,
+          confirmText: "我知道了"
+        })
+        wx.hideLoading()
+        return
+      }
+      wx.hideLoading()
       wx.showModal({
         title: "实名认证已通过",
         showCancel: false,
@@ -180,5 +225,31 @@ Page({
         }
       })
     }
+  },
+
+  async uploadImage(path: string, type: string) {
+    return new Promise((res, rej) => {
+      const { user } = store.getState()
+      wx.uploadFile({
+        filePath: path,
+        name: 'file',
+        url: BASEURL + 'store/customer-images',
+        formData: {
+          type: type,
+          owner: user.customer
+        },
+        success() {
+          res(true)
+        },
+        fail() {
+          wx.showToast({
+            title: "网络错误",
+            icon: "error"
+          })
+          rej()
+        }
+      })
+    })
+
   }
 })

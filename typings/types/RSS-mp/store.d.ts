@@ -58,7 +58,14 @@ declare namespace storeDesign {
 
   interface searchBars extends baseData {}
 
-  interface cities extends baseData {}
+  interface city extends swaggerI.requestSimpleBase {
+    code: string
+    country: string
+    province: string
+    county: string
+    translations: swaggerI.translateRes
+    name: string
+  }
 
   interface dropdownOption {
     value: string
@@ -110,6 +117,7 @@ declare namespace storeDesign {
     'brands.translations.name'?: string
     'products.translations.name'?: string
     'storeTaxons.taxon.code'?: string
+    'billingData.city.code'?: string
   }
 
   interface queryBrandsParams extends swaggerI.pageRequestParams {
@@ -159,6 +167,8 @@ declare namespace storeDesign {
   }
 
   interface QuerySalesRes extends swaggerI.requsetListBase<sale> {}
+
+  interface queryCitiesRes extends swaggerI.requsetListBase<city> {}
 
 
 }

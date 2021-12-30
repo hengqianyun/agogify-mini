@@ -38,8 +38,9 @@ Component({
       this.setData({
         showDialog: false
       })
+      const type = session.type === 'booking' ? 2 : '1'
       wx.navigateTo({
-        url: `../room/room?storeId=${code}&saleId=${salesId}&type=${1}`
+        url: `../room/room?storeId=${code}&saleId=${salesId}&type=${type}`
       })
     },
     async handleDialogCancel() {

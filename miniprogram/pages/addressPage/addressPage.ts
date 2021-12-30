@@ -122,7 +122,6 @@ Page({
   },
 
   navigateTo(id?: string) {
-    debugger
     wx.navigateTo({
       url: `../addressDetail/addressDetail${id ? '?id=' + id : ''}`
     })

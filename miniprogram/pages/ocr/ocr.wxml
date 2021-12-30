@@ -1,22 +1,13 @@
 <view class="ocr-page border-top">
   <view class="step">
-    <view class="step-icon">
-      1
-    </view>
-    <view class="step-text">
-      上传身份证正面照片
-    </view>
-      
-      
+    <view class="step-icon">1</view>
+    <view class="step-text">上传身份证正面照片</view>
   </view>
   <view class="image-choose-1">
-    <image class="image" bindtap="chooseImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload="">
-      
-    </image>
+    <image wx:if="{{!identityBase64}}" class="image" bindtap="chooseImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
+    <image wx:else class="image" bindtap="chooseImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image>
   </view>
-  <view class="tips">
-    上传身份证照片后，身份证号、姓名，自动识别
-  </view>
+  <view class="tips">上传身份证照片后，身份证号、姓名，自动识别</view>
   <view class="user-input">
     <input type="text" disabled="{{true}}" value="{{userName}}" class="input" placeholder="姓名" placeholder-class="placeholder-class" />
   </view>
@@ -24,42 +15,28 @@
     <input type="text" disabled="{{true}}" value="{{userNumber}}" class="input" placeholder="身份证号" placeholder-class="placeholder-class" />
   </view>
   <view class="step">
-    <view class="step-icon">
-      2
-    </view>
-    <view class="step-text">
-      人像认证
-    </view>
+    <view class="step-icon">2</view>
+    <view class="step-text">上传身份证反面照片</view>
+  </view>
+  <view class="image-choose-1">
+    <image wx:if="{{!identityBase64}}" class="image" bindtap="chooseBackImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
+    <image wx:else class="image" bindtap="chooseBackImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image>
+  </view>
+  <view class="step">
+    <view class="step-icon">3</view>
+    <view class="step-text">人像认证</view>
   </view>
   <view class="image-choose-2">
     <view class="image-box">
-      <image wx:if="{{!base64}}" class="image" src="../../assets/image/chooseImage-2.png" lazy-load="false" binderror="" bindload="">
-        
-      </image>
-      <image wx:else class="image" src="data:image/png;base64,{{base64}}" lazy-load="false" binderror="" bindload="">
-        
-      </image>
+      <image wx:if="{{!passportBase64}}" class="image" src="../../assets/image/chooseImage-2.png" lazy-load="false" binderror="" bindload=""></image>
+      <image wx:else class="image" src="data:image/png;base64,{{passportBase64}}" lazy-load="false" binderror="" bindload=""></image>
     </view>
     <view class="image-box">
-      <image class="image" bind:tap="handleChooseImage" src="../../assets/image/chooseImage-3.png" lazy-load="false" binderror="" bindload="">
-        
-      </image>
+      <image class="image" bind:tap="handleChooseImage" src="../../assets/image/chooseImage-3.png" lazy-load="false" binderror="" bindload=""></image>
     </view>
-      
   </view>
-  <view class="tips">
-    提示语句提示语句提示语句提示语句
-  </view>
+  <view class="tips">提示语句提示语句提示语句提示语句</view>
   <view class="btn">
     <rss-button label="提交" bind:tap="handleCommit" className="fill-btn" width="{{654}}" height="{{88}}" fontSize="{{34}}"></rss-button>
   </view>
-    
-    
-    
-    
-    
-    
-    
-    
 </view>
-  
