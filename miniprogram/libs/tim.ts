@@ -47,7 +47,6 @@ export class CustomMessageTypes {
 
 export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {
   _hasSendNeedService = false
-  debugger
   _StoreMeetingGroupId = `${storeId}_Meeting`
 
   _saleId = saleId
@@ -56,7 +55,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
     if (isReserve) joinReserve()
     return _tim
   }
-  debugger
+  
   // 创建IM实例
   const tim = TIM.create({
     SDKAppID
@@ -84,7 +83,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
   if (isReserve) {
     _timer = setInterval(() => {
       if (_isReady && !_hasSendNeedService) {
-        debugger
+        
         _hasSendNeedService = true
         joinReserve()
         clearInterval(_timer)
@@ -134,7 +133,7 @@ function logoutEvent(): void {
 
 async function onReadyStateUpdate({ name }: TIMEvent) {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
-  debugger
+  
   if (isSDKReady) {
     _isReady = isSDKReady
 
@@ -269,7 +268,7 @@ const neetService = async () => {
 const joinReserve = async () => {
   await joinStoreGroup()
 
-  debugger
+  
 
   const message = await _tim.createCustomMessage({
     to: _StoreMeetingGroupId,

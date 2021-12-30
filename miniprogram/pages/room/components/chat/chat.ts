@@ -88,7 +88,7 @@ Component({
     async ready() {
       const userID = this.properties.userId
       const { userSig, sdkAppID } = genTestUserSig(userID)
-      debugger
+      
       tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
       // tim = initTim(userID, { sdkAppID, userSig }, 'qianduanceshi')
       $on({
@@ -101,7 +101,7 @@ Component({
             payloadData = JSON.parse(data.payload.data)
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
-            debugger
+            
             // 判断消息是否发给自己
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
@@ -166,7 +166,7 @@ Component({
         name: 'joined_room',
         tg: this,
         success() {
-          // debugger
+          // 
           this.joinGroup(this.properties.groupId, tim)
           this.initRecording()
           this.queryAddressList()
@@ -181,7 +181,7 @@ Component({
           wx.navigateBack()
         }
       })
-      // debugger
+      // 
       if (this.properties.isReconnect) {
         const id = `${this.properties.storeId}_Meeting-${getIdFromString(this.properties.saleId)}`
         this.triggerEvent('startVideo', { publicGroupId: id, roomId: id })
@@ -504,7 +504,7 @@ Component({
     },
     async _handleCommit() {
       wx.showLoading({ title: '正在请求...' })
-      debugger
+      
       const { tokenValue, address, shipmentId, paymentId } = this.data
       console.log(address)
       try {

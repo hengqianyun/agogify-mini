@@ -87,7 +87,7 @@ Page({
     if (status !== 'online') {
       return
     }
-    // debugger
+    // 
     const saleId = getIdFromString(id)
     const currentStore = this.data.stores[this.data.currentStoreIndex]
     wx.navigateTo({

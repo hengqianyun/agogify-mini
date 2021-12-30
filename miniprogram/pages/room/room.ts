@@ -40,13 +40,13 @@ Page({
         isReconnect: true,
       })
     } else if (type === '2') {
-      debugger
+      
       this.setData({
         isReserve: true
       })
     }
     await this.queryStore(storeId)
-    // debugger
+    // 
     wx.setKeepScreenOn({
       keepScreenOn: true,
     })
@@ -90,7 +90,7 @@ Page({
   },
 
   startVideo({ detail }: WechatMiniprogram.TouchEvent) {
-    // debugger
+    // 
     const { publicGroupId, roomId } = detail as { publicGroupId: string, roomId: number }
     this.setData({
       groupId: publicGroupId,
