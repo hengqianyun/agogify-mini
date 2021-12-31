@@ -22,7 +22,7 @@
     <view class="s-c-title">
       <view class="s-c-bar">
         <view class="text-big">新店推荐</view>
-        <view class="text-small">New Store</view>
+        <!-- <view class="text-small">New Store</view> -->
       </view>
     </view>
     <view class="store-list-container">
