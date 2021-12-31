@@ -6,13 +6,13 @@
       <van-dropdown-menu custom-class="dropdown-box">
         <van-dropdown-item value="{{ location }}" options="{{ locationList }}" bind:change="handleCityChange" />
       </van-dropdown-menu>
-      <view class="menu-text">City</view>
+      <!-- <view class="menu-text">City</view> -->
     </van-col>
     <van-col span="12">
       <van-dropdown-menu custom-class="dropdown-box">
         <van-dropdown-item value="{{ shopClassification }}" options="{{ shopClassificationList }}" bind:change="handleShopClassificationChange" />
       </van-dropdown-menu>
-      <view class="menu-text">Store</view>
+      <!-- <view class="menu-text">Store</view> -->
     </van-col>
   </van-row>
   <!-- scroll tab -->

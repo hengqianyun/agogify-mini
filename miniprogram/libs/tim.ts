@@ -42,10 +42,14 @@ export class CustomMessageTypes {
 
   /// 是否ready 进入房间
   static READY_ENTER_ROOM = 'READY_ENTER_ROOM';
+
+  /// 销售通知客户重试
+  static RETRY = 'RETRY';
    
 }
 
 export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {
+  debugger
   _hasSendNeedService = false
   _StoreMeetingGroupId = `${storeId}_Meeting`
 

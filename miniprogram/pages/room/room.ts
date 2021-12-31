@@ -34,6 +34,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
+    debugger
     const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
     if (type === '1') {
       this.setData({
@@ -50,7 +51,8 @@ Page({
     wx.setKeepScreenOn({
       keepScreenOn: true,
     })
-    const { user } = store.getState()
+    // const { user } = store.getState()
+    const user = wx.getStorageSync('oauth.data').customer
     this.setData({
       userId: user.customer,
       // store: {id: storeId, avatar: IMAGEBASEURL + avatar, name: storeName},
@@ -131,7 +133,7 @@ Page({
       resData.data.images[0].path = IMAGEBASEURL + resData.data.images[0].path
     }
     this.setData({
-      store: { id: code, avatar: resData.data.images[0].path, name: resData.data.name },
+      store: { id: code, avatar: resData.data.logo.path, name: resData.data.name },
     })
   },
 

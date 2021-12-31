@@ -145,6 +145,9 @@ Component({
               case CustomMessageTypes.READY_ENTER_ROOM:
                 this.sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM, description: "succesee" }, `${this.properties.storeId}_Meeting`)
                 break
+              case CustomMessageTypes.RETRY:
+                clearSessuibAsync()
+                wx.navigateBack()
             }
           }
           console.log(data)
