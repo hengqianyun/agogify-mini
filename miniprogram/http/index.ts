@@ -8,7 +8,8 @@ export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === '
 
 enum SUCCESS_STATUS_CODE_DEF { OK = 200, Created = 201, Accepted = 202, no_content = 204 }
 
-http.setTimeout(16000)
+// http.setTimeout(16000)
+http.setTimeout(1600000)
   .createInterceptorReq({
     do: (options) => Object.assign({ ...options }, { url: options.url.indexOf('http') > -1 ? options.url : BASEURL + options.url }),
     error: (err) => Error(err as string)

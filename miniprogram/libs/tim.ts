@@ -49,7 +49,7 @@ export class CustomMessageTypes {
 }
 
 export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {
-  debugger
+  
   _hasSendNeedService = false
   _StoreMeetingGroupId = `${storeId}_Meeting`
 
@@ -78,10 +78,16 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
   // 初始化监听事件
   registerEvents(tim)
   // 登录im
-  tim.login({
-    userID,
-    userSig,
-  })
+  try {
+
+    tim.login({
+      userID,
+      userSig,
+    })
+  } catch(err) {
+    
+    console.log(err)
+  }
   _userID = userID
 
   if (isReserve) {
@@ -159,6 +165,7 @@ function kickOut(event: TIMEvent) {
 }
 
 function onError(event: TIMEvent) {
+  console.log(event)
   // 网络错误不弹toast && sdk未初始化完全报错
   if (event.data?.message && event.data.code && event.data.code !== 2800 && event.data.code !== 2999) {
     // store.commit('showToast', {

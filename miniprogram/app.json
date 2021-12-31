@@ -94,5 +94,8 @@
       "version": "1.0.8",
       "provider": "wx76a9a06e5b4e693e"
     }
+  },
+  "networkTimeout": {
+    "request": 120000
   }
 }
