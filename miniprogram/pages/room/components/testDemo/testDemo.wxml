@@ -1,0 +1,10 @@
+<view class="cover-view-demo">
+  <cover-view class="" scroll-top="0">
+  
+    cover-view-test
+    cover-view-test
+    cover-view-test
+    cover-view-test
+  </cover-view>
+</view>
+  

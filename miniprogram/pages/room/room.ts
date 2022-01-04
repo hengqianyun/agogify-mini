@@ -5,8 +5,12 @@ import store from '../../store/index.js'
 import { $emit } from '../../utils/event.js'
 import { IMAGEBASEURL } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
+import { CustomMessageTypes, initTim, sendCustomMessage } from '../../libs/tim.js'
+import { $on, $remove } from '../../utils/event'
+import { getIdFromString } from '../../utils/util.js'
 
 let trtcClient: TRTC
+let tim: TIMSKD
 Page({
   data: {
     _rtcConfig: {
@@ -20,13 +24,15 @@ Page({
     pusher: null as any,
     playerList: [] as PlayerListItem[],
     // store
-    store: { name: 'alsjdlkasjdlsaj', avatar: 'http://dummyimage.com/200x200/50B347/FFF&text=avatar', id: '1' },
+    store: { name: '', avatar: '', id: '' },
     isWaiting: false,
     showDialog: true,
     isReconnect: false,
     isReserve: false,
     showChat: false,
     saleId: '',
+    storeId: '',
+    tim: null as unknown as TIMSKD,
   },
   store: store,
 
@@ -34,62 +40,73 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    
+
     const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
     if (type === '1') {
       this.setData({
         isReconnect: true,
       })
     } else if (type === '2') {
-      
+
       this.setData({
         isReserve: true
       })
     }
     this.queryStore(storeId)
-    // 
     wx.setKeepScreenOn({
       keepScreenOn: true,
+
     })
-    // const { user } = store.getState()
 
     const user = wx.getStorageSync('oauth.data')
-    
+
     this.setData({
       userId: user.customer,
       saleId,
+      storeId,
     })
 
 
     const { userSig, sdkAppID } = genTestUserSig(user.customer)
+    // tim = initTim(user.customer, { sdkAppID, userSig }, storeId, saleId, this.data.isReserve, this.data.isReconnect)
     trtcClient = new TRTC(this)
     this.init({ userID: user.customer, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
-    // this.enterRoom({ roomID: 'store001_Meeting-4' })
-    // if (this.options.publicGroupId) {
-    //   this.setData({
-    //     groupId: this.options.publicGroupId,
-    //     roomId: Number(this.options.roomId)
-    //   })
 
-    //   const {userId, roomId} = this.data
-    //   const {userSig, sdkAppID} = genTestUserSig(userId)
-    //   trtcClient = new TRTC(this)
-    //   this.init({userID: userId, userSig, sdkAppID: sdkAppID + ''})
-    //   this.bindTRTCRoomEvent()
-    //   this.enterRoom({ roomID: roomId })
-    // }
+    $on({
+      name: "onMessageEvent",
+      tg: this,
+      success: (res: TIMMessageReceive) => {
+        const data = res.data[0]
+        let payloadData: any;
+        try {
+          payloadData = JSON.parse(data.payload.data)
+        } catch (err) { }
+        if (payloadData && payloadData.to === this.data.userId) {
+          // 判断消息是否发给自己
+          switch (payloadData.type) {
+            case CustomMessageTypes.START_VIDEO:
+              // 进入房间
+              // this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
+              this.startVideo({ publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
+              break
+            case CustomMessageTypes.NOW_BUSY:
+              this.setData({
+                showBusyDialog: true
+              })
+              break
+            case CustomMessageTypes.READY_ENTER_ROOM:
+              sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.data.storeId}_Meeting`, this.data.userId, this.data.saleId)
+              break
+          }
+        }
+      }
+    })
 
-    // wx.showLoading({
-    //   title: "等待接通..."
-    // })
-
-    // const userID = 'user0', roomID = 5555
-    // const {userSig, sdkAppID} = genTestUserSig(userID)
-
-    // this.init({userID, userSig, sdkAppID: sdkAppID + ''})
-    // this.bindTRTCRoomEvent()
-    // this.enterRoom({ roomID })
+    if (this.data.isReconnect) {
+      const id = `${this.data.storeId}_Meeting-${getIdFromString(this.data.saleId)}`
+      this.startVideo({ publicGroupId: id, roomId: id })
+    }
   },
 
   onReady() {
@@ -97,25 +114,21 @@ Page({
   },
   onUnload() {
     console.log('room unload')
+    $remove({
+      name: "onMessageEvent",
+      tg: this,
+    })
   },
 
-  startVideo({ detail }: WechatMiniprogram.TouchEvent) {
-    console.log(detail)
-    // 
-    const { publicGroupId, roomId } = detail as { publicGroupId: string, roomId: string }
+  startVideo(option: { publicGroupId: string, roomId: string }) {
+    const { publicGroupId, roomId } = option
     this.setData({
       groupId: publicGroupId,
       roomId: roomId,
       strRoomID: roomId,
       isWaiting: false
     })
-    this.enterRoom({ roomID: 'store001_Meeting-4' })
-    // const { userId } = this.data
-    // const { userSig, sdkAppID } = genTestUserSig(userId)
-    // trtcClient = new TRTC(this)
-    // this.init({ userID: userId, userSig, sdkAppID: sdkAppID + '' })
-    // this.bindTRTCRoomEvent()
-    // this.enterRoom({ roomID: roomId })
+    this.enterRoom({ roomID: roomId })
     $emit({
       name: 'joined_room'
     })
@@ -123,11 +136,14 @@ Page({
 
   handleDialogCommit() {
     let flag = true
+    const { userSig, sdkAppID } = genTestUserSig(this.data.userId)
+    tim = initTim(this.data.userId, { sdkAppID, userSig }, this.data.storeId, this.data.saleId, this.data.isReserve, this.data.isReconnect)
     if (this.data.isReserve && this.data.isReconnect) flag = false
     this.setData({
       showDialog: false,
       showChat: true,
-      isWaiting: flag
+      isWaiting: flag,
+      tim
     })
   },
 
@@ -170,17 +186,11 @@ Page({
   },
 
   enterRoom({ roomID }: { roomID: string }) {
-    // const config = Object.assign(this.data._rtcConfig, { strRoomID: roomID, roomID: 0, scene: 'live' as EnterRoomScene })
-    // const trtcConfig = {...this.data._rtcConfig, strRoomID: 'store001_Meeting-4'} as EnterRoomParams
-    const trtcConfig = {...this.data._rtcConfig, strRoomID: roomID} as EnterRoomParams
+    const trtcConfig = { ...this.data._rtcConfig, strRoomID: roomID } as EnterRoomParams
     this.setData({
       pusher: trtcClient.enterRoom(trtcConfig),
     }, () => {
       trtcClient.getPusherInstance().start() // 开始推流
-      // const playerList = trtcClient.getPlayerList()
-      // this.setData({
-      //   playerList
-      // })
     })
   },
 
@@ -210,18 +220,12 @@ Page({
   bindTRTCRoomEvent() {
     const TRTC_EVENT = trtcClient.EVENT
     // 初始化事件订阅
-    trtcClient.on(TRTC_EVENT.LOCAL_JOIN, (event: OnEvent) => {
-      // if (this.data.localVideo) {
-      //   this.setPusherAttributesHandler({ enableCamera: true })
-      // }
-      // if (this.data.localAudio) {
-      //   this.setPusherAttributesHandler({ enableMic: true })
-      // }
-    })
-    trtcClient.on(TRTC_EVENT.LOCAL_LEAVE, (event: OnEvent) => {
-    })
-    trtcClient.on(TRTC_EVENT.ERROR, (event: OnEvent) => {
-    })
+    // trtcClient.on(TRTC_EVENT.LOCAL_JOIN, (event: OnEvent) => {
+    // })
+    // trtcClient.on(TRTC_EVENT.LOCAL_LEAVE, (event: OnEvent) => {
+    // })
+    // trtcClient.on(TRTC_EVENT.ERROR, (event: OnEvent) => {
+    // })
     trtcClient.on(TRTC_EVENT.REMOTE_USER_JOIN, (event: OnEvent) => {
       const { userID } = event.data
       wx.showToast({

@@ -2,7 +2,8 @@
   "usingComponents": {
     "waiting": "./components/waiting/waiting",
     "chat": "./components/chat/chat",
-    "RssDialog": "../../components/RssDialog/RssDialog"
+    "RssDialog": "../../components/RssDialog/RssDialog",
+    "CoverViewDemo": "./components/testDemo/testDemo"
   },
   "navigationStyle": "custom"
 }

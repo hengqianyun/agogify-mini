@@ -1,5 +1,5 @@
 <view class="controllers-page" bind:longpress="handleRecording" bind:touchend="handleTouchEnd">
-  <view class="page-body" wx:if="{{!isWaiting}}">
+  <!-- <view class="page-body" wx:if="{{!isWaiting}}"> -->
     <view class="top-container">
       <view class="shop-info">
         <view class="store-avatar-box">
@@ -55,7 +55,7 @@
         </view>
       </view>
     </view>
-  </view>
+  <!-- </view> -->
   <view wx:if="{{showPopup}}" class="pay-popup">
     
       

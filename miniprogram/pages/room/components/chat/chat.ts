@@ -1,7 +1,6 @@
 // pages/room/components/chat/chat.ts
-
 import { $on, $remove } from '../../../../utils/event'
-import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes } from "../../../../libs/tim"
+import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage } from "../../../../libs/tim"
 import genTestUserSig from '../../../../debug/GenerateTestUserSig'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
@@ -19,7 +18,7 @@ const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
   format: 'aac', // 音频格式，选择此格式创建的音频消息，可以在即时通信 IM 全平台（Android、iOS、微信小程序和Web）互通
 
 }
-let tim: TIMSKD
+// let tim: TIMSKD
 
 Component({
   /**
@@ -35,6 +34,7 @@ Component({
     saleId: String,
     isReconnect: Boolean,
     isReserve: Boolean,
+    tim: Object
   },
 
   /**
@@ -86,11 +86,13 @@ Component({
 
   lifetimes: {
     async ready() {
-      const userID = this.properties.userId
-      const { userSig, sdkAppID } = genTestUserSig(userID)
+      // const userID = this.properties.userId
+      // const { userSig, sdkAppID } = genTestUserSig(userID)
 
-      tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
-      // tim = initTim(userID, { sdkAppID, userSig }, 'qianduanceshi')
+      // tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
+      this.joinGroup(this.properties.groupId)
+      this.initRecording()
+      this.queryAddressList()
       $on({
         name: "onMessageEvent",
         tg: this,
@@ -104,10 +106,6 @@ Component({
 
             // 判断消息是否发给自己
             switch (payloadData.type) {
-              case CustomMessageTypes.START_VIDEO:
-                // 进入房间
-                this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-                break
               case CustomMessageTypes.PAY:
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
@@ -143,7 +141,7 @@ Component({
                 })
                 break
               case CustomMessageTypes.READY_ENTER_ROOM:
-                this.sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM, description: "succesee" }, `${this.properties.storeId}_Meeting`)
+                sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 break
               case CustomMessageTypes.RETRY:
                 clearSessuibAsync()
@@ -168,7 +166,7 @@ Component({
         tg: this,
         success() {
           // 
-          this.joinGroup(this.properties.groupId, tim)
+          this.joinGroup(this.properties.groupId)
           this.initRecording()
           this.queryAddressList()
         }
@@ -177,7 +175,7 @@ Component({
         name: 'hang_up',
         tg: this,
         success() {
-          this.sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`)
+          sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`,  this.properties.userId, this.properties.saleId)
           clearSessuibAsync()
           wx.navigateBack()
         }
@@ -226,12 +224,11 @@ Component({
       })
     },
 
-    async joinGroup(groupId: string, tim: TIMSKD) {
+    async joinGroup(groupId: string) {
       try {
-        await tim.joinGroup({ groupID: groupId, type: 'AVChatRoom' })
+        await this.properties.tim.joinGroup({ groupID: groupId, type: 'AVChatRoom' })
       } catch (err) {
         console.log(err)
-        // this.joinGroup(groupId, tim)
       }
 
     },
@@ -265,7 +262,7 @@ Component({
 
     handleHangUp() {
       // TODO 挂断电话
-      this.sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM, description: "succesee" })
+      sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId ,  this.properties.userId, this.properties.saleId)
       wx.navigateBack()
     },
 
@@ -273,14 +270,8 @@ Component({
       if (this.data.inputValue.trim() === "") {
         return
       }
-      const message = await tim.createTextMessage({
-        to: this.properties.groupId,
-        conversationType: "GROUP",
-        payload: {
-          text: this.data.inputValue
-        }
-      })
-      const res = await tim.sendMessage(message)
+
+      const res = await sendTextMessage(this.properties.groupId, this.data.inputValue)
       const item = this.encodeMessage(res.data.message)
       if (item && item.status === 'success') {
         this.setData({
@@ -292,25 +283,6 @@ Component({
       }
     },
 
-    async sendCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid?: string) {
-      const message = await tim.createCustomMessage({
-        to: groupid || this.properties.groupId,
-        conversationType: "GROUP",
-        payload: { ...options, description: JSON.stringify({ userID: this.properties.userId, saleId: this.properties.saleId }) }
-      })
-      const res = await tim.sendMessage(message)
-      console.log(res)
-      // if (item && item.status === 'success') {}
-    },
-    async sendC2CCustomMessage(options: TIMCreateCustomMessageParamsPayload, to: string) {
-      const message = await tim.createCustomMessage({
-        to,
-        conversationType: "C2C",
-        payload: options
-      })
-      const res = await tim.sendMessage(message)
-      console.log(res)
-    },
     handleInput(event: WechatMiniprogram.TouchEvent) {
       const { value } = event.detail as { value: string }
       console.log(event)
@@ -334,28 +306,29 @@ Component({
               canSend: true
             })
             this.startRecording()
-          } else if (auth === false) { // 首次发起授权
-            this.toSettingPage({
-              content: '请前往设置页打开麦克风',
-              suc: (res) => {
-                if (!res.authSetting['scope.record']) {
-                  this.setData({
-                    isRecord: false
-                  })
-                }
-              },
-              fail: () => {
-                this.setData({
-                  isRecord: false
-                })
-              },
-              cancel: () => {
-                this.setData({
-                  isRecord: false
-                })
-              }
-            })
-          }
+          } 
+          // else if (auth === false) { // 首次发起授权
+          //   this.toSettingPage({
+          //     content: '请前往设置页打开麦克风',
+          //     suc: (res) => {
+          //       if (!res.authSetting['scope.record']) {
+          //         this.setData({
+          //           isRecord: false
+          //         })
+          //       }
+          //     },
+          //     fail: () => {
+          //       this.setData({
+          //         isRecord: false
+          //       })
+          //     },
+          //     cancel: () => {
+          //       this.setData({
+          //         isRecord: false
+          //       })
+          //     }
+          //   })
+          // }
         },
         fail: () => {
         }
@@ -433,21 +406,21 @@ Component({
         sourceType: ['album'],
         count: 1,
         success: async function (res) {
-          const message = await tim.createImageMessage({
+          const message = await self.properties.tim.createImageMessage({
             to: self.properties.groupId,
             conversationType: "GROUP",
             payload: {
               file: res
             },
-            onProgress: percent => {
+            onProgress: (percent: number) => {
               self.data.percent = percent
             }
           })
           console.log(message)
           // self.$store.commit('sendMessage', message)
-          tim.sendMessage(message).then(() => {
+          self.properties.tim.sendMessage(message).then(() => {
             self.data.percent = 0
-          }).catch((err) => {
+          }).catch(() => {
           })
           self.setData({
             chatHistory: [...self.data.chatHistory, message],
@@ -491,7 +464,7 @@ Component({
     },
     // 取消付款
     _popupCancel() {
-      this.sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED, description: "succesee" })
+      sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId,  this.properties.userId, this.properties.saleId)
       this.setData({
         showPopup: false
       })
@@ -521,7 +494,7 @@ Component({
         size: this.data.productSize,
       }
       const completeRes = await orderModule.orderComplete(tokenValue, { notes: JSON.stringify(notes) });
-      this.sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" })
+      sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId,  this.properties.userId, this.properties.saleId)
       this.setData({
         showPopup: false,
       })
@@ -540,7 +513,7 @@ Component({
           console.log(res)
           const completeRes = await orderModule.orderComplete(tokenValue, { notes: 'finished' })
           // 付款
-          _that.sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" })
+          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId,  _that.properties.userId, _that.properties.saleId)
           _that.setData({
             showPopup: false,
           })

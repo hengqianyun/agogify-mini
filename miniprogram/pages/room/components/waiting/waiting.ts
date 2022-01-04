@@ -21,6 +21,7 @@ Component({
    */
   methods: {
     handleHangUp() {
+      console.log('taped hang_up button')
       $emit({name: 'hang_up'})
     }
   }

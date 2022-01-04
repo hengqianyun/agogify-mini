@@ -38,18 +38,18 @@ export class CustomMessageTypes {
   static HANG_UP = 'HANG_UP'
 
   /// 客户通知销售自己已经通过预约进入房间
-  static  RESERVE_ENTER_ROOM = 'RESERVE_ENTER_ROOM';
+  static RESERVE_ENTER_ROOM = 'RESERVE_ENTER_ROOM';
 
   /// 是否ready 进入房间
   static READY_ENTER_ROOM = 'READY_ENTER_ROOM';
 
   /// 销售通知客户重试
   static RETRY = 'RETRY';
-   
+
 }
 
 export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {
-  
+
   _hasSendNeedService = false
   _StoreMeetingGroupId = `${storeId}_Meeting`
 
@@ -59,7 +59,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
     if (isReserve) joinReserve()
     return _tim
   }
-  
+
   // 创建IM实例
   const tim = TIM.create({
     SDKAppID
@@ -84,8 +84,8 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
       userID,
       userSig,
     })
-  } catch(err) {
-    
+  } catch (err) {
+
     console.log(err)
   }
   _userID = userID
@@ -93,7 +93,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
   if (isReserve) {
     _timer = setInterval(() => {
       if (_isReady && !_hasSendNeedService) {
-        
+
         _hasSendNeedService = true
         joinReserve()
         clearInterval(_timer)
@@ -143,7 +143,7 @@ function logoutEvent(): void {
 
 async function onReadyStateUpdate({ name }: TIMEvent) {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
-  
+
   if (isSDKReady) {
     _isReady = isSDKReady
 
@@ -245,49 +245,70 @@ const joinStoreGroup = async () => {
 
 const neetService = async () => {
   await joinStoreGroup()
-  // try {
-  //   // 加入店铺Meeting 群
-  //   const res = await _tim.joinGroup({ groupID: _StoreMeetingGroupId, type: 'ChatRoom' })
-  //   console.log(res)
-  // } catch {
-  //   // 加入异常处理
-  //   console.log('加入群聊失败')
-  // }
   // 创建自定义信息
-  const message = await _tim.createCustomMessage({
-    to: _StoreMeetingGroupId,
-    conversationType: "GROUP",
-    payload: {
-      data: CustomMessageTypes.NEED_SERVICE,
-      description: JSON.stringify({ userID: _userID, saleId: _saleId })
-    }
-  })
-  // 发送信息
-  try {
-    const res = await _tim.sendMessage(message)
-  } catch (err) {
-    console.log('发送消息失败')
-  }
+  await sendCustomMessage({ data: CustomMessageTypes.NEED_SERVICE, }, _StoreMeetingGroupId, _userID, _saleId)
+  // const message = await _tim.createCustomMessage({
+  //   to: _StoreMeetingGroupId,
+  //   conversationType: "GROUP",
+  //   payload: {
+  //     data: CustomMessageTypes.NEED_SERVICE,
+  //     description: JSON.stringify({ userID: _userID, saleId: _saleId })
+  //   }
+  // })
+  // // 发送信息
+  // try {
+  //   const res = await _tim.sendMessage(message)
+  // } catch (err) {
+  //   console.log('发送消息失败')
+  // }
 }
 
 const joinReserve = async () => {
   await joinStoreGroup()
 
-  
+  await sendCustomMessage({
+    data: CustomMessageTypes.RESERVE_ENTER_ROOM,
+  }, _StoreMeetingGroupId, _userID, _saleId);
 
+  // const message = await _tim.createCustomMessage({
+  //   to: _StoreMeetingGroupId,
+  //   conversationType: "GROUP",
+  //   payload: {
+  //     data: CustomMessageTypes.RESERVE_ENTER_ROOM,
+  //     description: JSON.stringify({ userID: _userID, saleId: _saleId })
+  //   }
+  // })
+
+
+  // try {
+  //   const res = await _tim.sendMessage(message)
+  // } catch (err) {
+  //   console.log('发送消息失败')
+  // }
+}
+
+export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string) => {
   const message = await _tim.createCustomMessage({
-    to: _StoreMeetingGroupId,
+    to: groupid,
+    conversationType: "GROUP",
+    payload: { ...options, description: JSON.stringify({ userID, saleId }) }
+  })
+  const res = await _tim.sendMessage(message)
+  console.log(res)
+  return res
+  // if (item && item.status === 'success') {}
+}
+
+export const sendTextMessage = async (groupId: string, text: string) => {
+  const message = await _tim.createTextMessage({
+    to: groupId,
     conversationType: "GROUP",
     payload: {
-      data: CustomMessageTypes.RESERVE_ENTER_ROOM,
-      description: JSON.stringify({ userID: _userID, saleId: _saleId })
+      text: text
     }
   })
 
+  const res = await _tim.sendMessage(message)
 
-  try {
-    const res = await _tim.sendMessage(message)
-  } catch (err) {
-    console.log('发送消息失败')
-  }
+  return res
 }

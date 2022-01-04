@@ -54,7 +54,7 @@ declare interface TIMCreateCustomMessageParams extends TIMCreateMessageParams{
 
 declare interface TIMCreateCustomMessageParamsPayload {
   data: string // 自定义消息的数据字段
-  description: string // 自定义消息的说明字段
+  description?: string // 自定义消息的说明字段
   extension?: string // 自定义消息的扩展字段
 }
 
