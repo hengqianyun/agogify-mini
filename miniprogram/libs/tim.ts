@@ -165,7 +165,6 @@ function kickOut(event: TIMEvent) {
 }
 
 function onError(event: TIMEvent) {
-  console.log(event)
   // 网络错误不弹toast && sdk未初始化完全报错
   if (event.data?.message && event.data.code && event.data.code !== 2800 && event.data.code !== 2999) {
     // store.commit('showToast', {
@@ -176,7 +175,6 @@ function onError(event: TIMEvent) {
 }
 
 function messageReceived(event: TIMEvent) {
-  console.log(event)
   $emit({
     name: 'onMessageEvent',
     data: event
@@ -239,7 +237,6 @@ const joinStoreGroup = async () => {
   try {
     // 加入店铺Meeting 群
     const res = await _tim.joinGroup({ groupID: _StoreMeetingGroupId, type: 'ChatRoom' })
-    console.log(res)
   } catch {
     // 加入异常处理
     console.log('加入群聊失败')
@@ -265,13 +262,10 @@ const neetService = async () => {
       description: JSON.stringify({ userID: _userID, saleId: _saleId })
     }
   })
-  console.log(message);
   // 发送信息
   try {
     const res = await _tim.sendMessage(message)
-    console.log(res)
   } catch (err) {
-    console.log(err)
     console.log('发送消息失败')
   }
 }
@@ -290,13 +284,10 @@ const joinReserve = async () => {
     }
   })
 
-  console.log(message)
 
   try {
     const res = await _tim.sendMessage(message)
-    console.log(res)
   } catch (err) {
-    console.log(err)
     console.log('发送消息失败')
   }
 }

@@ -88,7 +88,7 @@ Component({
     async ready() {
       const userID = this.properties.userId
       const { userSig, sdkAppID } = genTestUserSig(userID)
-      
+
       tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
       // tim = initTim(userID, { sdkAppID, userSig }, 'qianduanceshi')
       $on({
@@ -101,7 +101,7 @@ Component({
             payloadData = JSON.parse(data.payload.data)
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
-            
+
             // 判断消息是否发给自己
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
@@ -150,8 +150,6 @@ Component({
                 wx.navigateBack()
             }
           }
-          console.log(data)
-          console.log(this.data)
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
             if (message) {
@@ -283,7 +281,6 @@ Component({
         }
       })
       const res = await tim.sendMessage(message)
-      console.log(res)
       const item = this.encodeMessage(res.data.message)
       if (item && item.status === 'success') {
         this.setData({
@@ -368,17 +365,14 @@ Component({
       this.setData({
         isRecording: false
       })
-      console.log('recorde end')
       wx.hideLoading()
       recorderManager.stop()
     },
 
     startRecording() {
-      console.log('start')
       recorderManager.start(recordOptions)
     },
     initRecording() {
-      console.log('start init recorder')
       recorderManager.onStart(() => {
         console.log('recorder start')
       })
@@ -387,7 +381,6 @@ Component({
       })
       recorderManager.onStop(async (res) => {
         wx.hideLoading()
-        console.log('on stop')
         if (this.data.canSend) {
           if (res.duration < 1000) {
             wx.showToast({
@@ -435,7 +428,6 @@ Component({
       })
     },
     chooseImage() {
-      console.log('chooseImage')
       let self = this
       wx.chooseImage({
         sourceType: ['album'],
@@ -507,9 +499,8 @@ Component({
     },
     async _handleCommit() {
       wx.showLoading({ title: '正在请求...' })
-      
+
       const { tokenValue, address, shipmentId, paymentId } = this.data
-      console.log(address)
       try {
         const putAddressRes = await this.putAddress(tokenValue, address)
         const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
@@ -618,9 +609,7 @@ Component({
         method,
         time
       }
-      console.log(params)
       let stringA = sortByCharCode(params)
-      console.log(stringA)
       let sign = enc.Hex.stringify(HmacSHA256(stringA, secret_key))
       const res = await orderModule.pay({
         user,

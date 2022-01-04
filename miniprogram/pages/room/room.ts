@@ -16,7 +16,7 @@ Page({
     },
     groupId: '',
     userId: '',
-    roomId: null as unknown as number,
+    roomId: null as unknown as string,
     pusher: null as any,
     playerList: [] as PlayerListItem[],
     // store
@@ -46,7 +46,7 @@ Page({
         isReserve: true
       })
     }
-    await this.queryStore(storeId)
+    this.queryStore(storeId)
     // 
     wx.setKeepScreenOn({
       keepScreenOn: true,
@@ -55,12 +55,17 @@ Page({
 
     const user = wx.getStorageSync('oauth.data')
     
-    console.log(user)
     this.setData({
       userId: user.customer,
-      // store: {id: storeId, avatar: IMAGEBASEURL + avatar, name: storeName},
       saleId,
     })
+
+
+    const { userSig, sdkAppID } = genTestUserSig(user.customer)
+    trtcClient = new TRTC(this)
+    this.init({ userID: user.customer, userSig, sdkAppID: sdkAppID + '' })
+    this.bindTRTCRoomEvent()
+    // this.enterRoom({ roomID: 'store001_Meeting-4' })
     // if (this.options.publicGroupId) {
     //   this.setData({
     //     groupId: this.options.publicGroupId,
@@ -95,20 +100,22 @@ Page({
   },
 
   startVideo({ detail }: WechatMiniprogram.TouchEvent) {
+    console.log(detail)
     // 
-    const { publicGroupId, roomId } = detail as { publicGroupId: string, roomId: number }
+    const { publicGroupId, roomId } = detail as { publicGroupId: string, roomId: string }
     this.setData({
       groupId: publicGroupId,
       roomId: roomId,
       strRoomID: roomId,
       isWaiting: false
     })
-    const { userId } = this.data
-    const { userSig, sdkAppID } = genTestUserSig(userId)
-    trtcClient = new TRTC(this)
-    this.init({ userID: userId, userSig, sdkAppID: sdkAppID + '' })
-    this.bindTRTCRoomEvent()
-    this.enterRoom({ roomID: roomId })
+    this.enterRoom({ roomID: 'store001_Meeting-4' })
+    // const { userId } = this.data
+    // const { userSig, sdkAppID } = genTestUserSig(userId)
+    // trtcClient = new TRTC(this)
+    // this.init({ userID: userId, userSig, sdkAppID: sdkAppID + '' })
+    // this.bindTRTCRoomEvent()
+    // this.enterRoom({ roomID: roomId })
     $emit({
       name: 'joined_room'
     })
@@ -162,12 +169,18 @@ Page({
     })
   },
 
-  enterRoom({ roomID }: { roomID: number }) {
-    const config = Object.assign(this.data._rtcConfig, { roomID, scene: 'live' as EnterRoomScene })
+  enterRoom({ roomID }: { roomID: string }) {
+    // const config = Object.assign(this.data._rtcConfig, { strRoomID: roomID, roomID: 0, scene: 'live' as EnterRoomScene })
+    // const trtcConfig = {...this.data._rtcConfig, strRoomID: 'store001_Meeting-4'} as EnterRoomParams
+    const trtcConfig = {...this.data._rtcConfig, strRoomID: roomID} as EnterRoomParams
     this.setData({
-      pusher: trtcClient.enterRoom({ ...config }),
+      pusher: trtcClient.enterRoom(trtcConfig),
     }, () => {
       trtcClient.getPusherInstance().start() // 开始推流
+      // const playerList = trtcClient.getPlayerList()
+      // this.setData({
+      //   playerList
+      // })
     })
   },
 
@@ -198,32 +211,27 @@ Page({
     const TRTC_EVENT = trtcClient.EVENT
     // 初始化事件订阅
     trtcClient.on(TRTC_EVENT.LOCAL_JOIN, (event: OnEvent) => {
-      console.log('* room LOCAL_JOIN', event)
       // if (this.data.localVideo) {
-      // this.setPusherAttributesHandler({ enableCamera: true })
+      //   this.setPusherAttributesHandler({ enableCamera: true })
       // }
       // if (this.data.localAudio) {
-      // this.setPusherAttributesHandler({ enableMic: true })
+      //   this.setPusherAttributesHandler({ enableMic: true })
       // }
-    }, this)
+    })
     trtcClient.on(TRTC_EVENT.LOCAL_LEAVE, (event: OnEvent) => {
-      console.log('* room LOCAL_LEAVE', event)
-    }, this)
+    })
     trtcClient.on(TRTC_EVENT.ERROR, (event: OnEvent) => {
-      console.log('* room ERROR', event)
-    }, this)
+    })
     trtcClient.on(TRTC_EVENT.REMOTE_USER_JOIN, (event: OnEvent) => {
-      console.log('* room REMOTE_USER_JOIN', event)
       const { userID } = event.data
       wx.showToast({
         title: `${userID} 进入了房间`,
         icon: 'none',
         duration: 2000,
       })
-    }, this)
+    })
     // 远端用户退出
     trtcClient.on(TRTC_EVENT.REMOTE_USER_LEAVE, (event: OnEvent) => {
-      console.log('* room REMOTE_USER_LEAVE', event)
       const { userID, playerList } = event.data
       this.setData({
         playerList: playerList
@@ -233,46 +241,40 @@ Page({
         icon: 'none',
         duration: 2000,
       })
-    }, this)
+    })
     // 远端用户推送视频
     trtcClient.on(TRTC_EVENT.REMOTE_VIDEO_ADD, (event: OnEvent) => {
-      console.log('* room REMOTE_VIDEO_ADD', event)
       const { player } = event.data
       // 开始播放远端的视频流，默认是不播放的
       this.setPlayerAttributesHandler(player, { muteVideo: false })
-    }, this)
+    })
     // 远端用户取消推送视频
     trtcClient.on(TRTC_EVENT.REMOTE_VIDEO_REMOVE, (event: OnEvent) => {
-      console.log('* room REMOTE_VIDEO_REMOVE', event)
       const { player } = event.data
       this.setPlayerAttributesHandler(player, { muteVideo: true })
-    }, this)
+    })
     // 远端用户推送音频
     trtcClient.on(TRTC_EVENT.REMOTE_AUDIO_ADD, (event: OnEvent) => {
-      console.log('* room REMOTE_AUDIO_ADD', event)
       const { player } = event.data
       this.setPlayerAttributesHandler(player, { muteAudio: false })
-    }, this)
+    })
     // 远端用户取消推送音频
     trtcClient.on(TRTC_EVENT.REMOTE_AUDIO_REMOVE, (event: OnEvent) => {
-      console.log('* room REMOTE_AUDIO_REMOVE', event)
       const { player } = event.data
       this.setPlayerAttributesHandler(player, { muteAudio: true })
-    }, this)
+    })
     trtcClient.on(TRTC_EVENT.REMOTE_AUDIO_VOLUME_UPDATE, (event: OnEvent) => {
-      console.log('* room REMOTE_AUDIO_VOLUME_UPDATE', event)
       const { playerList } = event.data
       this.setData({
         playerList: playerList
       })
-    }, this)
+    })
     trtcClient.on(TRTC_EVENT.LOCAL_AUDIO_VOLUME_UPDATE, (event: OnEvent) => {
-      // console.log('* room LOCAL_AUDIO_VOLUME_UPDATE', event)
       const { pusher } = event.data
       this.setData({
         pusher: pusher
       })
-    }, this)
+    })
   },
 
 
@@ -287,6 +289,7 @@ Page({
 
   // 请保持跟 wxml 中绑定的事件名称一致
   _pusherStateChangeHandler(event: WechatMiniprogram.TouchEvent) {
+    console.log(event)
     trtcClient.pusherEventHandler(event)
   },
   _pusherNetStatusHandler(event: WechatMiniprogram.TouchEvent) {

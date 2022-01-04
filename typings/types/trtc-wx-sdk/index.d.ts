@@ -20,7 +20,7 @@ declare module 'trtc-wx-sdk' {
 
     getPlayerList(): PlayerListItem[]
 
-    on(EventCode: TRTCEvent, handler: Function, context: WechatMiniprogram.Page.Instance<{}, {}>): void
+    on(EventCode: TRTCEvent, handler: Function, context?: WechatMiniprogram.Page.Instance<{}, {}>): void
 
     off(EventCode: TRTCEvent, handler: Function): void
 
