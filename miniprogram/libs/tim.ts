@@ -1,4 +1,4 @@
-import TIM from 'tim-wx-sdk'
+import TIM from './tim_SDK.js'
 import TIMUploadPlugin from 'tim-upload-plugin';
 import { $emit } from '../utils/event';
 import userInfo from '../store/modules/user';
@@ -70,7 +70,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
 
 
   // wx.defineProperty
-  Object.defineProperty(wx, 'tim', tim)
+  // Object.defineProperty(wx, 'tim', tim)
   _tim = tim
 
   tim.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin })
@@ -104,6 +104,14 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
       if (_isReady && !_hasSendNeedService) {
         _hasSendNeedService = true
         neetService()
+        clearInterval(_timer)
+      }
+    }, 500)
+  } else {
+    _timer = setInterval(() => {
+      if (_isReady && !_hasSendNeedService) {
+        _hasSendNeedService = true
+        joinStoreGroup()
         clearInterval(_timer)
       }
     }, 500)

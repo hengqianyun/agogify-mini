@@ -5,12 +5,10 @@ import store from '../../store/index.js'
 import { $emit } from '../../utils/event.js'
 import { IMAGEBASEURL } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
-import { CustomMessageTypes, initTim, sendCustomMessage } from '../../libs/tim.js'
 import { $on, $remove } from '../../utils/event'
 import { getIdFromString } from '../../utils/util.js'
 
 let trtcClient: TRTC
-let tim: TIMSKD
 Page({
   data: {
     _rtcConfig: {
@@ -32,7 +30,6 @@ Page({
     showChat: false,
     saleId: '',
     storeId: '',
-    tim: null as unknown as TIMSKD,
   },
   store: store,
 
@@ -73,40 +70,38 @@ Page({
     this.init({ userID: user.customer, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
 
-    $on({
-      name: "onMessageEvent",
-      tg: this,
-      success: (res: TIMMessageReceive) => {
-        const data = res.data[0]
-        let payloadData: any;
-        try {
-          payloadData = JSON.parse(data.payload.data)
-        } catch (err) { }
-        if (payloadData && payloadData.to === this.data.userId) {
-          // 判断消息是否发给自己
-          switch (payloadData.type) {
-            case CustomMessageTypes.START_VIDEO:
-              // 进入房间
-              // this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-              this.startVideo({ publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-              break
-            case CustomMessageTypes.NOW_BUSY:
-              this.setData({
-                showBusyDialog: true
-              })
-              break
-            case CustomMessageTypes.READY_ENTER_ROOM:
-              sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.data.storeId}_Meeting`, this.data.userId, this.data.saleId)
-              break
-          }
-        }
-      }
-    })
+    // $on({
+    //   name: "onMessageEvent",
+    //   tg: this,
+    //   success: (res: TIMMessageReceive) => {
+    //     const data = res.data[0]
+    //     let payloadData: any;
+    //     try {
+    //       payloadData = JSON.parse(data.payload.data)
+    //     } catch (err) { }
+    //     if (payloadData && payloadData.to === this.data.userId) {
+    //       debugger
+    //       // 判断消息是否发给自己
+    //       switch (payloadData.type) {
+    //         case CustomMessageTypes.START_VIDEO:
+    //           // 进入房间
+    //           console.log(payloadData)
+    //           this.startVideo({ publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
+    //           break
+    //         case CustomMessageTypes.NOW_BUSY:
+    //           this.setData({
+    //             showBusyDialog: true
+    //           })
+    //           break
+    //         case CustomMessageTypes.READY_ENTER_ROOM:
+    //           sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.data.storeId}_Meeting`, this.data.userId, this.data.saleId)
+    //           break
+    //       }
+    //     }
+    //   }
+    // })
 
-    if (this.data.isReconnect) {
-      const id = `${this.data.storeId}_Meeting-${getIdFromString(this.data.saleId)}`
-      this.startVideo({ publicGroupId: id, roomId: id })
-    }
+    
   },
 
   onReady() {
@@ -114,20 +109,22 @@ Page({
   },
   onUnload() {
     console.log('room unload')
-    $remove({
-      name: "onMessageEvent",
-      tg: this,
-    })
+    // $remove({
+    //   name: "onMessageEvent",
+    //   tg: this,
+    // })
   },
 
-  startVideo(option: { publicGroupId: string, roomId: string }) {
-    const { publicGroupId, roomId } = option
+  startVideo(option: WechatMiniprogram.TouchEvent) {
+    const { publicGroupId, roomId } = option.detail as { publicGroupId: string, roomId: string }
+    console.log('room console: option -->', option)
     this.setData({
       groupId: publicGroupId,
       roomId: roomId,
       strRoomID: roomId,
       isWaiting: false
     })
+    console.log('start video --->', roomId)
     this.enterRoom({ roomID: roomId })
     $emit({
       name: 'joined_room'
@@ -135,15 +132,20 @@ Page({
   },
 
   handleDialogCommit() {
-    let flag = true
-    const { userSig, sdkAppID } = genTestUserSig(this.data.userId)
-    tim = initTim(this.data.userId, { sdkAppID, userSig }, this.data.storeId, this.data.saleId, this.data.isReserve, this.data.isReconnect)
-    if (this.data.isReserve && this.data.isReconnect) flag = false
-    this.setData({
+    // if (this.data.isReconnect) {
+    //   const id = `${this.data.storeId}_Meeting-${getIdFromString(this.data.saleId)}`
+    //   console.log( 'commit  --->', id)
+    //   this.startVideo({ publicGroupId: id, roomId: id })
+    // } 
+      let flag = true
+      if (this.data.isReserve && this.data.isReconnect) flag = false
+      this.setData({
+      })
+      
+      this.setData({
+      isWaiting: flag,
       showDialog: false,
       showChat: true,
-      isWaiting: flag,
-      tim
     })
   },
 
@@ -187,6 +189,7 @@ Page({
 
   enterRoom({ roomID }: { roomID: string }) {
     const trtcConfig = { ...this.data._rtcConfig, strRoomID: roomID } as EnterRoomParams
+    console.log('trtcConfig ---->', trtcConfig)
     this.setData({
       pusher: trtcClient.enterRoom(trtcConfig),
     }, () => {

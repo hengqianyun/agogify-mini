@@ -18,7 +18,7 @@ const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
   format: 'aac', // 音频格式，选择此格式创建的音频消息，可以在即时通信 IM 全平台（Android、iOS、微信小程序和Web）互通
 
 }
-// let tim: TIMSKD
+let tim: TIMSKD
 
 Component({
   /**
@@ -34,7 +34,6 @@ Component({
     saleId: String,
     isReconnect: Boolean,
     isReserve: Boolean,
-    tim: Object
   },
 
   /**
@@ -86,11 +85,11 @@ Component({
 
   lifetimes: {
     async ready() {
-      // const userID = this.properties.userId
-      // const { userSig, sdkAppID } = genTestUserSig(userID)
+      const userID = this.properties.userId
+      const { userSig, sdkAppID } = genTestUserSig(userID)
 
-      // tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
-      this.joinGroup(this.properties.groupId)
+      tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
+      this.joinGroup(`${this.properties.storeId}_Meeting`)
       this.initRecording()
       this.queryAddressList()
       $on({
@@ -226,7 +225,8 @@ Component({
 
     async joinGroup(groupId: string) {
       try {
-        await this.properties.tim.joinGroup({ groupID: groupId, type: 'AVChatRoom' })
+        console.log('groupId -->', groupId)
+        await tim.joinGroup({ groupID: groupId, type: 'AVChatRoom' })
       } catch (err) {
         console.log(err)
       }
@@ -406,7 +406,7 @@ Component({
         sourceType: ['album'],
         count: 1,
         success: async function (res) {
-          const message = await self.properties.tim.createImageMessage({
+          const message = await tim.createImageMessage({
             to: self.properties.groupId,
             conversationType: "GROUP",
             payload: {
@@ -418,7 +418,7 @@ Component({
           })
           console.log(message)
           // self.$store.commit('sendMessage', message)
-          self.properties.tim.sendMessage(message).then(() => {
+          tim.sendMessage(message).then(() => {
             self.data.percent = 0
           }).catch(() => {
           })
