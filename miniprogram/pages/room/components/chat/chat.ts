@@ -89,7 +89,7 @@ Component({
       const { userSig, sdkAppID } = genTestUserSig(userID)
 
       tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
-      this.joinGroup(`${this.properties.storeId}_Meeting`)
+      // this.joinGroup(`${this.properties.storeId}_Meeting`)
       this.initRecording()
       this.queryAddressList()
       $on({
@@ -105,6 +105,11 @@ Component({
 
             // 判断消息是否发给自己
             switch (payloadData.type) {
+              case CustomMessageTypes.START_VIDEO:
+              // 进入房间
+              console.log(payloadData)
+              this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
+              break
               case CustomMessageTypes.PAY:
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData

@@ -83,11 +83,7 @@ Page({
     //       debugger
     //       // 判断消息是否发给自己
     //       switch (payloadData.type) {
-    //         case CustomMessageTypes.START_VIDEO:
-    //           // 进入房间
-    //           console.log(payloadData)
-    //           this.startVideo({ publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-    //           break
+            
     //         case CustomMessageTypes.NOW_BUSY:
     //           this.setData({
     //             showBusyDialog: true

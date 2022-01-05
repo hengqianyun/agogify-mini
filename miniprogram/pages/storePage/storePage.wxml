@@ -1,9 +1,4 @@
 <view class="store-page">
-  <view class='block'>
-    <live-player mode="RTC" src="rtmp://192.168.20.113:1935/live/stream1">
-    </live-player>
-    <view class="test">Hello</view>
-</view>
   <view class="info-container">
     <view class="position-container">
       <image class="store-banner" src="{{details.images[0].path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
