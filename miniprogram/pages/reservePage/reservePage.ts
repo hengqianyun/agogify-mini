@@ -34,7 +34,7 @@ const weekMap: Map<WeekNum, string> = new Map([
   [4, '四'],
   [5, '五'],
   [6, '六'],
-  [0, '七'],
+  [0, '日'],
 ])
 
 type DurationType = 30 | 45
