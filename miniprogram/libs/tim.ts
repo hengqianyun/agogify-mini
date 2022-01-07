@@ -56,7 +56,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
   _saleId = saleId
   if (_tim) {
     if (!isReconnect) neetService()
-    if (isReserve) joinReserve()
+    else if (isReserve) joinReserve()
     return _tim
   }
 
