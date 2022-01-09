@@ -224,6 +224,17 @@ Page({
   },
 
   async querySalesTimeSlots() {
+    wx.showLoading({title: '加载中'})
+    let timer = 0
+    let count = 0, loading = true
+    timer = setInterval(() => {
+      if (loading) {
+        count++
+      } else {
+        clearInterval(timer)
+        wx.showToast({title: `加载了${count / 5}秒`})
+      }
+    }, 200)
     this.initTimeSlots()
     const code = this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"]
     const res = await reserveModule.querySalesTimeSlots({
@@ -253,6 +264,8 @@ Page({
     this.setData({
       tableItems: this.data.tableItems
     })
+    wx.hideLoading()
+    loading = false
   },
 
   getTime(i: number, j: number, isStart: boolean) {
