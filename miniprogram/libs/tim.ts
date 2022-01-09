@@ -46,6 +46,8 @@ export class CustomMessageTypes {
   /// 销售通知客户重试
   static RETRY = 'RETRY';
 
+  /// 倒计时校准
+  static TIMELEFT_CHECK = 'TIMELEFT_CHECK';
 }
 
 export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {

@@ -8,7 +8,7 @@
         <view class="store-name">{{storeName}}</view>
       </view>
       <view class="time-and-exit">
-        <view class="time-left border-radius-8">23:45</view>
+        <view class="time-left border-radius-8">{{timeleft}}</view>
         <view class="exit-icon border-radius-8" bind:tap="handleExitTab">
           <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
         </view>

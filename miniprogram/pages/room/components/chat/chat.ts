@@ -67,6 +67,9 @@ Component({
       freight: 20,
       sum: 2000
     },
+    timeleft: '00:00',
+    timeleftTimer: 0,
+    timeleftSec: 0,
     productName: '',
     paymentId: '',
     shipmentId: '',
@@ -81,6 +84,7 @@ Component({
     showHandUpDialog: false,
     showBusyDialog: false,
     showMoreAddress: false,
+    hasGetTime: false,
   },
 
   lifetimes: {
@@ -102,7 +106,6 @@ Component({
             payloadData = JSON.parse(data.payload.data)
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
-
             // 判断消息是否发给自己
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
@@ -146,6 +149,17 @@ Component({
                 break
               case CustomMessageTypes.READY_ENTER_ROOM:
                 sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                break
+              case CustomMessageTypes.TIMELEFT_CHECK:
+                // sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                if (!this.data.hasGetTime) {
+
+                  this.formatTimeleft(payloadData.timeleft)
+                } else {
+                  this.setData({
+                    timeleftSec: payloadData.timeleft
+                  })
+                }
                 break
               case CustomMessageTypes.RETRY:
                 clearSessuibAsync()
@@ -204,6 +218,7 @@ Component({
         name: "hang_up",
         tg: this,
       })
+      clearInterval(this.data.timeleftTimer)
     }
   },
 
@@ -608,7 +623,28 @@ Component({
       })
       const { parameters } = res.data
       return parameters
+    },
+
+    formatTimeleft(left: number) {
+      if (!this.data.hasGetTime) {
+        this.data.timeleftTimer = setInterval(() => {
+          this.data.timeleftSec--;
+          this.formatTimeleft(this.data.timeleftSec)
+        }, 1000)
+        this.setData({
+          timeleftSec: left,
+          hasGetTime: true
+        })
+      }
+      let min = Math.ceil(left / 60);
+      let sec = left % 60
+      this.setData({
+        timeleft: `${min > 9 ? min : '0' + min}:${sec > 9 ? sec : '0' + sec}`,
+        timeleftSec: left
+      })
     }
   },
+
+  
 
 })
