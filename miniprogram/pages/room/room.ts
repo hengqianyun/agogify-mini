@@ -165,7 +165,7 @@ Page({
     const pusherConfig: PusherAttributesParams = {
       mode: 'live', // RTC：实时通话，live：直播模式
       enableCamera: false, // 是否开启摄像头
-      enableMic: false, // 是否开启麦克风
+      enableMic: true, // 是否开启麦克风
       enableAgc: false, // 是否开启音频自动增益，该特性可以补偿部分手机麦克风音量太小的问题，但也会放大噪音，建议配合 ANS 同时开启
       enableAns: false, // 是否开启音频噪声抑制，该特性会自动检测背景噪音并进行过滤，但也会误伤周围的音乐，只有会议、教学等场景才适合开启
       minBitrate: 600, // 
