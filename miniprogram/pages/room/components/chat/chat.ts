@@ -107,13 +107,15 @@ Component({
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
+            console.log(payloadData.type)
+            console.log(payloadData)
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
-              // 进入房间
-              console.log(payloadData)
-              this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-              break
+                // 进入房间
+                this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
+                break
               case CustomMessageTypes.PAY:
+                debugger
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
                 if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3 || !size || !productCategory1CnName || !productCategory2CnName || !productCategory3CnName) {
@@ -201,7 +203,7 @@ Component({
         name: 'hang_up',
         tg: this,
         success() {
-          sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`,  this.properties.userId, this.properties.saleId)
+          sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
           clearSessuibAsync()
           wx.navigateBack()
         }
@@ -290,7 +292,7 @@ Component({
 
     handleHangUp() {
       // TODO 挂断电话
-      sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId ,  this.properties.userId, this.properties.saleId)
+      sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId, this.properties.userId, this.properties.saleId)
       wx.navigateBack()
     },
 
@@ -334,7 +336,7 @@ Component({
               canSend: true
             })
             this.startRecording()
-          } 
+          }
           // else if (auth === false) { // 首次发起授权
           //   this.toSettingPage({
           //     content: '请前往设置页打开麦克风',
@@ -492,7 +494,7 @@ Component({
     },
     // 取消付款
     _popupCancel() {
-      sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId,  this.properties.userId, this.properties.saleId)
+      sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId)
       this.setData({
         showPopup: false
       })
@@ -522,7 +524,7 @@ Component({
         size: this.data.productSize,
       }
       const completeRes = await orderModule.orderComplete(tokenValue, { notes: JSON.stringify(notes) });
-      sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId,  this.properties.userId, this.properties.saleId)
+      sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
       this.setData({
         showPopup: false,
       })
@@ -541,7 +543,7 @@ Component({
           console.log(res)
           const completeRes = await orderModule.orderComplete(tokenValue, { notes: 'finished' })
           // 付款
-          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId,  _that.properties.userId, _that.properties.saleId)
+          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId, _that.properties.userId, _that.properties.saleId)
           _that.setData({
             showPopup: false,
           })
@@ -644,7 +646,7 @@ Component({
           hasGetTime: true
         })
       }
-      let min = Math.ceil(left / 60);
+      let min = Math.floor(left / 60);
       let sec = left % 60
       this.setData({
         timeleft: `${min > 9 ? min : '0' + min}:${sec > 9 ? sec : '0' + sec}`,
@@ -653,6 +655,6 @@ Component({
     }
   },
 
-  
+
 
 })

@@ -1,4 +1,0 @@
-<view class='block'>
-  <live-player mode="RTC" src="rtmp://192.168.20.113:1935/live/stream1"></live-player>
-  <view class="test">Hello</view>
-</view>

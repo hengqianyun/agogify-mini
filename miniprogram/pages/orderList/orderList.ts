@@ -3,7 +3,7 @@ import orderModule from "../../http/module/order"
 import { formatTime } from "../../utils/util"
 
 interface PageOrders extends orderDesign.orderBasic {
-  jsonNotes: {brand: string, category1: string, category2: string, category3: string, size: string, category1CnName: string, category2CnName: string, category3CnName: string,}
+  jsonNotes: { brand: string, category1: string, category2: string, category3: string, size: string, category1CnName: string, category2CnName: string, category3CnName: string, }
   productName: string
 }
 
@@ -16,10 +16,10 @@ Page({
   data: {
     active: 0,
     tabList: [
-      {label: '待发货', status: '1'},
-      {label: '已发货', status: '2'},            
+      { label: '待发货', status: '1' },
+      { label: '已发货', status: '2' },
     ],
-    orderLists: [] as  PageOrders[][],
+    orderLists: [] as PageOrders[][],
     pageInfo: {
       page: 1,
       itemsPerPage: 99
@@ -82,8 +82,8 @@ Page({
 
   },
 
-  handleOrderTap({currentTarget}: WechatMiniprogram.TouchEvent) {
-    const {token} = currentTarget.dataset as {token: string}
+  handleOrderTap({ currentTarget }: WechatMiniprogram.TouchEvent) {
+    const { token } = currentTarget.dataset as { token: string }
     wx.navigateTo({
       url: '../orderDetail/orderDetail?token=' + token
     })
@@ -95,24 +95,24 @@ Page({
         title: '加载中...'
       })
       const resData = await orderModule.queryOrderList(this.data.pageInfo)
-    const {"hydra:member": list} = resData.data
-    const [readyList, shipedList] = [[] as PageOrders[], [] as PageOrders[]]
-    for (let item of list) {
-      if (item.store.logo?.path) {
-        item.store.logo.path = IMAGEBASEURL + item.store.logo.path
+      const { "hydra:member": list } = resData.data
+      const [readyList, shipedList] = [[] as PageOrders[], [] as PageOrders[]]
+      for (let item of list) {
+        if (item.store.logo?.path) {
+          item.store.logo.path = IMAGEBASEURL + item.store.logo.path
+        }
+        item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
+
+        if (item.shippingState === 'ready') {
+          readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
+        } else {
+          shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
+        }
       }
-      item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt))) 
-      
-      if (item.shippingState === 'ready') {
-        readyList.push({...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
-      } else {
-        shipedList.push({...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
-      }
-    }
-    this.setData({
-      orderLists: [readyList, shipedList]
-    })
-    } catch(err) {
+      this.setData({
+        orderLists: [readyList, shipedList]
+      })
+    } catch (err) {
       wx.showToast({
         title: '网络错误，请重试',
         icon: 'error'
@@ -120,6 +120,6 @@ Page({
     } finally {
       wx.hideLoading()
     }
-    
+
   }
 })
