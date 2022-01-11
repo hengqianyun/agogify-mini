@@ -160,6 +160,7 @@ Component({
                     timeleftSec: payloadData.timeleft
                   })
                 }
+                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 break
               case CustomMessageTypes.RETRY:
                 clearSessuibAsync()
