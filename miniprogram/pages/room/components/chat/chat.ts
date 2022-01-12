@@ -8,6 +8,7 @@ import orderModule from '../../../../http/module/order'
 import { HmacSHA256, enc } from 'crypto-js'
 import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessuibAsync } from '../../../../utils/querySession'
+import drawQrcode from 'weapp-qrcode-canvas-2d'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -81,10 +82,13 @@ Component({
     productCategory2CnName: '',
     productCategory3CnName: '',
     productSize: '',
+    payDialogLabel: '',
+    qrcode: '',
     showHandUpDialog: false,
     showBusyDialog: false,
     showMoreAddress: false,
     hasGetTime: false,
+    showQrcode: false,
   },
 
   lifetimes: {
@@ -122,6 +126,7 @@ Component({
                   return
                 }
                 that.setData({
+                  payDialogLabel: '确认订单',
                   showPopup: true,
                   tokenValue,
                   productName,
@@ -501,34 +506,45 @@ Component({
     },
     async _handleCommit() {
       wx.showLoading({ title: '正在请求...' })
-
-      const { tokenValue, address, shipmentId, paymentId } = this.data
-      try {
-        const putAddressRes = await this.putAddress(tokenValue, address)
-        const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
-        const putPaymentRes = await this.putPayment(tokenValue, paymentId)
-      } catch {
+      if (this.data.showQrcode) {
+        const notes = {
+          brand: this.data.productBrand,
+          category1: this.data.productCategory1,
+          category2: this.data.productCategory2,
+          category3: this.data.productCategory3,
+          productCategory1CnName: this.data.productCategory1CnName,
+          productCategory2CnName: this.data.productCategory2CnName,
+          productCategory3CnName: this.data.productCategory3CnName,
+          size: this.data.productSize,
+        }
+        const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
+        sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
+        this.setData({
+          showPopup: false,
+        })
+        this.resetOrder()
         wx.hideLoading()
-        wx.showToast({ title: '支付失败，请重新尝试' })
-        return
+      } else {
+        const { tokenValue, address, shipmentId, paymentId } = this.data
+        let qrcodeUrl: string
+        try {
+          const putAddressRes = await this.putAddress(tokenValue, address)
+          const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
+          const putPaymentRes = await this.putPayment(tokenValue, paymentId)
+          qrcodeUrl = await this.queryQrcode()
+        } catch {
+          wx.hideLoading()
+          wx.showToast({ title: '创建订单失败，请重新尝试' })
+          return
+        }
+        this.showQrcode(qrcodeUrl)
+        wx.hideLoading()
       }
-      const notes = {
-        brand: this.data.productBrand,
-        category1: this.data.productCategory1,
-        category2: this.data.productCategory2,
-        category3: this.data.productCategory3,
-        productCategory1CnName: this.data.productCategory1CnName,
-        productCategory2CnName: this.data.productCategory2CnName,
-        productCategory3CnName: this.data.productCategory3CnName,
-        size: this.data.productSize,
-      }
-      const completeRes = await orderModule.orderComplete(tokenValue, { notes: JSON.stringify(notes) });
-      sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
-      this.setData({
-        showPopup: false,
-      })
-      this.resetOrder()
-      wx.hideLoading()
+
+
+
+
+
       return
       const paymentRes = await this.payment()
       const _that = this
@@ -540,7 +556,7 @@ Component({
         paySign: paymentRes.paySign,
         async success(res) {
           console.log(res)
-          const completeRes = await orderModule.orderComplete(tokenValue, { notes: 'finished' })
+          const completeRes = await orderModule.orderComplete(_that.data.tokenValue, { notes: 'finished' })
           // 付款
           sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId, _that.properties.userId, _that.properties.saleId)
           _that.setData({
@@ -554,6 +570,80 @@ Component({
       })
 
     },
+    showQrcode(url: string) {
+      const that = this
+      this.setData({
+        payDialogLabel: '已付款',
+        showQrcode: true,
+      })
+      wx.createSelectorQuery().in(this)
+        .select('#union-pay-qrcode')
+        .fields({ node: true, size: true })
+        .exec((res) => {
+          console.log(res)
+          let canvas: any
+          try {
+            canvas = res[0].node
+          } catch (err) {
+            console.log(err)
+            return
+          }
+          drawQrcode({
+            width: 170,
+            height: 170,
+            canvas: canvas,
+            canvasId: 'union-pay-qrcode',
+            text: url
+          })
+
+          wx.canvasToTempFilePath({
+            canvasId: 'union-pay-qrcode',
+            canvas: canvas,
+            x: 0,
+            y: 0,
+            width: 170,
+            height: 170,
+            success(res) {
+              that.setData({
+                qrcode: res.tempFilePath,
+
+              })
+            }
+
+          })
+        })
+
+    },
+    async _handleSaveQrcode() {
+      wx.saveImageToPhotosAlbum({
+        filePath: this.data.qrcode,
+        success(res) {
+          console.log('saved');
+        }
+      })
+
+    },
+
+    async queryQrcode() {
+      wx.showLoading({ title: '加载中' })
+      try {
+        const res = await orderModule.unionPayPayment({
+          orderId: this.data.tokenValue,
+          user: "info@yabandmedia.com",
+          amount: (this.data.orderInfo.items[0].total / 100).toString(),
+          currency: "EUR",
+          description: "YabandPay / UnionPay / test",
+          demo: "test",
+          timeout: "0"
+
+        })
+        return res.data.url
+      } catch (err) {
+        wx.hideLoading()
+        throw err
+      }
+    },
+
     async queryAddressList() {
       const resData = await addressModule.queryAddressList({ ...this.data.pageInfo, type: 'customer' })
       const { 'hydra:member': list } = resData.data

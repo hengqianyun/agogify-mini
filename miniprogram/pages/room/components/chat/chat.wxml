@@ -146,9 +146,31 @@
             <view class="detail-number">€{{orderInfo.total / 100}}</view>
           </view>
         </view>
+        <view class="qr-code" wx:if="{{showQrcode}}">
+          <view class="canvas">
+            <canvas type="2d" style="width: 150px; height: 150px;" id="union-pay-qrcode"></canvas>
+          </view>
+          <view class="qr-info">
+            <view class="text-info">
+              
+              <view class="yun-pay-icon"></view>
+              <view class="pay-tips">
+                <view class="pay-tips-1">
+                  使用云闪付app扫码付款
+                </view>
+                <view class="pay-tips-2">
+                  付款后点击"已付款"完成订单
+                </view>
+              </view>
+            </view>
+            <view class="saveBtn">
+              <rss-btn label="保存我二维码到相册" width="{{346}}" height="{{72}}" className="{{'fill-btn'}}" borderRadius="{{44}}" bind:onTap="_handleSaveQrcode"></rss-btn>
+            </view>
+          </view>
+        </view>
       </view>
       <view class="btn-area">
-        <rss-btn label="确认支付" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
+        <rss-btn label="{{payDialogLabel}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
       </view>
     </van-popup>
   </view>

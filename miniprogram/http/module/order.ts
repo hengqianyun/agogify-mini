@@ -9,6 +9,7 @@ const orderModule = {
   putShipment: async (tokenValue: string, shipmentId: string, params: orderDesign.putShipmentParams) => await put<swaggerI.orderListResult, orderDesign.putShipmentParams>('store/orders/' + tokenValue + '/shipments/' + shipmentId, params),
   putPayment: async (tokenValue: string, paymentId: string, params: orderDesign.putPaymentParams) => await put<swaggerI.orderListResult, orderDesign.putPaymentParams>('store/orders/' + tokenValue + '/payments/' + paymentId, params),
   orderComplete: async (tokenValue: string, params: orderDesign.orderCompleteParams) => await put<swaggerI.orderCompleteBasic, orderDesign.orderCompleteParams>('store/orders/' + tokenValue + '/complete', params),
+  unionPayPayment: async (unipayParams: orderDesign.unionPayParams) =>  await post<swaggerI.inionPayRes, orderDesign.unionPayParams>('store/union-pay/payments', unipayParams),
   pay: async(params: payment.paymentReqParams) => await post<swaggerI.paymentRes, payment.paymentReqParams>('https://mapi.yabandpay.com/Payments', params),
   queryOrderList: async (params: orderDesign.queryOrderListParams) => get<swaggerI.queryOrderListRes, orderDesign.queryOrderListParams>('store/orders', params),
 }

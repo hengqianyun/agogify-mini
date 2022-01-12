@@ -17,6 +17,7 @@ declare namespace orderDesign {
   type shippingMethods = 'dhl'
   type paymentMethods = 'wechat_offline'
   type shippingStateTypes = 'ready' | 'shipped'
+  
 
   interface orderBasic extends swaggerI.requestBase {
     checkoutState: string
@@ -111,6 +112,20 @@ declare namespace orderDesign {
     shipments: shipments[]
   }
 
+  interface unionPayRes extends swaggerI.requestSimpleBase {
+    tradeId: string
+    status: string
+    orderId: string
+    amount: string
+    currency: string
+    settlementAmount: string
+    settlementCurrency: string
+    exchangeRate: string
+    url: string
+    state: string
+    message: string
+  }
+
   interface shippingAddress extends swaggerI.requestBase, addressDesign.createAddressParams {}
 
   interface billingAddress extends swaggerI.requestBase, addressDesign.createAddressParams {}
@@ -121,6 +136,16 @@ declare namespace orderDesign {
 
   interface orderCompleteParams {
     notes: string
+  }
+
+  interface unionPayParams {
+    orderId: string
+    user: 'info@yabandmedia.com'
+    amount: string
+    currency: payment.Currency
+    description: string
+    demo: 'test'
+    timeout: '0'
   }
 
   interface queryOrderListParams extends swaggerI.pageRequestParams {

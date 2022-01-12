@@ -98,6 +98,8 @@ declare namespace swaggerI {
 
   type orderCompleteBasic = orderDesign.orderComplectRes
 
+  type inionPayRes = orderDesign.unionPayRes
+
   type queryOrderListRes = orderDesign.queryOrderListRes
 
   type paymentRes = payment.paymentReqRes
