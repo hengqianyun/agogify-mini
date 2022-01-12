@@ -244,18 +244,22 @@ Page({
     })
 
     const { "hydra:member": list } = res.data
+    /**
+     * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
+     */
+    const timeZone = 8;
     for (const slot of list) {
       const { state } = slot
       if (state === 'available') {
         const { startTime, version, '@id': id} = slot
         const curDate = new Date(startTime)
         const today = new Date()
-        const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours(), curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
+        const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
         const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
         const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
         console.log(hour)
         // TODO 9 变为 12
-        const j = (hour - 9) * 4 + min / 15
+        const j = (hour - 13) * 4 + min / 15
         this.data.tableItems[i][j].disabled = false
         this.data.tableItems[i][j].paramsVersion = version
         this.data.tableItems[i][j].paramsId = getIdFromString(id)
