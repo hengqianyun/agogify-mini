@@ -28,6 +28,7 @@ Page({
     isReconnect: false,
     isReserve: false,
     showChat: false,
+    canTap: true,
     saleId: '',
     storeId: '',
   },
@@ -133,6 +134,7 @@ Page({
     //   console.log( 'commit  --->', id)
     //   this.startVideo({ publicGroupId: id, roomId: id })
     // } 
+    if (!this.data.canTap) return;
       let flag = true
       if (this.data.isReserve && this.data.isReconnect) flag = false
       this.setData({
@@ -146,16 +148,21 @@ Page({
   },
 
   handleDialogCancel() {
+    if (!this.data.canTap) return;
     wx.navigateBack()
   },
 
   async queryStore(code: string) {
+    this.data.canTap = false
+    wx.showLoading({title: ''})
     const resData = await storeModule.queryStoreDetails(code)
     if (resData.data.logo)
       resData.data.logo.path = IMAGEBASEURL + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
       resData.data.images[0].path = IMAGEBASEURL + resData.data.images[0].path
     }
+    this.data.canTap = true
+    wx.hideLoading()
     this.setData({
       store: { id: code, avatar: resData.data.logo.path, name: resData.data.name },
     })

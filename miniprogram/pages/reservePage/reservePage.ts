@@ -260,6 +260,9 @@ Page({
         console.log(hour)
         // TODO 9 变为 12
         const j = (hour - 13) * 4 + min / 15
+        if (!!this.data.tableItems[i][j]) {
+          
+        }
         this.data.tableItems[i][j].disabled = false
         this.data.tableItems[i][j].paramsVersion = version
         this.data.tableItems[i][j].paramsId = getIdFromString(id)
