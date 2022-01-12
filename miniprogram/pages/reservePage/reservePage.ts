@@ -225,7 +225,8 @@ Page({
 
   async querySalesTimeSlots() {
     wx.showLoading({title: '加载中'})
-    let timer = 0
+    try {
+      let timer = 0
     let count = 0, loading = true
     timer = setInterval(() => {
       if (loading) {
@@ -271,8 +272,13 @@ Page({
     this.setData({
       tableItems: this.data.tableItems
     })
-    wx.hideLoading()
     loading = false
+    } catch {
+
+    } finally {
+      wx.hideLoading()
+    }
+    
   },
 
   getTime(i: number, j: number, isStart: boolean) {
