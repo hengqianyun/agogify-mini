@@ -86,6 +86,9 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
       userID,
       userSig,
     })
+
+    
+
   } catch (err) {
 
     console.log(err)
@@ -156,6 +159,18 @@ async function onReadyStateUpdate({ name }: TIMEvent) {
 
   if (isSDKReady) {
     _isReady = isSDKReady
+    _tim.getMyProfile().then((res) => {
+      console.log('用户个人信息', res)
+      if (res.data.nick == '') {
+        wx.getStorage({
+          key: 'userInfo',
+          success(userinfo) {
+
+            _tim.updateMyProfile({nick: userinfo.data.userName, avatar: userinfo.data.avatarUrl})
+          }
+        })
+      }
+    })
 
   }
 }
