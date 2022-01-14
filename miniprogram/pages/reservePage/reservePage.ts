@@ -75,9 +75,9 @@ Page({
   async onLoad() {
     const today = new Date()
     const [year, month, date] = [today.getFullYear(), today.getMonth(), today.getDate()]
-    const newDay = new Date(year, month, date, 0, 0)
+    const newDay = new Date(year, month, date, 16, 0)
     const startTime = newDay.toISOString();
-    const endTime = (new Date(newDay.setDate(date + 6))).toISOString()
+    const endTime = (new Date(newDay.setDate(date + 7))).toISOString()
     const stores = wx.getStorageSync<storeDesign.storeItem[]>('reserveStores')
     this.setData({
       stores,
@@ -136,7 +136,7 @@ Page({
       const date = new Date(sec + aDaySec * i)
       const day = date.getDate(), month = date.getMonth(), week = date.getDay() as WeekNum
       titleList.push({
-        date: `${month}.${day < 10 ? '0' + day : day}`,
+        date: `${month + 1}.${day < 10 ? '0' + day : day}`,
         week: '周' + weekMap.get(week) || ''
       })
     }
