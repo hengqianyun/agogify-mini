@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "RssButton": "../../components/RssButton/RssButton"
+  },
   "onReachBottomDistance": 50
 }

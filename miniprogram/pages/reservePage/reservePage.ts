@@ -350,6 +350,13 @@ Page({
         })
       }
     }
+    if (timeSlots.length === 0) {
+      wx.showToast({
+        title: '请选择预约时间',
+        icon: 'error',
+      })
+      return
+    }
     try {
       await reserveModule.bookTimeSlot({timeSlots} as reserveDesign.bookTimeSlotParams)
       wx.showToast({

@@ -25,10 +25,16 @@
   </view>
   <view class="controller">
     <block wx:for="{{btns}}" wx:key="label">
-      <view class="btn {{item.class}}" data-event="{{item.event}}" bind:tap="handleIconButtonTap">
+      <view class="btn-box">
+        
+        <RssButton data-event="{{item.event}}" label="{{item.label}}" className="{{item.class}}" width="{{196}}" height="{{76}}" borderRadius="{{2}}" fontWeight="{{300}}" icon="{{item.icon}}" color="{{item.color}}" iconSize="{{item.size}}" bind:tap="handleIconButtonTap"></RssButton>
+      </view>
+        
+      
+      <!-- <view class="btn {{item.class}}" data-event="{{item.event}}" bind:tap="handleIconButtonTap">
         <iconfont name="{{item.icon}}" size="{{item.size}}" color="{{item.color}}" />
         <text>{{item.label}}</text>
-      </view>
+      </view> -->
     </block>
       
   </view>

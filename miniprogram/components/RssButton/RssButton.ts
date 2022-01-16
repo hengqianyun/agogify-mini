@@ -12,6 +12,10 @@ Component({
       type: String,
       default: 'icon_demo'
     },
+    iconSize: {
+      type: Number,
+      default: 18,
+    },
     label: {
       type: String,
       require: true

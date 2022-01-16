@@ -17,14 +17,16 @@ Page({
     details: {} as PageStore,
     products: [] as storeDesign.product[],
     storeId: '',
-    btns: [{
-      label: '已收藏',
-      icon: 'store_yishoucang',
-      size: 32,
-      class: 'line-btn',
-      color: "#353535",
-      event: 'handleCollect'
-    }, {
+    btns: [
+    //   {
+    //   label: '已收藏',
+    //   icon: 'store_yishoucang',
+    //   size: 32,
+    //   class: 'line-btn',
+    //   color: "#353535",
+    //   event: 'handleCollect'
+    // },
+     {
       label: '呼叫',
       icon: 'a-call2',
       size: 32,
@@ -109,6 +111,7 @@ Page({
   },
 
   handleIconButtonTap(ev: WechatMiniprogram.TouchEvent) {
+    debugger
     console.log(ev)
     const {event} = ev.currentTarget.dataset as {event: keyof WechatMiniprogram.Page.Constructor}
     ;(this[event] as Function)()
