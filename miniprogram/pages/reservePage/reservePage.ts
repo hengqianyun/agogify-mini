@@ -273,7 +273,8 @@ Page({
       tableItems: this.data.tableItems
     })
     loading = false
-    } catch {
+    } catch(err) {
+      console.log(err)
 
     } finally {
       wx.hideLoading()

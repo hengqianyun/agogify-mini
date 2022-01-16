@@ -111,7 +111,6 @@ Page({
   },
 
   handleIconButtonTap(ev: WechatMiniprogram.TouchEvent) {
-    debugger
     console.log(ev)
     const {event} = ev.currentTarget.dataset as {event: keyof WechatMiniprogram.Page.Constructor}
     ;(this[event] as Function)()

@@ -37,5 +37,17 @@
       </view>
     </view>
   </RssDialog>
+  <!-- <RssDialog wx:if="{{showYunDialog}}" title="请注意" commitText="同意并继续" cancelText="不同意" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
+    <view class="dialog-content">
+      <view class="dialog-item flex">
+        <view class="dialog-title-right">
+          因海外实体专柜远程购物的特殊性原因，商品一经购买无法取消或退货。（请在购买前仔细核对尺码、颜色和商品品质）
+        </view>
+      </view>
+      <view class="dialog-item flex">
+        <view class="dialog-title-right">通过本平台在实体专柜远程购物仅限您本人自用，且每天仅限购一件商品，否则您将承担由此产生的额外费用。</view>
+      </view>
+    </view>
+  </RssDialog> -->
  
 </view>
