@@ -51,6 +51,13 @@ export class CustomMessageTypes {
 
   /// 倒计时校准
   static TIMELEFT_CHECK = 'TIMELEFT_CHECK';
+
+  /// 询问订单状态
+  static ASK_FOR_ORDER_STATE = 'ASK_FOR_ORDER_STATE'
+  static TELLING_THE_ORDER_STATE = 'TELLING_THE_ORDER_STATE'
+
+  /// 客户没有查询到订单信息，通知销售重新发送
+  static RE_SEND = 'RE_SEND'
 }
 
 export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {

@@ -89,6 +89,7 @@ Component({
     showMoreAddress: false,
     hasGetTime: false,
     showQrcode: false,
+    hasPaid: false,
   },
 
   lifetimes: {
@@ -123,11 +124,11 @@ Component({
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
                 if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3 || !size || !productCategory1CnName || !productCategory2CnName || !productCategory3CnName) {
                   wx.showToast({ title: '订单信息获取异常，联系销售人员重新发起支付', icon: 'error' })
+                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                   return
                 }
                 that.setData({
                   payDialogLabel: '确认订单',
-                  showPopup: true,
                   tokenValue,
                   productName,
                   paymentId,
@@ -140,8 +141,14 @@ Component({
                   productCategory1CnName,
                   productCategory2CnName,
                   productCategory3CnName,
+                  hasPaid: false
                 })
-                this.queryOrder(tokenValue)
+                try {
+                  this.queryOrder(tokenValue)
+                } catch(err) {
+                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                  this.resetOrder()
+                }
                 // this.queryOrderDetail(tokenValue)
                 break
               case CustomMessageTypes.DISPOSE:
@@ -166,11 +173,50 @@ Component({
                     timeleftSec: payloadData.timeleft
                   })
                 }
-                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK}, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 break
               case CustomMessageTypes.RETRY:
                 clearSessuibAsync()
                 wx.navigateBack()
+                break
+              case CustomMessageTypes.ASK_FOR_ORDER_STATE:
+                debugger
+                if (this.data.tokenValue !== '') {
+                  let state: string;
+                  if (this.data.hasPaid) {
+                    state = 'hasPaid'
+                    const notes = {
+                      unitsId: this.data.orderInfo.items[0].units[0].id
+                    }
+                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({state, notes})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                  } else if(this.data.showQrcode) {
+                    state = 'hasCompleted'
+                    const notes = {
+                      unitsId: this.data.orderInfo.items[0].units[0].id
+                    }
+                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({state, notes})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                  } else {
+                    let timer: number
+                    timer = setInterval(() => {
+                      if (this.data.showPopup) {
+                        state = 'received'
+                        clearInterval(timer)
+                        const notes = {
+                          brand: this.data.productBrand,
+                          category1: this.data.productCategory1,
+                          category2: this.data.productCategory2,
+                          category3: this.data.productCategory3,
+                          size: this.data.productSize,
+                          unitsId: this.data.orderInfo.items[0].units[0].id
+                        }
+                        sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({state, notes})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                      }
+                    }, 500)
+                  }
+                } else {
+                  sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                }
+                break
             }
           }
           if (data.to === this.properties.groupId) {
@@ -263,6 +309,8 @@ Component({
         productCategory2CnName: '',
         productCategory3CnName: '',
         productSize: '',
+        orderInfo: undefined,
+        showQrcode: false,
       })
     },
 
@@ -533,6 +581,7 @@ Component({
           sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
           this.setData({
             showPopup: false,
+            hasPaid: true
           })
         } catch {
           wx.showToast({ title: '请求失败，请重新尝试' })
@@ -684,12 +733,17 @@ Component({
       })
     },
     async queryOrder(tokenValue: string) {
-      const res = await orderModule.queryOrder(tokenValue)
-      // TODO 获取到订单信息
-      const orderItem = res.data
-      this.setData({
-        orderInfo: orderItem
-      })
+      try {
+        const res = await orderModule.queryOrder(tokenValue)
+        // TODO 获取到订单信息
+        const orderItem = res.data
+        this.setData({
+          orderInfo: orderItem,
+          showPopup: true
+        })
+      } catch(err) {
+        throw err
+      }
     },
     async putAddress(tokenValue: string, address: addressDesign.address) {
       const { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
