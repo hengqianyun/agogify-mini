@@ -21,6 +21,9 @@ export class CustomMessageTypes {
   /// 客户通知销售支付已完成
   static PAY_FINISHED = 'PAY_FINISHED';
 
+  /// 客户通知销售订单确认完毕
+  static ORDER_COMPLETE = 'ORDER_COMPLETE'
+
   /// 客户通知销售支付取消
   static PAY_CANCELED = 'PAY_CANCELED';
 

@@ -137,8 +137,6 @@ Page({
     if (!this.data.canTap) return;
       let flag = true
       if (this.data.isReserve && this.data.isReconnect) flag = false
-      this.setData({
-      })
       
       this.setData({
       isWaiting: flag,

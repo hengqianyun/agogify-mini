@@ -214,8 +214,17 @@ Component({
       })
       // 
       if (this.properties.isReconnect) {
-        const id = `${this.properties.storeId}_Meeting-${getIdFromString(this.properties.saleId)}`
-        this.triggerEvent('startVideo', { publicGroupId: id, roomId: id })
+        const that = this
+        const session = wx.getStorage({
+          key: 'session',
+          success(res) {
+            console.log(res)
+
+            const id = `${that.properties.storeId}_Meeting-${res.data.code}`
+            that.triggerEvent('startVideo', { publicGroupId: id, roomId: id })
+          }
+        })
+        const id = `${that.properties.storeId}_Meeting-${getIdFromString(this.properties.saleId)}`
       }
     },
 
@@ -507,6 +516,31 @@ Component({
     async _handleCommit() {
       wx.showLoading({ title: '正在请求...' })
       if (this.data.showQrcode) {
+        try {
+          
+
+          // const notes = {
+          //   brand: this.data.productBrand,
+          //   category1: this.data.productCategory1,
+          //   category2: this.data.productCategory2,
+          //   category3: this.data.productCategory3,
+          //   productCategory1CnName: this.data.productCategory1CnName,
+          //   productCategory2CnName: this.data.productCategory2CnName,
+          //   productCategory3CnName: this.data.productCategory3CnName,
+          //   size: this.data.productSize,
+          // }
+          // const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
+          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
+          this.setData({
+            showPopup: false,
+          })
+        } catch {
+          wx.showToast({ title: '请求失败，请重新尝试' })
+        }
+        this.resetOrder()
+        wx.hideLoading()
+      } else {
+        const { tokenValue, address, shipmentId, paymentId } = this.data
         const notes = {
           brand: this.data.productBrand,
           category1: this.data.productCategory1,
@@ -517,27 +551,23 @@ Component({
           productCategory3CnName: this.data.productCategory3CnName,
           size: this.data.productSize,
         }
-        const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
-        sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
-        this.setData({
-          showPopup: false,
-        })
-        this.resetOrder()
-        wx.hideLoading()
-      } else {
-        const { tokenValue, address, shipmentId, paymentId } = this.data
+        
+        
         let qrcodeUrl: string
         try {
           const putAddressRes = await this.putAddress(tokenValue, address)
           const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
           const putPaymentRes = await this.putPayment(tokenValue, paymentId)
+          const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
           qrcodeUrl = await this.queryQrcode()
+          this.showQrcode(qrcodeUrl)
         } catch {
           wx.hideLoading()
           wx.showToast({ title: '创建订单失败，请重新尝试' })
           return
         }
-        this.showQrcode(qrcodeUrl)
+        sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
+        
         wx.hideLoading()
       }
 
