@@ -553,7 +553,18 @@ Component({
       return { url, id, flow }
     },
     // 取消付款
-    _popupCancel() {
+    async _popupCancel() {
+      if (this.data.showQrcode) {
+        const hasPaid = await this.userHasPaid()
+        if (!hasPaid) {
+          wx.showToast({
+            title: '请点击已付款按钮',
+            icon: 'error',
+            duration: 3000
+          })
+          return
+        }
+      }
       sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId)
       this.setData({
         showPopup: false
@@ -565,18 +576,10 @@ Component({
       if (this.data.showQrcode) {
         try {
 
-
-          // const notes = {
-          //   brand: this.data.productBrand,
-          //   category1: this.data.productCategory1,
-          //   category2: this.data.productCategory2,
-          //   category3: this.data.productCategory3,
-          //   productCategory1CnName: this.data.productCategory1CnName,
-          //   productCategory2CnName: this.data.productCategory2CnName,
-          //   productCategory3CnName: this.data.productCategory3CnName,
-          //   size: this.data.productSize,
-          // }
-          // const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
+          // TODO: 判断用户是否已经付款
+          if (!(await this.userHasPaid)) {
+            wx.showToast({title: '付款还未成功，'})
+          }
           sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
           this.setData({
             showPopup: false,
@@ -614,7 +617,7 @@ Component({
           wx.showToast({ title: '创建订单失败，请重新尝试' })
           return
         }
-        sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
+        // sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
 
         wx.hideLoading()
       }
@@ -648,6 +651,24 @@ Component({
       })
 
     },
+    async userHasPaid(): Promise<boolean> {
+      if (this.data.hasPaid) return true
+      return (await this.checkUserHasPaid(this.data.tokenValue)) == 'paid'
+    },
+    async checkUserHasPaid(tokenValue: string): Promise<orderDesign.paymentState> {
+      try {
+        const res = await orderModule.getPaymentState(tokenValue)
+        const {'hydra:member': list} = res.data
+        const order = list[0]
+        // if (order.state == 'awaiting_payment') {
+        //   return false
+        // } else if (order.state =)
+        return order.state
+      } catch(err) {
+        throw err
+      }
+    },
+
     showQrcode(url: string) {
       const that = this
       this.setData({

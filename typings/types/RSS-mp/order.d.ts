@@ -17,6 +17,7 @@ declare namespace orderDesign {
   type shippingMethods = 'dhl'
   type paymentMethods = 'wechat_offline'
   type shippingStateTypes = 'ready' | 'shipped'
+  type paymentState = 'cart' | 'awaiting_payment' | 'paid'
   
 
   interface orderBasic extends swaggerI.requestBase {
@@ -126,11 +127,23 @@ declare namespace orderDesign {
     message: string
   }
 
+  
+
   interface shippingAddress extends swaggerI.requestBase, addressDesign.createAddressParams {}
 
   interface billingAddress extends swaggerI.requestBase, addressDesign.createAddressParams {}
 
-  interface payments extends swaggerI.requestBase {}
+  interface payments extends swaggerI.requestBase {
+    order: string
+    id: number
+    method: paymentMethods
+    currencyCode: string
+    amount: number
+    state: paymentState
+    detail: any[]
+    createAt: string
+    updateAt: string
+  }
 
   interface shipments extends swaggerI.requestBase {}
 
@@ -155,6 +168,8 @@ declare namespace orderDesign {
   interface queryOrderRes extends orderBasic {}
 
   interface queryOrderListRes extends swaggerI.requsetListBase<orderBasic> {}
+
+  interface queryOrderStateRes extends swaggerI.requsetListBase<payments> {}
 
 
 }
