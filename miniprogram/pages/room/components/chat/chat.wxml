@@ -141,6 +141,10 @@
             <view class="detail-label">运营服务费（限时免费）</view>
             <view class="detail-number">0</view>
           </view>
+          <view class="detail">
+            <view class="detail-label">订单id</view>
+            <view class="detail-number" bind:tap="_copy">{{tokenValue}}</view>
+          </view>
           <view class="detail sum">
             <view class="detail-label">合计</view>
             <view class="detail-number">€{{orderInfo.total / 100}}</view>

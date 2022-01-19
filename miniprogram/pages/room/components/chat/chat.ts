@@ -145,7 +145,7 @@ Component({
                 })
                 try {
                   this.queryOrder(tokenValue)
-                } catch(err) {
+                } catch (err) {
                   sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                   this.resetOrder()
                 }
@@ -173,7 +173,7 @@ Component({
                     timeleftSec: payloadData.timeleft
                   })
                 }
-                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK}, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 break
               case CustomMessageTypes.RETRY:
                 clearSessuibAsync()
@@ -187,13 +187,13 @@ Component({
                     const notes = {
                       unitsId: this.data.orderInfo.items[0].units[0].id
                     }
-                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({state, notes})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
-                  } else if(this.data.showQrcode) {
+                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                  } else if (this.data.showQrcode) {
                     state = 'hasCompleted'
                     const notes = {
                       unitsId: this.data.orderInfo.items[0].units[0].id
                     }
-                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({state, notes})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                   } else {
                     let timer: number
                     timer = setInterval(() => {
@@ -208,12 +208,12 @@ Component({
                           size: this.data.productSize,
                           unitsId: this.data.orderInfo.items[0].units[0].id
                         }
-                        sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({state, notes})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                        sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                       }
                     }, 500)
                   }
                 } else {
-                  sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension:  JSON.stringify({})  }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                  sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({}) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 }
                 break
             }
@@ -564,7 +564,7 @@ Component({
       wx.showLoading({ title: '正在请求...' })
       if (this.data.showQrcode) {
         try {
-          
+
 
           // const notes = {
           //   brand: this.data.productBrand,
@@ -599,8 +599,8 @@ Component({
           productCategory3CnName: this.data.productCategory3CnName,
           size: this.data.productSize,
         }
-        
-        
+
+
         let qrcodeUrl: string
         try {
           const putAddressRes = await this.putAddress(tokenValue, address)
@@ -615,7 +615,7 @@ Component({
           return
         }
         sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
-        
+
         wx.hideLoading()
       }
 
@@ -740,7 +740,7 @@ Component({
           orderInfo: orderItem,
           showPopup: true
         })
-      } catch(err) {
+      } catch (err) {
         throw err
       }
     },
@@ -824,6 +824,11 @@ Component({
         timeleft: `${min > 9 ? min : '0' + min}:${sec > 9 ? sec : '0' + sec}`,
         timeleftSec: left
       })
+    },
+
+
+    _copy() {
+      wx.setClipboardData({ data: this.data.tokenValue, })
     }
   },
 
