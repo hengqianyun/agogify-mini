@@ -58,6 +58,9 @@ export class CustomMessageTypes {
 
   /// 客户没有查询到订单信息，通知销售重新发送
   static RE_SEND = 'RE_SEND'
+
+  /// 销售通知用户扫描完毕
+  static SCAN_FINISH = 'SCAN_FINISH'
 }
 
 export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAppID: number, userSig: string }, storeId: string, saleId: string, isReserve: boolean, isReconnect?: boolean,) => {

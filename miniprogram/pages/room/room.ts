@@ -29,6 +29,7 @@ Page({
     isReserve: false,
     showChat: false,
     canTap: true,
+    canLeave: true,
     saleId: '',
     storeId: '',
   },
@@ -289,10 +290,20 @@ Page({
 
   // 挂断退出房间
   _hangUp() {
+    if (!this.data.canLeave) {
+      wx.showLoading({
+        title: '销售还未操作完，请勿挂断电话'
+      })
+      return
+    }
     this.exitRoom()
     wx.navigateBack({
       delta: 1,
     })
+  },
+
+  setCanLeaveState(status: boolean ) {
+    this.data.canLeave = status
   },
 
   // 请保持跟 wxml 中绑定的事件名称一致

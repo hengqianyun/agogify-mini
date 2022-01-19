@@ -179,6 +179,9 @@ Component({
                 clearSessuibAsync()
                 wx.navigateBack()
                 break
+              case CustomMessageTypes.SCAN_FINISH:
+                this.triggerEvent("setCanLeaveState",  true)
+                break
               case CustomMessageTypes.ASK_FOR_ORDER_STATE:
                 if (this.data.tokenValue !== '') {
                   let state: string;
@@ -562,6 +565,7 @@ Component({
             icon: 'error',
             duration: 3000
           })
+          this.triggerEvent("setCanLeaveState",  false)
           return
         }
       }
