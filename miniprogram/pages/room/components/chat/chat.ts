@@ -180,7 +180,6 @@ Component({
                 wx.navigateBack()
                 break
               case CustomMessageTypes.ASK_FOR_ORDER_STATE:
-                debugger
                 if (this.data.tokenValue !== '') {
                   let state: string;
                   if (this.data.hasPaid) {
