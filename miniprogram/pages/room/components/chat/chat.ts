@@ -596,16 +596,37 @@ Component({
         wx.hideLoading()
       } else {
         const { tokenValue, address, shipmentId, paymentId } = this.data
-        const notes = {
-          brand: this.data.productBrand,
-          category1: this.data.productCategory1,
-          category2: this.data.productCategory2,
-          category3: this.data.productCategory3,
-          productCategory1CnName: this.data.productCategory1CnName,
-          productCategory2CnName: this.data.productCategory2CnName,
-          productCategory3CnName: this.data.productCategory3CnName,
-          size: this.data.productSize,
-          productName: this.data.productName
+        // let  note = {
+        //   brand: this.data.productBrand,
+        //   category1: this.data.productCategory1,
+        //   category2: this.data.productCategory2,
+        //   category3: this.data.productCategory3,
+        //   productCategory1CnName: this.data.productCategory1CnName,
+        //   productCategory2CnName: this.data.productCategory2CnName,
+        //   productCategory3CnName: this.data.productCategory3CnName,
+        //   size: this.data.productSize,
+        //   productName: this.data.productName
+        // }
+
+        let notes = {} as {[key: string]: Object}
+
+        notes[this.data.tokenValue] = {
+          en_US: {
+            brand: this.data.productBrand,
+            category1: this.data.productCategory1,
+            category2: this.data.productCategory2,
+            category3: this.data.productCategory3,
+            size: this.data.productSize,
+            productName: this.data.productName
+          },
+          zh_Hans: {
+            brand: this.data.productBrand,
+            category1: this.data.productCategory1CnName,
+            category2: this.data.productCategory2CnName,
+            category3: this.data.productCategory3CnName,
+            size: this.data.productSize,
+            productName: this.data.productName
+          },
         }
 
 
