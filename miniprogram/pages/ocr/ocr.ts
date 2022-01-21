@@ -267,10 +267,10 @@ Page({
   async putUserInfo() {
     try {
       await userModule.putCustomerInfo({
-        // firstName: this.data.userName.substr(0, 1),
-        // lastName: this.data.userName.substr(1),
-        firstName: 'firstName',
-        lastName: 'lastName',
+        firstName: this.data.userName.substr(0, 1),
+        lastName: this.data.userName.substr(1),
+        // firstName: 'firstName',
+        // lastName: 'lastName',
         identityNumber: this.data.userNumber.toString(),
       }, getIdFromString(wx.getStorageSync('oauth.data').customer))
     } catch(err) {
