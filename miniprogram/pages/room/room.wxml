@@ -41,7 +41,7 @@
   <wxs module="hasUser">
     module.exports = {
       getIsSalesInRoom: function(userList, saleId) {
-        return userList.some(user => user.id == saleId)
+        return userList.some(function(user) {return user.id == saleId} )
       }
     }
   </wxs>

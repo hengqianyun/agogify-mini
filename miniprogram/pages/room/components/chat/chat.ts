@@ -605,6 +605,7 @@ Component({
           productCategory2CnName: this.data.productCategory2CnName,
           productCategory3CnName: this.data.productCategory3CnName,
           size: this.data.productSize,
+          productName: this.data.productName
         }
 
 
