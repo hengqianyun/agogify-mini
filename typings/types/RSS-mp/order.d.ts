@@ -84,7 +84,7 @@ declare namespace orderDesign {
   }
 
   interface putOrderAddressParams {
-    billingAddress: {
+    shippingAddress: {
       "firstName"?: string,
       "lastName"?: string,
       "countryCode"?: string,

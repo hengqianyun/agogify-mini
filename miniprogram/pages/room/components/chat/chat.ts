@@ -609,8 +609,7 @@ Component({
         // }
 
         let notes = {} as {[key: string]: Object}
-
-        notes[this.data.tokenValue] = {
+        notes[this.data.orderInfo.items[0].id] = {
           en_US: {
             brand: this.data.productBrand,
             category1: this.data.productCategory1,
@@ -619,7 +618,7 @@ Component({
             size: this.data.productSize,
             productName: this.data.productName
           },
-          zh_Hans: {
+          zh_Hans_CN: {
             brand: this.data.productBrand,
             category1: this.data.productCategory1CnName,
             category2: this.data.productCategory2CnName,
@@ -793,7 +792,7 @@ Component({
     },
     async putAddress(tokenValue: string, address: addressDesign.address) {
       const { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
-      const res = await orderModule.putAddress(tokenValue, { billingAddress: { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
+      const res = await orderModule.putAddress(tokenValue, { shippingAddress: { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
       // TODO 设置用户地址
     },
     async putShipment(tokenValue: string, shipmentId: string) {
