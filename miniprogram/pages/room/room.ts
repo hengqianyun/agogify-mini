@@ -290,12 +290,14 @@ Page({
 
   // 挂断退出房间
   _hangUp() {
+    debugger
     if (!this.data.canLeave) {
       wx.showLoading({
         title: '销售还未操作完，请勿挂断电话'
       })
       return
     }
+    return;
     this.exitRoom()
     wx.navigateBack({
       delta: 1,

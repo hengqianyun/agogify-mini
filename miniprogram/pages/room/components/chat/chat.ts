@@ -90,6 +90,7 @@ Component({
     hasGetTime: false,
     showQrcode: false,
     hasPaid: false,
+    canLeave: true
   },
 
   lifetimes: {
@@ -180,7 +181,7 @@ Component({
                 wx.navigateBack()
                 break
               case CustomMessageTypes.SCAN_FINISH:
-                this.triggerEvent("setCanLeaveState",  true)
+                this.data.canLeave = true
                 break
               case CustomMessageTypes.ASK_FOR_ORDER_STATE:
                 if (this.data.tokenValue !== '') {
@@ -313,6 +314,7 @@ Component({
         productSize: '',
         orderInfo: undefined,
         showQrcode: false,
+        canLeave: true
       })
     },
 
@@ -343,6 +345,12 @@ Component({
     },
 
     handleExitTab() {
+      if (!this.data.canLeave) {
+        wx.showLoading({
+          title: '销售还未操作完，请勿挂断电话'
+        })
+        return
+      }
       this.setData({ showHandUpDialog: true })
     },
     handleHangUpCancel() {
@@ -565,7 +573,6 @@ Component({
             icon: 'error',
             duration: 3000
           })
-          this.triggerEvent("setCanLeaveState",  false)
           return
         }
       }
@@ -594,6 +601,7 @@ Component({
         }
         this.resetOrder()
         wx.hideLoading()
+        this.data.canLeave = false
       } else {
         const { tokenValue, address, shipmentId, paymentId } = this.data
         // let  note = {
@@ -637,6 +645,7 @@ Component({
           const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
           qrcodeUrl = await this.queryQrcode()
           this.showQrcode(qrcodeUrl)
+          sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId)
         } catch {
           wx.hideLoading()
           wx.showToast({ title: '创建订单失败，请重新尝试' })

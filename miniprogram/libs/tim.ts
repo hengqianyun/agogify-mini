@@ -14,6 +14,7 @@ let _hasSendNeedService = false
 let _timer = 0
 
 export class CustomMessageTypes {
+
   static NEED_SERVICE = 'NEED_SERVICE';
   /// 销售通知客户进行支付操作
   static PAY = 'PAY';
@@ -129,7 +130,9 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
     _timer = setInterval(() => {
       if (_isReady && !_hasSendNeedService) {
         _hasSendNeedService = true
+        console.log('session in')
         joinStoreGroup()
+        session()
         clearInterval(_timer)
       }
     }, 500)
@@ -279,6 +282,10 @@ const joinStoreGroup = async () => {
     // 加入异常处理
     console.log('加入群聊失败')
   }
+}
+
+const session = async () => {
+  await sendCustomMessage({ data: CustomMessageTypes.ASK_FOR_ORDER_STATE, }, _StoreMeetingGroupId, _userID, _saleId)
 }
 
 const neetService = async () => {
