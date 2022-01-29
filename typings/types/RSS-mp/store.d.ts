@@ -57,7 +57,7 @@ declare namespace storeDesign {
   // interface brand extends baseData {}
 
   interface category extends swaggerI.requestSingleDataBase {
-    translations?: {'en_US': categoryUSTranslations, 'zh_Hans_CN': any}
+    translations?: { 'en': categoryUSTranslations, 'zh_Hans_CN': any }
     name: string
     code: string
     id: number
@@ -70,7 +70,7 @@ declare namespace storeDesign {
     description: string | null
   }
 
-  interface searchBars extends baseData {}
+  interface searchBars extends baseData { }
 
   interface city extends swaggerI.requestSimpleBase {
     code: string
@@ -106,19 +106,19 @@ declare namespace storeDesign {
     firstName: string
     lastName: string
     languages: languageTypes[]
-    avatar?: {path: string}
+    avatar?: { path: string }
   }
 
   interface saleWithStore extends sale {
     store: storeItem
   }
-  
+
   interface QuerySalesParams extends swaggerI.pageRequestParams {
     'store.code': string
     roles: adminisstratorsTypes
   }
 
-  interface BrandItemSimple extends swaggerI.requestSingleDataBase{
+  interface BrandItemSimple extends swaggerI.requestSingleDataBase {
     logo: Logo
   }
 
@@ -141,7 +141,7 @@ declare namespace storeDesign {
   /**
    * 分类请求参数
    */
-  interface queryCategoryParams extends swaggerI.pageRequestParams {}
+  interface queryCategoryParams extends swaggerI.pageRequestParams { }
 
   /**
    * 子分类请求参数
@@ -162,27 +162,27 @@ declare namespace storeDesign {
     'store.code[]'?: string[]
   }
 
-  interface QueryStoresRes extends swaggerI.requsetListBase<storeItem> {}
+  interface QueryStoresRes extends swaggerI.requsetListBase<storeItem> { }
 
-  interface QueryBrandRes extends swaggerI.requsetListBase<brand> {}
+  interface QueryBrandRes extends swaggerI.requsetListBase<brand> { }
 
-  interface QueryProductsRes extends swaggerI.requsetListBase<product> {}
+  interface QueryProductsRes extends swaggerI.requsetListBase<product> { }
 
-  interface queryProductDetail extends swaggerI.requestBase, product {}
+  interface queryProductDetail extends swaggerI.requestBase, product { }
 
-  interface QueryCategorys extends swaggerI.requsetListBase<category> {}
+  interface QueryCategorys extends swaggerI.requsetListBase<category> { }
 
   interface QueryStoreDetailRes extends storeItem, swaggerI.requestBase {
     brands: BrandItemSimple[]
     logo: Logo
     slug: string
     products: product[]
-    images: {path: string}[]
+    images: { path: string }[]
   }
 
-  interface QuerySalesRes extends swaggerI.requsetListBase<sale> {}
+  interface QuerySalesRes extends swaggerI.requsetListBase<sale> { }
 
-  interface queryCitiesRes extends swaggerI.requsetListBase<city> {}
+  interface queryCitiesRes extends swaggerI.requsetListBase<city> { }
 
 
 }

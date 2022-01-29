@@ -589,7 +589,7 @@ Component({
 
           // TODO: 判断用户是否已经付款
           if (!(await this.userHasPaid)) {
-            wx.showToast({title: '付款还未成功，'})
+            wx.showToast({ title: '付款还未成功，' })
           }
           sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
           this.setData({
@@ -616,9 +616,9 @@ Component({
         //   productName: this.data.productName
         // }
 
-        let notes = {} as {[key: string]: Object}
+        let notes = {} as { [key: string]: Object }
         notes[this.data.orderInfo.items[0].id] = {
-          en_US: {
+          en: {
             brand: this.data.productBrand,
             category1: this.data.productCategory1,
             category2: this.data.productCategory2,
@@ -692,13 +692,13 @@ Component({
     async checkUserHasPaid(tokenValue: string): Promise<orderDesign.paymentState> {
       try {
         const res = await orderModule.getPaymentState(tokenValue)
-        const {'hydra:member': list} = res.data
+        const { 'hydra:member': list } = res.data
         const order = list[0]
         // if (order.state == 'awaiting_payment') {
         //   return false
         // } else if (order.state =)
         return order.state
-      } catch(err) {
+      } catch (err) {
         throw err
       }
     },

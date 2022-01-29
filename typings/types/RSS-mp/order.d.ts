@@ -18,7 +18,7 @@ declare namespace orderDesign {
   type paymentMethods = 'wechat_offline'
   type shippingStateTypes = 'ready' | 'shipped'
   type paymentState = 'cart' | 'awaiting_payment' | 'paid'
-  
+
 
   interface orderBasic extends swaggerI.requestBase {
     checkoutState: string
@@ -48,7 +48,7 @@ declare namespace orderDesign {
     total: number
     unitPrice: number
     variant: string
-  units: unit[]
+    units: unit[]
   }
 
   interface orderSimpleItem extends swaggerI.requestSimpleBase {
@@ -77,7 +77,7 @@ declare namespace orderDesign {
     optionValues: any[]
     proce: number
     translations: {
-      en_US: {
+      en: {
         name: string
       }
     }
@@ -127,11 +127,11 @@ declare namespace orderDesign {
     message: string
   }
 
-  
 
-  interface shippingAddress extends swaggerI.requestBase, addressDesign.createAddressParams {}
 
-  interface billingAddress extends swaggerI.requestBase, addressDesign.createAddressParams {}
+  interface shippingAddress extends swaggerI.requestBase, addressDesign.createAddressParams { }
+
+  interface billingAddress extends swaggerI.requestBase, addressDesign.createAddressParams { }
 
   interface payments extends swaggerI.requestBase {
     order: string
@@ -145,7 +145,7 @@ declare namespace orderDesign {
     updateAt: string
   }
 
-  interface shipments extends swaggerI.requestBase {}
+  interface shipments extends swaggerI.requestBase { }
 
   interface orderCompleteParams {
     notes: string
@@ -165,11 +165,11 @@ declare namespace orderDesign {
 
   }
 
-  interface queryOrderRes extends orderBasic {}
+  interface queryOrderRes extends orderBasic { }
 
-  interface queryOrderListRes extends swaggerI.requsetListBase<orderBasic> {}
+  interface queryOrderListRes extends swaggerI.requsetListBase<orderBasic> { }
 
-  interface queryOrderStateRes extends swaggerI.requsetListBase<payments> {}
+  interface queryOrderStateRes extends swaggerI.requsetListBase<payments> { }
 
 
 }

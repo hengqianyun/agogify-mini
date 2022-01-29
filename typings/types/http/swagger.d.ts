@@ -44,7 +44,7 @@ declare namespace swaggerI {
   }
 
   interface requestSingleDataBase extends requestSimpleBase {
-    
+
     code: string
     translations?: requestItemTranslations
   }
@@ -55,7 +55,7 @@ declare namespace swaggerI {
   }
 
   interface requestItemTranslations {
-    'en_US': requestItemTranslationsItem
+    'en': requestItemTranslationsItem
     'zh_Hans_CN': requestItemTranslationsItem
   }
 
@@ -109,7 +109,7 @@ declare namespace swaggerI {
 
   // type addressListResult = RequestType<addressDesign.address[]>
   type addressListResult = addressDesign.queryAddressedRes
-  
+
   type queryAddressListParams = addressDesign.queryAddressParams
 
   type createAddressResult = addressDesign.createAddressRes

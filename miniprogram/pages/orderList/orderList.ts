@@ -104,9 +104,9 @@ Page({
         item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
 
         if (item.shippingState === 'ready') {
-          readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
+          readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
         } else {
-          shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en_US.name })
+          shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
         }
       }
       this.setData({

@@ -141,7 +141,7 @@ Page({
       this.setData({
         coasts,
         textInfo,
-        productName: data.items[0].units[0].shippable.translations.en_US.name,
+        productName: data.items[0].units[0].shippable.translations.en.name,
         productPrice: (data.items[0].unitPrice / 100).toLocaleString(),
         storeAvatar: IMAGEBASEURL + data.store.logo.path,
         storeName: data.store.name,
@@ -159,7 +159,7 @@ Page({
     wx.scanCode({
       success(res) {
         if (res.errMsg !== "scanCode:ok") {
-          wx.showToast({title: '扫描失败', icon: 'error'})
+          wx.showToast({ title: '扫描失败', icon: 'error' })
           return
         }
         wx.showModal({
@@ -169,7 +169,7 @@ Page({
         })
       },
       fail() {
-        wx.showToast({title: '扫描失败，请重试', icon: 'error'})
+        wx.showToast({ title: '扫描失败，请重试', icon: 'error' })
       }
     })
   }
