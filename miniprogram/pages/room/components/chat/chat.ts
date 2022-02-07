@@ -156,6 +156,13 @@ Component({
                 clearSessuibAsync()
                 wx.navigateBack()
                 break
+              case CustomMessageTypes.PAY_CANCELED: 
+                this.resetOrder()
+                this.setData({
+                  showPopup: false,
+                  canLeave: true
+                })
+              break
               case CustomMessageTypes.NOW_BUSY:
                 this.setData({
                   showBusyDialog: true
