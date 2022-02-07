@@ -162,7 +162,8 @@ declare namespace orderDesign {
   }
 
   interface queryOrderListParams extends swaggerI.pageRequestParams {
-
+    'shippingState'?: shippingStateTypes
+    'paymentState'?: paymentState
   }
 
   interface queryOrderRes extends orderBasic { }

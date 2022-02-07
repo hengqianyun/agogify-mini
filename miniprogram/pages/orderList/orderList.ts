@@ -20,17 +20,25 @@ Page({
       { label: '已发货', status: '2' },
     ],
     orderLists: [] as PageOrders[][],
-    pageInfo: {
+    pageInfo1: {
       page: 1,
-      itemsPerPage: 99
-    } as swaggerI.pageRequestParams
+      itemsPerPage: 8,
+      shippingState: 'ready',
+      paymentState: 'paid',
+    } as orderDesign.queryOrderListParams,
+    pageInfo2: {
+      page: 1,
+      itemsPerPage: 8,
+      shippingState: 'shipped',
+      paymentState: 'paid',
+    } as orderDesign.queryOrderListParams,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    this.queryOrderList()
+    this.queryReadyList()
   },
 
   /**
@@ -72,7 +80,11 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom() {
-
+    if (this.data.active == 0) {
+      this.queryReadyList()
+    } else {
+      this.queryShipedList()
+    }
   },
 
   /**
@@ -89,28 +101,24 @@ Page({
     })
   },
 
-  async queryOrderList() {
+  async queryReadyList() {
+    wx.showLoading({
+      title: '加载中...'
+    })
     try {
-      wx.showLoading({
-        title: '加载中...'
-      })
-      const resData = await orderModule.queryOrderList(this.data.pageInfo)
+      const resData = await orderModule.queryOrderList(this.data.pageInfo1)
       const { "hydra:member": list } = resData.data
-      const [readyList, shipedList] = [[] as PageOrders[], [] as PageOrders[]]
+      const readyList = [] as PageOrders[]
       for (let item of list) {
         if (item.store.logo?.path) {
           item.store.logo.path = IMAGEBASEURL + item.store.logo.path
         }
         item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
-
-        if (item.shippingState === 'ready') {
-          readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
-        } else {
-          shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
-        }
+        readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
       }
       this.setData({
-        orderLists: [readyList, shipedList]
+        'orderLists[0]': readyList,
+        'pageInfo1.page': this.data.pageInfo1.page + 1,
       })
     } catch (err) {
       wx.showToast({
@@ -121,5 +129,78 @@ Page({
       wx.hideLoading()
     }
 
-  }
+  },
+
+  async queryShipedList() {
+    wx.showLoading({
+      title: '加载中...'
+    })
+    try {
+      const resData = await orderModule.queryOrderList(this.data.pageInfo2)
+      const { "hydra:member": list } = resData.data
+      const shipedList = [] as PageOrders[]
+      for (let item of list) {
+        if (item.store.logo?.path) {
+          item.store.logo.path = IMAGEBASEURL + item.store.logo.path
+        }
+        item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
+        shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
+      }
+      this.setData({
+        'orderLists[1]': shipedList,
+        'pageInfo1.page': this.data.pageInfo1.page + 1,
+      })
+    } catch (err) {
+      wx.showToast({
+        title: '网络错误，请重试',
+        icon: 'error'
+      })
+    } finally {
+      wx.hideLoading()
+    }
+
+  },
+
+  onChange({ detail }: WechatMiniprogram.TouchEvent) {
+    const { index } = detail as unknown as { index: number}
+    if (index == 1 && this.data.orderLists.length == 1) {
+      this.queryShipedList()
+    }
+    this.data.active = index
+    console.log(detail)
+  },
+
+  // async queryOrderList() {
+  //   try {
+  //     wx.showLoading({
+  //       title: '加载中...'
+  //     })
+  //     const resData = await orderModule.queryOrderList(this.data.pageInfo1)
+  //     const { "hydra:member": list } = resData.data
+  //     const [readyList, shipedList] = [[] as PageOrders[], [] as PageOrders[]]
+  //     for (let item of list) {
+  //       if (item.store.logo?.path) {
+  //         item.store.logo.path = IMAGEBASEURL + item.store.logo.path
+  //       }
+  //       item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
+
+  //       if (item.shippingState === 'ready') {
+  //         readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
+  //       } else {
+  //         shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
+  //       }
+  //     }
+  //     this.setData({
+  //       orderLists: [readyList, shipedList]
+  //     })
+  //   } catch (err) {
+  //     wx.showToast({
+  //       title: '网络错误，请重试',
+  //       icon: 'error'
+  //     })
+  //   } finally {
+  //     wx.hideLoading()
+  //   }
+
+  // }
 })
