@@ -115,7 +115,7 @@ declare namespace storeDesign {
 
   interface QuerySalesParams extends swaggerI.pageRequestParams {
     'store.code': string
-    roles: adminisstratorsTypes
+    // roles: adminisstratorsTypes
   }
 
   interface BrandItemSimple extends swaggerI.requestSingleDataBase {

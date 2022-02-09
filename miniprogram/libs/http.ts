@@ -45,6 +45,12 @@ class RSSHTTP {
     },
     dataType: 'json',
   };
+  publicReqConfig: RSSHTTPModule.DefaultConfig = {
+    header: {
+      'content-type': 'application/json'
+    },
+    dataType: 'json',
+  };
   token = '';
 
   // constructor() {}
@@ -85,6 +91,15 @@ class RSSHTTP {
       data: params,
       method: 'GET',
       ...this.defaultConfig,
+      ...option
+    }, this.interceptor)
+  }
+  async publicGet<T>(url: string, params?: any, option = {}) {
+    return await wxrequest<T>({
+      url,
+      data: params,
+      method: 'GET',
+      ...this.publicReqConfig,
       ...option
     }, this.interceptor)
   }

@@ -101,7 +101,7 @@ Page({
       page: 1,
       itemsPerPage: 99,
       "store.code": this.data.stores[this.data.currentStoreIndex].code,
-      roles: 'ROLE_STORE_SALES_ACCESS',
+      // roles: 'ROLE_STORE_SALES_ACCESS',
     })
     const {"hydra:member": list} = res.data
     for (let i = 0; i < list.length; i++) {

@@ -70,3 +70,14 @@ export function deleteMethod<T, S>(url: string, data?: S): Promise<WechatMinipro
       })
   })
 }
+
+export function publicGet<T, S>(url: string, data?: S): Promise<WechatMiniprogram.RequestSuccessCallbackResult<T>> {
+  return new Promise((resolve, resject) => {
+    http.publicGet<T>(url, data)
+      .then(res => {
+        resolve(res)
+      }).catch(err => {
+        resject(err)
+      })
+  })
+}

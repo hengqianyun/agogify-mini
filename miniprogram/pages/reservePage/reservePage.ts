@@ -151,7 +151,7 @@ Page({
       page: 1,
       itemsPerPage: 100,
       'store.code': stores[currentStoreIndex].code,
-      roles: 'ROLE_STORE_SALES_ACCESS' as storeDesign.adminisstratorsTypes
+      // roles: 'ROLE_STORE_SALES_ACCESS' as storeDesign.adminisstratorsTypes
     }
     try {
       const res = await storeModule.querySales(params)

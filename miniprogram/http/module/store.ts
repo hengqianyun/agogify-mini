@@ -1,4 +1,4 @@
-import { get, post } from "../index";
+import { get, post, publicGet } from "../index";
 
 const storeModule = {
   // queryNewStore: async () => await get<swaggerI.newStoreListResult>('https://www.fastmock.site/mock/7a84f5def9c899423230775fc860efb5/ss-mini/api/shop/newList'),
@@ -13,15 +13,15 @@ const storeModule = {
   // querySales: async (params: storeDesign.QuerySalesParams) => await post<swaggerI.saleListResult, storeDesign.QuerySalesParams>('https://www.fastmock.site/mock/7a84f5def9c899423230775fc860efb5/ss-mini/api/shop/querySales', params),
   
   
-  querySales: async (params: storeDesign.QuerySalesParams) => await get<swaggerI.querySalesResult, storeDesign.QuerySalesParams>('store/administrators', params),
-  queryStore: async (params: storeDesign.QueryStoresParams) => await get<swaggerI.newStoreListResult, storeDesign.QueryStoresParams>('store/stores', params),
+  querySales: async (params: storeDesign.QuerySalesParams) => await publicGet<swaggerI.querySalesResult, storeDesign.QuerySalesParams>('public/sales', params),
+  queryStore: async (params: storeDesign.QueryStoresParams) => await publicGet<swaggerI.newStoreListResult, storeDesign.QueryStoresParams>('public/stores', params),
   queryStoreWhitString: async (params: string) => await get<swaggerI.newStoreListResult, undefined>('store/stores?' + params),
-  queryStoreDetails: async (storeId: string) => await get<swaggerI.storeDetailResult, undefined>('store/stores/' + storeId),
+  queryStoreDetails: async (storeId: string) => await publicGet<swaggerI.storeDetailResult, undefined>('public/stores/' + storeId),
   queryBrand: async (params: storeDesign.queryBrandsParams) => await get<swaggerI.brandListResult, storeDesign.queryBrandsParams>('store/brands', params),
   queryCities: async (params: swaggerI.pageRequestParams) => await get<swaggerI.citiesListResult, swaggerI.pageRequestParams>('store/cities', params),
   queryCategory: async (params: storeDesign.queryCategoryParams) => await get<swaggerI.categoryListResult, storeDesign.queryCategoryParams>('store/taxons', params),
   queryCategoryChild: async (params: storeDesign.queryCategoryChildParams) => await get<swaggerI.categoryListResult, storeDesign.queryCategoryChildParams>('store/taxons/children', params),
-  queryProducts: async (params: storeDesign.queryProductsParams) => await get<swaggerI.productListResult, storeDesign.queryProductsParams>('store/products', params),
+  queryProducts: async (params: storeDesign.queryProductsParams) => await publicGet<swaggerI.productListResult, storeDesign.queryProductsParams>('public/products', params),
   queryProductDetails: async (code: string) => await get<swaggerI.productDetailResult, undefined>('store/products/' + code),
 }
 
