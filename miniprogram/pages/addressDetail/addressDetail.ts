@@ -162,6 +162,13 @@ Page({
     }
     const userInfo = wx.getStorageSync('oauth.data')
     const { customer } = userInfo
+    let cityName = '';
+    const cityData = this.data.region[1];
+    if (cityData.includes('自治州')) {
+      cityName = cityData.substr(0, cityData.length -3)
+    } else {
+      cityName = cityData.substr(0, cityData.length - 1)
+    }
     try {
       const params = {
         type: 'customer',
@@ -175,7 +182,7 @@ Page({
         provinceCode: 'CN-sh',
         provinceName: this.data.region[0],
         street: address.value,
-        city: this.data.region[1],
+        city: cityName,
         county: this.data.region[2],
         postcode: postcode.value,
       } as addressDesign.createAddressParams
