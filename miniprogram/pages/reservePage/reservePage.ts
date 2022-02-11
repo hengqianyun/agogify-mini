@@ -382,7 +382,7 @@ Page({
     })
   },
 
-  hnadleSaleChange({detail}: WechatMiniprogram.TouchEvent) {
+  handleSaleChange({detail}: WechatMiniprogram.TouchEvent) {
     const {index} = detail as unknown as {index: number}
     this.setData({
       sale: index,
