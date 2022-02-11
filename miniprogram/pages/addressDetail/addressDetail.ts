@@ -1,4 +1,5 @@
 import addressModule from "../../http/module/address";
+import { getFirstNameAndLastName } from "../../utils/util";
 
 const chooseLocation = requirePlugin('chooseLocation');
 
@@ -169,14 +170,13 @@ Page({
     } else {
       cityName = cityData.substr(0, cityData.length - 1)
     }
+    const {firstName, lastName} = getFirstNameAndLastName(name.value)
     try {
       const params = {
         type: 'customer',
         customer: customer,
-        // firstName: name.value.substr(0, 1),
-        // lastName: name.value.substr(1),
-        firstName: name.value.substr(0, 1),
-        lastName: name.value.substr(1),
+        firstName,
+        lastName,
         mobileNumber: phone.value,
         countryCode: 'CN',
         provinceCode: 'CN-sh',
@@ -213,7 +213,7 @@ Page({
       const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber} = res.data
       this.setData({
         'form.phone.value': mobileNumber,
-        'form.name.value': firstName + lastName,
+        'form.name.value': lastName + firstName,
         'form.postcode.value': postcode,
         'form.region.value': provinceName + ' ' + city,
         'form.address.value': street,

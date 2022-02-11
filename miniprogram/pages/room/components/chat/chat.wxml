@@ -70,7 +70,7 @@
             <view class="message-box">
               <view class="user-info">
                 <view class="user-name text-ellipsis">
-                  {{address.firstName + address.lastName}}
+                  {{address.lastName + address.firstName}}
                 </view>
                 <view class="user-phone">{{address.phoneNumber}}</view>
               </view>
@@ -88,7 +88,7 @@
               <view class="message-box" data-index="{{index}}" bind:tap="handleChoose">
                 <view class="user-info">
                   <view class="user-name text-ellipsis">
-                    {{address.firstName + address.lastName}}
+                    {{address.lastName + address.firstName}}
                   </view>
                   <view class="user-phone">{{address.phoneNumber}}</view>
                 </view>

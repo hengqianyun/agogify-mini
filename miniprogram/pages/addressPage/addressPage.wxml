@@ -3,7 +3,7 @@
     <block wx:for="{{addressList}}" wx:key="id">
       <view class="address-item">
         <view class="user-info">
-          <text class="user-name">{{item.firstName + item.lastName}}</text>
+          <text class="user-name">{{item.lastName + item.firstName}}</text>
           <text>{{item.phoneNumber}}</text>
         </view>
         <view class="address-info">
