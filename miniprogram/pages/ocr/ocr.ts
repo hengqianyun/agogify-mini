@@ -2,7 +2,7 @@ import { BASEURL } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
 import userModule from "../../http/module/user"
 import store from "../../store/index"
-import { getIdFromString } from "../../utils/util"
+import { getFirstNameAndLastName, getIdFromString } from "../../utils/util"
 
 // pages/ocr/ocr.ts
 Page({
@@ -265,12 +265,14 @@ Page({
   },
 
   async putUserInfo() {
+    const {firstName, lastName} = getFirstNameAndLastName(this.data.userName)
     try {
       await userModule.putCustomerInfo({
-        firstName: this.data.userName.substr(0, 1),
-        lastName: this.data.userName.substr(1),
+        lastName,
+        firstName,
         // firstName: 'firstName',
         // lastName: 'lastName',
+        identityType: 'identity',
         identityNumber: this.data.userNumber.toString(),
       }, getIdFromString(wx.getStorageSync('oauth.data').customer))
     } catch(err) {
