@@ -4,7 +4,7 @@
       <view class="address-item">
         <view class="user-info">
           <text class="user-name">{{item.lastName + item.firstName}}</text>
-          <text>{{item.phoneNumber}}</text>
+          <text>{{item.mobileNumber}}</text>
         </view>
         <view class="address-info">
           <view class="address-box text-ellipsis-2">{{item.provinceName + ' ' + item.city + '市 ' + item.street}}</view>

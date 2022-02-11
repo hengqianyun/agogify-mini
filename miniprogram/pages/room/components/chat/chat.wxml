@@ -90,7 +90,7 @@
                   <view class="user-name text-ellipsis">
                     {{address.lastName + address.firstName}}
                   </view>
-                  <view class="user-phone">{{address.phoneNumber}}</view>
+                  <view class="user-phone">{{address.mobileNumber}}</view>
                 </view>
                 <view class="address-detail text-ellipsis-2">
                   {{address.provinceName + ' ' + address.cityName + ' ' + address.street}}

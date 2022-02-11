@@ -246,7 +246,6 @@ Page({
         header: {Authorization: 'Bearer ' + token},
         formData: {
           type: type,
-          owner: user.customer
         },
         success(res) {
           if (res.statusCode === 500) {
