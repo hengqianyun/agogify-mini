@@ -1,7 +1,7 @@
 import { post } from "../index";
 
 const videoModule = {
-  translate: (recordeFile: string | ArrayBuffer) => post<swaggerI.translateRes, {'data': string | ArrayBuffer, [key: string]: any}>('store/tmt-inputs', {
+  translate: (recordeFile: string | ArrayBuffer) => post<swaggerI.translateRes, {'data': string | ArrayBuffer, [key: string]: any}>('private/tmt-inputs', {
     
     "region": "ap-shanghai",
       "sessionUuid": "test001",
