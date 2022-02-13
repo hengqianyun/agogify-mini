@@ -17,7 +17,7 @@ declare namespace storeDesign {
   }
 
   interface storeBillingData extends swaggerI.requestSingleDataBase {
-    city?: {translations: {en: any, zh_Hans_CN: addressSimpleData}}
+    city?: addressSimpleData
     country?: addressSimpleData
     county?: addressSimpleData
     id: number

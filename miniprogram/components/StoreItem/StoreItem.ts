@@ -26,7 +26,7 @@ Component({
       let path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + this.properties.store.logo?.path || DEFAULT_IMAGE;
       let {billingData} = this.properties.store as {billingData: storeDesign.storeBillingData}
       // const address = `${billingData.countryCode} ${billingData.city} ${billingData.street}`
-      const address = `${billingData.country?.name} ${billingData.city?.translations.zh_Hans_CN.name}`
+      const address = `${billingData.country?.name} ${billingData.city?.name}`
       this.setData({
         imageUrl : path,
         address,

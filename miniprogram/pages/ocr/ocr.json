@@ -1,5 +1,6 @@
 {
   "usingComponents": {
-    "rss-button": "../../components/RssButton/RssButton"
+    "rss-button": "../../components/RssButton/RssButton",
+    "ocr-navigator": "plugin://ocr-plugin/ocr-navigator"
   }
 }

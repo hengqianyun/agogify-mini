@@ -252,6 +252,10 @@ Page({
     }
   },
 
+  success() {
+
+  },
+
   async uploadImage(path: string, type: string) {
     const token: string = wx.getStorageSync('oauth.data').token
     return new Promise((resove, rej) => {

@@ -4,6 +4,9 @@
     <view class="step-text">上传身份证正面照片</view>
   </view>
   <view class="image-choose-1">
+    <ocr-navigator bind:onSuccess="success" certificateType="idCard" opposite="{{false}}">
+      <button type="primary">身份证正面识别</button>
+    </ocr-navigator>
     <image wx:if="{{!identityBase64}}" class="image" bindtap="chooseImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
     <!-- <image wx:else class="image" bindtap="chooseImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image> -->
     <image wx:else class="image" bindtap="chooseImage" src="{{identityPath}}" lazy-load="false" binderror="" bindload=""></image>

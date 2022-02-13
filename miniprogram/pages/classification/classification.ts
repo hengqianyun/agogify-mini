@@ -368,7 +368,7 @@ Page({
     }
     const list = resData.data["hydra:member"]
     this.setData({
-      shopList: list.map(item => Object.assign(item, { status: 0 as storeDesign.checkBoxStatus, address: `${item.billingData.country?.name} ${item.billingData.city?.translations.zh_Hans_CN.name}` })),
+      shopList: list.map(item => Object.assign(item, { status: 0 as storeDesign.checkBoxStatus, address: `${item.billingData.country?.name} ${item.billingData.city?.name}` })),
       shopCheckStatusList: (new Array(list.length)).fill(1),
       loading: false
     })

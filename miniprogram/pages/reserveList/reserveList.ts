@@ -113,7 +113,7 @@ Page({
         date: timeFormat(startTime, 'yyyy-MM-dd'),
         duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
         tag: '待进行',
-        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.translations.zh_Hans_CN.name
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
       }
     })
 
@@ -140,7 +140,7 @@ Page({
         date: timeFormat(startTime, 'yyyy-MM-dd'),
         duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
         tag: '已结束',
-        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.translations.zh_Hans_CN.name
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
       }
     })
 
