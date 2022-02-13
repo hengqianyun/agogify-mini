@@ -152,7 +152,7 @@ Page({
       resData.data.images[0].path = IMAGEBASEURL+ IMAGEPATHS.storeMain1x + resData.data.images[0].path
     }
     const { country, city } = resData.data.billingData
-    const address = `${country?.name} ${city?.name}`
+    const address = `${country?.name} ${city?.translations.zh_Hans_CN.name}`
     this.setData({
       details: {...resData.data, address}
     })
