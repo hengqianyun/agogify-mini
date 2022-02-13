@@ -30,6 +30,7 @@ Page({
     showChat: false,
     canTap: true,
     canLeave: true,
+    showBusyDialog: false,
     saleId: '',
     storeId: '',
   },
@@ -290,18 +291,29 @@ Page({
 
   // 挂断退出房间
   _hangUp() {
-    debugger
     if (!this.data.canLeave) {
       wx.showLoading({
         title: '销售还未操作完，请勿挂断电话'
       })
       return
     }
-    return;
     this.exitRoom()
     wx.navigateBack({
       delta: 1,
     })
+  },
+
+  handleShowBusyDialog() {
+    this.setData({
+      showBusyDialog: true
+    })
+  },
+
+  handleBusy() {
+    this.setData({
+      showDialog: false,
+    })
+    wx.navigateBack()
   },
 
   setCanLeaveState(status: boolean ) {

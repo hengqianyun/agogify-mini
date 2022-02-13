@@ -85,7 +85,6 @@ Component({
     payDialogLabel: '',
     qrcode: '',
     showHandUpDialog: false,
-    showBusyDialog: false,
     showMoreAddress: false,
     hasGetTime: false,
     showQrcode: false,
@@ -106,7 +105,7 @@ Component({
       this.queryAddressList()
       this.setData({
         callTimer: setTimeout(() => {
-          wx.navigateBack()
+          // wx.navigateBack()
         }, 60000)
       })
       $on({
@@ -120,6 +119,7 @@ Component({
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
+            debugger
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
                 // 进入房间
@@ -169,9 +169,7 @@ Component({
                 })
               break
               case CustomMessageTypes.NOW_BUSY:
-                this.setData({
-                  showBusyDialog: true
-                })
+                this.triggerEvent('busy')
                 break
               case CustomMessageTypes.READY_ENTER_ROOM:
                 sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
@@ -368,10 +366,6 @@ Component({
     },
     handleHangUpCancel() {
       this.setData({ showHandUpDialog: false })
-    },
-
-    handleBusy() {
-      wx.navigateBack();
     },
 
     handleHangUp() {
