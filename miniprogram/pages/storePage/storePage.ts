@@ -32,14 +32,14 @@ Page({
       size: 32,
       class: 'line-btn',
       color: "#353535",
-      event: 'handleCall'
+      event: 'handleCall',
     }, {
       label: "预约",
       icon: "my_reserve",
       size: 32,
       class: 'fill-btn',
       color: "#fff",
-      event: 'handleReserve'
+      event: 'handleReserve',
     }],
     pageInfo: {
       page: 1,

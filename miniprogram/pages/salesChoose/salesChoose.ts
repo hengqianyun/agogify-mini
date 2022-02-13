@@ -14,7 +14,7 @@ Page({
     stores: [] as storeDesign.storeItem[],
     currentStoreIndex: 0,
     sales: [] as storeDesign.sale[],
-    showDialog: false
+    showDialog: false,
   },
   store: store,
 
@@ -80,16 +80,27 @@ Page({
   },
 
   async handleCall({currentTarget}: WechatMiniprogram.TouchEvent) {
-    if (!(await this.querySession())) {
-      return
-    }
-    const {id, status} = currentTarget.dataset as {id: string, status: string}
+    const {id, status, index} = currentTarget.dataset as {id: string, status: string, index: number}
     if (status !== 'online') {
       return
     }
+    let key = `sales[${index}].status`
+    this.setData({
+      [key]: 'offline'
+    })
+    if (!(await this.querySession())) {
+      this.setData({
+        [key]: 'online'
+      })
+      return
+    }
+    
     // 
     const saleId = getIdFromString(id)
     const currentStore = this.data.stores[this.data.currentStoreIndex]
+    this.setData({
+      [key]: 'online'
+    })
     wx.navigateTo({
       url: `../room/room?storeName=${currentStore.name}&avatar=${currentStore.logo?.path}&storeId=${currentStore.code}&saleId=${saleId}`
     })

@@ -48,6 +48,10 @@ Component({
     },
     backgroundColor: {
       type: String,
+    },
+    disabled: {
+      type: Boolean,
+      value: false
     }
   },
 
@@ -63,6 +67,7 @@ Component({
    */
   methods: {
     handleTap(event: WechatMiniprogram.TouchEvent) {
+      if (this.properties.disabled) return
       this.triggerEvent('onTap', event)
     }
   }
