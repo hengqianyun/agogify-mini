@@ -254,7 +254,7 @@ Page({
         const { state } = slot
         if (state === 'available') {
           const { startTime, version, '@id': id } = slot
-          const curDate = new Date(startTime)
+          const curDate = new Date(startTime.split('GMT')[0])
           const today = new Date()
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]

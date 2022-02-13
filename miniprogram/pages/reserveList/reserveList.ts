@@ -104,12 +104,16 @@ Page({
 
     const tempList = reserveList.map(e => {
       e.sales.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
+      let startTime = new Date(e.startTime.split('GMT')[0])
+      let endTime = new Date(e.endTime.split('GMT')[0])
+      startTime = new Date(startTime.setHours(startTime.getHours() + 8)) 
+      endTime = new Date(endTime.setHours(endTime.getHours() + 8)) 
       return {
         ...e,
-        date: timeFormat(new Date(e.startTime), 'yyyy-MM-dd'),
-        duration: `${timeFormat(new Date(e.startTime), 'hh:mm')}~${timeFormat(new Date(e.endTime), 'hh:mm')}`,
+        date: timeFormat(startTime, 'yyyy-MM-dd'),
+        duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
         tag: '待进行',
-        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.translations.zh_Hans_CN.name
       }
     })
 
@@ -127,12 +131,16 @@ Page({
 
     const tempList = reserveList.map(e => {
       e.sales.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
+      let startTime = new Date(e.startTime.split('GMT')[0])
+      let endTime = new Date(e.endTime.split('GMT')[0])
+      startTime = new Date(startTime.setHours(startTime.getHours() + 8)) 
+      endTime = new Date(endTime.setHours(endTime.getHours() + 8)) 
       return {
         ...e,
-        date: timeFormat(new Date(e.startTime), 'yyyy-MM-dd'),
-        duration: `${timeFormat(new Date(e.startTime), 'hh:mm')}~${timeFormat(new Date(e.endTime), 'hh:mm')}`,
+        date: timeFormat(startTime, 'yyyy-MM-dd'),
+        duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
         tag: '已结束',
-        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.translations.zh_Hans_CN.name
       }
     })
 
