@@ -1,5 +1,5 @@
 import reserveModule from "../../http/module/reserve"
-import storeModule from "../../http/module/store"             
+import storeModule from "../../http/module/store"
 import { getIdFromString } from "../../utils/util"
 
 interface SimpleTitme {
@@ -67,6 +67,7 @@ Page({
     startTime: '',
     endTime: '',
     saleLanguage: '',
+    reserveBtnDisabled: false
   },
 
   /**
@@ -76,8 +77,9 @@ Page({
     const today = new Date()
     const [year, month, date] = [today.getFullYear(), today.getMonth(), today.getDate()]
     const newDay = new Date(year, month, date, 16, 0)
-    const startTime = newDay.toISOString();
-    const endTime = (new Date(newDay.setDate(date + 7))).toISOString()
+    const startTime = this.getGMTTimerString(newDay)
+    // const endTime = (new Date(newDay.setDate(date + 7))).toISOString()
+    const endTime = this.getGMTTimerString(new Date(newDay.setDate(date + 7)))
     const stores = wx.getStorageSync<storeDesign.storeItem[]>('reserveStores')
     this.setData({
       stores,
@@ -195,7 +197,6 @@ Page({
   },
 
   initTimeSlots() {
-    // TODO 查询对应销售的时间表
     let tableItems: SimpleTableItem[][] = []
     for (let i = 0; i < 7; i++) {
       tableItems.push([] as SimpleTableItem[])
@@ -224,62 +225,62 @@ Page({
   },
 
   async querySalesTimeSlots() {
-    wx.showLoading({title: '加载中'})
+    wx.showLoading({ title: '加载中' })
     try {
       let timer = 0
-    let count = 0, loading = true
-    timer = setInterval(() => {
-      if (loading) {
-        count++
-      } else {
-        clearInterval(timer)
-        wx.showToast({title: `加载了${count / 5}秒`})
-      }
-    }, 200)
-    this.initTimeSlots()
-    const code = this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"]
-    const res = await reserveModule.querySalesTimeSlots({
-      'sales.id': getIdFromString(code),
-      'startTime[after]': this.data.startTime,
-      'endTime[before]': this.data.endTime,
-    })
+      let count = 0, loading = true
+      timer = setInterval(() => {
+        if (loading) {
+          count++
+        } else {
+          clearInterval(timer)
+          wx.showToast({ title: `加载了${count / 5}秒` })
+        }
+      }, 200)
+      this.initTimeSlots()
+      const code = this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"]
+      const res = await reserveModule.querySalesTimeSlots({
+        'sales.id': getIdFromString(code),
+        'startTime[after]': this.data.startTime,
+        'endTime[before]': this.data.endTime,
+      })
 
-    const { "hydra:member": list } = res.data
-    /**
-     * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
-     */
-    const timeZone = 8;
-    for (const slot of list) {
-      const { state } = slot
-      if (state === 'available') {
-        const { startTime, version, '@id': id} = slot
-        const curDate = new Date(startTime)
-        const today = new Date()
-        const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
-        const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
-        const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-        console.log(hour)
-        // TODO 9 变为 12
-        const j = (hour - 13) * 4 + min / 15
-        if (!!this.data.tableItems[i][j]) {
-          
-          this.data.tableItems[i][j].disabled = false
-          this.data.tableItems[i][j].paramsVersion = version
-          this.data.tableItems[i][j].paramsId = getIdFromString(id)
+      const { "hydra:member": list } = res.data
+      /**
+       * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
+       */
+      const timeZone = 8;
+      for (const slot of list) {
+        const { state } = slot
+        if (state === 'available') {
+          const { startTime, version, '@id': id } = slot
+          const curDate = new Date(startTime)
+          const today = new Date()
+          const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
+          const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
+          const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
+          console.log(hour)
+          // TODO 9 变为 12
+          const j = (hour - 13) * 4 + min / 15
+          if (!!this.data.tableItems[i][j]) {
+
+            this.data.tableItems[i][j].disabled = false
+            this.data.tableItems[i][j].paramsVersion = version
+            this.data.tableItems[i][j].paramsId = getIdFromString(id)
+          }
         }
       }
-    }
-    this.setData({
-      tableItems: this.data.tableItems
-    })
-    loading = false
-    } catch(err) {
+      this.setData({
+        tableItems: this.data.tableItems
+      })
+      loading = false
+    } catch (err) {
       console.log(err)
 
     } finally {
       wx.hideLoading()
     }
-    
+
   },
 
   getTime(i: number, j: number, isStart: boolean) {
@@ -340,6 +341,9 @@ Page({
   },
 
   async handleCommitReserve() {
+    this.setData({
+      reserveBtnDisabled: true
+    })
     const { x, y1, y2 } = this.data.reserveRes
     const list = this.data.tableItems[x]
     let timeSlots = []
@@ -356,10 +360,13 @@ Page({
         title: '请选择预约时间',
         icon: 'error',
       })
+      this.setData({
+        reserveBtnDisabled: false
+      })
       return
     }
     try {
-      await reserveModule.bookTimeSlot({timeSlots} as reserveDesign.bookTimeSlotParams)
+      await reserveModule.bookTimeSlot({ timeSlots } as reserveDesign.bookTimeSlotParams)
       wx.showToast({
         title: '预约成功',
         icon: 'success',
@@ -367,10 +374,14 @@ Page({
       setTimeout(() => {
         wx.navigateBack()
       }, 1000)
-    } catch{
+    } catch {
       wx.showToast({
         title: '请求异常，请刷新重试',
-      icon: 'error'
+        icon: 'error'
+      })
+    } finally {
+      this.setData({
+        reserveBtnDisabled: false
       })
     }
   },
@@ -382,8 +393,8 @@ Page({
     })
   },
 
-  handleSaleChange({detail}: WechatMiniprogram.TouchEvent) {
-    const {index} = detail as unknown as {index: number}
+  handleSaleChange({ detail }: WechatMiniprogram.TouchEvent) {
+    const { index } = detail as unknown as { index: number }
     this.setData({
       sale: index,
       saleLanguage: this.data.sales[this.data.stores[this.data.currentStoreIndex].code][index].languages.map(e => {
@@ -436,5 +447,16 @@ Page({
       weekText,
       timeText
     }
+  },
+
+  getGMTTimerString(time: Date) {
+    const year = time.getUTCFullYear()
+    const month = time.getUTCMonth() + 1
+    const day = time.getUTCDate()
+    const hour = time.getUTCHours()
+    const timezone = 0 - time.getTimezoneOffset() / 60
+
+    return timezone < 0 ? `${year}-${month}-${day}T${hour}:00:00GMT-${timezone > -10 ? '0' : ''}${timezone}:00` : `${year}-${month}-${day}T${hour}:00:00GMT-${timezone < 10 ? '0' : ''}${timezone}:00`
+
   }
 })
