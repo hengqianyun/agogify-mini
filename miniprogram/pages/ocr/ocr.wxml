@@ -39,6 +39,6 @@
   </view>
   <view class="tips">提示语句提示语句提示语句提示语句</view>
   <view class="btn">
-    <rss-button label="提交" bind:tap="handleCommit" className="fill-btn" width="{{654}}" height="{{88}}" fontSize="{{34}}"></rss-button>
+    <rss-button label="提交" bind:onTap="handleCommit" disabled="{{commitBtnDisabled}}" className="fill-btn" width="{{654}}" height="{{88}}" fontSize="{{34}}"></rss-button>
   </view>
 </view>

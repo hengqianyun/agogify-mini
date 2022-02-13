@@ -20,6 +20,7 @@ Page({
     passportPath: '',
     identityBase64: '' as string | ArrayBuffer,
     identityPath: '',
+    commitBtnDisabled: false,
   },
 
   /**
@@ -181,56 +182,68 @@ Page({
       wx.showToast({ title: "请选择人像照片", icon: "error" })
       return
     }
+    this.setData({
+      commitBtnDisabled: true
+    })
 
     wx.showLoading({ title: '正在对比人像...' })
-
-    const res = await ocrModule.baiduOCR(this.data.access_token, {
-      image: this.data.base64,
-      id_card_number: this.data.userNumber,
-      name: this.data.userName
-    })
-    const { result, error_code } = res.data
-    if (error_code === 222356) {
-      wx.hideLoading()
-      wx.showModal({
-        title: "图片无法识别",
-        showCancel: false,
-        confirmText: "我知道了"
+    try {
+      const res = await ocrModule.baiduOCR(this.data.access_token, {
+        image: this.data.base64,
+        id_card_number: this.data.userNumber,
+        name: this.data.userName
       })
-      // wx.showToast({
-      //   title: "图片无法识别",
-      //   icon: "error"
-      // })
-    } else if (result.score < 80) {
-      wx.hideLoading()
-      wx.showModal({
-        title: "认证失败",
-        showCancel: false,
-        confirmText: "我知道了"
-      })
-    } else {
-      try {
-        await this.uploadImage(this.data.passportPath, 'identity-back')
-        await this.uploadImage(this.data.identityPath, 'identity-front')
-        await this.uploadImage(this.data.portraitPath, 'portrait')
-        await this.putUserInfo()
-      } catch {
+      const { result, error_code } = res.data
+      if (error_code === 222356) {
+        wx.hideLoading()
         wx.showModal({
-          title: "网络错误",
+          title: "图片无法识别",
           showCancel: false,
           confirmText: "我知道了"
         })
+      } else if (result.score < 80) {
         wx.hideLoading()
-        return
-      }
-      wx.hideLoading()
-      wx.showModal({
-        title: "实名认证已通过",
-        showCancel: false,
-        confirmText: "我知道了",
-        success() {
-          wx.navigateBack()
+        wx.showModal({
+          title: "认证失败",
+          showCancel: false,
+          confirmText: "我知道了"
+        })
+      }else {
+        try {
+          await this.uploadImage(this.data.passportPath, 'identity-back')
+          await this.uploadImage(this.data.identityPath, 'identity-front')
+          await this.uploadImage(this.data.portraitPath, 'portrait')
+          await this.putUserInfo()
+        } catch {
+          wx.showModal({
+            title: "网络错误",
+            showCancel: false,
+            confirmText: "我知道了"
+          })
+          wx.hideLoading()
+          return
         }
+        wx.hideLoading()
+        wx.showModal({
+          title: "实名认证已通过",
+          showCancel: false,
+          confirmText: "我知道了",
+          success() {
+            wx.navigateBack()
+          }
+        })
+      }
+    } catch (err) {
+      wx.showModal({
+        title: "网络错误",
+        showCancel: false,
+        confirmText: "我知道了"
+      })
+      wx.hideLoading()
+      return
+    } finally {
+      this.setData({
+        commitBtnDisabled: false
       })
     }
   },
