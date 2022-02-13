@@ -22,7 +22,7 @@ const storeModule = {
   queryCategory: async (params: storeDesign.queryCategoryParams) => await publicGet<swaggerI.categoryListResult, storeDesign.queryCategoryParams>('public/taxons', params),
   queryCategoryChild: async (params: storeDesign.queryCategoryChildParams) => await publicGet<swaggerI.categoryListResult, storeDesign.queryCategoryChildParams>('public/taxons/children', params),
   queryProducts: async (params: storeDesign.queryProductsParams) => await publicGet<swaggerI.productListResult, storeDesign.queryProductsParams>('public/products', params),
-  queryProductDetails: async (code: string) => await get<swaggerI.productDetailResult, undefined>('store/products/' + code),
+  queryProductDetails: async (code: string) => await publicGet<swaggerI.productDetailResult, undefined>('public/products/' + code),
 }
 
 export default storeModule
