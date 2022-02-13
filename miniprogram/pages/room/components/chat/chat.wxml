@@ -174,7 +174,7 @@
         </view>
       </view>
       <view class="btn-area">
-        <rss-btn label="{{payDialogLabel}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
+        <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
       </view>
     </van-popup>
   </view>

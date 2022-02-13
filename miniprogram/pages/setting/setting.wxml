@@ -2,19 +2,12 @@
   <view class="menu">
     <block wx:for="{{menu}}" wx:key="label">
       <view class="menu-item" data-url="{{item.url}}" bind:tap="handleMenuItemTap">
-        <view class="menu-item-name">
-          {{item.label}}
-        </view>
+        <view class="menu-item-name">{{item.label}}</view>
         <view class="menu-item-icon">
           <iconfont name="{{item.icon}}" size="{{item.size}}"></iconfont>
         </view>
       </view>
     </block>
   </view>
-  <view class="btn" bind:tap="handleLogout">
-    退出登录
-  </view>
-    
-    
+  <view class="btn" bind:tap="handleLogout">退出登录</view>
 </view>
-  

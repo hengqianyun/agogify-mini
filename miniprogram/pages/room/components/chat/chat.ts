@@ -90,7 +90,8 @@ Component({
     hasGetTime: false,
     showQrcode: false,
     hasPaid: false,
-    canLeave: true
+    canLeave: true,
+    payDialogBtnDisabled: false,
   },
 
   lifetimes: {
@@ -591,24 +592,37 @@ Component({
     },
     async _handleCommit() {
       wx.showLoading({ title: '正在请求...' })
+      this.setData({
+        payDialogBtnDisabled: true
+      })
+      /**
+       * 判断按钮是确认订单还是已付款
+       */
       if (this.data.showQrcode) {
         try {
-
-          // TODO: 判断用户是否已经付款
+          /**
+           * 判断用户是否已经付款
+           * TODO 完善用户未付款逻辑
+           */
           if (!(await this.userHasPaid)) {
             wx.showToast({ title: '付款还未成功，' })
           }
           sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
           this.setData({
             showPopup: false,
-            hasPaid: true
+            hasPaid: true,
           })
         } catch {
           wx.showToast({ title: '请求失败，请重新尝试' })
+          
+        } finally {
+          this.setData({
+            payDialogBtnDisabled: false
+          })
+          this.resetOrder()
+          wx.hideLoading()
+          this.data.canLeave = false
         }
-        this.resetOrder()
-        wx.hideLoading()
-        this.data.canLeave = false
       } else {
         const { tokenValue, address, shipmentId, paymentId } = this.data
         // let  note = {
@@ -657,6 +671,10 @@ Component({
           wx.hideLoading()
           wx.showToast({ title: '创建订单失败，请重新尝试' })
           return
+        } finally {
+          this.setData({
+            payDialogBtnDisabled: false
+          })
         }
         // sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
 
