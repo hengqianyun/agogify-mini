@@ -16,7 +16,7 @@
           {{verifyText}}
         </view>
       </view>
-      <rss-button label="{{btnText}}" data-funname="phoneLogin" bind:onTap="handleLogin" className="fill-btn" fontSize="{{28}}" height="{{88}}" width="{{654}}" fontWeight="{{400}}"></rss-button>
+      <rss-button label="{{btnText}}" data-funname="phoneLogin" disabled="{{commitBtnDisabled}}" bind:onTap="handleLogin" className="fill-btn" fontSize="{{28}}" height="{{88}}" width="{{654}}" fontWeight="{{400}}"></rss-button>
     </view>
     <view wx:if="{{showReguration}}" class="regulations" bind:tap="handleCheckRegulation">
       <rss-checkbox status="{{status}}" length="{{20}}"></rss-checkbox>

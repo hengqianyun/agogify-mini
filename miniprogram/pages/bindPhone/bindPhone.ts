@@ -23,7 +23,8 @@ Page({
     type: '0' as queryType,
     phoneNumber: '' as unknown as number,
     verifyCode: '' as unknown as number,
-    userInfo: {userName: '', avatarUrl: ''}
+    userInfo: {userName: '', avatarUrl: ''},
+    commitBtnDisabled: false,
   },
 
   store: store,
@@ -149,6 +150,9 @@ Page({
 
   async handleLogin() {
     // return
+    this.setData({
+      commitBtnDisabled: true
+    })
     const { code } = await wx.login()
     if (this.data.type === '0' || this.data.type === '1') {
       // wx.navigateTo({url: '../person/person'})
@@ -174,6 +178,10 @@ Page({
         await querySessionAsync()
       } catch {
         wx.showToast({title: '登录失败', icon: 'error'})
+      } finally {
+        this.setData({
+          commitBtnDisabled: false
+        })
       }
        
     } else if (this.data.type === '2') {

@@ -15,7 +15,9 @@ Page({
   data: {
     status: 0,
     wxLoginCode: '',
-    isRegister: false
+    isRegister: false,
+    wxLoginBtnDisabled: false,
+    phoneLoginBtnDisabled: false,
   },
 
   store: store,
@@ -118,6 +120,9 @@ Page({
 
   async handleWxLogin() {
     try {
+      this.setData({
+        wxLoginBtnDisabled: true
+      })
       const res = await wx.getUserProfile({
         desc: '用于获取您的微信个人信息'
       })
@@ -156,10 +161,17 @@ Page({
         title: "获取信息失败",
         icon: "error"
       })
+    } finally {
+      this.setData({
+        wxLoginBtnDisabled: false
+      })
     }
   },
 
   async handlePhoneLogin() {
+    this.setData({
+      phoneLoginBtnDisabled: true
+    })
     try {
       const res = await wx.getUserProfile({
         desc: '用于获取您的微信个人信息'
@@ -168,7 +180,11 @@ Page({
       wx.navigateTo({
         url: `../bindPhone/bindPhone?type=1&userName=${userInfo.nickName}&avatarUrl=${userInfo.avatarUrl}`
       })
-    } catch {}
+    } catch {} finally {
+      this.setData({
+        phoneLoginBtnDisabled: false
+      })
+    }
   },
 
   handleCheckRegulation() {
