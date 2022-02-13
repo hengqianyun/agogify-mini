@@ -41,7 +41,7 @@
     </view>
   </view>
   <view class="btn-box">
-    <rss-button width="{{654}}" height="{{88}}" label="保存" className="fill-btn" fontSize="{{28}}" bind:onTap="handleSubmit"></rss-button>
+    <rss-button width="{{654}}" height="{{88}}" disabled="{{commitBtnDisabled}}" label="保存" className="fill-btn" fontSize="{{28}}" bind:onTap="handleSubmit"></rss-button>
   </view>
   <!-- <view class="map-cover">
     <rss-map></rss-map>

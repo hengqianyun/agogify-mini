@@ -20,7 +20,8 @@ Page({
       postcode: { focus: false, error: false, value: '', errorMsg: '请输入正确的邮政编码' },
     },
     region: [] as string[],
-    id: null as unknown as number
+    id: null as unknown as number,
+    commitBtnDisabled: false,
   },
 
   /**
@@ -161,6 +162,9 @@ Page({
         'form.postcode.error': false
       })
     }
+    this.setData({
+      commitBtnDisabled: true
+    })
     const userInfo = wx.getStorageSync('oauth.data')
     const { customer } = userInfo
     let cityName = '';
@@ -202,6 +206,9 @@ Page({
       wx.showToast({
         title: '创建地址错误，请稍后重试',
         icon: 'error'
+      })
+      this.setData({
+        commitBtnDisabled: false
       })
     }
   },
