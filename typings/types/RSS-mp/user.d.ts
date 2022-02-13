@@ -26,6 +26,11 @@ declare namespace userDesign {
     provider: loginProviderTypes
   }
 
+  interface userInfoRes extends swaggerI.requestBase {
+    id: number
+    identityNumber: string
+  }
+
   interface putUserInfoParams {
     "identityType"?: string,
     "identityNumber"?: string,

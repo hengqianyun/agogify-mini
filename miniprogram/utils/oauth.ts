@@ -1,5 +1,6 @@
 import loginModule from "../http/module/login";
 import http from "../libs/http";
+import { getIdFromString } from "./util";
 
 type LoginType = 'wxLogin' | 'mobileLogin'
 
@@ -58,9 +59,36 @@ export const autoLogin = async () => {
     console.log(resData)
     setOautoData(resData.data)
     http.setToken(resData.data.token)
+    queryUserInfo(resData.data.customer);
+  }
+}
+
+export const queryUserInfo = async (strId: string) => {
+  const id = getIdFromString(strId)
+  try {
+    const res = await loginModule.getUserInfo(id)
+    const {identityNumber} = res.data
+    if (!!identityNumber && (identityNumber.length === 18 || identityNumber.length === 15)) {
+      setIfUserHasTheRealNameBeenCertified(true)
+    }
+  } catch (err) {
+
   }
 }
 
 export const setOautoData = async (data: userDesign.loginRes) => {
   await wx.setStorageSync('oauth.data', data)
+}
+
+export const setIfUserHasTheRealNameBeenCertified = (status: boolean) => {
+  if (status) {
+    wx.setStorageSync('realNameCertified', true)
+  } else {
+    wx.removeStorageSync('realNameCertified');
+  }
+}
+
+export const getIfUserHasTheRealNameBeenCertified = () => {
+  const status = wx.getStorageSync<boolean | undefined>('realNameCertified')
+  return !!status
 }

@@ -1,7 +1,7 @@
 import loginModule from "../../http/module/login"
 import http from "../../libs/http"
 import store from "../../store/index"
-import { setOautoData } from "../../utils/oauth"
+import { queryUserInfo, setOautoData } from "../../utils/oauth"
 import { querySessionAsync } from "../../utils/querySession"
 
 // pages/loginPage/loginPage.ts
@@ -152,6 +152,8 @@ Page({
         wx.setStorageSync('userInfo', user)
         http.setToken(loginRes.data.token)
         await querySessionAsync()
+        console.log(user)
+        queryUserInfo(user.customer)
         wx.navigateBack({
           delta: 1
         });

@@ -1,6 +1,6 @@
 import storeModule from "../../http/module/store"
 import { BASEURL } from '../../http/index'
-import { checkloginAsync } from "../../utils/checkLogin"
+import { checkloginAndRealNameCertifiedAsync } from "../../utils/checkLogin"
 
 // pages/productPage/productPage.ts
 Page({
@@ -97,12 +97,16 @@ Page({
   },
 
   handleCall() {
-    checkloginAsync()
+    if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
     wx.navigateTo({ url: '../salesChoose/salesChoose' })
   },
   
   handleReserve() {
-    checkloginAsync()
+    if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
     wx.navigateTo({ url: '../reservePage/reservePage' })
   },
 

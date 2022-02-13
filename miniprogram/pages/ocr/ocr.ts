@@ -2,6 +2,7 @@ import { BASEURL } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
 import userModule from "../../http/module/user"
 import store from "../../store/index"
+import { setIfUserHasTheRealNameBeenCertified } from "../../utils/oauth"
 import { getFirstNameAndLastName, getIdFromString } from "../../utils/util"
 
 // pages/ocr/ocr.ts
@@ -99,6 +100,7 @@ Page({
           identityPath: tempPath,
         })
         const wxTokenRes = await ocrModule.getAssessToken()
+        console.log(tempPath)
         wx.uploadFile({
           filePath: tempPath,
           name: 'img',
@@ -122,7 +124,8 @@ Page({
               userNumber: id
             })
           },
-          fail() {
+          fail(err) {
+            console.log(err)
             wx.showToast({
               title: "网络错误",
               icon: "error"
@@ -229,6 +232,7 @@ Page({
           showCancel: false,
           confirmText: "我知道了",
           success() {
+            setIfUserHasTheRealNameBeenCertified(true)
             wx.navigateBack()
           }
         })

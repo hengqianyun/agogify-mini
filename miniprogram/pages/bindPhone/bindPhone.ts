@@ -1,7 +1,7 @@
 import loginModule from "../../http/module/login"
 import http from "../../libs/http"
 import store from "../../store/index"
-import { setOautoData } from "../../utils/oauth"
+import { queryUserInfo, setOautoData } from "../../utils/oauth"
 import { querySessionAsync } from "../../utils/querySession"
 
 // pages/bindPhone/bindPhone.ts
@@ -176,6 +176,7 @@ Page({
         wx.switchTab({ url: '../person/person' })
         http.setToken(loginRes.data.token)
         await querySessionAsync()
+        queryUserInfo(user.customer)
       } catch {
         wx.showToast({title: '登录失败', icon: 'error'})
       } finally {

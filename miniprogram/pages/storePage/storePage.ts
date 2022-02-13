@@ -1,6 +1,6 @@
 import storeModule from "../../http/module/store"
 import { IMAGEBASEURL } from '../../http/index'
-import { checkloginAsync } from "../../utils/checkLogin";
+import { checkloginAndRealNameCertifiedAsync } from "../../utils/checkLogin";
 const DEFAULT_IMAGE = '../../assets/image/avatar.jpg'
 
 interface PageStore extends storeDesign.QueryStoreDetailRes {
@@ -116,15 +116,21 @@ Page({
     ;(this[event] as Function)()
   },
   handleCollect() {
-    checkloginAsync()
+    if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
   },
   handleCall() {
-    checkloginAsync()
+    if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
     wx.setStorageSync('reserveStores', [this.data.details]);
     wx.navigateTo({url: '../salesChoose/salesChoose'})
   },
   handleReserve() {
-    checkloginAsync()
+    if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
     wx.setStorageSync('reserveStores', [this.data.details]);
     wx.navigateTo({url: '../reservePage/reservePage'})
   },

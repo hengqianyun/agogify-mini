@@ -137,4 +137,6 @@ declare namespace swaggerI {
   type querySessionRes = sessionDesign.querySessionRes
 
   type putSessionRes = sessionDesign.putSessionRes
+
+  type getUserInfoRes = userDesign.userInfoRes
 } 

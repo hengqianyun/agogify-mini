@@ -1,5 +1,5 @@
 import storeModule from "../../http/module/store";
-import { checkloginAsync } from "../../utils/checkLogin";
+import { checkloginAndRealNameCertifiedAsync } from "../../utils/checkLogin";
 
 interface categoryInPage {
   name: string
@@ -186,7 +186,9 @@ Page({
     if (ids.length === 0) {
       return
     }
-    checkloginAsync()
+     if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
     wx.setStorageSync('reserveStores', ids);
     wx.navigateTo({
       url: '../salesChoose/salesChoose'
@@ -198,7 +200,9 @@ Page({
     if (ids.length === 0) {
       return
     }
-    checkloginAsync()
+    if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
     wx.setStorageSync('reserveStores', ids);
     wx.navigateTo({
       url: '../reservePage/reservePage'

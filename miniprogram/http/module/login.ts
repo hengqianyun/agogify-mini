@@ -8,6 +8,8 @@ const loginModule = {
   verifyOauthLoginState: async(code: string) => await get<swaggerI.oauthRecordsRes, undefined>('store/user-oauth-records/' + code),
   
   sendVerificationCode: async (params: userDesign.sendVerificationCodeParams) => await post<any, userDesign.sendVerificationCodeParams>('store/sms-verification-requests/login', params),
+
+  getUserInfo: async (id: number) => await get<swaggerI.getUserInfoRes, undefined>('store/customers/' + id)
 }
 
 export default loginModule
