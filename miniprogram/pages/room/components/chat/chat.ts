@@ -92,6 +92,7 @@ Component({
     hasPaid: false,
     canLeave: true,
     payDialogBtnDisabled: false,
+    callTimer: 0
   },
 
   lifetimes: {
@@ -103,6 +104,11 @@ Component({
       // this.joinGroup(`${this.properties.storeId}_Meeting`)
       this.initRecording()
       this.queryAddressList()
+      this.setData({
+        callTimer: setTimeout(() => {
+          wx.navigateBack()
+        }, 60000)
+      })
       $on({
         name: "onMessageEvent",
         tg: this,
@@ -114,8 +120,6 @@ Component({
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
-            console.log(payloadData.type)
-            console.log(payloadData)
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
                 // 进入房间
@@ -254,6 +258,7 @@ Component({
         name: 'joined_room',
         tg: this,
         success() {
+          clearTimeout(this.data.callTimer)
           // 
           this.joinGroup(this.properties.groupId)
           this.initRecording()
