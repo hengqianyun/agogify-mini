@@ -93,7 +93,7 @@
                   <view class="user-phone">{{address.mobileNumber}}</view>
                 </view>
                 <view class="address-detail text-ellipsis-2">
-                  {{address.provinceName + ' ' + address.cityName + ' ' + address.street}}
+                  {{address.provinceName + ' ' + address.city + ' ' + address.street}}
                 </view>
               </view>
             </block>

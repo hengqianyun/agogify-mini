@@ -118,7 +118,7 @@ Page({
       imageList: detail.images,
       name: detail.translations?.zh_Hans_CN.name,
       id: detail.id,
-      category: detail.mainTaxon,
+      category: detail.mainTaxon.name,
       desc: detail.description,
       // price: String.fromCharCode(8364) + ' ' + detail.price,
     })

@@ -38,6 +38,7 @@ declare namespace orderDesign {
     updatedAt: string
     createdAt: string
     notes: string
+    shipments: shipments[]
   }
 
   interface orderItem extends swaggerI.requestSimpleBase {
@@ -145,7 +146,10 @@ declare namespace orderDesign {
     updateAt: string
   }
 
-  interface shipments extends swaggerI.requestBase { }
+  interface shipments extends swaggerI.requestBase { 
+    id: number
+    shippedAt: string | null
+  }
 
   interface orderCompleteParams {
     notes: string
@@ -164,6 +168,7 @@ declare namespace orderDesign {
   interface queryOrderListParams extends swaggerI.pageRequestParams {
     'shippingState'?: shippingStateTypes
     'paymentState'?: paymentState
+    'order[checkoutCompletedAt]': 'desc'
   }
 
   interface queryOrderRes extends orderBasic { }

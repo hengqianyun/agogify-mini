@@ -19,7 +19,7 @@
                   </view>
                   <view class="content-right">
                     <view class="store-name">{{reserve.sales.store.name}}</view>
-                    <view class="saler-name text-ellipsis">预约店员：{{reserve.sales.username}}</view>
+                    <view class="saler-name text-ellipsis">预约店员：{{reserve.sales.nickname}}</view>
                     <view class="store-address">
                       <iconfont name="dingwei_g" size="{{24}}"></iconfont>
                       <view class="store-address-text text-ellipsis">

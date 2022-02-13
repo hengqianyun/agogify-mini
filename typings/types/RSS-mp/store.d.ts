@@ -90,7 +90,7 @@ declare namespace storeDesign {
     averageRating: number // 评分
     id: number
     images: swaggerI.image[]
-    mainTaxon: string
+    mainTaxon: {name: string}
     description?: string
 
     // image: string

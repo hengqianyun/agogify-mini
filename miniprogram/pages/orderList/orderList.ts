@@ -4,7 +4,6 @@ import { formatTime } from "../../utils/util"
 
 interface PageOrders extends orderDesign.orderBasic {
   jsonNotes: { brand: string, category1: string, category2: string, category3: string, size: string, category1CnName: string, category2CnName: string, category3CnName: string, }
-  productName: string
 }
 
 // pages/orderList/orderList.ts
@@ -25,12 +24,14 @@ Page({
       itemsPerPage: 8,
       shippingState: 'ready',
       paymentState: 'paid',
+      'order[checkoutCompletedAt]': 'desc',
     } as orderDesign.queryOrderListParams,
     pageInfo2: {
       page: 1,
       itemsPerPage: 8,
       shippingState: 'shipped',
       paymentState: 'paid',
+      'order[checkoutCompletedAt]': 'desc',
     } as orderDesign.queryOrderListParams,
   },
 
@@ -114,7 +115,12 @@ Page({
           item.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeSmall1x + item.store.logo.path
         }
         item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
-        readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
+        try {
+
+          readyList.push({ ...item, jsonNotes: JSON.parse(item.notes)[item.items[0].id] })
+        } catch {
+          readyList.push({ ...item, jsonNotes: JSON.parse(item.notes) })
+        }
       }
       this.setData({
         'orderLists[0]': readyList,
@@ -144,7 +150,7 @@ Page({
           item.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + item.store.logo.path
         }
         item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
-        shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
+        shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes)[item.items[0].id] })
       }
       this.setData({
         'orderLists[1]': shipedList,

@@ -126,7 +126,6 @@ Component({
           } catch (err) { }
           if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
-            debugger
             switch (payloadData.type) {
               case CustomMessageTypes.START_VIDEO:
                 // 进入房间
@@ -179,6 +178,7 @@ Component({
                 this.triggerEvent('busy')
                 break
               case CustomMessageTypes.READY_ENTER_ROOM:
+                console.log('i am ready')
                 sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 break
               case CustomMessageTypes.TIMELEFT_CHECK:
@@ -286,7 +286,7 @@ Component({
           key: 'session',
           success(res) {
             console.log(res)
-
+            console.log(that.properties.storeId)
             const id = `${that.properties.storeId}_Meeting-${res.data.code}`
             that.triggerEvent('startVideo', { publicGroupId: id, roomId: id })
           }
@@ -835,7 +835,7 @@ Component({
     },
     async putAddress(tokenValue: string, address: addressDesign.address) {
       const { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
-      const res = await orderModule.putAddress(tokenValue, { shippingAddress: { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
+      const res = await orderModule.putAddress(tokenValue, { shippingAddress: { firstName, lastName, countryCode: "CN", provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
       // TODO 设置用户地址
     },
     async putShipment(tokenValue: string, shipmentId: string) {

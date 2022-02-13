@@ -131,22 +131,23 @@ Page({
         // {label: '积分抵扣', value: Number(123).toLocaleString()},
         { label: '合计', value: (data.total / 100).toLocaleString() },
       ]
+      const shippedAt = data.shipments[0].shippedAt
       const textInfo = [
         { label: '订单号', value: data.tokenValue },
         { label: '流水号', value: data.items[0].units[0].serialNumber! },
         { label: '创建时间', value: formatTime(new Date(Date.parse(data.createdAt))) },
-        { label: '发货时间', value: formatTime(new Date(Date.parse(data.updatedAt))) },
+        { label: '发货时间', value: shippedAt ? formatTime(new Date(Date.parse(shippedAt))) : '' },
       ]
-      const notes = JSON.parse(data.notes)
+      const notes = JSON.parse(data.notes)[data.items[0].id]
       this.setData({
         coasts,
         textInfo,
-        productName: data.items[0].units[0].shippable.translations.en.name,
+        productName: notes.zh_Hans_CN.productName,
         productPrice: (data.items[0].unitPrice / 100).toLocaleString(),
         storeAvatar: IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + data.store.logo.path,
         storeName: data.store.name,
-        productDesc: notes.size,
-        category: `${notes.productCategory1CnName} - ${notes.productCategory2CnName} - ${notes.productCategory3CnName}`
+        productDesc: notes.zh_Hans_CN.size,
+        category: `${notes.zh_Hans_CN.category1} - ${notes.zh_Hans_CN.category2} - ${notes.zh_Hans_CN.category3}`
       })
     } catch (err) {
       throw err
