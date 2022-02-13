@@ -1,4 +1,4 @@
-import { IMAGEBASEURL } from "../../http/index"
+import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import orderModule from "../../http/module/order"
 import { formatTime } from "../../utils/util"
 
@@ -111,7 +111,7 @@ Page({
       const readyList = [] as PageOrders[]
       for (let item of list) {
         if (item.store.logo?.path) {
-          item.store.logo.path = IMAGEBASEURL + item.store.logo.path
+          item.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeSmall1x + item.store.logo.path
         }
         item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
         readyList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })
@@ -141,7 +141,7 @@ Page({
       const shipedList = [] as PageOrders[]
       for (let item of list) {
         if (item.store.logo?.path) {
-          item.store.logo.path = IMAGEBASEURL + item.store.logo.path
+          item.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + item.store.logo.path
         }
         item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
         shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes), productName: item.items[0].units[0].shippable.translations.en.name })

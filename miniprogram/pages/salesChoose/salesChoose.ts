@@ -1,4 +1,4 @@
-import { IMAGEBASEURL } from "../../http/index"
+import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
 import store from "../../store/index"
@@ -117,7 +117,7 @@ Page({
     const {"hydra:member": list} = res.data
     for (let i = 0; i < list.length; i++) {
       try {
-        list[i].avatar = {path: IMAGEBASEURL + list[i].avatar?.path}
+        list[i].avatar = {path: IMAGEBASEURL+ IMAGEPATHS.avatarNormal1x + list[i].avatar?.path}
       } catch {
         list[i].avatar = {path: IMAGEBASEURL}
       }

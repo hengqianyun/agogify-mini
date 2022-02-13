@@ -4,7 +4,30 @@ import http from "../libs/http";
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://api.agogify.com/api/v2/' : 'https://api.agogify.com/api/v2/'
 export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.vieewer.com/api/v2/' : 'https://rss.vieewer.com/api/v2/'
 
-export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.vieewer.com/media/image/' : 'https://rss.vieewer.com/media/image/' 
+export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.vieewer.com/media/cache/resolve/' : 'https://rss.vieewer.com/media/cache/resolve/' 
+
+export const IMAGEPATHS = {
+  avatarSmall2x: 'avatar_thumbnail_small_2x/',
+  avatarMedium2x: 'avatar_thumbnail_medium_2x/',
+  avatarNormal2x: 'avatar_thumbnail_normal_2x/',
+  avatarSmall1x: 'avatar_thumbnail_small_1x/',
+  avatarMedium1x: 'avatar_thumbnail_medium_1x/',
+  avatarNormal1x: 'avatar_thumbnail_normal_1x/',
+  storeSmall2x: 'store_thumbnail_small_1x/',
+  storeMedium2x: 'store_thumbnail_medium_1x/',
+  storeNormal2x: 'store_thumbnail_normal_1x/',
+  storeTiny2x: 'store_thumbnail_tiny_1x/',
+  storeMain2x: 'store_main_normal_2x/',
+  storeSmall1x: 'store_thumbnail_small_1x/',
+  storeMedium1x: 'store_thumbnail_medium_1x/',
+  storeNormal1x: 'store_thumbnail_normal_1x/',
+  storeTiny1x: 'store_thumbnail_tiny_1x/',
+  storeMain1x: 'store_main_normal_1x/',
+  productThumbnail2x: 'product_thumbnail_normal_2x/',
+  productMain2x: 'product_main_normal_2x/',
+  productThumbnail1x: 'product_thumbnail_normal_1x/',
+  productMain1x: 'product_main_normal_1x/',
+}
 
 enum SUCCESS_STATUS_CODE_DEF { OK = 200, Created = 201, Accepted = 202, no_content = 204 }
 

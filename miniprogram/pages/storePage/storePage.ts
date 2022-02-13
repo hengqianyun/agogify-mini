@@ -1,5 +1,5 @@
 import storeModule from "../../http/module/store"
-import { IMAGEBASEURL } from '../../http/index'
+import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index'
 import { checkloginAndRealNameCertifiedAsync } from "../../utils/checkLogin";
 const DEFAULT_IMAGE = '../../assets/image/avatar.jpg'
 
@@ -147,9 +147,9 @@ Page({
   async queryDetails() {
     const resData = await storeModule.queryStoreDetails(this.data.storeId)
     if (resData.data.logo)
-      resData.data.logo.path = IMAGEBASEURL + resData.data?.logo?.path
+      resData.data.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal2x + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
-      resData.data.images[0].path = IMAGEBASEURL + resData.data.images[0].path
+      resData.data.images[0].path = IMAGEBASEURL+ IMAGEPATHS.storeMain1x + resData.data.images[0].path
     }
     const { country, city } = resData.data.billingData
     const address = `${country?.name} ${city?.name}`
@@ -162,7 +162,7 @@ Page({
     if (type === 1 && !this.data.reachBottomSearch) return
     const resData = await storeModule.queryProducts(this.data.pageInfo)
     const { 'hydra:member': list } = resData.data
-    list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL + im?.path))
+    list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL+ IMAGEPATHS.productMain1x + im?.path))
     if (type === 0) {
       this.setData({
         products: list

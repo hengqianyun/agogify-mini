@@ -1,4 +1,4 @@
-import {IMAGEBASEURL} from '../../http/index'
+import {IMAGEBASEURL, IMAGEPATHS} from '../../http/index'
 
 const DEFAULT_IMAGE = '../../assets/image/avatar.jpg'
 // components/CheckboxStoreItem/CheckboxStoreItem.ts
@@ -24,7 +24,7 @@ Component({
 
   lifetimes: {
     attached() {
-      let path = IMAGEBASEURL + this.properties.image || DEFAULT_IMAGE;
+      let path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + this.properties.image || DEFAULT_IMAGE;
       this.setData({
         path
       })

@@ -1,5 +1,5 @@
 // components/StoreItem/StoreItem.ts
-import {IMAGEBASEURL} from '../../http/index'
+import {IMAGEBASEURL, IMAGEPATHS} from '../../http/index'
 
 const DEFAULT_IMAGE = '../../assets/image/avatar.jpg'
 Component({
@@ -23,7 +23,7 @@ Component({
 
   lifetimes: {
     attached() {
-      let path = IMAGEBASEURL + this.properties.store.logo?.path || DEFAULT_IMAGE;
+      let path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + this.properties.store.logo?.path || DEFAULT_IMAGE;
       let {billingData} = this.properties.store as {billingData: storeDesign.storeBillingData}
       // const address = `${billingData.countryCode} ${billingData.city} ${billingData.street}`
       const address = `${billingData.country?.name} ${billingData.city?.name}`

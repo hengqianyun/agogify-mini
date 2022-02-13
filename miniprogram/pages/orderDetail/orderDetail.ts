@@ -1,4 +1,4 @@
-import { IMAGEBASEURL } from "../../http/index"
+import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import orderModule from "../../http/module/order"
 import { formatTime } from "../../utils/util"
 
@@ -143,7 +143,7 @@ Page({
         textInfo,
         productName: data.items[0].units[0].shippable.translations.en.name,
         productPrice: (data.items[0].unitPrice / 100).toLocaleString(),
-        storeAvatar: IMAGEBASEURL + data.store.logo.path,
+        storeAvatar: IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + data.store.logo.path,
         storeName: data.store.name,
         productDesc: notes.size,
         category: `${notes.productCategory1CnName} - ${notes.productCategory2CnName} - ${notes.productCategory3CnName}`

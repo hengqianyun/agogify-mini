@@ -1,4 +1,4 @@
-import { IMAGEBASEURL } from "../../http/index"
+import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
 import { getIdFromString, timeFormat } from "../../utils/util"
 
@@ -103,7 +103,7 @@ Page({
     const { "hydra:member": reserveList } = res.data
 
     const tempList = reserveList.map(e => {
-      e.sales.store.logo.path = IMAGEBASEURL + e.sales.store.logo.path
+      e.sales.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
       return {
         ...e,
         date: timeFormat(new Date(e.startTime), 'yyyy-MM-dd'),
@@ -126,7 +126,7 @@ Page({
     const { "hydra:member": reserveList } = res.data
 
     const tempList = reserveList.map(e => {
-      e.sales.store.logo.path = IMAGEBASEURL + e.sales.store.logo.path
+      e.sales.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
       return {
         ...e,
         date: timeFormat(new Date(e.startTime), 'yyyy-MM-dd'),

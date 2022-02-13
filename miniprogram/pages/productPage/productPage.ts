@@ -1,5 +1,5 @@
 import storeModule from "../../http/module/store"
-import { BASEURL } from '../../http/index'
+import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index'
 import { checkloginAndRealNameCertifiedAsync } from "../../utils/checkLogin"
 
 // pages/productPage/productPage.ts
@@ -113,7 +113,7 @@ Page({
   async queryProductDetail(code: string) {
     const resData = await storeModule.queryProductDetails(code)
     const { data: detail } = resData
-    detail.images.forEach(e => e.path = BASEURL + e.path)
+    detail.images.forEach(e => e.path = IMAGEBASEURL+ IMAGEPATHS.productMain1x + e.path)
     this.setData({
       imageList: detail.images,
       name: detail.translations?.zh_Hans_CN.name,

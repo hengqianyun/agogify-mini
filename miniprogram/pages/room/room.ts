@@ -3,7 +3,7 @@ import genTestUserSig from '../../debug/GenerateTestUserSig.js'
 import TRTC from 'trtc-wx-sdk'
 import store from '../../store/index.js'
 import { $emit } from '../../utils/event.js'
-import { IMAGEBASEURL } from '../../http/index.js'
+import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
 import { $on, $remove } from '../../utils/event'
 import { getIdFromString } from '../../utils/util.js'
@@ -156,9 +156,9 @@ Page({
     wx.showLoading({title: ''})
     const resData = await storeModule.queryStoreDetails(code)
     if (resData.data.logo)
-      resData.data.logo.path = IMAGEBASEURL + resData.data?.logo?.path
+      resData.data.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
-      resData.data.images[0].path = IMAGEBASEURL + resData.data.images[0].path
+      resData.data.images[0].path = IMAGEBASEURL+ IMAGEPATHS.storeSmall1x + resData.data.images[0].path
     }
     this.data.canTap = true
     wx.hideLoading()
