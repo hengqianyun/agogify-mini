@@ -21,6 +21,10 @@ const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
 }
 let tim: TIMSKD
 
+interface PageOrderBasic {
+
+}
+
 Component({
   /**
    * 组件的属性列表
@@ -91,7 +95,10 @@ Component({
     hasPaid: false,
     canLeave: true,
     payDialogBtnDisabled: false,
-    callTimer: 0
+    callTimer: 0,
+    itemsTotal: '',
+    shippingTotal: '',
+    total: ''
   },
 
   lifetimes: {
@@ -817,7 +824,10 @@ Component({
         const orderItem = res.data
         this.setData({
           orderInfo: orderItem,
-          showPopup: true
+          showPopup: true,
+          itemsTotal: (orderItem.itemsTotal / 100).toFixed(2),
+          shippingTotal: (orderItem.shippingTotal / 100).toFixed(2),
+          total: (orderItem.total / 100).toFixed(2),
         })
       } catch (err) {
         throw err

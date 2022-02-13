@@ -110,14 +110,16 @@
               <view class="product-info-item text-ellipsis-2">类别：{{productCategory1CnName + ' ' + productCategory2CnName + ' ' + productCategory3CnName}}</view>
               <view class="product-info-item text-ellipsis-2">名称：{{productBrand + ' ' + productName}}</view>
               <view class="product-info-item text-ellipsis-2">尺寸：{{productSize}}</view>
-              <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view>
+              <!-- <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view> -->
+              <view class="product-info-item">金额：€{{itemsTotal}}</view>
             </view>
           </view>
         </view>
         <view class="order-details">
           <view class="detail">
             <view class="detail-label">商品含关税价</view>
-            <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view>
+            <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
+            <view class="detail-number">€{{itemsTotal}}</view>
           </view>
           <!-- <view class="detail">
             <view class="detail-label">返税</view>
@@ -135,7 +137,8 @@
           </view> -->
           <view class="detail">
             <view class="detail-label">运费</view>
-            <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view>
+            <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
+            <view class="detail-number">{{shippingTotal}}</view>
           </view>
           <view class="detail">
             <view class="detail-label">运营服务费（限时免费）</view>
@@ -147,10 +150,11 @@
           </view>
           <view class="detail sum">
             <view class="detail-label">合计</view>
-            <view class="detail-number">€{{orderInfo.total / 100}}</view>
+            <!-- <view class="detail-number">€{{orderInfo.total / 100}}</view> -->
+            <view class="detail-number">€{{total}}</view>
           </view>
         </view>
-        <view class="qr-code" wx:if="{{showQrcode}}">
+        <!-- <view class="qr-code" wx:if="{{showQrcode}}">
           <view class="canvas">
             <canvas type="2d" style="width: 150px; height: 150px;" id="union-pay-qrcode"></canvas>
           </view>
@@ -171,7 +175,7 @@
               <rss-btn label="保存我二维码到相册" width="{{346}}" height="{{72}}" className="{{'fill-btn'}}" borderRadius="{{44}}" bind:onTap="_handleSaveQrcode"></rss-btn>
             </view>
           </view>
-        </view>
+        </view> -->
       </view>
       <view class="btn-area">
         <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
