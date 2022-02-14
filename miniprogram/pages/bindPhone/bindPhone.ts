@@ -157,6 +157,7 @@ Page({
     if (this.data.type === '0' || this.data.type === '1') {
       // wx.navigateTo({url: '../person/person'})
       try {
+        wx.showLoading({title: '正在登陆'})
         const loginRes = await loginModule.wxLogin({
           code,
           mobile_number: this.data.phoneNumber,
@@ -176,10 +177,11 @@ Page({
         wx.switchTab({ url: '../person/person' })
         http.setToken(loginRes.data.token)
         await querySessionAsync()
-        queryUserInfo(user.customer)
+        await queryUserInfo(user.customer)
       } catch {
         wx.showToast({title: '登录失败', icon: 'error'})
       } finally {
+        wx.hideLoading()
         this.setData({
           commitBtnDisabled: false
         })

@@ -126,6 +126,7 @@ Page({
       const res = await wx.getUserProfile({
         desc: '用于获取您的微信个人信息'
       })
+      wx.showLoading({title: 'loading'})
       const { userInfo } = res
       if (this.data.isRegister) {
         // 是否为第一次注册
@@ -164,6 +165,7 @@ Page({
         icon: "error"
       })
     } finally {
+      wx.hideLoading()
       this.setData({
         wxLoginBtnDisabled: false
       })
