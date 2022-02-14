@@ -126,7 +126,7 @@ Page({
     if (!!item) {
       const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county} = item
       wx.navigateTo({
-        url: `../addressDetail/addressDetail?id=${id}&lastName=${lastName}&firstName=${firstName}&provinceName=${provinceName}&city=${city}&street=${lastName}&postcode=${postcode}&mobileNumber=${mobileNumber}&county=${county}`
+        url: `../addressDetail/addressDetail?id=${id}&lastName=${lastName}&firstName=${firstName}&provinceName=${provinceName}&city=${city}&street=${street}&postcode=${postcode}&mobileNumber=${mobileNumber}&county=${county}`
       })
     } else {
       wx.navigateTo({

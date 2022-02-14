@@ -30,10 +30,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    debugger
-    const {id} = this.options
+    const { id } = this.options
     if (!!id) {
-      const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county} = this.options as unknown as addressDesign.address
+      const { id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county } = this.options as unknown as addressDesign.address
       this.setData({
         'form.phone.value': mobileNumber,
         'form.name.value': lastName + firstName,
@@ -184,11 +183,11 @@ Page({
     let cityName = '';
     const cityData = this.data.region[1];
     if (cityData.includes('自治州')) {
-      cityName = cityData.substr(0, cityData.length -3)
+      cityName = cityData.substr(0, cityData.length - 3)
     } else {
       cityName = cityData.substr(0, cityData.length - 1)
     }
-    const {firstName, lastName} = getFirstNameAndLastName(name.value)
+    const { firstName, lastName } = getFirstNameAndLastName(name.value)
     try {
       const params = {
         type: 'customer',
@@ -216,7 +215,7 @@ Page({
       setTimeout(() => {
         wx.navigateBack()
       }, 1000)
-    } catch { 
+    } catch {
       wx.showToast({
         title: '创建地址错误，请稍后重试',
         icon: 'error'
@@ -227,18 +226,37 @@ Page({
     }
   },
 
-  async queryUserName()  {
+  async queryUserName() {
     try {
       const wxUserInfo = wx.getStorageSync('userInfo')
 
-       const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
+      const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
 
-       const {firstName, lastName} = res.data
-       this.setData({
+      const { firstName, lastName } = res.data
+      //  if (!firstName || !lastName) {
+      wx.showModal({
+        title: '添加地址前需要实名认证',
+        confirmText: '立即前往',
+        cancelText: '确定',
+        success(res) {
+          if (res.confirm) {
+
+            wx.navigateTo({ url: '../ocr/ocr' })
+          } else {
+            wx.navigateBack()
+
+          }
+        },
+        fail() {
+          wx.navigateBack()
+        }
+      })
+      //  }
+      this.setData({
         'form.name.value': lastName + firstName,
-       })
+      })
     } catch (err) {
-      wx.showToast({title: '网络异常'})
+      wx.showToast({ title: '网络异常' })
     }
   },
 
@@ -246,7 +264,7 @@ Page({
     try {
       const res = await addressModule.queryAddress(addressId)
       console.log(res)
-      const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber} = res.data
+      const { id, lastName, firstName, provinceName, city, street, postcode, mobileNumber } = res.data
       this.setData({
         'form.phone.value': mobileNumber,
         'form.name.value': lastName + firstName,
