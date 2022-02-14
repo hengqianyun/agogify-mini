@@ -153,7 +153,7 @@ Page({
         http.setToken(loginRes.data.token)
         await querySessionAsync()
         console.log(user)
-        queryUserInfo(user.customer)
+        await queryUserInfo(user.customer)
         wx.navigateBack({
           delta: 1
         });

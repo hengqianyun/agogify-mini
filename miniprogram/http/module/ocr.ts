@@ -14,7 +14,7 @@ const ocrModule = {
   }),
   baiduOCR: async (access_token: string, params: {
     image: string | ArrayBuffer,
-    id_card_number: number,
+    id_card_number: string,
     name: string
   }) => await post<swaggerI.baiduOcrRes>('https://aip.baidubce.com/rest/2.0/face/v3/person/verify?access_token=' + access_token, {...params, image_type: 'BASE64',})
   // queryNewStore: async () => await get<storeDesign.storeItem>('')

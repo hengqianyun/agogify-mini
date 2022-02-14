@@ -93,10 +93,6 @@
     "chooseLocation": {
       "version": "1.0.8",
       "provider": "wx76a9a06e5b4e693e"
-    },
-    "ocr-plugin": {
-      "version": "3.1.2",
-      "provider": "wx4418e3e031e551be"
     }
   },
   "networkTimeout": {

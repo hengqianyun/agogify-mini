@@ -15,4 +15,20 @@ declare namespace ocrDesign {
   interface tokenGetParams {
     
   }
+
+  interface ocrRes {
+    'identity-front': identityFrontRes
+    'identity-back': identityBackRes
+  }
+
+  interface identityFrontRes {
+    Address: string
+    Birth: string
+    IdNum: string
+    Name: string
+    Nation: string
+  }
+  interface identityBackRes {
+
+  }
 }

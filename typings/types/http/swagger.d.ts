@@ -94,6 +94,8 @@ declare namespace swaggerI {
 
   type orderListResult = RequestType<orderDesign.orderBasic[]>
 
+  type ocrResult = ocrDesign.ocrRes
+
   type orderBasic = orderDesign.queryOrderRes
 
   type orderCompleteBasic = orderDesign.orderComplectRes

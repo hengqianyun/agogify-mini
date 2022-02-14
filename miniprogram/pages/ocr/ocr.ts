@@ -2,6 +2,7 @@ import { BASEURL } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
 import userModule from "../../http/module/user"
 import store from "../../store/index"
+import http from "../../libs/http"
 import { setIfUserHasTheRealNameBeenCertified } from "../../utils/oauth"
 import { getFirstNameAndLastName, getIdFromString } from "../../utils/util"
 
@@ -13,7 +14,7 @@ Page({
    */
   data: {
     userName: '',
-    userNumber: '' as unknown as number,
+    userNumber: '',
     base64: '' as string | ArrayBuffer,
     portraitPath: '',
     access_token: '',
@@ -99,12 +100,42 @@ Page({
           identityBase64: base64,
           identityPath: tempPath,
         })
-        const wxTokenRes = await ocrModule.getAssessToken()
-        console.log(tempPath)
+        try {
+          wx.showLoading({title: '上传识别中'})
+          await that.uploadImage(that.data.identityPath, 'identity-front')
+          const ocrRes = await userModule.getOcrInfo()
+          const {IdNum, Name} = ocrRes.data["identity-front"]
+          that.setData({
+            userName: Name,
+            userNumber: IdNum
+          })
+        } catch(err: any) {
+          if (err.data.code == 500) {
+            console.log(err)
+            wx.showModal({
+              title: "图片无法识别",
+              showCancel: false,
+              confirmText: "我知道了"
+            })
+          } else {
+            wx.showModal({
+              title: "发生错误，请重试",
+              showCancel: false,
+              confirmText: "我知道了"
+            })
+          }
+        } finally {
+          wx.hideLoading()
+        }
+        
+
+        return
         wx.uploadFile({
           filePath: tempPath,
-          name: 'img',
-          url: `https://api.weixin.qq.com/cv/ocr/idcard?type=photo&access_token=${wxTokenRes.data.access_token}`,
+          name: 'file',
+          header: {authorization: http.defaultConfig.header.authorization},
+          // url: `https://api.weixin.qq.com/cv/ocr/idcard?type=photo&access_token=${wxTokenRes.data.access_token}`,
+          url: BASEURL + 'store/id-card-ocr-requests',
           success(res) {
             console.log(res.data)
             const { name, id, errcode } = JSON.parse(res.data)
@@ -214,7 +245,7 @@ Page({
       }else {
         try {
           await this.uploadImage(this.data.passportPath, 'identity-back')
-          await this.uploadImage(this.data.identityPath, 'identity-front')
+          // await this.uploadImage(this.data.identityPath, 'identity-front')
           await this.uploadImage(this.data.portraitPath, 'portrait')
           await this.putUserInfo()
         } catch {
