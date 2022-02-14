@@ -2,7 +2,7 @@
   <view class="input-box">
     <view class="input-label">收货人</view>
     <view class="input-area icon-input {{form.name.focus ? 'focus-area' : ''}} {{form.name.error ? 'error-area' : ''}}">
-      <input class="input" type="text" value="{{form.name.value}}" data-key="name" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="姓名" placeholder-class="placeholder-class" />
+      <input class="input" type="text" disabled="{{true}}" value="{{form.name.value}}" data-key="name" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="姓名" placeholder-class="placeholder-class" />
       <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
       <iconfont wx:else />
       <text class="error-msg" wx:if="{{form.name.error}}">{{form.name.errorMsg}}</text>

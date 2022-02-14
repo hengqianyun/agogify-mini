@@ -121,10 +121,18 @@ Page({
     })
   },
 
-  navigateTo(id?: string) {
-    wx.navigateTo({
-      url: `../addressDetail/addressDetail${id ? '?id=' + id : ''}`
-    })
+  navigateTo(id?: number) {
+    const item = this.data.addressList.find(e => e.id === id)
+    if (!!item) {
+      const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county} = item
+      wx.navigateTo({
+        url: `../addressDetail/addressDetail?id=${id}&lastName=${lastName}&firstName=${firstName}&provinceName=${provinceName}&city=${city}&street=${lastName}&postcode=${postcode}&mobileNumber=${mobileNumber}&county=${county}`
+      })
+    } else {
+      wx.navigateTo({
+        url: '../addressDetail/addressDetail'
+      })
+    }
   },
 
   async queryAddressList() {

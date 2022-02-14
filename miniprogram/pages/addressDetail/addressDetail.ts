@@ -1,5 +1,7 @@
 import addressModule from "../../http/module/address";
-import { getFirstNameAndLastName } from "../../utils/util";
+import loginModule from "../../http/module/login";
+import userModule from "../../http/module/user";
+import { getFirstNameAndLastName, getIdFromString } from "../../utils/util";
 
 const chooseLocation = requirePlugin('chooseLocation');
 
@@ -28,9 +30,21 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad() {
+    debugger
     const {id} = this.options
     if (!!id) {
-      this.queryAddress(id)
+      const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county} = this.options as unknown as addressDesign.address
+      this.setData({
+        'form.phone.value': mobileNumber,
+        'form.name.value': lastName + firstName,
+        'form.postcode.value': postcode,
+        'form.region.value': provinceName + ' ' + city + ' ' + county,
+        'form.address.value': street,
+        id,
+        region: [provinceName, city, county],
+      })
+    } else {
+      this.queryUserName()
     }
   },
 
@@ -213,6 +227,21 @@ Page({
     }
   },
 
+  async queryUserName()  {
+    try {
+      const wxUserInfo = wx.getStorageSync('userInfo')
+
+       const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
+
+       const {firstName, lastName} = res.data
+       this.setData({
+        'form.name.value': lastName + firstName,
+       })
+    } catch (err) {
+      wx.showToast({title: '网络异常'})
+    }
+  },
+
   async queryAddress(addressId: string) {
     try {
       const res = await addressModule.queryAddress(addressId)
@@ -225,6 +254,7 @@ Page({
         'form.region.value': provinceName + ' ' + city,
         'form.address.value': street,
         id,
+        region: [provinceName, city],
       })
     } catch {
       wx.showToast({

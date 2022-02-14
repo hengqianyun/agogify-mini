@@ -29,6 +29,8 @@ declare namespace userDesign {
   interface userInfoRes extends swaggerI.requestBase {
     id: number
     identityNumber: string
+    firstName: string
+    lastName: string
   }
 
   interface putUserInfoParams {
