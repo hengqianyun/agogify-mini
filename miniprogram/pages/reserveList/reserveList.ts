@@ -1,6 +1,6 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
-import { getIdFromString, timeFormat } from "../../utils/util"
+import { getIdFromString, getStringCode, timeFormat } from "../../utils/util"
 
 type reserveTagType = '待进行' | '已结束'
 
@@ -103,11 +103,11 @@ Page({
     const { "hydra:member": reserveList } = res.data
 
     const tempList = reserveList.map(e => {
-      e.sales.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
+      e.sales.store.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
       let startTime = new Date(e.startTime.split('GMT')[0])
       let endTime = new Date(e.endTime.split('GMT')[0])
-      startTime = new Date(startTime.setHours(startTime.getHours() + 8)) 
-      endTime = new Date(endTime.setHours(endTime.getHours() + 8)) 
+      startTime = new Date(startTime.setHours(startTime.getHours() + 8))
+      endTime = new Date(endTime.setHours(endTime.getHours() + 8))
       return {
         ...e,
         date: timeFormat(startTime, 'yyyy-MM-dd'),
@@ -130,11 +130,11 @@ Page({
     const { "hydra:member": reserveList } = res.data
 
     const tempList = reserveList.map(e => {
-      e.sales.store.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
+      e.sales.store.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
       let startTime = new Date(e.startTime.split('GMT')[0])
       let endTime = new Date(e.endTime.split('GMT')[0])
-      startTime = new Date(startTime.setHours(startTime.getHours() + 8)) 
-      endTime = new Date(endTime.setHours(endTime.getHours() + 8)) 
+      startTime = new Date(startTime.setHours(startTime.getHours() + 8))
+      endTime = new Date(endTime.setHours(endTime.getHours() + 8))
       return {
         ...e,
         date: timeFormat(startTime, 'yyyy-MM-dd'),
@@ -149,36 +149,36 @@ Page({
     })
   },
 
-  handleCall({currentTarget}: WechatMiniprogram.TouchEvent) {
-    const {index} = currentTarget.dataset as {index: number}
+  handleCall({ currentTarget }: WechatMiniprogram.TouchEvent) {
+    debugger
+    const { index } = currentTarget.dataset as { index: number }
     const reserveItem = this.data.reserveLists[0][index]
     console.log(reserveItem)
-    // const {startTime, endTime} = reserveItem
-    // if (Date.now() > Date.parse(startTime)) {
-    //   wx.showToast({
-    //     title: '还未到预约时间',
-    //     icon: 'error'
-    //   })
-    //   return
-    // } else if (Date.now() < Date.parse(endTime)) {
-    //   wx.showToast({
-    //     title: '预约时间已过，请重新预约或直接沟通',
-    //     icon: 'error'
-    //   })
-    //   return
-    // } else {
-    //   const {'@id': saleId, store} = reserveItem.sales
-    //   const {code} = store
-    //   wx.navigateTo({
-    //     url: `../room/room?storeId=${code}&saleId=${saleId}&type=2`
-    //   })
-    // }
-
-
-    const {'@id': saleId, store} = reserveItem.sales
-      const {code} = store
+    const { startTime, endTime } = reserveItem
+    let parsedStartTime = new Date(startTime.split('GMT')[0])
+    let parsedEndTime = new Date(endTime.split('GMT')[0])
+    if (Date.now() > parsedStartTime.getTime()) {
+      wx.showToast({
+        title: '还未到预约时间',
+        icon: 'error'
+      })
+      parsedEndTime
+    } else if (Date.now() < Date.parse(endTime)) {
+      wx.showToast({
+        title: '预约时间已过，请重新预约或直接沟通',
+        icon: 'error'
+      })
+      return
+    } else {
+      const { '@id': saleId, store } = reserveItem.sales
+      const { '@id': pathCode } = store
+      const code = getStringCode(pathCode)
       wx.navigateTo({
         url: `../room/room?storeId=${code}&saleId=${saleId}&type=2`
       })
+    }
+
+
+
   }
 })

@@ -1,5 +1,5 @@
 declare namespace storeDesign {
-  interface storeItem {
+  interface storeItem extends swaggerI.requestSimpleBase {
     code: string
     name: string
     desc?: string

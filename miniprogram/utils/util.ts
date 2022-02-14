@@ -27,6 +27,8 @@ export const timeFormat = (date: Date, format: formatType) => {
   return str
 }
 
+
+
 const formatNumber = (n: number) => {
   const s = n.toString()
   return s[1] ? s : '0' + s
@@ -46,6 +48,11 @@ const sortByCharCodeFn = <T extends string>(a: T, b: T, index: number = 0): numb
 export const getIdFromString = (strId: string) => {
   const list = strId.split('/')
   return Number(list[list.length - 1])
+}
+
+export const getStringCode = (atId: string) => {
+  const list = atId.split('/')
+  return list[list.length - 1] 
 }
 
 export const getFirstNameAndLastName = (name: string) => {
