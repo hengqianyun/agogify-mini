@@ -233,7 +233,7 @@ Page({
       const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
 
       const { firstName, lastName } = res.data
-      //  if (!firstName || !lastName) {
+       if (!firstName || !lastName) {
       wx.showModal({
         title: '添加地址前需要实名认证',
         confirmText: '立即前往',
@@ -251,7 +251,7 @@ Page({
           wx.navigateBack()
         }
       })
-      //  }
+       }
       this.setData({
         'form.name.value': lastName + firstName,
       })
