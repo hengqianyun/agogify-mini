@@ -37,6 +37,7 @@ declare namespace reserveDesign {
     'startTime[after]'?: string
     'customer.id': number
     'endTime[before]'?: string
+    'order[startTime]': string
   }
 
   interface bookTimeSlotParams {

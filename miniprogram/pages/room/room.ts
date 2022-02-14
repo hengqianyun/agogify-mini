@@ -49,6 +49,7 @@ Page({
     } else if (type === '2') {
 
       this.setData({
+        isReconnect: true,
         isReserve: true
       })
     }

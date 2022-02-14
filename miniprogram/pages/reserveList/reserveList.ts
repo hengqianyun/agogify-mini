@@ -97,6 +97,7 @@ Page({
     // const strId = wx.getStorageSync('oauth.data').customer
     const res = await reserveModule.queryMyReserveList({
       "startTime[after]": (new Date()).toISOString(),
+      "order[startTime]": 'desc',
       "customer.id": getIdFromString(wx.getStorageSync('oauth.data').customer),
     })
 
@@ -125,6 +126,7 @@ Page({
   async queryFinishedReserveList() {
     const res = await reserveModule.queryMyReserveList({
       "endTime[before]": (new Date()).toISOString(),
+      "order[startTime]": 'desc',
       "customer.id": getIdFromString(wx.getStorageSync('oauth.data').customer),
     })
     const { "hydra:member": reserveList } = res.data
