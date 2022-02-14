@@ -123,13 +123,14 @@ Page({
         wx.hideLoading()
       }
       const coasts = [
-        { label: '商品金额', value: (data.items[0].unitPrice / 100).toLocaleString() },
+        { label: '商品金额', value: (data.items[0].unitPrice / 100).toFixed(2) },
         // {label: '返税', value: Number(567).toLocaleString()},
         // {label: '退税服务费', value: Number(567).toLocaleString()},
-        { label: '海关关税', value: (data.taxTotal / 100).toLocaleString() },
-        { label: '运费', value: (data.shippingTotal / 100).toLocaleString() },
+        // { label: '海关关税', value: (data.taxTotal / 100).toLocaleString() },
+        { label: '海关关税', value: '0.00' },
+        { label: '运费', value: (data.shippingTotal / 100).toFixed(2) },
         // {label: '积分抵扣', value: Number(123).toLocaleString()},
-        { label: '合计', value: (data.total / 100).toLocaleString() },
+        { label: '合计', value: '€' + (data.total / 100).toFixed(2) },
       ]
       const shippedAt = data.shipments[0].shippedAt
       const textInfo = [
