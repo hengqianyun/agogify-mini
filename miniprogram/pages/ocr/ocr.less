@@ -4,6 +4,71 @@
   padding: 0 48rpx;
   padding-bottom: 236rpx;
 
+  .input-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 48rpx 0;
+
+    .input-label {
+      font-size: 36rpx;
+      width: 144rpx;
+      color: @defaultColor;
+      font-weight: 400;
+      height: 68rpx;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-area {
+      width: 478rpx;
+      height: 68rpx;
+      border: 2rpx solid @defaultColor3;
+      border-radius: 8rpx;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      padding: 18rpx 32rpx;
+      position: relative;
+
+      .placeholder-class {
+        font-size: 28rpx;
+        font-weight: 300;
+        color: @defaultColor3;
+      }
+
+      .input {
+        font-size: 28rpx;
+        color: @defaultColor;
+      }
+
+      // .small-input {
+      //   width: 100rpx;
+      // }
+
+      .error-msg {
+        position: absolute;
+        color: @errorColor;
+        font-size: 22rpx;
+        bottom: -20px;
+        left: 0;
+      }
+    }
+
+    .small-input {
+      width: 226rpx;
+    }
+
+    .focus-area {
+      border-color: @defaultColor;
+    }
+
+    .error-area {
+      border-color: @errorColor;
+    }
+
+  }
+
   .step {
     display: flex;
     align-items: center;
@@ -41,8 +106,9 @@
   }
 
   .tips {
-    font-size: 22rpx;
-    color: @defaultColor3;
+    font-size: 26rpx;
+    color: @defaultColor;
+    padding: 10rpx 20rpx;
   }
 
   .user-input {

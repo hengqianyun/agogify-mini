@@ -6,6 +6,8 @@ import http from "../../libs/http"
 import { setIfUserHasTheRealNameBeenCertified } from "../../utils/oauth"
 import { getFirstNameAndLastName, getIdFromString } from "../../utils/util"
 
+type inputKeyType = 'firstName' | 'lastName' | 'identity'
+
 // pages/ocr/ocr.ts
 Page({
 
@@ -23,6 +25,11 @@ Page({
     identityBase64: '' as string | ArrayBuffer,
     identityPath: '',
     commitBtnDisabled: false,
+    form: {
+      firstName: { focus: false, error: false, value: '', errorMsg: '请输入正确的姓氏' },
+      lastName: { focus: false, error: false, value: '', errorMsg: '请输入正确的名字' },
+      identity: { focus: false, error: false, value: '', errorMsg: '请输入正确的身份证号' },
+    },
   },
 
   /**
@@ -85,6 +92,26 @@ Page({
   onShareAppMessage() {
 
   },
+
+  handleInput(event: WechatMiniprogram.TouchEvent) {
+    const { key } = event.currentTarget.dataset as { key: inputKeyType }
+    const { value } = event.detail
+    this.setData({
+      [`form.${key}.value`]: value
+    })
+  },
+  handleFocus(event: WechatMiniprogram.TouchEvent) {
+    const { key } = event.currentTarget.dataset as { key: inputKeyType }
+    this.setData({
+      [`form.${key}.focus`]: true
+    })
+  },
+  handleBlur(event: WechatMiniprogram.TouchEvent) {
+    const { key } = event.currentTarget.dataset as { key: inputKeyType }
+    this.setData({
+      [`form.${key}.focus`]: false
+    })
+  },
   chooseImage() {
     const that = this
 
@@ -100,6 +127,7 @@ Page({
           identityBase64: base64,
           identityPath: tempPath,
         })
+        return
         try {
           wx.showLoading({title: '上传识别中'})
           await that.uploadImage(that.data.identityPath, 'identity-front')
@@ -204,7 +232,38 @@ Page({
   },
 
   async handleCommit() {
-    if (!this.data.userName || !this.data.userNumber) {
+    const { firstName, lastName, identity } = this.data.form
+    if (firstName.value.trim() == '' || firstName.value.length > 2) {
+      this.setData({
+        'form.firstName.error': true
+      })
+      return
+    }  else {
+      this.setData({
+        'form.firstName.error': false
+      })
+    }
+    if (lastName.value.trim() == '' || lastName.value.length > 2) {
+      this.setData({
+        'form.lastName.error': true
+      })
+      return
+    }  else {
+      this.setData({
+        'form.lastName.error': false
+      })
+    }
+    if (identity.value.trim() == '' || identity.value.length !== 18) {
+      this.setData({
+        'form.identity.error': true
+      })
+      return
+    }  else {
+      this.setData({
+        'form.identity.error': false
+      })
+    }
+    if (!this.data.identityPath) {
       wx.showToast({ title: "请选择身份证照片", icon: "error" })
       return
     }
@@ -212,15 +271,41 @@ Page({
       wx.showToast({ title: "请选择身份证背面照", icon: "error" })
       return
     }
-    if (!this.data.base64) {
-      wx.showToast({ title: "请选择人像照片", icon: "error" })
-      return
-    }
+    // if (!this.data.base64) {
+    //   wx.showToast({ title: "请选择人像照片", icon: "error" })
+    //   return
+    // }
     this.setData({
       commitBtnDisabled: true
     })
 
-    wx.showLoading({ title: '正在对比人像...' })
+    // wx.showLoading({ title: '正在对比人像...' })
+    wx.showLoading({ title: '正在提交...' })
+    try {
+      await this.uploadImage(this.data.passportPath, 'identity-back')
+      await this.uploadImage(this.data.identityPath, 'identity-front')
+      // await this.uploadImage(this.data.portraitPath, 'portrait')
+      await this.putUserInfo()
+    } catch {
+      wx.showModal({
+        title: "网络错误",
+        showCancel: false,
+        confirmText: "我知道了"
+      })
+      wx.hideLoading()
+      return
+    }
+    wx.hideLoading()
+    wx.showModal({
+      title: "提交成功",
+      showCancel: false,
+      confirmText: "我知道了",
+      success() {
+        setIfUserHasTheRealNameBeenCertified(true)
+        wx.navigateBack()
+      }
+    })
+    return
     try {
       const res = await ocrModule.baiduOCR(this.data.access_token, {
         image: this.data.base64,
@@ -245,8 +330,8 @@ Page({
       }else {
         try {
           await this.uploadImage(this.data.passportPath, 'identity-back')
-          // await this.uploadImage(this.data.identityPath, 'identity-front')
-          await this.uploadImage(this.data.portraitPath, 'portrait')
+          await this.uploadImage(this.data.identityPath, 'identity-front')
+          // await this.uploadImage(this.data.portraitPath, 'portrait')
           await this.putUserInfo()
         } catch {
           wx.showModal({
@@ -316,15 +401,17 @@ Page({
   },
 
   async putUserInfo() {
-    const {firstName, lastName} = getFirstNameAndLastName(this.data.userName)
+    // const {firstName, lastName} = getFirstNameAndLastName(this.data.userName)
+    const {firstName, lastName, identity} = this.data.form
     try {
       await userModule.putCustomerInfo({
-        lastName,
-        firstName,
+        lastName: lastName.value,
+        firstName: firstName.value,
         // firstName: 'firstName',
         // lastName: 'lastName',
         identityType: 'identity',
-        identityNumber: this.data.userNumber.toString(),
+        // identityNumber: this.data.userNumber.toString(),
+        identityNumber: identity.value,
       }, getIdFromString(wx.getStorageSync('oauth.data').customer))
     } catch(err) {
       throw err;
