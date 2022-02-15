@@ -47,6 +47,12 @@ interface ReserveRes {
   y2: number
 }
 
+const startTime = 16
+const endTime = 23.5
+const durationPerHour = 4
+const durationCount = (endTime - startTime) * durationPerHour
+const weekLength = 7
+
 Page({
 
   /**
@@ -78,8 +84,7 @@ Page({
     const [year, month, date] = [today.getFullYear(), today.getMonth(), today.getDate()]
     const newDay = new Date(year, month, date, 16, 0)
     const startTime = this.getGMTTimerString(newDay)
-    // const endTime = (new Date(newDay.setDate(date + 7))).toISOString()
-    const endTime = this.getGMTTimerString(new Date(newDay.setDate(date + 7)))
+    const endTime = this.getGMTTimerString(new Date(newDay.setDate(date + weekLength)))
     const stores = wx.getStorageSync<storeDesign.storeItem[]>('reserveStores')
     this.setData({
       stores,
@@ -134,7 +139,7 @@ Page({
     const titleList = []
     const nowDate = new Date()
     let sec = nowDate.getTime(), aDaySec = 1000 * 60 * 60 * 24
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < weekLength; i++) {
       const date = new Date(sec + aDaySec * i)
       const day = date.getDate(), month = date.getMonth(), week = date.getDay() as WeekNum
       titleList.push({
@@ -169,11 +174,14 @@ Page({
     } catch { }
   },
 
+  /**
+   * 目前时间参照+01:00时区，从下午四点到晚上十一点半
+   */
   initDurations() {
-    let startHour = 13
+    let startHour = startTime
     const timeList = []
-    for (let i = 1; i <= 40; i++) {
-      const num = i % 4
+    for (let i = 1; i <= durationCount; i++) {
+      const num = i % durationPerHour
       let string = ''
       switch (num) {
         case 0:
@@ -198,9 +206,9 @@ Page({
 
   initTimeSlots() {
     let tableItems: SimpleTableItem[][] = []
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < weekLength; i++) {
       tableItems.push([] as SimpleTableItem[])
-      for (let j = 0; j < 40; j++) {
+      for (let j = 0; j < durationCount; j++) {
         tableItems[i].push({ checked: false, x: i, y: j, id: `${i}${j}`, disabled: true, startTime: this.getTime(i, j, true), endTime: this.getTime(i, j, false), })
       }
     }
@@ -407,7 +415,7 @@ Page({
   judgeDate(x: number, y: number): false | { y1: number, y2: number } {
     const { tableItems, duration } = this.data
     if (duration === 30) {
-      if (tableItems[x][y + 1].disabled) {
+      if (tableItems[x][y + 1]?.disabled) {
         if (y - 1 < 0 || tableItems[x][y - 1].disabled) {
           return false
         }
