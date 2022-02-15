@@ -231,7 +231,7 @@ Page({
 
   async queryUserName() {
     try {
-      const wxUserInfo = wx.getStorageSync('userInfo')
+      const wxUserInfo = wx.getStorageSync('oauth.data')
 
       const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
 
