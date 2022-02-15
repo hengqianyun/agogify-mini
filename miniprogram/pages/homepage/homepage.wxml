@@ -1,10 +1,10 @@
 <view class="homepage page-content">
-  <view class='search-container'>
+  <!-- <view class='search-container'>
     <view class="search-border" bind:tap="handleSearchTab">
       <iconfont name="search12x12_b" size="{{26}}" />
       <text class="search-placeholder">搜索品牌、类目或商品</text>
     </view>
-  </view>
+  </view> -->
   <view class='banner-container'>
     <swiper style="height: 100%;" circular="{{true}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{bannerList}}" wx:key="*this">
