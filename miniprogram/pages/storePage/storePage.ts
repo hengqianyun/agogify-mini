@@ -52,11 +52,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad(options) {
-    const { storeId } = options;
+    const { storeId, storeName } = options;
     this.setData({
       storeId: storeId
     })
-    wx.setNavigationBarTitle({ title: '店铺名称' })
+    wx.setNavigationBarTitle({ title: storeName! })
     console.log(options)
     await this.queryDetails()
     await this.queryProducts(0)

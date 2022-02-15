@@ -1,5 +1,6 @@
 {
   "usingComponents": {
     "rss-checkbox": "../../components/Checkbox/Checkbox"
-  }
+  },
+  "navigationBarTitleText": "语言偏好"
 }

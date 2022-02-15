@@ -2,5 +2,6 @@
   "usingComponents": {
     "rss-button": "../../components/RssButton/RssButton",
     "RssDialog": "../../components/RssDialog/RssDialog"
-  }
+  },
+  "navigationBarTitleText": "选择销售"
 }

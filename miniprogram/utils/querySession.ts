@@ -9,7 +9,7 @@ export const querySessionAsync = async () => {
     //   "state[]": ['ended', 'paused'],
     //   'customer.id': getIdFromString(wx.getStorageSync('userInfo').customer),
     // })
-    const res = await sessionModule.querySession('state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+    const res = await sessionModule.querySession('state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&droppedByCustomer=true&itemsPerPage=1&page=1')
     const {"hydra:member": list} = res.data
     if (list.length > 0) {
       wx.setStorageSync('session', list[0])

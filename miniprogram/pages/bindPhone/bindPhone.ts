@@ -40,6 +40,7 @@ Page({
     })
     switch (type) {
       case "0":
+        wx.setNavigationBarTitle({ title: '绑定手机号' })
         this.setData({
           showReguration: false,
           title: '绑定手机号',
@@ -47,12 +48,14 @@ Page({
         })
         break;
       case "1":
+        wx.setNavigationBarTitle({ title: '手机号登录' })
         this.setData({
           showReguration: false,
           userInfo: {userName, avatarUrl}
         })
         break
       case "2":
+        wx.setNavigationBarTitle({ title: '绑定手机号' })
         this.setData({
           title: '绑定手机号',
           btnText: "绑定"

@@ -32,6 +32,7 @@ Page({
   onLoad() {
     const { id } = this.options
     if (!!id) {
+      wx.setNavigationBarTitle({ title: '修改地址' })
       const { id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county } = this.options as unknown as addressDesign.address
       this.setData({
         'form.phone.value': mobileNumber,
@@ -42,7 +43,9 @@ Page({
         id,
         region: [provinceName, city, county],
       })
+      
     } else {
+      wx.setNavigationBarTitle({ title: '新增地址' })
       this.queryUserName()
     }
   },

@@ -126,7 +126,7 @@ Page({
       const res = await wx.getUserProfile({
         desc: '用于获取您的微信个人信息'
       })
-      wx.showLoading({title: 'loading'})
+      
       const { userInfo } = res
       if (this.data.isRegister) {
         // 是否为第一次注册
@@ -134,6 +134,7 @@ Page({
           url: `../bindPhone/bindPhone?type=1&userName=${userInfo.nickName}&avatarUrl=${userInfo.avatarUrl}`
         })
       } else {
+        wx.showLoading({title: 'loading'})
         // 直接登录
         const { code } = await wx.login()
         const loginRes = await loginModule.wxLogin({

@@ -4,7 +4,7 @@
     "RssDialog": "../../components/RssDialog/RssDialog",
     "SessionTip": "../../components/SessionTip/SessionTip"
   },
-  "navigationBarTitleText": "RSS",
+  "navigationBarTitleText": "Agogify",
   "enablePullDownRefresh": true,
   "onReachBottomDistance": 50
 }

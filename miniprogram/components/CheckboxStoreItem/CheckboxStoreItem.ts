@@ -41,7 +41,7 @@ Component({
     },
     handleClick() {
       wx.navigateTo({
-        url: `/pages/storePage/storePage?storeId=${this.properties.code}`,
+        url: `/pages/storePage/storePage?storeId=${this.properties.code}&storeName=${this.properties.name}`,
       })
     },
   }

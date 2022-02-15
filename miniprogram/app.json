@@ -23,7 +23,8 @@
     "pages/pointsPage/pointsPage",
     "pages/protocol/protocol",
     "pages/privacy/privacy",
-    "pages/salesChoose/salesChoose"
+    "pages/salesChoose/salesChoose",
+    "pages/languageSetting/languageSetting"
   ],
   "window": {
     "backgroundTextStyle": "light",

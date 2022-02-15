@@ -18,6 +18,7 @@ declare namespace sessionDesign {
   interface querySessionParams extends swaggerI.pageRequestParams {
     'customer.id': number
     'state[]': sessionStateTypes[]
+    'droppedByCustomer': boolean
   }
 
   interface putSessionParams {
