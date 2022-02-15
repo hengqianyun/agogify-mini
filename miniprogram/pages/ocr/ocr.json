@@ -2,5 +2,5 @@
   "usingComponents": {
     "rss-button": "../../components/RssButton/RssButton"
   },
-  "navigationBarTitleText": "实名认证"
+  "navigationBarTitleText": "个人信息"
 }
