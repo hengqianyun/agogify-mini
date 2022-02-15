@@ -1,20 +1,27 @@
 <view class="product-page">
   <view class="product-images">
     <view class="image-container">
-      <swiper style="height: 100%;" circular="{{true}}" indicator-dots="{{true}}" autoplay="{{false}}">
-        <block wx:for="{{imageList}}" wx:key="*this">
-          <swiper-item>
-            <view class="swiper-item">
-              <image class="swiper-image" src="{{item.path}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
-            </view>
-          </swiper-item>
-        </block>
-      </swiper>
+      <block wx:if="{{imageList.length > 1}}">
+        <swiper style="height: 100%;" circular="{{true}}" indicator-dots="{{true}}" autoplay="{{false}}">
+          <block wx:for="{{imageList}}" wx:key="*this">
+            <swiper-item>
+              <view class="swiper-item">
+                <image class="swiper-image" src="{{item.path}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
+              </view>
+            </swiper-item>
+          </block>
+        </swiper>
+      </block>
+      <block wx:else>
+        <view class="swiper-item">
+          <image class="swiper-image" src="{{imageList[0].path}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
+        </view>
+      </block>
     </view>
   </view>
   <view class="product-info">
     <view class="product-name text-ellipsis">{{name}}</view>
-    <view class="product-category text-ellipsis">{{category}}</view>
+    <!-- <view class="product-category text-ellipsis">{{category}}</view> -->
     <view class="product-desc text-ellipsis-2">{{desc}}</view>
     <!-- TODO 取消指导价格 -->
     <!-- <view class="product-price text-ellipsis">{{price}}</view> -->
