@@ -670,8 +670,13 @@ Component({
           const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
           const putPaymentRes = await this.putPayment(tokenValue, paymentId)
           const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
-          qrcodeUrl = await this.queryQrcode()
-          this.showQrcode(qrcodeUrl)
+          // TODO 暂时取消支付码获取
+          // qrcodeUrl = await this.queryQrcode()
+          // this.showQrcode(qrcodeUrl)
+          this.setData({
+            payDialogLabel: '已付款',
+            showQrcode: true,
+          })
           sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId)
         } catch {
           wx.hideLoading()
