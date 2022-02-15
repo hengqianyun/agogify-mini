@@ -38,6 +38,14 @@
     </block>
       
   </view>
+  <view class='store-container'>
+    <view class="s-c-title">
+      <view class="s-c-bar">
+        <view class="text-big">橱窗展示</view>
+        <!-- <view class="text-small">New Store</view> -->
+      </view>
+    </view>
+  </view>
   <view class="product-container">
     <block wx:for="{{products}}" wx:key="id">
       <view class="product-card" bind:tap="handleProductTap" data-code="{{item.code}}" data-name="{{item.translations.zh_Hans_CN.name}}">
