@@ -8,7 +8,7 @@
   "libVersion": "2.19.6",
   "projectname": "rss-re-mp",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": true,
     "enhance": true,
     "postcss": true,
