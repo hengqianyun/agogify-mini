@@ -3,8 +3,9 @@ import ocrModule from "../../http/module/ocr"
 import userModule from "../../http/module/user"
 import store from "../../store/index"
 import http from "../../libs/http"
-import { setIfUserHasTheRealNameBeenCertified } from "../../utils/oauth"
+import { getIfUserHasTheRealNameBeenCertified, setIfUserHasTheRealNameBeenCertified } from "../../utils/oauth"
 import { getFirstNameAndLastName, getIdFromString } from "../../utils/util"
+import loginModule from "../../http/module/login"
 
 type inputKeyType = 'firstName' | 'lastName' | 'identity'
 
@@ -42,6 +43,10 @@ Page({
     this.setData({
       access_token: access_token
     })
+    const hasRealNameCertified = getIfUserHasTheRealNameBeenCertified()
+    if (hasRealNameCertified) {
+      await this.queryUserInfo()
+    }
   },
 
   /**
@@ -91,6 +96,23 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+
+   async queryUserInfo() {
+    const oauthData = wx.getStorageSync('oauth.data')
+    try {
+      const res = await loginModule.getUserInfo(getIdFromString(oauthData.customer))
+      const {identityNumber, firstName, lastName} = res.data
+      this.setData({
+        'form.firstName.value': firstName,
+        'form.identity.value': identityNumber,
+        'form.lastName.value': lastName,
+      })
+    } catch {
+      wx.showToast({
+        title: '网络错误'
+      })
+    }
   },
 
   handleInput(event: WechatMiniprogram.TouchEvent) {
