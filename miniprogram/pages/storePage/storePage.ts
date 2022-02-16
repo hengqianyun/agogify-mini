@@ -160,7 +160,7 @@ Page({
 
   async queryProducts(type: number) {
     if (type === 1 && !this.data.reachBottomSearch) return
-    const resData = await storeModule.queryProducts(this.data.pageInfo)
+    const resData = await storeModule.queryProducts({...this.data.pageInfo, 'store.code': this.data.storeId})
     const { 'hydra:member': list } = resData.data
     list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL+ IMAGEPATHS.productMain1x + im?.path))
     if (type === 0) {
