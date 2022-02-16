@@ -1,6 +1,5 @@
 import loginModule from "../../http/module/login"
 import http from "../../libs/http"
-import store from "../../store/index"
 import { queryUserInfo, setOautoData } from "../../utils/oauth"
 import { querySessionAsync } from "../../utils/querySession"
 
@@ -18,9 +17,8 @@ Page({
     isRegister: false,
     wxLoginBtnDisabled: false,
     phoneLoginBtnDisabled: false,
+    userInfo: {} as WechatMiniprogram.UserInfo
   },
-
-  store: store,
 
   /**
    * 生命周期函数--监听页面加载
@@ -59,7 +57,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    console.log('诶，我出来啦')
+    wx.clearStorage()
   },
 
   /**
@@ -126,40 +124,40 @@ Page({
       const res = await wx.getUserProfile({
         desc: '用于获取您的微信个人信息'
       })
-      
+
       const { userInfo } = res
+      this.setData({
+        userInfo
+      })
+      wx.setStorageSync('userInfo', userInfo)
       if (this.data.isRegister) {
         // 是否为第一次注册
         wx.navigateTo({
           url: `../bindPhone/bindPhone?type=1&userName=${userInfo.nickName}&avatarUrl=${userInfo.avatarUrl}`
         })
       } else {
-        wx.showLoading({title: 'loading'})
+        wx.showLoading({ title: 'loading' })
         // 直接登录
         const { code } = await wx.login()
-        const loginRes = await loginModule.wxLogin({
-          code,
-          mobile_number: null,
-          verification_code: null,
-          is_mobile_number_required: false,
-          verification_type: 'login'
-        })
-        await setOautoData(loginRes.data)
-        let { user } = this.store.getState()
-        user.userName = userInfo.nickName
-        user.avatarUrl = userInfo.avatarUrl
-        this.store.setState({
-          user,
-        })
-        wx.setStorageSync('userInfo', user)
-        http.setToken(loginRes.data.token)
-        await querySessionAsync()
-        console.log(user)
-        const uauthData = wx.getStorageSync('oauth.data')
-        await queryUserInfo(uauthData.customer)
-        wx.navigateBack({
-          delta: 1
-        });
+        try {
+          const loginRes = await loginModule.wxLogin({
+            code,
+            mobile_number: null,
+            verification_code: null,
+            is_mobile_number_required: false,
+            verification_type: 'login'
+          })
+          await setOautoData(loginRes.data)
+          http.setToken(loginRes.data.token)
+          await querySessionAsync()
+          const uauthData = wx.getStorageSync('oauth.data')
+          await queryUserInfo(uauthData.customer)
+          wx.navigateBack({
+            delta: 1
+          });
+        } catch (err) {
+          wx.clearStorage()
+        }
       }
     } catch (err) {
       wx.showToast({
@@ -183,10 +181,11 @@ Page({
         desc: '用于获取您的微信个人信息'
       })
       const { userInfo } = res
+      wx.setStorageSync('userInfo', userInfo)
       wx.navigateTo({
         url: `../bindPhone/bindPhone?type=1&userName=${userInfo.nickName}&avatarUrl=${userInfo.avatarUrl}`
       })
-    } catch {} finally {
+    } catch { } finally {
       this.setData({
         phoneLoginBtnDisabled: false
       })

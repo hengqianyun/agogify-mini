@@ -1,7 +1,6 @@
 import { BASEURL } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
 import userModule from "../../http/module/user"
-import store from "../../store/index"
 import http from "../../libs/http"
 import { getIfUserHasTheRealNameBeenCertified, setIfUserHasTheRealNameBeenCertified } from "../../utils/oauth"
 import { getFirstNameAndLastName, getIdFromString } from "../../utils/util"
@@ -397,7 +396,6 @@ Page({
   async uploadImage(path: string, type: string) {
     const token: string = wx.getStorageSync('oauth.data').token
     return new Promise((resove, rej) => {
-      const { user } = store.getState()
       wx.uploadFile({
         filePath: path,
         name: 'file',

@@ -1,7 +1,6 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
-import store from "../../store/index"
 import { getIdFromString } from "../../utils/util"
 
 // pages/salesChoose/salesChoose.ts
@@ -16,7 +15,6 @@ Page({
     sales: [] as storeDesign.sale[],
     showDialog: false,
   },
-  store: store,
 
   /**
    * 生命周期函数--监听页面加载

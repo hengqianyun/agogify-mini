@@ -1,4 +1,3 @@
-import store from "../../store/index"
 
 // pages/setting/setting.ts
 Page({
@@ -40,7 +39,6 @@ Page({
       },
     ]
   },
-  store: store,
 
   /**
    * 生命周期函数--监听页面加载
@@ -104,12 +102,6 @@ Page({
   },
   async handleLogout() {
     await wx.clearStorageSync()
-    let {user} = this.store.getState()
-    user.userName = ''
-    user.avatarUrl = ''
-    this.store.setState({
-      user,
-    })
     wx.switchTab({ url: '../person/person' })
   }
 })

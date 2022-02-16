@@ -11,7 +11,7 @@
 // }
 
 declare namespace RSSDesign {
-  interface RSSAppOptions<T> extends IAppOption {
+  interface RSSAppOptions extends IAppOption {
     globalData: {
       isIOS: boolean
       userInfo?: WechatMiniprogram.UserInfo
@@ -19,7 +19,6 @@ declare namespace RSSDesign {
       height: number,
       position: WechatMiniprogram.Rect
     },
-    store?: T
     tokenCallback?: () => void
   }
 

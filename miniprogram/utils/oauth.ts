@@ -64,6 +64,8 @@ export const autoLogin = async () => {
     } catch {
       wx.clearStorage()
     }
+  } else {
+    wx.clearStorage()
   }
 }
 

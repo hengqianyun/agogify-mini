@@ -1,6 +1,5 @@
 import loginModule from "../../http/module/login"
 import http from "../../libs/http"
-import store from "../../store/index"
 import { queryUserInfo, setOautoData } from "../../utils/oauth"
 import { querySessionAsync } from "../../utils/querySession"
 
@@ -27,7 +26,6 @@ Page({
     commitBtnDisabled: false,
   },
 
-  store: store,
 
   /**
    * 生命周期函数--监听页面加载
@@ -169,14 +167,6 @@ Page({
           verification_type: 'login'
         })
         await setOautoData(loginRes.data)
-        // TODO 保存userinfo
-        let {user} = this.store.getState()
-        user.userName = this.data.userInfo.userName
-        user.avatarUrl = this.data.userInfo.avatarUrl
-        this.store.setState({
-          user,
-        })
-        wx.setStorageSync('userInfo', user)
         wx.switchTab({ url: '../person/person' })
         http.setToken(loginRes.data.token)
         await querySessionAsync()

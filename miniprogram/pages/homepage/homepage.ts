@@ -4,7 +4,6 @@
 
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
-import store from "../../store/index"
 import { checkSessionAsync, clearSessuibAsync, querySessionAsync } from "../../utils/querySession"
 import { getIdFromString } from "../../utils/util"
 import { BANNERS } from '../../serviceStaticResource/index'
@@ -30,7 +29,6 @@ Page({
     showIcon: false,
     timer: 0,
   },
-  store: store,
   async onLoad() {
     this.setData({
       bannerList: BANNERS

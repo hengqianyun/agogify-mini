@@ -1,18 +1,15 @@
-import Store from "wxministore"
 // import initTim from "./libs/tim"
-import store from './store/index'
 // import genTestUserSig from './debug/GenerateTestUserSig.js'
 import {autoLogin} from './utils/oauth'
 
 // app.ts
-App<RSSDesign.RSSAppOptions<Store>>({
+App<RSSDesign.RSSAppOptions>({
   globalData: {
     isIOS: false,
     hasLaunched: false,
     height: 1,
     position: null as unknown as WechatMiniprogram.Rect
   },
-  store,
   async onLaunch() {
     const { system, statusBarHeight } = await wx.getSystemInfoSync()
     this.globalData.isIOS = system.indexOf('iOS') > -1

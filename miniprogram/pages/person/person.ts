@@ -1,6 +1,5 @@
 // pages/person/person.ts
 
-// import store from "../../store/index"
 
 Page({
   /**
@@ -72,8 +71,6 @@ Page({
     avatar: '',
   },
 
-  // store: store,
-
   /**
    * 生命周期函数--监听页面加载
    */
@@ -83,8 +80,6 @@ Page({
       position: getApp().globalData.position
     })
     console.log(this.data.position)
-    // const {user} = this.store.getState()
-    // console.log(user)
   },
 
   /**
@@ -98,7 +93,13 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    
+    const userInfo = wx.getStorageSync<WechatMiniprogram.UserInfo>('userInfo')
+    if (!!userInfo) {
+      this.setData({
+        userName: userInfo.nickName,
+        avatar: userInfo.avatarUrl
+      })
+    }
   },
 
   /**
@@ -145,26 +146,17 @@ Page({
 
   async handleLogout() {
     await wx.clearStorageSync()
-    // let {user} = this.store.getState()
-    // user.userName = ''
-    // user.avatarUrl = ''
-    // this.store.setState({
-    //   user,
-    // })
+    this.setData({
+      userName: '',
+      avatar: ''
+    })
   },
 
   navigateTo(event: WechatMiniprogram.TouchEvent) {
     const {url} = event.currentTarget.dataset
-    if(url === 'loginPage' && this.data.userName !== '') {
+    if(url === 'loginPage/loginPage' && this.data.userName !== '') {
       return
     }
-    //   if (this.store.getState().user.userName) return
-    // } else if (!this.store.getState().user.userName) {
-    //   wx.navigateTo({
-    //     url: `../loginPage/loginPage`
-    //   })
-    //   return 
-    // }
     if (this.data.userName === '') {
       wx.navigateTo({
         url: '../loginPage/loginPage'

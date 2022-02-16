@@ -1,7 +1,6 @@
 // pages/room/room.ts
 import genTestUserSig from '../../debug/GenerateTestUserSig.js'
 import TRTC from 'trtc-wx-sdk'
-import store from '../../store/index.js'
 import { $emit } from '../../utils/event.js'
 import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
@@ -34,7 +33,6 @@ Page({
     saleId: '',
     storeId: '',
   },
-  store: store,
 
   /**
    * 生命周期函数--监听页面加载

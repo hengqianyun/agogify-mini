@@ -1,11 +1,5 @@
 <!-- <view class="person-page" style="padding-top: {{height}}px"> -->
-<view class="person-page" style="padding-top: {{height}}px">
-  <!-- <view class="custom-navbar" style="height: {{(position.top - height) * 2 + position.height}}px; top: {{height}}px">
-    <view wx:if='{{!!$state.user.userName}}' class="custom-icon" data-url="setting" bind:tap="navigateTo">
-      <iconfont name="my_shezhi" size="{{62}}"></iconfont>
-    </view>
-    <view class="custom-title">我的</view>
-  </view> -->
+<view class="person-page">
   <view class="user-container">
     <view class="avatar-box">
       <image class="avatar" src="{{avatar || '../../assets/image/userAvatar.png'}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
