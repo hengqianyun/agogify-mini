@@ -51,7 +51,9 @@
       <view class="product-card" bind:tap="handleProductTap" data-code="{{item.code}}" data-name="{{item.translations.zh_Hans_CN.name}}">
         <image class="product-image" src="{{item.images[0].path}}" mode="aspectFit|aspectFill|heightFix" lazy-load="false" binderror="" bindload=""></image>
         <view class="product-name text-ellipsis">{{item.translations.zh_Hans_CN.name}}</view>
-        <view class="product-category text-ellipsis">{{item.mainTaxon.name}}</view>
+        <!-- <view class="product-category text-ellipsis">{{item.mainTaxon.name}}</view> -->
+        <!-- <view class="product-category text-ellipsis">指导价:{{item.enabledVariants[0].price}}</view> -->
+        <view class="product-category text-ellipsis">指导价:€ {{item.localPrice}}</view>
       </view>
         
     </block>

@@ -92,9 +92,15 @@ declare namespace storeDesign {
     images: swaggerI.image[]
     mainTaxon: {name: string}
     description?: string
+    enabledVariants: productPrice[]
 
     // image: string
     // category: string
+  }
+
+  interface productPrice extends swaggerI.requestSimpleBase {
+    inStock: boolean
+    price: number
   }
 
   interface collectedStore extends storeItem {

@@ -7,6 +7,10 @@ interface PageStore extends storeDesign.QueryStoreDetailRes {
   address: string
 }
 
+interface PageProduct extends storeDesign.product {
+  localPrice: string
+}
+
 // pages/storePage/storePage.ts
 Page({
 
@@ -15,32 +19,32 @@ Page({
    */
   data: {
     details: {} as PageStore,
-    products: [] as storeDesign.product[],
+    products: [] as PageProduct[],
     storeId: '',
     btns: [
-    //   {
-    //   label: '已收藏',
-    //   icon: 'store_yishoucang',
-    //   size: 32,
-    //   class: 'line-btn',
-    //   color: "#353535",
-    //   event: 'handleCollect'
-    // },
-     {
-      label: '呼叫',
-      icon: 'a-call2',
-      size: 32,
-      class: 'line-btn',
-      color: "#353535",
-      event: 'handleCall',
-    }, {
-      label: "预约",
-      icon: "my_reserve",
-      size: 32,
-      class: 'fill-btn',
-      color: "#fff",
-      event: 'handleReserve',
-    }],
+      //   {
+      //   label: '已收藏',
+      //   icon: 'store_yishoucang',
+      //   size: 32,
+      //   class: 'line-btn',
+      //   color: "#353535",
+      //   event: 'handleCollect'
+      // },
+      {
+        label: '呼叫',
+        icon: 'a-call2',
+        size: 32,
+        class: 'line-btn',
+        color: "#353535",
+        event: 'handleCall',
+      }, {
+        label: "预约",
+        icon: "my_reserve",
+        size: 32,
+        class: 'fill-btn',
+        color: "#fff",
+        event: 'handleReserve',
+      }],
     pageInfo: {
       page: 1,
       itemsPerPage: 10,
@@ -112,8 +116,8 @@ Page({
 
   handleIconButtonTap(ev: WechatMiniprogram.TouchEvent) {
     console.log(ev)
-    const {event} = ev.currentTarget.dataset as {event: keyof WechatMiniprogram.Page.Constructor}
-    ;(this[event] as Function)()
+    const { event } = ev.currentTarget.dataset as { event: keyof WechatMiniprogram.Page.Constructor }
+      ; (this[event] as Function)()
   },
   handleCollect() {
     if (!checkloginAndRealNameCertifiedAsync()) {
@@ -125,19 +129,19 @@ Page({
       return
     }
     wx.setStorageSync('reserveStores', [this.data.details]);
-    wx.navigateTo({url: '../salesChoose/salesChoose'})
+    wx.navigateTo({ url: '../salesChoose/salesChoose' })
   },
   handleReserve() {
     if (!checkloginAndRealNameCertifiedAsync()) {
       return
     }
     wx.setStorageSync('reserveStores', [this.data.details]);
-    wx.navigateTo({url: '../reservePage/reservePage'})
+    wx.navigateTo({ url: '../reservePage/reservePage' })
   },
 
   handleProductTap(event: WechatMiniprogram.TouchEvent) {
     console.log(event)
-    const {code, name} = event.currentTarget.dataset
+    const { code, name } = event.currentTarget.dataset
     wx.setStorageSync('reserveStores', [this.data.details]);
     wx.navigateTo({
       url: `../productPage/productPage?code=${code}&name=${name}`
@@ -147,35 +151,38 @@ Page({
   async queryDetails() {
     const resData = await storeModule.queryStoreDetails(this.data.storeId)
     if (resData.data.logo)
-      resData.data.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal2x + resData.data?.logo?.path
+      resData.data.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal2x + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
-      resData.data.images[0].path = IMAGEBASEURL+ IMAGEPATHS.storeMain1x + resData.data.images[0].path
+      resData.data.images[0].path = IMAGEBASEURL + IMAGEPATHS.storeMain1x + resData.data.images[0].path
     }
     const { country, city } = resData.data.billingData
     const address = `${country?.name} ${city?.name}`
     this.setData({
-      details: {...resData.data, address}
+      details: { ...resData.data, address }
     })
   },
 
   async queryProducts(type: number) {
     if (type === 1 && !this.data.reachBottomSearch) return
-    const resData = await storeModule.queryProducts({...this.data.pageInfo, 'store.code': this.data.storeId})
+    const resData = await storeModule.queryProducts({ ...this.data.pageInfo, 'store.code': this.data.storeId })
     const { 'hydra:member': list } = resData.data
-    list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL+ IMAGEPATHS.productMain1x + im?.path))
+    // list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path))
+    const temp: PageProduct[] = list.map(e => {
+      return { ...e, images: e.images.map(im => { im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path; return im }), localPrice: e.enabledVariants[0].price.toLocaleString() }
+    })
     if (type === 0) {
       this.setData({
-        products: list
+        products: temp
       })
     } else {
-      if (list.length <this.data.pageInfo.itemsPerPage || list[list.length - 1].code === this.data.products[this.data.products.length - 1].code) {
+      if (list.length < this.data.pageInfo.itemsPerPage || list[list.length - 1].code === this.data.products[this.data.products.length - 1].code) {
         this.setData({
           reachBottomSearch: false
         })
         return
       }
       this.setData({
-        products: this.data.products.concat(list)
+        products: this.data.products.concat(temp)
       })
     }
   },

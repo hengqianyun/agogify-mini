@@ -24,7 +24,7 @@
     <!-- <view class="product-category text-ellipsis">{{category}}</view> -->
     <view class="product-desc text-ellipsis-2">{{desc}}</view>
     <!-- TODO 取消指导价格 -->
-    <!-- <view class="product-price text-ellipsis">{{price}}</view> -->
+    <view class="product-price text-ellipsis">指导价：{{price}}</view>
   </view>
   <view class="controllers">
     <block wx:for="{{controllers}}" wx:key="label">

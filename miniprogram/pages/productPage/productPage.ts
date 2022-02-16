@@ -120,7 +120,7 @@ Page({
       id: detail.id,
       category: detail.mainTaxon?.name,
       desc: detail.description,
-      // price: String.fromCharCode(8364) + ' ' + detail.price,
+      price: String.fromCharCode(8364) + ' ' + detail.enabledVariants[0].price.toLocaleString(),
     })
   }
 })
