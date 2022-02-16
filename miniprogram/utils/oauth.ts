@@ -49,17 +49,21 @@ export const autoLogin = async () => {
     // })
     const {code} = await wx.login()
     console.log(code)
-    const resData = await loginModule.wxLogin({
-      code,
-      mobile_number: null,
-      is_mobile_number_required: false,
-      verification_code: null,
-      verification_type: 'login'
-    })
-    console.log(resData)
-    setOautoData(resData.data)
-    http.setToken(resData.data.token)
-    queryUserInfo(resData.data.customer);
+    try {
+      const resData = await loginModule.wxLogin({
+        code,
+        mobile_number: null,
+        is_mobile_number_required: false,
+        verification_code: null,
+        verification_type: 'login'
+      })
+      console.log(resData)
+      setOautoData(resData.data)
+      http.setToken(resData.data.token)
+      queryUserInfo(resData.data.customer);
+    } catch {
+      wx.clearStorage()
+    }
   }
 }
 
