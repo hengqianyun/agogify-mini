@@ -155,7 +155,8 @@ Page({
         http.setToken(loginRes.data.token)
         await querySessionAsync()
         console.log(user)
-        await queryUserInfo(user.customer)
+        const uauthData = wx.getStorageSync('oauth.data')
+        await queryUserInfo(uauthData.customer)
         wx.navigateBack({
           delta: 1
         });

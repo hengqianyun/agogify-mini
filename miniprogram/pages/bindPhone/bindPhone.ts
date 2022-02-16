@@ -180,7 +180,8 @@ Page({
         wx.switchTab({ url: '../person/person' })
         http.setToken(loginRes.data.token)
         await querySessionAsync()
-        await queryUserInfo(user.customer)
+        const uauthData = wx.getStorageSync('oauth.data')
+        await queryUserInfo(uauthData.customer)
       } catch {
         wx.showToast({title: '登录失败', icon: 'error'})
       } finally {
