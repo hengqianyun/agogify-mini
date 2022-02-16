@@ -1,6 +1,6 @@
 // pages/person/person.ts
 
-import store from "../../store/index"
+// import store from "../../store/index"
 
 Page({
   /**
@@ -11,19 +11,19 @@ Page({
       {
         label: '预约',
         icon: 'my_reserve',
-        url: 'reserveList',
+        url: 'reserveList/reserveList',
         size: 58
       },
       {
         label: '订单',
         icon: 'my_order',
-        url: 'orderList',
+        url: 'orderList/orderList',
         size: 58
       },
       {
         label: '收藏',
         icon: 'my_collection',
-        url: 'collectionPage',
+        url: 'collectionPage/collectionPage',
         size: 58
       },
     ],
@@ -31,15 +31,34 @@ Page({
       {
         label: '地址簿',
         icon: 'my_dizhibu',
-        url: 'addressPage',
+        url: 'addressPage/addressPage',
         size: 58
       },
       {
         label: '积分',
         icon: 'my_jifen',
-        url: 'pointsPage',
+        url: 'pointsPage/pointsPage',
         size: 58
       },
+      {
+        label: '实名认证',
+        icon: 'shimingrenzheng',
+        url: 'ocr/ocr',
+        size: 58
+      },
+      {
+        label: '修改手机号',
+        icon: 'xiugaishoujihao',
+        url: 'bindPhone/bindPhone?type=2',
+        size: 58
+      },
+      {
+        label: '语言偏好设置',
+        icon: 'my_jifen',
+        url: 'languageSetting/languageSetting',
+        size: 58
+      },
+
       // {
       //   label: '客服',
       //   icon: 'my_kefu',
@@ -48,10 +67,12 @@ Page({
       // },
     ],
     height: 0,
-    position: {}
+    position: {},
+    userName: '',
+    avatar: '',
   },
 
-  store: store,
+  // store: store,
 
   /**
    * 生命周期函数--监听页面加载
@@ -62,8 +83,8 @@ Page({
       position: getApp().globalData.position
     })
     console.log(this.data.position)
-    const {user} = this.store.getState()
-    console.log(user)
+    // const {user} = this.store.getState()
+    // console.log(user)
   },
 
   /**
@@ -77,7 +98,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    
   },
 
   /**
@@ -114,19 +135,44 @@ Page({
   onShareAppMessage() {
 
   },
+  showProtocol() {
+    wx.navigateTo({ url: '../protocol/protocol' })
+  },
+
+  showPrivacy() {
+    wx.navigateTo({ url: '../privacy/privacy' })
+  },
+
+  async handleLogout() {
+    await wx.clearStorageSync()
+    // let {user} = this.store.getState()
+    // user.userName = ''
+    // user.avatarUrl = ''
+    // this.store.setState({
+    //   user,
+    // })
+  },
 
   navigateTo(event: WechatMiniprogram.TouchEvent) {
     const {url} = event.currentTarget.dataset
-    if(url === 'loginPage') {
-      if (this.store.getState().user.userName) return
-    } else if (!this.store.getState().user.userName) {
-      wx.navigateTo({
-        url: `../loginPage/loginPage`
-      })
-      return 
+    if(url === 'loginPage' && this.data.userName !== '') {
+      return
     }
-    wx.navigateTo({
-      url: `../${url}/${url}`
-    })
+    //   if (this.store.getState().user.userName) return
+    // } else if (!this.store.getState().user.userName) {
+    //   wx.navigateTo({
+    //     url: `../loginPage/loginPage`
+    //   })
+    //   return 
+    // }
+    if (this.data.userName === '') {
+      wx.navigateTo({
+        url: '../loginPage/loginPage'
+      })
+    } else {
+      wx.navigateTo({
+        url: `../${url}`
+      })
+    }
   }
 })

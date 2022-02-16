@@ -1,30 +1,38 @@
+<!-- <view class="person-page" style="padding-top: {{height}}px"> -->
 <view class="person-page" style="padding-top: {{height}}px">
-  <view class="custom-navbar" style="height: {{(position.top - height) * 2 + position.height}}px; top: {{height}}px">
+  <!-- <view class="custom-navbar" style="height: {{(position.top - height) * 2 + position.height}}px; top: {{height}}px">
     <view wx:if='{{!!$state.user.userName}}' class="custom-icon" data-url="setting" bind:tap="navigateTo">
       <iconfont name="my_shezhi" size="{{62}}"></iconfont>
     </view>
     <view class="custom-title">我的</view>
-    <!-- <view wx:if='{{!!$state.user.userName}}'></view> -->
-  </view>
+  </view> -->
   <view class="user-container">
     <view class="avatar-box">
-      <image class="avatar" src="{{$state.user.avatarUrl || '../../assets/image/userAvatar.png'}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+      <image class="avatar" src="{{avatar || '../../assets/image/userAvatar.png'}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
     </view>
-    <view class="user-simple-info" data-url="loginPage" bind:tap="navigateTo">
-      {{$state.user.userName || '账号登录'}}
+    <view class="user-simple-info" data-url="loginPage/loginPage" bind:tap="navigateTo">
+      {{userName || '账号登录'}}
     </view>
   </view>
-  <view class="tools-container">
+  <view class="btn-container" hover-class="none" hover-stop-propagation="false">
+    <rss-button data-url="reserveList/reserveList" bind:onTap="navigateTo" className="fill-btn" label="我的预约" height="{{108}}" width="{{312}}" icon="my_reserve" color="#fff" iconSize="{{32}}">
+      我的预约
+    </rss-button>
+    <rss-button data-url="orderList/orderList" bind:onTap="navigateTo" className="line-btn" label="我的订单" height="{{108}}" width="{{312}}" icon="my_order" color="#353535" iconSize="{{32}}">
+      我的预约
+    </rss-button>
+  </view>
+  <!-- <view class="tools-container">
     <block wx:for="{{tools}}" wx:key="icon">
       <view class="tool-item" data-url="{{item.url}}" bind:tap="navigateTo">
         <iconfont name="{{item.icon}}" size="{{item.size}}"></iconfont>
         <view class="tool-name">{{item.label}}</view>
       </view>
     </block>
-  </view>
-  <view class="invite-banner">
+  </view> -->
+  <!-- <view class="invite-banner">
     <image class="invite-image" src="../../assets/image/invite.png" lazy-load="false" binderror="" bindload=""></image>
-  </view>
+  </view> -->
   <view class="person-center-container">
     <view class="p-c-title">个人中心</view>
     <view class="p-c-tools tools-container">
@@ -39,5 +47,12 @@
         <view class="tool-name">客服</view>
       </button>
     </view>
+  </view>
+  <view class="btn" bind:tap="handleLogout">退出登录</view>
+  <view class="regulations-text">
+    已阅读并同意
+    <text class="regulation-link" catch:tap="showProtocol">《用户服务协议》</text>
+    、
+    <text class="regulation-link" catch:tap="showPrivacy">《隐私政策》</text>
   </view>
 </view>

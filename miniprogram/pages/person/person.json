@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
-  "navigationStyle": "custom"
+  "usingComponents": {
+    "rss-button": "../../components/RssButton/RssButton"
+  },
+  "navigationBarTitleText": "我的订单"
 }

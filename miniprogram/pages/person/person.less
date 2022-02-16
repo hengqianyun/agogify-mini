@@ -1,8 +1,8 @@
 @import url(../../style/global.less);
 
 .person-page {
-  padding-top: 44rpx;
-  position: relative;
+  // padding-top: 44rpx;
+  // position: relative;
 
   .custom-navbar {
     position: fixed;
@@ -32,7 +32,7 @@
   .user-container {
     padding: 2rpx 48rpx;
     width: 100%;
-    margin-top: calc(40px + 48rpx);
+    // margin-top: calc(40px + 48rpx);
     display: flex;
     align-items: center;
     height: 108rpx;
@@ -55,6 +55,12 @@
       font-size: 32rpx;
       letter-spacing: 2px;
     }
+  }
+
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 64rpx 46rpx;
   }
   
   .tools-container {
@@ -102,6 +108,38 @@
       color: @defaultColor;
       margin-top: 64rpx;
       margin-left: 48rpx;
+    }
+
+    .p-c-tools {
+      padding: 0 30rpx;
+      padding-bottom: 30rpx;
+      display: grid;
+      grid-template-columns: 33.33% 33.33% 33.33%;
+      grid-template-rows: 70%;
+    }
+  }
+
+  .btn {
+    margin: 70rpx 48rpx;
+    border: 2rpx solid @borderColor;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: @defaultColor3;
+    font-size: 28rxp;
+    height: 88rpx;
+    border-radius: 8rpx;
+  }
+
+  .regulations-text {
+    color: @defaultColor2;
+    font-size: 22rpx;
+    margin-left: 4rpx;
+    text-align: center;
+
+    .regulation-link {
+      color: @defaultColor;
     }
   }
 }
