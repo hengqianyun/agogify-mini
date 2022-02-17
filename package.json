@@ -16,7 +16,7 @@
   "devDependencies": {
     "@types/crypto-js": "^4.0.2",
     "mini-program-iconfont-cli": "^0.6.1",
-    "miniprogram-api-typings": "^2.8.3-1"
+    "miniprogram-api-typings": "^3.4.5"
   },
   "main": ".eslintrc.js",
   "description": ""

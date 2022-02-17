@@ -2,6 +2,23 @@
 // import genTestUserSig from './debug/GenerateTestUserSig.js'
 import {autoLogin} from './utils/oauth'
 
+const judgeProgram = () => {
+  const weid = wx.getAccountInfoSync().miniProgram.appId
+  console.log('weid', weid)
+  if (weid !== 'wx785fd7d9a9dd6412') {
+    wx.showModal({
+      title: '当前小程序行为异常，请搜索"Agogify爱购季"进入正版小程序',
+      success(res) {
+        wx.exitMiniProgram({
+          fail() {
+            judgeProgram()
+          }
+        })
+      }
+    })
+  }
+}
+
 // app.ts
 App<RSSDesign.RSSAppOptions>({
   globalData: {
@@ -11,6 +28,7 @@ App<RSSDesign.RSSAppOptions>({
     position: null as unknown as WechatMiniprogram.Rect
   },
   async onLaunch() {
+    judgeProgram()
     const { system, statusBarHeight } = await wx.getSystemInfoSync()
     this.globalData.isIOS = system.indexOf('iOS') > -1
     this.globalData.height = statusBarHeight
@@ -24,6 +42,8 @@ App<RSSDesign.RSSAppOptions>({
     if (this.tokenCallback) {
       this.tokenCallback()
     }
+
+    
 
     // if (option.query.type === 'share') {
     //   initTim('tempuser',genTestUserSig('tempuser'))
@@ -62,3 +82,4 @@ App<RSSDesign.RSSAppOptions>({
     })
   },
 })
+
