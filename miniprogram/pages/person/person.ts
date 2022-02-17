@@ -1,5 +1,5 @@
 // pages/person/person.ts
-
+import { $on, $remove } from '../../utils/event'
 
 Page({
   /**
@@ -80,6 +80,16 @@ Page({
       position: getApp().globalData.position
     })
     console.log(this.data.position)
+    $on({
+      name: 'login_error',
+      tg: this,
+      success() {
+        this.setData({
+          userName: '',
+          avatar: ''
+        })
+      }
+    })
   },
 
   /**
@@ -113,7 +123,10 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-
+    $remove({
+      name: "login_error",
+      tg: this,
+    })
   },
 
   /**

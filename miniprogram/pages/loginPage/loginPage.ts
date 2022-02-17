@@ -1,5 +1,6 @@
 import loginModule from "../../http/module/login"
 import http from "../../libs/http"
+import { $emit } from '../../utils/event.js'
 import { queryUserInfo, setOautoData } from "../../utils/oauth"
 import { querySessionAsync } from "../../utils/querySession"
 
@@ -157,6 +158,9 @@ Page({
           });
         } catch (err) {
           wx.clearStorage()
+          $emit({
+            name: 'login_error'
+          })
         }
       }
     } catch (err) {
