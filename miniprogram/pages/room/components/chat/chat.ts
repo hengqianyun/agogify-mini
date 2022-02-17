@@ -98,7 +98,8 @@ Component({
     callTimer: 0,
     itemsTotal: '',
     shippingTotal: '',
-    total: ''
+    total: '',
+    hangupText: '确认挂断通话？',
   },
 
   lifetimes: {
@@ -198,7 +199,9 @@ Component({
                 wx.navigateBack()
                 break
               case CustomMessageTypes.SCAN_FINISH:
-                this.data.canLeave = true
+                this.setData({
+                  canLeave: true
+                })
                 break
               case CustomMessageTypes.ASK_FOR_ORDER_STATE:
                 if (this.data.tokenValue !== '') {
@@ -364,11 +367,16 @@ Component({
 
     handleExitTab() {
       if (!this.data.canLeave) {
-        wx.showLoading({
+        wx.showToast({
           title: '销售还未操作完，请勿挂断电话'
         })
         return
       }
+      // if (!this.data.canLeave) {
+      //   this.setData({
+      //     hangupText: '销售还未操作完，确认挂断通话？'
+      //   })
+      // }
       this.setData({ showHandUpDialog: true })
     },
     handleHangUpCancel() {
@@ -610,9 +618,10 @@ Component({
            * 判断用户是否已经付款
            * TODO 完善用户未付款逻辑
            */
-          if (!(await this.userHasPaid)) {
+          if (!(await this.userHasPaid())) {
             wx.showToast({ title: '付款还未成功，' })
-          }
+            return
+          } 
           sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
           this.setData({
             showPopup: false,

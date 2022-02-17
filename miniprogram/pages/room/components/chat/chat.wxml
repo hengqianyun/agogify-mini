@@ -182,5 +182,5 @@
       </view>
     </van-popup>
   </view>
-  <RssDialog wx:if="{{showHandUpDialog}}" title="确认挂断通话？" commitText="取消" cancelText="挂断" bind:handleCommit="handleHangUpCancel" bind:handleCancel="handleHangUp"></RssDialog>
+  <RssDialog wx:if="{{showHandUpDialog}}" title="{{hangupText}}" commitText="取消" cancelText="挂断" bind:handleCommit="handleHangUpCancel" bind:handleCancel="handleHangUp"></RssDialog>
 </view>
