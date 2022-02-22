@@ -2,9 +2,9 @@ import http from "../libs/http";
 
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://api.agogify.com/api/v2/' : 'https://192.168.20.188:8000/api/v2/'
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://api.agogify.com/api/v2/' : 'https://api.agogify.com/api/v2/'
-export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.vieewer.com/api/v2/' : 'https://rss1.vieewer.com/api/v2/'
+export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss1.agogify.cn/api/v2/'
 
-export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.vieewer.com/media/cache/resolve/' : 'https://rss1.vieewer.com/media/cache/resolve/' 
+export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss1.agogify.cn/media/cache/resolve/' 
 
 export const IMAGEPATHS = {
   avatarSmall2x: 'avatar_thumbnail_small_2x/',

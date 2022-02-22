@@ -1,6 +1,6 @@
 // pages/room/components/chat/chat.ts
 import { $on, $remove } from '../../../../utils/event'
-import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage } from "../../../../libs/tim"
+import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq } from "../../../../libs/tim"
 import genTestUserSig from '../../../../debug/GenerateTestUserSig'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
@@ -136,8 +136,11 @@ Component({
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
                 if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3 || !size || !productCategory1CnName || !productCategory2CnName || !productCategory3CnName) {
-                  wx.showToast({ title: '订单信息获取异常，联系销售人员重新发起支付', icon: 'error' })
-                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+
+                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {
+                    send: () => { wx.showToast({ title: '订单信息获取异常，联系销售人员重新发起支付', icon: 'error' }) },
+                    failed: () => {},
+                  })
                   return
                 }
                 that.setData({
@@ -159,7 +162,7 @@ Component({
                 try {
                   this.queryOrder(tokenValue)
                 } catch (err) {
-                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
                   this.resetOrder()
                 }
                 // this.queryOrderDetail(tokenValue)
@@ -168,19 +171,19 @@ Component({
                 clearSessuibAsync()
                 wx.navigateBack()
                 break
-              case CustomMessageTypes.PAY_CANCELED: 
+              case CustomMessageTypes.PAY_CANCELED:
                 this.resetOrder()
                 this.setData({
                   showPopup: false,
                   canLeave: true
                 })
-              break
+                break
               case CustomMessageTypes.NOW_BUSY:
                 this.triggerEvent('busy')
                 break
               case CustomMessageTypes.READY_ENTER_ROOM:
                 console.log('i am ready')
-                sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
                 break
               case CustomMessageTypes.TIMELEFT_CHECK:
                 // sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
@@ -192,7 +195,7 @@ Component({
                     timeleftSec: payloadData.timeleft
                   })
                 }
-                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
                 break
               case CustomMessageTypes.RETRY:
                 clearSessuibAsync()
@@ -203,44 +206,47 @@ Component({
                   canLeave: true
                 })
                 break
-              case CustomMessageTypes.ASK_FOR_ORDER_STATE:
-                if (this.data.tokenValue !== '') {
-                  let state: string;
-                  if (this.data.hasPaid) {
-                    state = 'hasPaid'
-                    const notes = {
-                      unitsId: this.data.orderInfo.items[0].units[0].id
-                    }
-                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
-                  } else if (this.data.showQrcode) {
-                    state = 'hasCompleted'
-                    const notes = {
-                      unitsId: this.data.orderInfo.items[0].units[0].id
-                    }
-                    sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
-                  } else {
-                    let timer: number
-                    timer = setInterval(() => {
-                      if (this.data.showPopup) {
-                        state = 'received'
-                        clearInterval(timer)
-                        const notes = {
-                          brand: this.data.productBrand,
-                          category1: this.data.productCategory1,
-                          category2: this.data.productCategory2,
-                          category3: this.data.productCategory3,
-                          size: this.data.productSize,
-                          unitsId: this.data.orderInfo.items[0].units[0].id
-                        }
-                        sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
-                      }
-                    }, 500)
-                  }
-                } else {
-                  sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({}) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
-                }
-                break
+              case 'ack':
+                clearAckTimeout(payloadData.seq)
+              // case CustomMessageTypes.ASK_FOR_ORDER_STATE:
+              //   if (this.data.tokenValue !== '') {
+              //     let state: string;
+              //     if (this.data.hasPaid) {
+              //       state = 'hasPaid'
+              //       const notes = {
+              //         unitsId: this.data.orderInfo.items[0].units[0].id
+              //       }
+              //       sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
+              //     } else if (this.data.showQrcode) {
+              //       state = 'hasCompleted'
+              //       const notes = {
+              //         unitsId: this.data.orderInfo.items[0].units[0].id
+              //       }
+              //       sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
+              //     } else {
+              //       let timer: number
+              //       timer = setInterval(() => {
+              //         if (this.data.showPopup) {
+              //           state = 'received'
+              //           clearInterval(timer)
+              //           const notes = {
+              //             brand: this.data.productBrand,
+              //             category1: this.data.productCategory1,
+              //             category2: this.data.productCategory2,
+              //             category3: this.data.productCategory3,
+              //             size: this.data.productSize,
+              //             unitsId: this.data.orderInfo.items[0].units[0].id
+              //           }
+              //           sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
+              //         }
+              //       }, 500)
+              //     }
+              //   } else {
+              //     sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({}) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
+              //   }
+              //   break
             }
+            // sendAck({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, data.)
           }
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
@@ -276,8 +282,8 @@ Component({
       $on({
         name: 'hang_up',
         tg: this,
-        success() {
-          sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
+        async success()  {
+          await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
           clearSessuibAsync()
           wx.navigateBack()
         }
@@ -312,6 +318,7 @@ Component({
         tg: this,
       })
       clearInterval(this.data.timeleftTimer)
+      resetTimerAndSeq()
     }
   },
 
@@ -385,7 +392,7 @@ Component({
 
     handleHangUp() {
       // TODO 挂断电话
-      sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId, this.properties.userId, this.properties.saleId)
+      sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
       wx.navigateBack()
     },
 
@@ -598,7 +605,7 @@ Component({
           return
         }
       }
-      sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId)
+      sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
       this.setData({
         showPopup: false
       })
@@ -621,15 +628,15 @@ Component({
           if (!(await this.userHasPaid())) {
             wx.showToast({ title: '付款还未成功，' })
             return
-          } 
-          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
+          }
+          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
           this.setData({
             showPopup: false,
             hasPaid: true,
           })
         } catch {
           wx.showToast({ title: '请求失败，请重新尝试' })
-          
+
         } finally {
           this.setData({
             payDialogBtnDisabled: false
@@ -686,7 +693,7 @@ Component({
             payDialogLabel: '已付款',
             showQrcode: true,
           })
-          sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId)
+          sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
         } catch {
           wx.hideLoading()
           wx.showToast({ title: '创建订单失败，请重新尝试' })
@@ -718,7 +725,7 @@ Component({
           console.log(res)
           const completeRes = await orderModule.orderComplete(_that.data.tokenValue, { notes: 'finished' })
           // 付款
-          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId, _that.properties.userId, _that.properties.saleId)
+          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId, _that.properties.userId, _that.properties.saleId, {})
           _that.setData({
             showPopup: false,
           })
@@ -733,6 +740,7 @@ Component({
     async userHasPaid(): Promise<boolean> {
       if (this.data.hasPaid) return true
       return (await this.checkUserHasPaid(this.data.tokenValue)) == 'paid'
+      return true
     },
     async checkUserHasPaid(tokenValue: string): Promise<orderDesign.paymentState> {
       try {

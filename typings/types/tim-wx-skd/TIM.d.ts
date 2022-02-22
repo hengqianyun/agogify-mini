@@ -132,6 +132,7 @@ declare interface TIMMessage {
   flow: TIMMEssageFlow // 
   time: number // 消息时间戳
   status: TIMMessageStatus
+  sequence: number
   nick: string
   avatar: string
   clientSequence: number

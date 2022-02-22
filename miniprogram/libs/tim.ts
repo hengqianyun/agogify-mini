@@ -12,6 +12,8 @@ let _StoreMeetingGroupId = '' // 店铺meeting group id
 let _isReady = false
 let _hasSendNeedService = false
 let _timer = 0
+let _ackTimer: null | number = 0
+let _seq = ''
 
 export class CustomMessageTypes {
 
@@ -101,7 +103,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
       userSig,
     })
 
-    
+
 
   } catch (err) {
 
@@ -132,7 +134,7 @@ export const initTim = (userID: string, { sdkAppID: SDKAppID, userSig }: { sdkAp
         _hasSendNeedService = true
         console.log('session in')
         joinStoreGroup()
-        session()
+        // session()
         clearInterval(_timer)
       }
     }, 500)
@@ -182,7 +184,7 @@ async function onReadyStateUpdate({ name }: TIMEvent) {
           key: 'userInfo',
           success(userinfo) {
 
-            _tim.updateMyProfile({nick: userinfo.data.userName, avatar: userinfo.data.avatarUrl})
+            _tim.updateMyProfile({ nick: userinfo.data.userName, avatar: userinfo.data.avatarUrl })
           }
         })
       }
@@ -284,14 +286,14 @@ const joinStoreGroup = async () => {
   }
 }
 
-const session = async () => {
-  await sendCustomMessage({ data: CustomMessageTypes.ASK_FOR_ORDER_STATE, }, _StoreMeetingGroupId, _userID, _saleId)
-}
+// const session = async () => {
+//   await sendCustomMessage({ data: CustomMessageTypes.ASK_FOR_ORDER_STATE, }, _StoreMeetingGroupId, _userID, _saleId, {})
+// }
 
 const neetService = async () => {
   await joinStoreGroup()
   // 创建自定义信息
-  await sendCustomMessage({ data: CustomMessageTypes.NEED_SERVICE, }, _StoreMeetingGroupId, _userID, _saleId)
+  await sendCustomMessage({ data: CustomMessageTypes.NEED_SERVICE, }, _StoreMeetingGroupId, _userID, _saleId, {})
   // const message = await _tim.createCustomMessage({
   //   to: _StoreMeetingGroupId,
   //   conversationType: "GROUP",
@@ -313,7 +315,7 @@ const joinReserve = async () => {
 
   await sendCustomMessage({
     data: CustomMessageTypes.RESERVE_ENTER_ROOM,
-  }, _StoreMeetingGroupId, _userID, _saleId);
+  }, _StoreMeetingGroupId, _userID, _saleId, {});
 
   // const message = await _tim.createCustomMessage({
   //   to: _StoreMeetingGroupId,
@@ -332,16 +334,65 @@ const joinReserve = async () => {
   // }
 }
 
-export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string) => {
-  const message = await _tim.createCustomMessage({
-    to: groupid,
-    conversationType: "GROUP",
-    payload: { ...options, description: JSON.stringify({ userID, saleId }) }
-  })
-  const res = await _tim.sendMessage(message)
-  console.log(res)
-  return res
+export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string, data: {
+  success?: Function,
+  failed?: Function,
+  send?: Function,
+}, inserDB: boolean = true) => {
+  if (!!data.send) {
+    data.send()
+  }
+  try {
+    const message = await _tim.createCustomMessage({
+      to: groupid,
+      conversationType: "GROUP",
+      payload: { ...options, description: JSON.stringify({ userID, saleId }) }
+    })
+    const res = await _tim.sendMessage(message)
+    _seq = res.data.message.sequence.toString()
+    console.log(res)
+    console.log(_seq)
+    _ackTimer = setTimeout(() => {
+      try {
+        /// insert data base
+        // wx.showToast({title: 'timer取消失败'})
+        // throw Error()
+        clearTimeout(_ackTimer!)
+        _seq = ''
+      } catch {
+        // wx.showModal({title: '发送失败'})
+        if (!!data.failed) {
+          data.failed()
+        }
+      }
+    }, 8000)
+    return res
+  } catch {
+    if (!!data.failed) {
+      data.failed()
+    }
+  }
   // if (item && item.status === 'success') {}
+}
+
+export const sendAck = async (options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string, messageId: string) => {
+  try {
+    const message = await _tim.createCustomMessage({
+      to: groupid,
+      conversationType: "GROUP",
+      payload: { ...options, description: JSON.stringify({ userID, saleId, messageId }), }
+    })
+    const res = await _tim.sendMessage(message)
+    return res
+  } catch { }
+}
+
+export const clearAckTimeout = (seq: string) => {
+  if (_ackTimer != null && seq === _seq) {
+    _seq = ''
+    clearTimeout(_ackTimer)
+    _ackTimer = null
+  } 
 }
 
 export const sendTextMessage = async (groupId: string, text: string) => {
@@ -356,4 +407,17 @@ export const sendTextMessage = async (groupId: string, text: string) => {
   const res = await _tim.sendMessage(message)
 
   return res
+}
+
+export const resetTimerAndSeq = () => {
+  if (typeof _ackTimer === 'number') {
+    try {
+
+      clearTimeout(_ackTimer)
+      _ackTimer = null
+      _seq = ''
+    } catch(err) {
+      console.log(err)
+    }
+  }
 }
