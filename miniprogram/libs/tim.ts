@@ -2,6 +2,7 @@ import TIM from './tim_SDK.js'
 import TIMUploadPlugin from 'tim-upload-plugin';
 import { $emit } from '../utils/event';
 import userInfo from '../store/modules/user';
+import sessionModule from '../http/module/session.js';
 // import store from '../store';
 
 let _tim: TIMSKD
@@ -12,8 +13,7 @@ let _StoreMeetingGroupId = '' // 店铺meeting group id
 let _isReady = false
 let _hasSendNeedService = false
 let _timer = 0
-let _ackTimer: null | number = 0
-let _seq = ''
+const _timerMap: Map<String, {timer: number, success?: Function}> = new Map()
 
 export class CustomMessageTypes {
 
@@ -349,23 +349,27 @@ export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPay
       payload: { ...options, description: JSON.stringify({ userID, saleId }) }
     })
     const res = await _tim.sendMessage(message)
-    _seq = res.data.message.sequence.toString()
-    console.log(res)
-    console.log(_seq)
-    _ackTimer = setTimeout(() => {
-      try {
-        /// insert data base
-        // wx.showToast({title: 'timer取消失败'})
-        // throw Error()
-        clearTimeout(_ackTimer!)
-        _seq = ''
-      } catch {
-        // wx.showModal({title: '发送失败'})
-        if (!!data.failed) {
-          data.failed()
+    if (inserDB) {
+      let seq = res.data.message.sequence.toString()
+      _timerMap.set(seq, {timer: setTimeout(async () => {
+        try {
+          await sessionModule.createMessageLocks({
+            code: seq,
+            customer: userID,
+            sales: saleId,
+          })
+          if (!!data.success) {
+            data.success()
+          }
+        } catch(err: any) {
+          if (err.data.statusCode == 422 && !!data.failed) {
+            data.failed()
+          }
+        } finally {
+          clearAckTimeout(seq)
         }
-      }
-    }, 8000)
+      }, 8000), success: data.success})
+    }
     return res
   } catch {
     if (!!data.failed) {
@@ -375,12 +379,17 @@ export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPay
   // if (item && item.status === 'success') {}
 }
 
-export const sendAck = async (options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string, messageId: string) => {
+export const sendAck = async (options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string, seq: string) => {
   try {
+    sessionModule.createMessageLocks({
+      code: seq,
+      sales: saleId,
+      customer: userID,
+    })
     const message = await _tim.createCustomMessage({
       to: groupid,
       conversationType: "GROUP",
-      payload: { ...options, description: JSON.stringify({ userID, saleId, messageId }), }
+      payload: { ...options, description: JSON.stringify({ userID, saleId, seq }), }
     })
     const res = await _tim.sendMessage(message)
     return res
@@ -388,11 +397,10 @@ export const sendAck = async (options: TIMCreateCustomMessageParamsPayload, grou
 }
 
 export const clearAckTimeout = (seq: string) => {
-  if (_ackTimer != null && seq === _seq) {
-    _seq = ''
-    clearTimeout(_ackTimer)
-    _ackTimer = null
-  } 
+  if (_timerMap.has(seq)) {
+    clearTimeout(_timerMap.get(seq)!.timer)
+    _timerMap.delete(seq)
+  }
 }
 
 export const sendTextMessage = async (groupId: string, text: string) => {
@@ -410,14 +418,5 @@ export const sendTextMessage = async (groupId: string, text: string) => {
 }
 
 export const resetTimerAndSeq = () => {
-  if (typeof _ackTimer === 'number') {
-    try {
-
-      clearTimeout(_ackTimer)
-      _ackTimer = null
-      _seq = ''
-    } catch(err) {
-      console.log(err)
-    }
-  }
+  _timerMap.clear()
 }

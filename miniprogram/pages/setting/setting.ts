@@ -14,7 +14,7 @@ Page({
         url: '../bindPhone/bindPhone?type=2'
       },
       {
-        label: '实名认证',
+        label: '个人信息',
         icon: 'jiantou',
         size: 18,
         url: '../ocr/ocr'

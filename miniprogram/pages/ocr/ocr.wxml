@@ -1,17 +1,17 @@
 <view class="ocr-page border-top">
   <view class="input-box">
     <view class="input-label">姓名</view>
-    <view class="input-area small-input icon-input {{form.firstName.focus ? 'focus-area' : ''}} {{form.firstName.error ? 'error-area' : ''}}">
-      <input class="input" type="text" value="{{form.firstName.value}}" data-key="firstName" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入姓氏" placeholder-class="placeholder-class" />
-      <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
-      <iconfont wx:else /> -->
-      <text class="error-msg" wx:if="{{form.firstName.error}}">{{form.firstName.errorMsg}}</text>
-    </view>
     <view class="input-area small-input icon-input {{form.lastName.focus ? 'focus-area' : ''}} {{form.lastName.error ? 'error-area' : ''}}">
       <input class="input" type="text" value="{{form.lastName.value}}" data-key="lastName" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入名字" placeholder-class="placeholder-class" />
       <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
       <iconfont wx:else /> -->
       <text class="error-msg" wx:if="{{form.lastName.error}}">{{form.lastName.errorMsg}}</text>
+    </view>
+    <view class="input-area small-input icon-input {{form.firstName.focus ? 'focus-area' : ''}} {{form.firstName.error ? 'error-area' : ''}}">
+      <input class="input" type="text" value="{{form.firstName.value}}" data-key="firstName" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入姓氏" placeholder-class="placeholder-class" />
+      <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
+      <iconfont wx:else /> -->
+      <text class="error-msg" wx:if="{{form.firstName.error}}">{{form.firstName.errorMsg}}</text>
     </view>
   </view>
   <view class="input-box">

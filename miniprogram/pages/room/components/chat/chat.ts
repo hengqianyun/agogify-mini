@@ -6,7 +6,7 @@ import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
 import { HmacSHA256, enc } from 'crypto-js'
-import { getIdFromString, sortByCharCode } from '../../../../utils/util'
+import { sortByCharCode } from '../../../../utils/util'
 import { clearSessuibAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 
@@ -20,10 +20,6 @@ const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
 
 }
 let tim: TIMSKD
-
-interface PageOrderBasic {
-
-}
 
 Component({
   /**
@@ -181,10 +177,10 @@ Component({
               case CustomMessageTypes.NOW_BUSY:
                 this.triggerEvent('busy')
                 break
-              case CustomMessageTypes.READY_ENTER_ROOM:
-                console.log('i am ready')
-                sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-                break
+              // case CustomMessageTypes.READY_ENTER_ROOM:
+              //   console.log('i am ready')
+              //   sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
+              //   break
               case CustomMessageTypes.TIMELEFT_CHECK:
                 // sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 if (!this.data.hasGetTime) {
@@ -195,7 +191,7 @@ Component({
                     timeleftSec: payloadData.timeleft
                   })
                 }
-                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
+                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {}, false)
                 break
               case CustomMessageTypes.RETRY:
                 clearSessuibAsync()
@@ -208,45 +204,10 @@ Component({
                 break
               case 'ack':
                 clearAckTimeout(payloadData.seq)
-              // case CustomMessageTypes.ASK_FOR_ORDER_STATE:
-              //   if (this.data.tokenValue !== '') {
-              //     let state: string;
-              //     if (this.data.hasPaid) {
-              //       state = 'hasPaid'
-              //       const notes = {
-              //         unitsId: this.data.orderInfo.items[0].units[0].id
-              //       }
-              //       sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-              //     } else if (this.data.showQrcode) {
-              //       state = 'hasCompleted'
-              //       const notes = {
-              //         unitsId: this.data.orderInfo.items[0].units[0].id
-              //       }
-              //       sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-              //     } else {
-              //       let timer: number
-              //       timer = setInterval(() => {
-              //         if (this.data.showPopup) {
-              //           state = 'received'
-              //           clearInterval(timer)
-              //           const notes = {
-              //             brand: this.data.productBrand,
-              //             category1: this.data.productCategory1,
-              //             category2: this.data.productCategory2,
-              //             category3: this.data.productCategory3,
-              //             size: this.data.productSize,
-              //             unitsId: this.data.orderInfo.items[0].units[0].id
-              //           }
-              //           sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({ state, notes }) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-              //         }
-              //       }, 500)
-              //     }
-              //   } else {
-              //     sendCustomMessage({ data: CustomMessageTypes.TELLING_THE_ORDER_STATE, extension: JSON.stringify({}) }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-              //   }
-              //   break
             }
-            // sendAck({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, data.)
+            if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
+              sendAck({ data: 'ack', description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, data.sequence.toString())
+            }
           }
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
@@ -291,7 +252,8 @@ Component({
       // 
       if (this.properties.isReconnect) {
         const that = this
-        const session = wx.getStorage({
+        // const session = 
+        wx.getStorage({
           key: 'session',
           success(res) {
             console.log(res)
@@ -300,7 +262,7 @@ Component({
             that.triggerEvent('startVideo', { publicGroupId: id, roomId: id })
           }
         })
-        const id = `${that.properties.storeId}_Meeting-${getIdFromString(this.properties.saleId)}`
+        // const id = `${that.properties.storeId}_Meeting-${getIdFromString(this.properties.saleId)}`
       }
     },
 
@@ -375,7 +337,7 @@ Component({
     handleExitTab() {
       if (!this.data.canLeave) {
         wx.showToast({
-          title: '销售还未操作完，请勿挂断电话'
+          title: '销售还未操作完,请勿挂断电话'
         })
         return
       }
@@ -492,7 +454,7 @@ Component({
               image: '',
               duration: 1500,
               mask: false,
-              success: (result) => {
+              success: () => {
 
               },
               fail: () => { },
@@ -566,9 +528,6 @@ Component({
         urls: [src]
       })
     },
-    insertMessageDom(data: TIMMessage) {
-      // const data = res.data[0]
-    },
 
     encodeMessage(data: TIMMessage) {
       switch (data.type) {
@@ -596,7 +555,7 @@ Component({
     async _popupCancel() {
       if (this.data.showQrcode) {
         const hasPaid = await this.userHasPaid()
-        if (!hasPaid) {
+        if (hasPaid) {
           wx.showToast({
             title: '请点击已付款按钮',
             icon: 'error',
@@ -634,17 +593,26 @@ Component({
             showPopup: false,
             hasPaid: true,
           })
+          
+          this.resetOrder()
+          this.data.canLeave = false
         } catch {
           wx.showToast({ title: '请求失败，请重新尝试' })
-
-        } finally {
+          
+        }  finally {
           this.setData({
             payDialogBtnDisabled: false
           })
-          this.resetOrder()
           wx.hideLoading()
-          this.data.canLeave = false
         }
+        // finally {
+        //   this.setData({
+        //     payDialogBtnDisabled: false
+        //   })
+        //   this.resetOrder()
+        //   wx.hideLoading()
+        //   this.data.canLeave = false
+        // }
       } else {
         const { tokenValue, address, shipmentId, paymentId } = this.data
         // let  note = {
@@ -680,12 +648,13 @@ Component({
         }
 
 
-        let qrcodeUrl: string
+        // let qrcodeUrl: string
         try {
           const putAddressRes = await this.putAddress(tokenValue, address)
           const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
           const putPaymentRes = await this.putPayment(tokenValue, paymentId)
           const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
+          console.debug(putAddressRes, putShipmentRes, putPaymentRes, completeRes)
           // TODO 暂时取消支付码获取
           // qrcodeUrl = await this.queryQrcode()
           // this.showQrcode(qrcodeUrl)
@@ -713,33 +682,33 @@ Component({
 
 
       return
-      const paymentRes = await this.payment()
-      const _that = this
-      wx.requestPayment({
-        timeStamp: paymentRes.timeStamp,
-        nonceStr: paymentRes.nonceStr,
-        package: paymentRes.package,
-        signType: paymentRes.signType,
-        paySign: paymentRes.paySign,
-        async success(res) {
-          console.log(res)
-          const completeRes = await orderModule.orderComplete(_that.data.tokenValue, { notes: 'finished' })
-          // 付款
-          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId, _that.properties.userId, _that.properties.saleId, {})
-          _that.setData({
-            showPopup: false,
-          })
-          _that.resetOrder()
-        },
-        fail(err) {
-          console.log(err)
-        }
-      })
+      // const paymentRes = await this.payment()
+      // const _that = this
+      // wx.requestPayment({
+      //   timeStamp: paymentRes.timeStamp,
+      //   nonceStr: paymentRes.nonceStr,
+      //   package: paymentRes.package,
+      //   signType: paymentRes.signType,
+      //   paySign: paymentRes.paySign,
+      //   async success(res) {
+      //     console.log(res)
+      //     const completeRes = await orderModule.orderComplete(_that.data.tokenValue, { notes: 'finished' })
+      //     // 付款
+      //     sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId, _that.properties.userId, _that.properties.saleId, {})
+      //     _that.setData({
+      //       showPopup: false,
+      //     })
+      //     _that.resetOrder()
+      //   },
+      //   fail(err) {
+      //     console.log(err)
+      //   }
+      // })
 
     },
     async userHasPaid(): Promise<boolean> {
       if (this.data.hasPaid) return true
-      return (await this.checkUserHasPaid(this.data.tokenValue)) == 'paid'
+      return (await this.checkUserHasPaid(this.data.tokenValue)) == 'completed'
       return true
     },
     async checkUserHasPaid(tokenValue: string): Promise<orderDesign.paymentState> {
@@ -847,6 +816,7 @@ Component({
         this.setData({
           orderInfo: orderItem,
           showPopup: true,
+          payDialogBtnDisabled: false,
           itemsTotal: (orderItem.itemsTotal / 100).toFixed(2),
           shippingTotal: (orderItem.shippingTotal / 100).toFixed(2),
           total: (orderItem.total / 100).toFixed(2),

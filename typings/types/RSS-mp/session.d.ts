@@ -26,6 +26,13 @@ declare namespace sessionDesign {
     state: sessionStateTypes
   }
 
+  interface createMessageLocksParams {
+    code: string
+    customer: string
+    sales: string
+    session?: string
+  }
+
   interface querySessionRes extends swaggerI.requsetListBase<session>  {
 
   }

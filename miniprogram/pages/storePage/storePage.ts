@@ -168,7 +168,11 @@ Page({
     const { 'hydra:member': list } = resData.data
     // list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path))
     const temp: PageProduct[] = list.map(e => {
-      return { ...e, images: e.images.map(im => { im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path; return im }), localPrice: e.enabledVariants[0].price.toLocaleString() }
+      let price = (e.enabledVariants[0].price / 100).toLocaleString()
+      if (!price.includes('.')) {
+        price += '.00'
+      }
+      return { ...e, images: e.images.map(im => { im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path; return im }), localPrice: price }
     })
     if (type === 0) {
       this.setData({

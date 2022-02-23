@@ -100,13 +100,17 @@ Page({
     const resData = await storeModule.queryProductDetails(code)
     const { data: detail } = resData
     detail.images.forEach(e => e.path = IMAGEBASEURL+ IMAGEPATHS.productMain1x + e.path)
+    let price = (detail.enabledVariants[0].price / 100).toLocaleString()
+    if (!price.includes('.')) {
+      price += '.00'
+    }
     this.setData({
       imageList: detail.images,
       name: detail.translations?.zh_Hans_CN.name,
       id: detail.id,
       category: detail.mainTaxon?.name,
       desc: detail.description,
-      price: String.fromCharCode(8364) + ' ' + detail.enabledVariants[0].price.toLocaleString(),
+      price: String.fromCharCode(8364) + ' ' + price,
     })
   }
 })

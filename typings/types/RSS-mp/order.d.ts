@@ -17,7 +17,7 @@ declare namespace orderDesign {
   type shippingMethods = 'dhl'
   type paymentMethods = 'wechat_offline'
   type shippingStateTypes = 'ready' | 'shipped'
-  type paymentState = 'cart' | 'awaiting_payment' | 'paid'
+  type paymentState = 'cart' | 'awaiting_payment' | 'paid' | 'completed'
 
 
   interface orderBasic extends swaggerI.requestBase {

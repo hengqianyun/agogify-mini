@@ -263,13 +263,15 @@ Page({
         if (state === 'available') {
           const { startTime, version, '@id': id } = slot
           const curDate = new Date(startTime.split('GMT')[0])
+          console.log('curDate', curDate)
+          // const curDate = new Date(Date.parse(startTime.replace('GMT', '')))
           const today = new Date()
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
           const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
           console.log(hour)
           // TODO 9 变为 12
-          const j = (hour - 13) * 4 + min / 15
+          const j = (hour - 16) * 4 + min / 15
           if (!!this.data.tableItems[i][j]) {
 
             this.data.tableItems[i][j].disabled = false

@@ -12,9 +12,21 @@ export const checkloginAndRealNameCertifiedAsync = (): boolean => {
   if (!getIfUserHasTheRealNameBeenCertified()) {
     wx.showModal({
       title: '提示',
-      content: '通话或预约前需要先实名认证',
-      showCancel: false,
-      confirmText: '确认'
+      content: '通话或预约前需要先完善个人信息',
+      cancelText: '确定',
+      confirmText: '立即前往',
+      success(res) {
+        if (res.confirm) {
+
+          wx.navigateTo({ url: '../ocr/ocr' })
+        } else {
+          // wx.navigateBack()
+
+        }
+      },
+      fail() {
+        wx.navigateBack()
+      }
     })
     return false
   } 

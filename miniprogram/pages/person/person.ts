@@ -40,7 +40,7 @@ Page({
         size: 58
       },
       {
-        label: '实名认证',
+        label: '个人信息',
         icon: 'shimingrenzheng',
         url: 'ocr/ocr',
         size: 58

@@ -238,7 +238,7 @@ Page({
       const { firstName, lastName } = res.data
        if (!firstName || !lastName) {
       wx.showModal({
-        title: '添加地址前需要实名认证',
+        title: '添加地址前需要完善个人信息',
         confirmText: '立即前往',
         cancelText: '确定',
         success(res) {
