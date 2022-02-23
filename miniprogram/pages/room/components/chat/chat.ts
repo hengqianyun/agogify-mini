@@ -131,14 +131,6 @@ Component({
               case CustomMessageTypes.PAY:
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
-                if (!tokenValue || !productName || !paymentId || !shipmentId || !productBrand || !productCategory1 || !productCategory2 || !productCategory3 || !size || !productCategory1CnName || !productCategory2CnName || !productCategory3CnName) {
-
-                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {
-                    send: () => { wx.showToast({ title: '订单信息获取异常，联系销售人员重新发起支付', icon: 'error' }) },
-                    failed: () => {},
-                  })
-                  return
-                }
                 that.setData({
                   payDialogLabel: '确认订单',
                   tokenValue,
@@ -158,7 +150,6 @@ Component({
                 try {
                   this.queryOrder(tokenValue)
                 } catch (err) {
-                  sendCustomMessage({ data: CustomMessageTypes.RE_SEND }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
                   this.resetOrder()
                 }
                 // this.queryOrderDetail(tokenValue)
@@ -564,11 +555,33 @@ Component({
           return
         }
       }
-      sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
-      this.setData({
-        showPopup: false
+      await sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId, {
+        send: () => {
+          wx.showLoading({title: ''})
+        },
+        success: () => {
+          
+          wx.hideLoading()
+          this.setData({
+            showPopup: false
+          })
+          this.resetOrder()
+        },
+        failed: () => {
+          wx.hideLoading()
+          wx.showModal({
+            title: '消息发送失败，请通知销售关闭订单窗口。',
+            showCancel: false,
+            success: () => {
+              this.setData({
+                showPopup: false
+              })
+              this.resetOrder()
+            }
+          })
+        }
       })
-      this.resetOrder()
+      
     },
     async _handleCommit() {
       wx.showLoading({ title: '正在请求...' })
@@ -588,14 +601,24 @@ Component({
             wx.showToast({ title: '付款还未成功，' })
             return
           }
-          sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
-          this.setData({
-            showPopup: false,
-            hasPaid: true,
+          await sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId, {
+            success: () => {
+              this.setData({
+                showPopup: false,
+                hasPaid: true,
+              })
+              
+              this.resetOrder()
+              this.data.canLeave = false
+            },
+            failed: () => {
+              wx.showModal({
+                title: '消息发送失败，请再次点击已付款按钮',
+                showCancel: false,
+              })
+            }
           })
           
-          this.resetOrder()
-          this.data.canLeave = false
         } catch {
           wx.showToast({ title: '请求失败，请重新尝试' })
           
@@ -658,11 +681,27 @@ Component({
           // TODO 暂时取消支付码获取
           // qrcodeUrl = await this.queryQrcode()
           // this.showQrcode(qrcodeUrl)
-          this.setData({
-            payDialogLabel: '已付款',
-            showQrcode: true,
+          
+          await sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId, {
+            send: () => {
+              wx.showLoading({title: ''})
+
+            },
+            success: () => {
+              wx.hideLoading()
+              this.setData({
+                payDialogLabel: '已付款',
+                showQrcode: true,
+              })
+            },
+            failed: () => {
+              wx.hideLoading()
+              wx.showModal({
+                title: '未能成功通知销售订单状态以改变，请再次确认',
+                showCancel: false
+              })
+            }
           })
-          sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
         } catch {
           wx.hideLoading()
           wx.showToast({ title: '创建订单失败，请重新尝试' })

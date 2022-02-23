@@ -13,7 +13,7 @@ let _StoreMeetingGroupId = '' // 店铺meeting group id
 let _isReady = false
 let _hasSendNeedService = false
 let _timer = 0
-const _timerMap: Map<String, {timer: number, success?: Function}> = new Map()
+const _timerMap: Map<String, { timer: number, success?: Function }> = new Map()
 
 export class CustomMessageTypes {
 
@@ -293,7 +293,17 @@ const joinStoreGroup = async () => {
 const neetService = async () => {
   await joinStoreGroup()
   // 创建自定义信息
-  await sendCustomMessage({ data: CustomMessageTypes.NEED_SERVICE, }, _StoreMeetingGroupId, _userID, _saleId, {})
+  await sendCustomMessage({ data: CustomMessageTypes.NEED_SERVICE, }, _StoreMeetingGroupId, _userID, _saleId, {
+    failed: () => {
+      wx.showModal({
+        title: '链接失败，请重试',
+        showCancel: false,
+        success: () => {
+          wx.navigateBack()
+        }
+      })
+    }
+  })
   // const message = await _tim.createCustomMessage({
   //   to: _StoreMeetingGroupId,
   //   conversationType: "GROUP",
@@ -314,8 +324,18 @@ const joinReserve = async () => {
   await joinStoreGroup()
 
   await sendCustomMessage({
-    data: CustomMessageTypes.RESERVE_ENTER_ROOM,
-  }, _StoreMeetingGroupId, _userID, _saleId, {});
+    data: CustomMessageTypes.RESERVE_ENTER_ROOM
+  }, _StoreMeetingGroupId, _userID, _saleId, {
+    failed: () => {
+      wx.showModal({
+        title: '链接失败，请重试',
+        showCancel: false,
+        success: () => {
+          wx.navigateBack()
+        }
+      })
+    }
+  });
 
   // const message = await _tim.createCustomMessage({
   //   to: _StoreMeetingGroupId,
@@ -342,6 +362,7 @@ export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPay
   if (!!data.send) {
     data.send()
   }
+  
   try {
     const message = await _tim.createCustomMessage({
       to: groupid,
@@ -350,25 +371,31 @@ export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPay
     })
     const res = await _tim.sendMessage(message)
     if (inserDB) {
+      console.debug('开始设置timer')
       let seq = res.data.message.sequence.toString()
-      _timerMap.set(seq, {timer: setTimeout(async () => {
-        try {
-          await sessionModule.createMessageLocks({
-            code: seq,
-            customer: userID,
-            sales: saleId,
-          })
-          if (!!data.success) {
-            data.success()
+      _timerMap.set(seq, {
+        timer: setTimeout(async () => {
+          console.log('success 触发了')
+          try {
+            await sessionModule.createMessageLocks({
+              code: seq,
+              customer: userID,
+              sales: saleId,
+            })
+            console.debug('创建messageLock成功，说明对方未收到消息，执行failed')
+            if (!!data.failed) {
+              data.failed()
+            }
+          } catch (err: any) {
+            console.debug('创建messageLock失败，说明对方收到了消息，执行success')
+            if (err.data.statusCode == 422 && !!data.success) {
+              data.success()
+            }
+          } finally {
+            clearAckTimeout(seq)
           }
-        } catch(err: any) {
-          if (err.data.statusCode == 422 && !!data.failed) {
-            data.failed()
-          }
-        } finally {
-          clearAckTimeout(seq)
-        }
-      }, 8000), success: data.success})
+        }, 8000), success: data.success
+      })
     }
     return res
   } catch {
@@ -398,6 +425,9 @@ export const sendAck = async (options: TIMCreateCustomMessageParamsPayload, grou
 
 export const clearAckTimeout = (seq: string) => {
   if (_timerMap.has(seq)) {
+    if (!!_timerMap.get(seq)!.success) {
+      _timerMap.get(seq)!.success!()
+    }
     clearTimeout(_timerMap.get(seq)!.timer)
     _timerMap.delete(seq)
   }

@@ -82,7 +82,7 @@ Page({
     //       payloadData = JSON.parse(data.payload.data)
     //     } catch (err) { }
     //     if (payloadData && payloadData.to === this.data.userId) {
-    //       debugger
+    //       
     //       // 判断消息是否发给自己
     //       switch (payloadData.type) {
             
