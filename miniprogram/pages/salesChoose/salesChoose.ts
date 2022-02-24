@@ -20,11 +20,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    const stores = wx.getStorageSync('reserveStores')
-    this.setData({
-      stores,
-    })
-    this.querySales()
+    // const stores = wx.getStorageSync('reserveStores')
+    // this.setData({
+    //   stores,
+    // })
+    // this.querySales()
   
   },
 
@@ -39,7 +39,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    const stores = wx.getStorageSync('reserveStores')
+    this.setData({
+      stores,
+    })
+    this.querySales()
   },
 
   /**
@@ -84,7 +88,7 @@ Page({
     }
     let key = `sales[${index}].status`
     this.setData({
-      [key]: 'offline'
+      [key]: 'busy'
     })
     if (!(await this.querySession())) {
       this.setData({
@@ -96,9 +100,9 @@ Page({
     // 
     const saleId = getIdFromString(id)
     const currentStore = this.data.stores[this.data.currentStoreIndex]
-    this.setData({
-      [key]: 'online'
-    })
+    // this.setData({
+    //   [key]: 'online'
+    // })
     wx.navigateTo({
       url: `../room/room?storeName=${currentStore.name}&avatar=${currentStore.logo?.path}&storeId=${currentStore.code}&saleId=${id}`
     })
