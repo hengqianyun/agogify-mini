@@ -22,8 +22,9 @@ declare namespace sessionDesign {
   }
 
   interface putSessionParams {
-    endTime: string
-    state: sessionStateTypes
+    // endTime: string
+    // state: sessionStateTypes
+    droppedByCustomer: boolean
   }
 
   interface createMessageLocksParams {

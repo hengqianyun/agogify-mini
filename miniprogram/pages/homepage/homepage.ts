@@ -47,11 +47,9 @@ Page({
 
   async onShow() {
     const session = await checkSessionAsync()
-    if (session) {
-      this.setData({
-        showIcon: true
-      })
-    }
+    this.setData({
+      showIcon: !!session
+    })
   },
 
   async onPullDownRefresh() {

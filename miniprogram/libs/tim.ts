@@ -298,7 +298,9 @@ const neetService = async () => {
       wx.showModal({
         title: '链接失败，请重试',
         showCancel: false,
-        success: () => {
+        success: async () => {
+          await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, _StoreMeetingGroupId, _userID, _saleId, {}, false)
+          wx.setStorageSync('session', null)
           wx.navigateBack()
         }
       })
@@ -372,7 +374,7 @@ export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPay
     const res = await _tim.sendMessage(message)
     if (inserDB) {
       console.debug('开始设置timer')
-      let seq = res.data.message.sequence.toString()
+      let seq = res.data.message.time.toString()
       _timerMap.set(seq, {
         timer: setTimeout(async () => {
           console.log('success 触发了')
@@ -386,6 +388,7 @@ export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPay
             if (!!data.failed) {
               data.failed()
             }
+            
           } catch (err: any) {
             console.debug('创建messageLock失败，说明对方收到了消息，执行success')
             if (err.data.statusCode == 422 && !!data.success) {
@@ -393,6 +396,7 @@ export const sendCustomMessage = async (options: TIMCreateCustomMessageParamsPay
             }
           } finally {
             clearAckTimeout(seq)
+            wx.hideLoading()
           }
         }, 8000), success: data.success
       })

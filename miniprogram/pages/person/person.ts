@@ -104,7 +104,7 @@ Page({
    */
   onShow() {
     const userInfo = wx.getStorageSync<WechatMiniprogram.UserInfo>('userInfo')
-    if (!!userInfo) {
+    if (!!userInfo && !!userInfo.nickName && !!userInfo.avatarUrl) {
       this.setData({
         userName: userInfo.nickName,
         avatar: userInfo.avatarUrl

@@ -9,6 +9,7 @@ import { HmacSHA256, enc } from 'crypto-js'
 import { sortByCharCode } from '../../../../utils/util'
 import { clearSessuibAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
+import sessionModule from '../../../../http/module/session'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -197,7 +198,7 @@ Component({
                 clearAckTimeout(payloadData.seq)
             }
             if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
-              sendAck({ data: 'ack', description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, data.sequence.toString())
+              sendAck({ data: 'ack', description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, data.time.toString())
             }
           }
           if (data.to === this.properties.groupId) {
@@ -326,12 +327,12 @@ Component({
     },
 
     handleExitTab() {
-      if (!this.data.canLeave) {
-        wx.showToast({
-          title: '销售还未操作完,请勿挂断电话'
-        })
-        return
-      }
+      // if (!this.data.canLeave) {
+      //   wx.showToast({
+      //     title: '销售还未操作完,请勿挂断电话'
+      //   })
+      //   return
+      // }
       // if (!this.data.canLeave) {
       //   this.setData({
       //     hangupText: '销售还未操作完，确认挂断通话？'
@@ -343,9 +344,16 @@ Component({
       this.setData({ showHandUpDialog: false })
     },
 
-    handleHangUp() {
+    async handleHangUp()  {
       // TODO 挂断电话
       sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
+      const code = this.properties.groupId.split('Meeting-')[1]
+      await sessionModule.putSession({
+        droppedByCustomer: true
+        // endTime: (new Date()).toISOString(),
+        // state: 'ended',
+      }, code)
+      clearSessuibAsync()
       wx.navigateBack()
     },
 
@@ -599,6 +607,7 @@ Component({
            */
           if (!(await this.userHasPaid())) {
             wx.showToast({ title: '付款还未成功，' })
+            wx.hideLoading()
             return
           }
           await sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId, {
@@ -613,9 +622,11 @@ Component({
             },
             failed: () => {
               wx.showModal({
-                title: '消息发送失败，请再次点击已付款按钮',
+                title: '若已支付成功，请通知销售',
                 showCancel: false,
               })
+              this.resetOrder()
+              this.data.canLeave = false
             }
           })
           
@@ -683,37 +694,41 @@ Component({
           // this.showQrcode(qrcodeUrl)
           
           await sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId, {
-            send: () => {
-              wx.showLoading({title: ''})
-
-            },
-            success: () => {
-              wx.hideLoading()
-              this.setData({
-                payDialogLabel: '已付款',
-                showQrcode: true,
-              })
-            },
-            failed: () => {
-              wx.hideLoading()
-              wx.showModal({
-                title: '未能成功通知销售订单状态以改变，请再次确认',
-                showCancel: false
-              })
-            }
+            // send: () => {
+            //   wx.showLoading({title: ''})
+            // },
+            // success: () => {
+            //   this.setData({
+            //     payDialogLabel: '已付款',
+            //     showQrcode: true,
+            //   })
+            // },
+            // failed: () => {
+            //   wx.showModal({
+            //     title: '未能成功通知销售订单状态以改变，请再次确认',
+            //     showCancel: false
+            //   })
+            //   this.setData({
+            //     payDialogBtnDisabled: false
+            //   })
+            // }
+          }, false)
+          this.setData({
+            payDialogLabel: '已付款',
+            showQrcode: true,
           })
         } catch {
-          wx.hideLoading()
           wx.showToast({ title: '创建订单失败，请重新尝试' })
           return
         } finally {
           this.setData({
             payDialogBtnDisabled: false
           })
+          wx.hideLoading()
         }
         // sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
 
-        wx.hideLoading()
+        
       }
 
 

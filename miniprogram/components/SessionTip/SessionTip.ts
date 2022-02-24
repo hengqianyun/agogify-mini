@@ -50,8 +50,9 @@ Component({
       try {
         wx.showLoading({title: '处理中...'})
         await sessionModule.putSession({
-          endTime: (new Date()).toISOString(),
-          state: 'ended',
+          droppedByCustomer: true
+          // endTime: (new Date()).toISOString(),
+          // state: 'ended',
         }, code)
         wx.hideLoading()
         this.setData({
