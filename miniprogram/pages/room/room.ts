@@ -38,7 +38,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-
+    
     const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
     if (type === '1') {
       this.setData({

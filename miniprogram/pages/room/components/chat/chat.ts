@@ -186,10 +186,6 @@ Component({
                 }
                 sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {}, false)
                 break
-              case CustomMessageTypes.RETRY:
-                clearSessuibAsync()
-                wx.navigateBack()
-                break
               case CustomMessageTypes.SCAN_FINISH:
                 this.setData({
                   canLeave: true
@@ -216,8 +212,6 @@ Component({
                 chatHistory: this.data.chatHistory.concat([message!])
               })
             }
-            // this.encodeMessage(data)
-            setHistory(data)
           }
         }
       })

@@ -271,11 +271,11 @@ Page({
       })
     }
     if (!this.data.identityPath) {
-      wx.showToast({ title: "请选择身份证照片", icon: "error" })
+      wx.showToast({ title: "上传证件正面照", icon: "error" })
       return
     }
     if (!this.data.passportBase64) {
-      wx.showToast({ title: "请选择身份证背面照", icon: "error" })
+      wx.showToast({ title: "上传证件背面照", icon: "error" })
       return
     }
     // if (!this.data.base64) {
