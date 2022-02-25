@@ -407,7 +407,6 @@ Page({
   },
 
   async putUserInfo() {
-    // const {firstName, lastName} = getFirstNameAndLastName(this.data.userName)
     const {firstName, lastName, identity} = this.data.form
     try {
       await userModule.putCustomerInfo({

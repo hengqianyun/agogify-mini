@@ -14,6 +14,9 @@
         </view>
       </view>
     </view>
+    <!-- <view class="recording-tips" hover-class="none" hover-stop-propagation="false">
+      正在录音
+    </view> -->
     <view class="bottom-container" wx:if="{{!isWaiting}}">
       <scroll-view class="chat-content" scroll-y="{{true}}">
         <block wx:for="{{chatHistory}}" wx:key="id">
@@ -39,20 +42,25 @@
         <view class="input-area border-radius-8">
           <iconfont name="zhibojian_shurukuangicon" size="{{40}}"></iconfont>
           <input type="text" bindconfirm="sendMessage" value="{{inputValue}}" confirm-type="发送" bindinput="handleInput" class="live-input" placeholder="询问想了解的" placeholder-class="input-placeholder" />
+          <view class="send-btn" bind:tap="sendMessage" hover-class="none" hover-stop-propagation="false">
+            发送
+          </view>
         </view>
+        <!-- <view class="icons border-radius-8 send-btn-box" >
+        </view> -->
         <view class="icons border-radius-8">
           <iconfont name="zhibojian_yuyin_bai" size="{{40}}" id="record"></iconfont>
         </view>
         <view class="icons border-radius-8" bind:tap="chooseImage">
           <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
         </view>
-        <button class="icons border-radius-8 share-button" open-type="share">
+        <!-- <button class="icons border-radius-8 share-button" open-type="share">
           <iconfont name="zhibojian_yaoqing" size="{{40}}"></iconfont>
-        </button>
-        <view class="invite-tips border-radius-8">
+        </button> -->
+        <!-- <view class="invite-tips border-radius-8">
           邀请好友参谋
           <view class="tri"></view>
-        </view>
+        </view> -->
       </view>
     </view>
   <!-- </view> -->

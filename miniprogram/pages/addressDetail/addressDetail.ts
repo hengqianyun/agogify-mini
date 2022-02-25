@@ -21,6 +21,8 @@ Page({
       address: { focus: false, error: false, value: '', errorMsg: '请输入正确的地址' },
       postcode: { focus: false, error: false, value: '', errorMsg: '请输入正确的邮政编码' },
     },
+    firstName: '',
+    lastName: '',
     region: [] as string[],
     id: null as unknown as number,
     commitBtnDisabled: false,
@@ -190,7 +192,7 @@ Page({
     } else {
       cityName = cityData.substr(0, cityData.length - 1)
     }
-    const { firstName, lastName } = getFirstNameAndLastName(name.value)
+    const {firstName, lastName} = this.data
     try {
       const params = {
         type: 'customer',
@@ -257,6 +259,8 @@ Page({
        }
       this.setData({
         'form.name.value': lastName + firstName,
+        firstName,
+        lastName,
       })
     } catch (err) {
       wx.showToast({ title: '网络异常' })

@@ -18,7 +18,6 @@ const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
   numberOfChannels: 1,
   encodeBitRate: 16000,
   format: 'aac', // 音频格式，选择此格式创建的音频消息，可以在即时通信 IM 全平台（Android、iOS、微信小程序和Web）互通
-
 }
 let tim: TIMSKD
 
@@ -109,8 +108,10 @@ Component({
       this.initRecording()
       this.queryAddressList()
       this.setData({
-        callTimer: setTimeout(() => {
-          // wx.navigateBack()
+        callTimer: setTimeout(async () => {
+          await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
+          clearSessuibAsync()
+          wx.navigateBack()
         }, 60000)
       })
       $on({
