@@ -30,9 +30,7 @@ Page({
     timer: 0,
   },
   async onLoad() {
-    this.setData({
-      bannerList: BANNERS
-    })
+    
     app.tokenCallback = async () => {
       await querySessionAsync()
       const session = await checkSessionAsync()
@@ -43,6 +41,9 @@ Page({
       }
     }
     await this.queryNewStore(1)
+    this.setData({
+      bannerList: BANNERS
+    })
   },
 
   async onShow() {
