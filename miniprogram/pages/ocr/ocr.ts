@@ -129,6 +129,7 @@ Page({
       async success(res) {
         let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
         var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
+        // wx.getFileInfo()
         console.log(base64)
         that.setData({
           identityBase64: base64,

@@ -11,6 +11,26 @@ import { clearSessuibAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
 
+interface Session {
+  code: string
+  id: number
+  orders: pageOrder[]
+  sales: []
+}
+
+interface pageOrder {
+  checkoutState: string
+  id: number
+  items: { id: string }[]
+  notes: ''
+  paymentState: string
+  shippingAddress: {} | null
+  shippingState: string
+  tokenValue: string
+  shipments: {id: number}[]
+  payments: {id: number}[]
+}
+
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
   duration: 60000,
@@ -103,10 +123,11 @@ Component({
       const userID = this.properties.userId
       const { userSig, sdkAppID } = genTestUserSig(userID)
 
+
       tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
       // this.joinGroup(`${this.properties.storeId}_Meeting`)
       this.initRecording()
-      this.queryAddressList()
+      // this.queryAddressList()
       this.setData({
         callTimer: setTimeout(async () => {
           await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
@@ -219,18 +240,71 @@ Component({
       $on({
         name: 'joined_room',
         tg: this,
-        success() {
+        async success() {
           clearTimeout(this.data.callTimer)
           // 
           this.joinGroup(this.properties.groupId)
           this.initRecording()
-          this.queryAddressList()
+          await this.queryAddressList()
+          const session = wx.getStorageSync<Session>('session')
+          let unfinishedOrder: pageOrder | null = null
+          let state = 0 // 0 -- null; 1 -- 没有确认; 2 -- 没有支付
+          const { orders } = session
+          for (let orderItem of orders) {
+            const { items, paymentState, shippingState, checkoutState } = orderItem
+            
+            if (items.length === 0 || paymentState === 'cancelled') {
+              continue
+            }
+            if (paymentState === 'awaiting_payment') {
+              state = 2
+              unfinishedOrder = orderItem
+            } else if (paymentState == 'cart' && shippingState == 'cart' && checkoutState == 'cart') {
+              state = 1
+              unfinishedOrder = orderItem
+            }
+          }
+          if (!!unfinishedOrder) {
+            let strnote = unfinishedOrder.notes
+            let note = JSON.parse(strnote)
+            note = note[unfinishedOrder.items[0].id.toString()]
+            const { brand, category1, category2, category3, size, productName } = note['zh_Hans_CN']
+            const { tokenValue, shipments, payments, shippingAddress } = unfinishedOrder
+            const { id: shipmentId } = shipments[0]
+            const { id: paymentId } = payments[0]
+            this.setData({
+              payDialogLabel: '确认订单',
+              tokenValue,
+              productName,
+              paymentId,
+              shipmentId,
+              productBrand: brand,
+              productSize: size,
+              productCategory1CnName: category1,
+              productCategory2CnName: category2,
+              productCategory3CnName: category3,
+              hasPaid: false
+            })
+            // this.queryOrder(tokenValue)
+            if (!!shippingAddress) {
+              // const addressList = [shippingAddress, ...this.data.addressList]
+              // console.log(addressList)
+              this.setData({
+                payDialogLabel: '已付款',
+                showQrcode: true,
+                address: shippingAddress,
+              })
+            }
+            // this.setData({
+            //   show
+            // })
+          }
         }
       })
       $on({
         name: 'hang_up',
         tg: this,
-        async success()  {
+        async success() {
           await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
           clearSessuibAsync()
           wx.navigateBack()
@@ -339,7 +413,7 @@ Component({
       this.setData({ showHandUpDialog: false })
     },
 
-    async handleHangUp()  {
+    async handleHangUp() {
       // TODO 挂断电话
       sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
       const code = this.properties.groupId.split('Meeting-')[1]
@@ -560,10 +634,10 @@ Component({
       }
       await sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId, {
         send: () => {
-          wx.showLoading({title: ''})
+          wx.showLoading({ title: '' })
         },
         success: () => {
-          
+
           wx.hideLoading()
           this.setData({
             showPopup: false
@@ -584,7 +658,7 @@ Component({
           })
         }
       })
-      
+
     },
     async _handleCommit() {
       wx.showLoading({ title: '正在请求...' })
@@ -611,7 +685,7 @@ Component({
                 showPopup: false,
                 hasPaid: true,
               })
-              
+
               this.resetOrder()
               this.data.canLeave = false
             },
@@ -624,11 +698,11 @@ Component({
               this.data.canLeave = false
             }
           })
-          
+
         } catch {
           wx.showToast({ title: '请求失败，请重新尝试' })
-          
-        }  finally {
+
+        } finally {
           this.setData({
             payDialogBtnDisabled: false
           })
@@ -656,25 +730,25 @@ Component({
         //   productName: this.data.productName
         // }
 
-        let notes = {} as { [key: string]: Object }
-        notes[this.data.orderInfo.items[0].id] = {
-          en: {
-            brand: this.data.productBrand,
-            category1: this.data.productCategory1,
-            category2: this.data.productCategory2,
-            category3: this.data.productCategory3,
-            size: this.data.productSize,
-            productName: this.data.productName
-          },
-          zh_Hans_CN: {
-            brand: this.data.productBrand,
-            category1: this.data.productCategory1CnName,
-            category2: this.data.productCategory2CnName,
-            category3: this.data.productCategory3CnName,
-            size: this.data.productSize,
-            productName: this.data.productName
-          },
-        }
+        // let notes = {} as { [key: string]: Object }
+        // notes[this.data.orderInfo.items[0].id] = {
+        //   en: {
+        //     brand: this.data.productBrand,
+        //     category1: this.data.productCategory1,
+        //     category2: this.data.productCategory2,
+        //     category3: this.data.productCategory3,
+        //     size: this.data.productSize,
+        //     productName: this.data.productName
+        //   },
+        //   zh_Hans_CN: {
+        //     brand: this.data.productBrand,
+        //     category1: this.data.productCategory1CnName,
+        //     category2: this.data.productCategory2CnName,
+        //     category3: this.data.productCategory3CnName,
+        //     size: this.data.productSize,
+        //     productName: this.data.productName
+        //   },
+        // }
 
 
         // let qrcodeUrl: string
@@ -682,12 +756,12 @@ Component({
           const putAddressRes = await this.putAddress(tokenValue, address)
           const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
           const putPaymentRes = await this.putPayment(tokenValue, paymentId)
-          const completeRes = await orderModule.orderComplete(this.data.tokenValue, { notes: JSON.stringify(notes) });
+          const completeRes = await orderModule.orderComplete(this.data.tokenValue, {});
           console.debug(putAddressRes, putShipmentRes, putPaymentRes, completeRes)
           // TODO 暂时取消支付码获取
           // qrcodeUrl = await this.queryQrcode()
           // this.showQrcode(qrcodeUrl)
-          
+
           await sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId, {
             // send: () => {
             //   wx.showLoading({title: ''})
@@ -723,7 +797,7 @@ Component({
         }
         // sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
 
-        
+
       }
 
 

@@ -152,7 +152,7 @@ declare namespace orderDesign {
   }
 
   interface orderCompleteParams {
-    notes: string
+    // notes: string
   }
 
   interface unionPayParams {
