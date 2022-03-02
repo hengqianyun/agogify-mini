@@ -151,7 +151,7 @@ Page({
       //   "state[]": ['ended', 'paused'],
       //   'customer.id': getIdFromString(wx.getStorageSync('oauth.data').customer),
       // })
-      const res = await sessionModule.querySession('state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+      const res = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
       const {"hydra:member": list} = res.data
       if (list.length > 0) {
         this.setData({

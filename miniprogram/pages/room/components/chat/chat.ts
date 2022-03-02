@@ -590,6 +590,9 @@ Component({
             chatHistory: [...self.data.chatHistory, message],
             inputValue: ''
           })
+          self.setData({
+            messageView: message.ID
+          })
         }
       })
     },
