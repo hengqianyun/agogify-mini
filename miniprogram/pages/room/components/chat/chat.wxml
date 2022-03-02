@@ -18,9 +18,9 @@
       正在录音
     </view> -->
     <view class="bottom-container" wx:if="{{!isWaiting}}">
-      <scroll-view class="chat-content" scroll-y="{{true}}">
+      <scroll-view class="chat-content" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}">
         <block wx:for="{{chatHistory}}" wx:key="id">
-          <view wx:if="{{item.flow === 'in'}}" class="left-message">
+          <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
             <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
               {{item.payload.text}}
             </view>
@@ -28,7 +28,7 @@
               <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
             </view>
           </view>
-          <view wx:else class="right-message">
+          <view wx:else class="right-message" id="{{item.ID}}">
             <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
               {{item.payload.text}}
             </view>

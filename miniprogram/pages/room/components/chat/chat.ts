@@ -61,6 +61,7 @@ Component({
    * 组件的初始数据
    */
   data: {
+    messageView: '',
     chatHistory: [] as TIMMessage[],
     inputValue: '',
     conversationID: '',
@@ -227,6 +228,9 @@ Component({
                 this.setData({
                   chatHistory: this.data.chatHistory.concat([message])
                 })
+                this.setData({
+                  messageView: message.ID
+                })
               }
             } catch {
               this.setData({
@@ -285,7 +289,7 @@ Component({
               productCategory3CnName: category3,
               hasPaid: false
             })
-            // this.queryOrder(tokenValue)
+            this.queryOrder(tokenValue)
             if (!!shippingAddress) {
               // const addressList = [shippingAddress, ...this.data.addressList]
               // console.log(addressList)
