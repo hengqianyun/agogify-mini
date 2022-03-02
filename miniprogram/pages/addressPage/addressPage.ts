@@ -1,4 +1,6 @@
 import addressModule from "../../http/module/address"
+import loginModule from "../../http/module/login"
+import { getIdFromString } from "../../utils/util"
 
 // pages/addressPage/addressPage.ts
 Page({
@@ -11,7 +13,8 @@ Page({
     pageInfo: {
       page: 1,
       itemsPerPage: 99
-    } as swaggerI.pageRequestParams
+    } as swaggerI.pageRequestParams,
+    defaultAddressId: null as unknown as number,
   },
 
   /**
@@ -24,8 +27,8 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() {
-    
+  async onReady() {
+    const flag = await this.queryDefaulAddress()
   },
 
   /**
@@ -110,7 +113,7 @@ Page({
             _this.setData({
               addressList: addressList
             })
-          } catch{
+          } catch {
             wx.showToast({
               title: '删除失败，请稍后重试',
               icon: 'error'
@@ -121,10 +124,32 @@ Page({
     })
   },
 
+  async queryDefaulAddress() {
+    try {
+      const wxUserInfo = wx.getStorageSync('oauth.data')
+
+      const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
+
+      const { defaultAddress } = res.data
+      if (defaultAddress == null) {
+        return false
+      } else {
+        const { id } = defaultAddress
+        this.setData({
+          defaultAddressId: id
+        })
+      }
+      return true
+    } catch (err) {
+      wx.showToast({ title: '网络异常' })
+      return false
+    }
+  },
+
   navigateTo(id?: number) {
     const item = this.data.addressList.find(e => e.id === id)
     if (!!item) {
-      const {id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county} = item
+      const { id, lastName, firstName, provinceName, city, street, postcode, mobileNumber, county } = item
       wx.navigateTo({
         url: `../addressDetail/addressDetail?id=${id}&lastName=${lastName}&firstName=${firstName}&provinceName=${provinceName}&city=${city}&street=${street}&postcode=${postcode}&mobileNumber=${mobileNumber}&county=${county}`
       })
@@ -136,7 +161,7 @@ Page({
   },
 
   async queryAddressList() {
-    const resData = await addressModule.queryAddressList({...this.data.pageInfo, type: 'customer'})
+    const resData = await addressModule.queryAddressList({ ...this.data.pageInfo, type: 'customer' })
     const { 'hydra:member': list } = resData.data
     this.setData({
       // addressList: [...this.data.addressList, ...list]

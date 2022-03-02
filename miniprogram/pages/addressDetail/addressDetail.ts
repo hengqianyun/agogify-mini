@@ -26,6 +26,7 @@ Page({
     region: [] as string[],
     id: null as unknown as number,
     commitBtnDisabled: false,
+    flag: true,
   },
 
   /**
@@ -63,15 +64,21 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    const location: RSSDesign.txMapLocation = chooseLocation.getLocation();
-    console.log(location)
-    if (location) {
-      const { province, city, district, name } = location
+    if (this.data.flag) {
       this.setData({
-        region: [province, city, district],
-        'form.region.value': province + city + district,
-        'form.address.value': name
+        flag: false
       })
+    } else {
+      const location: RSSDesign.txMapLocation = chooseLocation.getLocation();
+      console.log(location)
+      if (location) {
+        const { province, city, district, name } = location
+        this.setData({
+          region: [province, city, district],
+          'form.region.value': province + city + district,
+          'form.address.value': name
+        })
+      }
     }
 
   },

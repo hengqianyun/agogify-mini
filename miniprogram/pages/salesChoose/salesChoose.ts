@@ -109,11 +109,11 @@ Page({
           if (res.confirm) {
             wx.navigateTo({ url: '../addressPage/addressPage' })
           } else {
-            wx.navigateBack()
+            // wx.navigateBack()
           }
         },
         fail() {
-          wx.navigateBack()
+          // wx.navigateBack()
         }
       })
       return
