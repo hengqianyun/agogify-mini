@@ -73,7 +73,7 @@ Page({
     }
     if (this.data.shopClassification !== 'all') {
       params["storeTaxons.taxon.code"] = this.data.shopClassification
-    } 
+    }
     if (this.data.brandActiveKey !== 0) {
       params["brands.translations.name"] = this.data.brandList[this.data.brandActiveKey].name
     }
@@ -89,7 +89,7 @@ Page({
       return strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
     } else if (this.data.classificationChild !== '全部') {
       strParamsList.push(this.data.classificationList[0].code.toString())
-      const child = this.data.classificationChildList.find(e => e.name === this.data.classificationChild) 
+      const child = this.data.classificationChildList.find(e => e.name === this.data.classificationChild)
       strParamsList.push(child?.code.toString())
       return strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
     } else {
@@ -186,7 +186,7 @@ Page({
     if (ids.length === 0) {
       return
     }
-     if (!checkloginAndRealNameCertifiedAsync()) {
+    if (!checkloginAndRealNameCertifiedAsync()) {
       return
     }
     wx.setStorageSync('reserveStores', ids);
@@ -239,7 +239,7 @@ Page({
   },
 
   async queryCities() {
-    const resData = await storeModule.queryCities({page: 1, itemsPerPage: 999})
+    const resData = await storeModule.queryCities({ page: 1, itemsPerPage: 999 })
     const { "hydra:member": list } = resData.data
     const optionList = list.map(item => {
       return {
@@ -357,21 +357,28 @@ Page({
 
   async queryStore(type: number) {
     const params = this.formateParams(type)
-    this.setData({
-      loading: true
-    })
-    let resData = {} as WechatMiniprogram.RequestSuccessCallbackResult<storeDesign.QueryStoresRes>
-    if (typeof params === 'string') {
-      resData = await storeModule.queryStoreWhitString(params)
-    } else {
-      resData = await storeModule.queryStore(params)
+    // this.setData({
+    //   loading: true
+    // })
+    wx.showLoading({ title: "加载中" })
+    try {
+      let resData = {} as WechatMiniprogram.RequestSuccessCallbackResult<storeDesign.QueryStoresRes>
+      if (typeof params === 'string') {
+        resData = await storeModule.queryStoreWhitString(params)
+      } else {
+        resData = await storeModule.queryStore(params)
+      }
+      const list = resData.data["hydra:member"]
+      this.setData({
+        shopList: list.map(item => Object.assign(item, { status: 0 as storeDesign.checkBoxStatus, address: `${item.billingData.country?.name} ${item.billingData.city?.name}` })),
+        shopCheckStatusList: (new Array(list.length)).fill(1),
+        loading: false
+      })
+    } catch { }
+    finally {
+      wx.hideLoading()
     }
-    const list = resData.data["hydra:member"]
-    this.setData({
-      shopList: list.map(item => Object.assign(item, { status: 0 as storeDesign.checkBoxStatus, address: `${item.billingData.country?.name} ${item.billingData.city?.name}` })),
-      shopCheckStatusList: (new Array(list.length)).fill(1),
-      loading: false
-    })
+
   },
 
   handleDialogCommit() {
