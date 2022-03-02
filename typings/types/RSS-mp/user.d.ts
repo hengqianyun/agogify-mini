@@ -31,6 +31,7 @@ declare namespace userDesign {
     identityNumber: string
     firstName: string
     lastName: string
+    defaultAddress: {id: number}
   }
 
   interface putUserInfoParams {

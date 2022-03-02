@@ -27,8 +27,8 @@ interface pageOrder {
   shippingAddress: {} | null
   shippingState: string
   tokenValue: string
-  shipments: {id: number}[]
-  payments: {id: number}[]
+  shipments: { id: number }[]
+  payments: { id: number }[]
 }
 
 const recorderManager = wx.getRecorderManager()
@@ -236,6 +236,9 @@ Component({
               this.setData({
                 chatHistory: this.data.chatHistory.concat([message!])
               })
+              this.setData({
+                messageView: message!.ID
+              })
             }
           }
         }
@@ -256,7 +259,7 @@ Component({
           const { orders } = session
           for (let orderItem of orders) {
             const { items, paymentState, shippingState, checkoutState } = orderItem
-            
+
             if (items.length === 0 || paymentState === 'cancelled') {
               continue
             }
@@ -441,6 +444,9 @@ Component({
         this.setData({
           chatHistory: [...this.data.chatHistory, item],
           inputValue: ''
+        })
+        this.setData({
+          messageView: item.ID
         })
       } else {
         wx.showToast({ title: "发送失败", icon: "error" })

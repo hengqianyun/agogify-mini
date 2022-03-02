@@ -1,4 +1,5 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
+import loginModule from "../../http/module/login"
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
 import { getIdFromString } from "../../utils/util"
@@ -25,7 +26,7 @@ Page({
     //   stores,
     // })
     // this.querySales()
-  
+
   },
 
   /**
@@ -81,8 +82,8 @@ Page({
 
   },
 
-  async handleCall({currentTarget}: WechatMiniprogram.TouchEvent) {
-    const {id, status, index} = currentTarget.dataset as {id: string, status: string, index: number}
+  async handleCall({ currentTarget }: WechatMiniprogram.TouchEvent) {
+    const { id, status, index } = currentTarget.dataset as { id: string, status: string, index: number }
     if (status !== 'online') {
       return
     }
@@ -96,7 +97,29 @@ Page({
       })
       return
     }
+    if (!(await this.queryDefaulAddress())) {
+      this.setData({
+        [key]: 'online'
+      })
+      wx.showModal({
+        title: '通话前需要先有可用地址。',
+        confirmText: '立即前往',
+        cancelText: '确定',
+        success(res) {
+          if (res.confirm) {
+            wx.navigateTo({ url: '../addressPage/addressPage' })
+          } else {
+            wx.navigateBack()
+          }
+        },
+        fail() {
+          wx.navigateBack()
+        }
+      })
+      return
+    }
     
+
     // 
     const saleId = getIdFromString(id)
     const currentStore = this.data.stores[this.data.currentStoreIndex]
@@ -116,12 +139,12 @@ Page({
       "store.code": this.data.stores[this.data.currentStoreIndex].code,
       // roles: 'ROLE_STORE_SALES_ACCESS',
     })
-    const {"hydra:member": list} = res.data
+    const { "hydra:member": list } = res.data
     for (let i = 0; i < list.length; i++) {
       try {
-        list[i].avatar = {path: IMAGEBASEURL+ IMAGEPATHS.avatarNormal1x + list[i].avatar?.path}
+        list[i].avatar = { path: IMAGEBASEURL + IMAGEPATHS.avatarNormal1x + list[i].avatar?.path }
       } catch {
-        list[i].avatar = {path: IMAGEBASEURL}
+        list[i].avatar = { path: IMAGEBASEURL }
       }
     }
     this.setData({
@@ -143,6 +166,23 @@ Page({
     })
     await this.querySales()
   },
+  async queryDefaulAddress() {
+    try {
+      const wxUserInfo = wx.getStorageSync('oauth.data')
+
+      const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
+
+      const { defaultAddress } = res.data
+      if (defaultAddress == null) {
+        return false
+        
+      }
+      return true
+    } catch (err) {
+      wx.showToast({ title: '网络异常' })
+      return false
+    }
+  },
   async querySession() {
     try {
       // const res = await sessionModule.querySession({
@@ -152,7 +192,7 @@ Page({
       //   'customer.id': getIdFromString(wx.getStorageSync('oauth.data').customer),
       // })
       const res = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
-      const {"hydra:member": list} = res.data
+      const { "hydra:member": list } = res.data
       if (list.length > 0) {
         this.setData({
           showDialog: true
@@ -160,7 +200,7 @@ Page({
         return false
       }
       return true
-    } catch(err) {
+    } catch (err) {
       console.log(err)
       this.onLoad()
       return false
