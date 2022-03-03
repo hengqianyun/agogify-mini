@@ -172,7 +172,7 @@ Component({
                   hasPaid: false
                 })
                 try {
-                  this.queryOrder(tokenValue)
+                  this.queryCart(tokenValue)
                 } catch (err) {
                   this.resetOrder()
                 }
@@ -292,8 +292,8 @@ Component({
               productCategory3CnName: category3,
               hasPaid: false
             })
-            this.queryOrder(tokenValue)
             if (!!shippingAddress) {
+              await this.queryOrder(tokenValue)
               // const addressList = [shippingAddress, ...this.data.addressList]
               // console.log(addressList)
               this.setData({
@@ -301,6 +301,9 @@ Component({
                 showQrcode: true,
                 address: shippingAddress,
               })
+            } else {
+              
+              this.queryCart(tokenValue)
             }
             // this.setData({
             //   show
@@ -944,10 +947,10 @@ Component({
         address: list[0]
       })
     },
-    async queryOrder(tokenValue: string) {
+    async queryCart(tokenValue: string) {
       wx.showLoading({ title: '正在拉取订单' })
       try {
-        const res = await orderModule.queryOrder(tokenValue)
+        const res = await orderModule.queryCart(tokenValue)
         // TODO 获取到订单信息
         const orderItem = res.data
         this.setData({
@@ -955,6 +958,33 @@ Component({
           showPopup: true,
           payDialogBtnDisabled: false,
           itemsTotal: (orderItem.itemsTotal / 100).toFixed(2),
+          shippingTotal: (orderItem.shippingTotal / 100).toFixed(2),
+          total: (orderItem.total / 100).toFixed(2),
+        })
+      } catch (err) {
+        wx.showModal({
+          title: '错误',
+          content: '获取订单失败',
+          showCancel: false,
+          confirmText: '我知道了',
+          success: () => { }
+        })
+        throw err
+      } finally {
+        wx.hideLoading()
+      }
+    },
+    async queryOrder(tokenValue: string) {
+      wx.showLoading({ title: '正在拉取订单' })
+      try {
+        const res = await orderModule.queryOrderDetail(tokenValue)
+        // TODO 获取到订单信息
+        const orderItem = res.data
+        this.setData({
+          orderInfo: orderItem,
+          showPopup: true,
+          payDialogBtnDisabled: false,
+          itemsTotal: (orderItem.items[0].total / 100).toFixed(2),
           shippingTotal: (orderItem.shippingTotal / 100).toFixed(2),
           total: (orderItem.total / 100).toFixed(2),
         })
