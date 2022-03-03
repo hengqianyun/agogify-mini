@@ -117,6 +117,8 @@ Component({
     shippingTotal: '',
     total: '',
     hangupText: '确认挂断通话？',
+    orderStep: 0, // 0 没有订单， 1 put address 2 put shipment 3 put payment 4 complete
+    addressSelectDisabled: false,
   },
 
   lifetimes: {
@@ -264,10 +266,31 @@ Component({
               continue
             }
             if (paymentState === 'awaiting_payment') {
+              this.setData({
+                orderStep: 4,
+                addressSelectDisabled: true,
+              })
               state = 2
               unfinishedOrder = orderItem
             } else if (paymentState == 'cart' && shippingState == 'cart' && checkoutState == 'cart') {
               state = 1
+              unfinishedOrder = orderItem
+            } else if (checkoutState === 'addressed') {
+              this.setData({
+                orderStep: 1
+              })
+              unfinishedOrder = orderItem
+            } else if (checkoutState === 'shipping_selected') {
+              this.setData({
+                orderStep: 2,
+                addressSelectDisabled: true,
+              })
+              unfinishedOrder = orderItem
+            } else if (checkoutState === 'payment_selected') {
+              this.setData({
+                orderStep: 3,
+                addressSelectDisabled: true,
+              })
               unfinishedOrder = orderItem
             }
           }
@@ -292,7 +315,7 @@ Component({
               productCategory3CnName: category3,
               hasPaid: false
             })
-            if (!!shippingAddress) {
+            if (this.data.orderStep === 4) {
               await this.queryOrder(tokenValue)
               // const addressList = [shippingAddress, ...this.data.addressList]
               // console.log(addressList)
@@ -302,9 +325,21 @@ Component({
                 address: shippingAddress,
               })
             } else {
-              
               this.queryCart(tokenValue)
             }
+            // if (!!shippingAddress) {
+            //   await this.queryOrder(tokenValue)
+            //   // const addressList = [shippingAddress, ...this.data.addressList]
+            //   // console.log(addressList)
+            //   this.setData({
+            //     payDialogLabel: '已付款',
+            //     showQrcode: true,
+            //     address: shippingAddress,
+            //   })
+            // } else {
+
+            //   this.queryCart(tokenValue)
+            // }
             // this.setData({
             //   show
             // })
@@ -389,6 +424,7 @@ Component({
 
     },
     handleShowMoreAddress() {
+      if (this.data.addressSelectDisabled || this.data.showQrcode) return
       this.setData({
         showMoreAddress: !this.data.showMoreAddress
       })
@@ -691,7 +727,7 @@ Component({
            * TODO 完善用户未付款逻辑
            */
           if (!(await this.userHasPaid())) {
-            wx.showToast({ title: '付款还未成功，' })
+            wx.showToast({ title: '款项暂未到账，请稍等片刻' })
             wx.hideLoading()
             return
           }
@@ -768,11 +804,83 @@ Component({
 
 
         // let qrcodeUrl: string
+        this.setData({
+          addressSelectDisabled: true,
+        })
         try {
-          const putAddressRes = await this.putAddress(tokenValue, address)
-          const putShipmentRes = await this.putShipment(tokenValue, shipmentId)
-          const putPaymentRes = await this.putPayment(tokenValue, paymentId)
-          const completeRes = await orderModule.orderComplete(this.data.tokenValue, {});
+          let putAddressRes, putShipmentRes, putPaymentRes, completeRes
+          if (this.data.orderStep === 0) {
+            try {
+              putAddressRes = await this.putAddress(tokenValue, address)
+              this.setData({
+                orderStep: 1
+              })
+            } catch (err) {
+              wx.showModal({
+                title: '错误',
+                content: '请求错误，请重试.',
+                showCancel: false,
+              })
+              this.setData({
+                addressSelectDisabled: false
+              })
+              throw err
+            }
+          }
+          if (this.data.orderStep === 1) {
+            try {
+              putShipmentRes = await this.putShipment(tokenValue, shipmentId)
+              this.setData({
+                orderStep: 2
+              })
+            } catch (err) {
+              wx.showModal({
+                title: '错误',
+                content: '请求错误，请重试.',
+                showCancel: false,
+              })
+              this.setData({
+                addressSelectDisabled: false
+              })
+              throw err
+            }
+          }
+          if (this.data.orderStep === 2) {
+            try {
+              putPaymentRes = await this.putPayment(tokenValue, paymentId)
+              this.setData({
+                orderStep: 3,
+              })
+            } catch (err) {
+              wx.showModal({
+                title: '错误',
+                content: '请求错误，请重试.',
+                showCancel: false,
+              })
+              
+              throw err
+            }
+          }
+          if (this.data.orderStep === 3) {
+            try {
+              completeRes = await orderModule.orderComplete(this.data.tokenValue, {});
+              this.setData({
+                orderStep: 4
+              })
+            } catch (err) {
+              wx.showModal({
+                title: '错误',
+                content: '请求错误，请重试.',
+                showCancel: false,
+              })
+              throw err
+            }
+          }
+          
+
+
+
+
           console.debug(putAddressRes, putShipmentRes, putPaymentRes, completeRes)
           // TODO 暂时取消支付码获取
           // qrcodeUrl = await this.queryQrcode()
@@ -803,7 +911,7 @@ Component({
             showQrcode: true,
           })
         } catch {
-          wx.showToast({ title: '创建订单失败，请重新尝试' })
+          // wx.showToast({ title: '创建订单失败，请重新尝试' })
           return
         } finally {
           this.setData({
