@@ -945,6 +945,7 @@ Component({
       })
     },
     async queryOrder(tokenValue: string) {
+      wx.showLoading({ title: '正在拉取订单' })
       try {
         const res = await orderModule.queryOrder(tokenValue)
         // TODO 获取到订单信息
@@ -958,7 +959,16 @@ Component({
           total: (orderItem.total / 100).toFixed(2),
         })
       } catch (err) {
+        wx.showModal({
+          title: '错误',
+          content: '获取订单失败',
+          showCancel: false,
+          confirmText: '我知道了',
+          success: () => { }
+        })
         throw err
+      } finally {
+        wx.hideLoading()
       }
     },
     async putAddress(tokenValue: string, address: addressDesign.address) {

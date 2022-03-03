@@ -168,6 +168,7 @@ Page({
       }
        
     } else if (this.data.type === '2') {
+      /// TODO 修改手机号
       wx.navigateBack()
     } else {
       wx.showToast({
