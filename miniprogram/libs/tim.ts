@@ -149,6 +149,12 @@ export const logoutTim = () => {
   _tim.destroy();
 }
 
+export const quiteGroup = (groupId: string) => {
+  try {
+    _tim.quiteGroup(groupId)
+  } catch(err) {}
+}
+
 function registerEvents(tim: TIMSKD): void {
   // logoutEvent()
   tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate)

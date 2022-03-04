@@ -1,6 +1,6 @@
 // pages/room/components/chat/chat.ts
 import { $on, $remove } from '../../../../utils/event'
-import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq } from "../../../../libs/tim"
+import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
 import genTestUserSig from '../../../../debug/GenerateTestUserSig'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
@@ -10,26 +10,6 @@ import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessuibAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
-
-interface Session {
-  code: string
-  id: number
-  orders: pageOrder[]
-  sales: []
-}
-
-interface pageOrder {
-  checkoutState: string
-  id: number
-  items: { id: string }[]
-  notes: ''
-  paymentState: string
-  shippingAddress: {} | null
-  shippingState: string
-  tokenValue: string
-  shipments: { id: number }[]
-  payments: { id: number }[]
-}
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -128,9 +108,7 @@ Component({
 
 
       tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
-      // this.joinGroup(`${this.properties.storeId}_Meeting`)
       this.initRecording()
-      // this.queryAddressList()
       this.setData({
         callTimer: setTimeout(async () => {
           await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
@@ -257,7 +235,7 @@ Component({
           await this.queryAddressList()
           const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
           const session = sessionRes.data
-          let unfinishedOrder: pageOrder | null = null
+          let unfinishedOrder: sessionDesign.SessionOrder | null = null
           const { orders } = session
           for (let orderItem of orders) {
             const { items, paymentState, shippingState, checkoutState } = orderItem
@@ -385,6 +363,7 @@ Component({
       })
       clearInterval(this.data.timeleftTimer)
       resetTimerAndSeq()
+      quiteGroup(`${this.properties.storeId}_Meeting`)
     }
   },
 
