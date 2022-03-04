@@ -6,7 +6,7 @@ import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
 import { HmacSHA256, enc } from 'crypto-js'
-import { sortByCharCode } from '../../../../utils/util'
+import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessuibAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
@@ -255,9 +255,9 @@ Component({
           this.joinGroup(this.properties.groupId)
           this.initRecording()
           await this.queryAddressList()
-          const session = wx.getStorageSync<Session>('session')
+          const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+          const session = sessionRes.data
           let unfinishedOrder: pageOrder | null = null
-          let state = 0 // 0 -- null; 1 -- 没有确认; 2 -- 没有支付
           const { orders } = session
           for (let orderItem of orders) {
             const { items, paymentState, shippingState, checkoutState } = orderItem
@@ -270,10 +270,8 @@ Component({
                 orderStep: 4,
                 addressSelectDisabled: true,
               })
-              state = 2
               unfinishedOrder = orderItem
             } else if (paymentState == 'cart' && shippingState == 'cart' && checkoutState == 'cart') {
-              state = 1
               unfinishedOrder = orderItem
             } else if (checkoutState === 'addressed') {
               this.setData({

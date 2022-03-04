@@ -35,7 +35,23 @@ declare namespace sessionDesign {
   }
 
   interface querySessionRes extends swaggerI.requsetListBase<session>  {
+    code: string
+    id: number
+    orders: SessionOrder[]
+    sales: []
+  }
 
+  interface SessionOrder {
+    checkoutState: string
+    id: number
+    items: { id: string }[]
+    notes: ''
+    paymentState: string
+    shippingAddress: {} | null
+    shippingState: string
+    tokenValue: string
+    shipments: { id: number }[]
+    payments: { id: number }[]
   }
 
   interface putSessionRes extends session {}
