@@ -886,6 +886,8 @@ Component({
           this.setData({
             payDialogLabel: '已付款',
             showQrcode: true,
+            orderStep: 0,
+            addressSelectDisabled: false
           })
         } catch {
           // wx.showToast({ title: '创建订单失败，请重新尝试' })

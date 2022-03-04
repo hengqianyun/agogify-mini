@@ -32,6 +32,7 @@ Page({
     showBusyDialog: false,
     saleId: '',
     storeId: '',
+    firstIn: true,
   },
 
   /**
@@ -64,6 +65,7 @@ Page({
       userId: user.customer,
       saleId,
       storeId,
+      firstIn: false
     })
 
 
@@ -101,6 +103,16 @@ Page({
     // })
 
     
+  },
+
+  onShow() {
+    if (this.data.firstIn) return
+    // trtcClient.getPusherInstance().start()
+    setTimeout(() => {
+      this.setData({
+        playerList: this.data.playerList
+      })
+    }, 1000)
   },
 
   onReady() {
