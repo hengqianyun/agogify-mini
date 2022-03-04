@@ -363,6 +363,7 @@ Component({
       })
       clearInterval(this.data.timeleftTimer)
       resetTimerAndSeq()
+      clearTimeout(this.data.callTimer)
       quiteGroup(`${this.properties.storeId}_Meeting`)
     }
   },
@@ -669,7 +670,9 @@ Component({
 
           wx.hideLoading()
           this.setData({
-            showPopup: false
+            showPopup: false,
+            orderStep: 0,
+            addressSelectDisabled: false
           })
           this.resetOrder()
         },
@@ -680,7 +683,9 @@ Component({
             showCancel: false,
             success: () => {
               this.setData({
-                showPopup: false
+                showPopup: false,
+                orderStep: 0,
+                addressSelectDisabled: false
               })
               this.resetOrder()
             }
@@ -834,7 +839,7 @@ Component({
                 content: '请求错误，请重试.',
                 showCancel: false,
               })
-              
+
               throw err
             }
           }
@@ -853,7 +858,7 @@ Component({
               throw err
             }
           }
-          
+
 
 
 

@@ -440,6 +440,7 @@ export const clearAckTimeout = (seq: string) => {
     }
     clearTimeout(_timerMap.get(seq)!.timer)
     _timerMap.delete(seq)
+    console.debug(seq + 'timer cleared')
   }
 }
 
