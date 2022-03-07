@@ -7,6 +7,8 @@ declare class TIMSKD {
 
   login: (options: {userID: string, userSig: string}) => Promise<void>
 
+  logout: () => Promise<void>
+
   on: (eventName: String, handle: (event: TIMEvent) => void, context?: TIMSKD) => void
 
   off: (eventName: String, handle: (event: TIMEvent) => void, context?: TIMSKD) => void

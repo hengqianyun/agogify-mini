@@ -1,6 +1,7 @@
 import TIM from '../tim_SDK.js'
 import TIMUploadPlugin from 'tim-upload-plugin';
 import { $emit } from '../../utils/event';
+import genTestUserSig from '../../debug/GenerateTestUserSig.js';
 
 interface TimSkdSign {
   SDKAppID: number
@@ -9,6 +10,44 @@ interface TimSkdSign {
 
 let _tim: TIMSKD
 let _userID: string
+let _hasReady = false
+
+export default class IMClient {
+  private static instance: IMClient
+
+  private tim: TIMSKD
+  private userId: string
+
+  private constructor() {
+    this.tim = _tim
+    this.userId = _userID
+  }
+
+  public static getInstance(): IMClient {
+    if (!this.instance) {
+      this.instance  = new IMClient()
+    }
+    return this.instance
+  }
+
+  public logout() {
+    this.tim.logout()
+  }
+
+  public login(userID: string) {
+    const { userSig } = genTestUserSig(userID)
+    this.userId = userID
+    try {
+      this.tim.login({
+        userID,
+        userSig,
+      })
+    } catch {}
+  }
+}
+
+IMClient.getInstance()
+
 
 /**
  * 
@@ -35,22 +74,24 @@ export const init = (userID: string, sign: TimSkdSign) => {
   // 初始化监听事件
   registerEvents(_tim)
 
-  // 登录im
-  try {
-    _tim.login({
-      userID,
-      userSig,
-    })
-  } catch (err) {
-    /// TODO im登录异常的处理
-    wx.showModal({
-      title: '登录错误'
-    })
-  }
-
   _userID = userID
 
   return _tim
+}
+
+export const imLoing = (userID: string) => {
+  const { userSig } = genTestUserSig(userID)
+  try {
+    _tim.login({
+      userID,
+      userSig
+    })
+  } catch {}
+}
+
+export const imLogout = () => {
+  _tim.logout()
+  _userID = ''
 }
 
 const registerEvents = (tim: TIMSKD) => {
@@ -73,8 +114,17 @@ const onReadyStateUpdate = ({ name }: TIMEvent) => {
 
   if (isSDKReady) {
     wx.hideLoading()
+    _hasReady = true
   } else {
     /// TODO 小程序需要重新login
+    wx.hideLoading()
+    wx.showModal({
+      title: '登录失败，请重新登录',
+      showCancel: false,
+      success() {
+        /// TODO 清除登录信息
+      }
+    })
   }
 }
 
