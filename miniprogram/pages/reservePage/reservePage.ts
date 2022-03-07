@@ -91,7 +91,7 @@ Page({
       startTime,
       endTime,
     })
-    this.initDurations()
+    // this.initDurations()
     this.initTitle()
     await this.querySales()
     // this.setData({
@@ -177,8 +177,8 @@ Page({
   /**
    * 目前时间参照+01:00时区，从下午四点到晚上十一点半
    */
-  initDurations() {
-    let startHour = startTime
+  initDurations(startHour: number, durationCount: number) {
+    // let startHour = startTime
     const timeList = []
     for (let i = 1; i <= durationCount; i++) {
       const num = i % durationPerHour
@@ -245,7 +245,7 @@ Page({
       //     wx.showToast({ title: `加载了${count / 5}秒` })
       //   }
       // }, 200)
-      this.initTimeSlots()
+      // this.initTimeSlots()
       const code = this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"]
       const res = await reserveModule.querySalesTimeSlots({
         'sales.id': getIdFromString(code),
@@ -258,13 +258,13 @@ Page({
        * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
        */
       const timeZone = 8;
+
+
       for (const slot of list) {
         const { state } = slot
         if (state === 'available') {
           const { startTime, version, '@id': id } = slot
           const curDate = new Date(startTime.split('GMT')[0])
-          console.log('curDate', curDate)
-          // const curDate = new Date(Date.parse(startTime.replace('GMT', '')))
           const today = new Date()
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
@@ -280,8 +280,56 @@ Page({
           }
         }
       }
+      const timeList: number[][][] = [[], [], [], [], [], [], []]
+      let latest = 0, earliest = 0
+      for (const slot of list) {
+        const { state } = slot
+        if (state === 'available') {
+          const { startTime, version, '@id': id } = slot
+          const curDate = new Date(startTime.split('GMT')[0])
+          const today = new Date()
+          const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
+          const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
+          const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
+          console.log(hour)
+          // TODO 9 变为 12
+          const j = (hour - 16) * 4 + min / 15
+          if (hour < earliest) earliest = hour
+
+          if (hour > latest) latest = hour
+          timeList[i].push([hour, min, version, getIdFromString(id)])
+
+          // if (!!this.data.tableItems[i][j]) {
+
+          //   this.data.tableItems[i][j].disabled = false
+          //   this.data.tableItems[i][j].paramsVersion = version
+          //   this.data.tableItems[i][j].paramsId = getIdFromString(id)
+          // }
+        }
+      }
+      const length = (latest - earliest + 1) * 4
+      this.initDurations(earliest, length)
+      const tableItems: SimpleTableItem[][] = [[], [], [], [], [], [], []]
+      for (let i = 0; i < tableItems.length; i++) {
+        for (let j = 0; j < length; j++) {
+          tableItems[i].push({ checked: false, x: i, y: j, id: `${i}${j}`, disabled: true, startTime: this.getTime(i, j, true), endTime: this.getTime(i, j, false), })
+        }
+      }
+      for (let i = 0; i < timeList.length; i++) {
+        for (let j = 0; j < timeList[i].length; j++) {
+          const [hour, min, version, id] = timeList[i][j]
+          const index = (hour - earliest) * 4 + min / 15
+          if (!!tableItems[i][index]) {
+            tableItems[i][j].disabled = false
+            tableItems[i][j].paramsVersion = version
+            tableItems[i][j].paramsId = id
+          }
+        }
+      }
+      
       this.setData({
-        tableItems: this.data.tableItems
+        // tableItems: this.data.tableItems
+        tableItems,
       })
       // loading = false
     } catch (err) {
