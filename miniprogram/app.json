@@ -24,7 +24,8 @@
     "pages/protocol/protocol",
     "pages/privacy/privacy",
     "pages/salesChoose/salesChoose",
-    "pages/languageSetting/languageSetting"
+    "pages/languageSetting/languageSetting",
+    "pages/share/share"
   ],
   "window": {
     "backgroundTextStyle": "light",

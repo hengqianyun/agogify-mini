@@ -1,0 +1,16 @@
+<!--pages/share/video/video.wxml-->
+<view class="video-box" hover-class="none" hover-stop-propagation="false">
+  <view class="video-container" hover-class="none" hover-stop-propagation="false">
+      <view class="text-info" hover-class="none" hover-stop-propagation="false">
+        <view class="text-title" hover-class="none" hover-stop-propagation="false">
+          {{from}}邀请您协助参谋
+        </view>
+        <view class="text-desc" hover-class="none" hover-stop-propagation="false">
+          加入直播后可以协助好友挑选商品
+        </view>
+      </view>
+      <view class="btn-area" hover-class="none" hover-stop-propagation="false">
+        <rss-btn label="{{btnLabel}}" disabled="{{btnDisabled}}" width="{{654}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleTap"></rss-btn>
+      </view>
+  </view>
+</view>

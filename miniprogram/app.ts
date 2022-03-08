@@ -1,6 +1,6 @@
 // import initTim from "./libs/tim"
 // import genTestUserSig from './debug/GenerateTestUserSig.js'
-import {autoLogin} from './utils/oauth'
+import { autoLogin } from './utils/oauth'
 
 const judgeProgram = () => {
   const weid = wx.getAccountInfoSync().miniProgram.appId
@@ -36,14 +36,16 @@ App<RSSDesign.RSSAppOptions>({
     wx.setStorageSync('categoryMap', undefined)
     this.globalData.position = wx.getMenuButtonBoundingClientRect()
     console.log(statusBarHeight)
-
-    await autoLogin()
-
-    if (this.tokenCallback) {
-      this.tokenCallback()
+    try {
+      await autoLogin()
+    } catch { } finally {
+      if (this.tokenCallback) {
+        this.tokenCallback()
+      }
     }
 
-    
+
+
 
     // if (option.query.type === 'share') {
     //   initTim('tempuser',genTestUserSig('tempuser'))
@@ -74,7 +76,7 @@ App<RSSDesign.RSSAppOptions>({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       },
     })
-    
+
     wx.checkSession({
       success: res => {
         console.log(res)

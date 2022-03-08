@@ -6,6 +6,7 @@ import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
 import { $on, $remove } from '../../utils/event'
 import { getIdFromString } from '../../utils/util.js'
+import { shareVideo } from '../../libs/share.js'
 
 let trtcClient: TRTC
 Page({
@@ -124,6 +125,17 @@ Page({
     //   name: "onMessageEvent",
     //   tg: this,
     // })
+  },
+
+  onShareAppMessage(option) {
+    const { from } = option
+    if (from === 'button') {
+      return shareVideo('衡浅筠', 'sessionCode', '/pages/share/share?type=video')
+      return {
+        title: '',
+        path: '/pages/share/share?type=video',
+      }
+    }
   },
 
   startVideo(option: WechatMiniprogram.TouchEvent) {

@@ -1,0 +1,6 @@
+<!--pages/share/share.wxml-->
+<view class="" hover-class="none" hover-stop-propagation="false">
+  <block wx:if="{{isVideo}}">
+    <video-share from="{{videoParams.userName}}" sessionCode="{{videoParams.sessionCode}}"></video-share>
+  </block>
+</view>

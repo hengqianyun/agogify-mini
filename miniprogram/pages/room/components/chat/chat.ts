@@ -105,7 +105,7 @@ Component({
     async ready() {
       const userID = this.properties.userId
       const { userSig, sdkAppID } = genTestUserSig(userID)
-
+// return
 
       tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
       this.initRecording()

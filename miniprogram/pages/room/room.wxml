@@ -10,6 +10,7 @@
       </live-player>
     </view>
     <waiting wx:if="{{isWaiting}}"></waiting>
+    <!-- <chat isReserve="{{isReserve}}" isReconnect="{{isReconnect}}" storeName="{{store.name}}" isWaiting="{{isWaiting}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" userId="{{userId}}" groupId="{{groupId}}" saleId="{{saleId}}" bind:startVideo="startVideo" bind:busy="handleShowBusyDialog"></chat> -->
     <chat wx:if="{{!showDialog && showChat}}" isReserve="{{isReserve}}" isReconnect="{{isReconnect}}" storeName="{{store.name}}" isWaiting="{{isWaiting}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" userId="{{userId}}" groupId="{{groupId}}" saleId="{{saleId}}" bind:startVideo="startVideo" bind:busy="handleShowBusyDialog"></chat>
   </view>
   <RssDialog wx:if="{{showDialog}}" title="请注意" commitText="同意并继续" cancelText="不同意" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
