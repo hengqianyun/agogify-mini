@@ -24,6 +24,8 @@ Component({
         try {
           const userInfo = wx.getStorageSync('oauth.data')
           const userId = userInfo.customer
+          /// TODO check wether user can join
+          this.checkSession()
           this.setData({
             btnLabel: '加入直播'
           })
@@ -48,6 +50,18 @@ Component({
       } else {
 
       }
+    },
+    /**
+     * 查询房间是否已满
+     */
+    async checkSession() {
+
+    },
+    /**
+     * 用户加入session
+     */
+    async joinSession() {
+
     }
   }
 })

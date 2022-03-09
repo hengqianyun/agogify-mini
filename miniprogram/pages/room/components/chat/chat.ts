@@ -105,7 +105,7 @@ Component({
     async ready() {
       const userID = this.properties.userId
       const { userSig, sdkAppID } = genTestUserSig(userID)
-// return
+      // return
 
       tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
       this.initRecording()
@@ -172,12 +172,7 @@ Component({
               case CustomMessageTypes.NOW_BUSY:
                 this.triggerEvent('busy')
                 break
-              // case CustomMessageTypes.READY_ENTER_ROOM:
-              //   console.log('i am ready')
-              //   sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-              //   break
               case CustomMessageTypes.TIMELEFT_CHECK:
-                // sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId)
                 if (!this.data.hasGetTime) {
 
                   this.formatTimeleft(payloadData.timeleft)

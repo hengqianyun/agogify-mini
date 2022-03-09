@@ -23,7 +23,7 @@ Page({
     playerList: [] as PlayerListItem[],
     // store
     store: { name: '', avatar: '', id: '' },
-    isWaiting: false,
+    isWaiting: false, // false
     showDialog: true,
     isReconnect: false,
     isReserve: false,
@@ -129,12 +129,9 @@ Page({
 
   onShareAppMessage(option) {
     const { from } = option
+    const {nickName} = wx.getStorageSync('userInfo')
     if (from === 'button') {
-      return shareVideo('衡浅筠', 'sessionCode', '/pages/share/share?type=video')
-      return {
-        title: '',
-        path: '/pages/share/share?type=video',
-      }
+      return shareVideo(nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share')
     }
   },
 
