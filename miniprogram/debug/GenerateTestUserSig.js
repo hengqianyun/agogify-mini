@@ -7,7 +7,7 @@ import LibGenerateTestUserSig from './lib-generate-test-usersig-es.min.js'
  * 它是腾讯云用于区分客户的唯一标识。
  */
 // const SDKAPPID = 1400572600
-const SDKAPPID = 1400626008
+export const SDKAPPID = 1400626008
 
 
 /**
