@@ -1,54 +1,63 @@
 <view class="ocr-page border-top">
-  <view class="input-box">
-    <view class="input-label">姓名</view>
-    <view class="input-area small-input icon-input {{form.lastName.focus ? 'focus-area' : ''}} {{form.lastName.error ? 'error-area' : ''}}">
-      <input class="input" type="text" value="{{form.lastName.value}}" data-key="lastName" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入姓氏" placeholder-class="placeholder-class" />
-      <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
+  <view class="success-tips flag" hover-class="none" hover-stop-propagation="false">
+    <icon class="" type="success" size="34rpx" color="white"></icon>
+    <text class="flag-text" selectable="false" space="false" decode="false">您已成功上传个人信息，如需重新上传请编辑后再次提交</text>
+  </view>
+  <view class="warning-tips flag" hover-class="none" hover-stop-propagation="false">
+    <icon class="" type="warn" size="34rpx" color="white"></icon>
+    <text class="flag-text" selectable="false" space="false" decode="false">您上传的信息不匹配，请仔细核对后再次提交</text>
+  </view>
+  <view class="ocr-container" hover-class="none" hover-stop-propagation="false">
+    <view class="input-box">
+      <view class="input-label">姓名</view>
+      <view class="input-area small-input icon-input {{form.lastName.focus ? 'focus-area' : ''}} {{form.lastName.error ? 'error-area' : ''}}">
+        <input class="input" type="text" value="{{form.lastName.value}}" data-key="lastName" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入姓氏" placeholder-class="placeholder-class" />
+        <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
       <iconfont wx:else /> -->
-      <text class="error-msg" wx:if="{{form.lastName.error}}">{{form.lastName.errorMsg}}</text>
-    </view>
-    <view class="input-area small-input icon-input {{form.firstName.focus ? 'focus-area' : ''}} {{form.firstName.error ? 'error-area' : ''}}">
-      <input class="input" type="text" value="{{form.firstName.value}}" data-key="firstName" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入名字" placeholder-class="placeholder-class" />
-      <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
+        <text class="error-msg" wx:if="{{form.lastName.error}}">{{form.lastName.errorMsg}}</text>
+      </view>
+      <view class="input-area small-input icon-input {{form.firstName.focus ? 'focus-area' : ''}} {{form.firstName.error ? 'error-area' : ''}}">
+        <input class="input" type="text" value="{{form.firstName.value}}" data-key="firstName" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入名字" placeholder-class="placeholder-class" />
+        <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
       <iconfont wx:else /> -->
-      <text class="error-msg" wx:if="{{form.firstName.error}}">{{form.firstName.errorMsg}}</text>
+        <text class="error-msg" wx:if="{{form.firstName.error}}">{{form.firstName.errorMsg}}</text>
+      </view>
     </view>
-  </view>
-  <view class="input-box">
-    <view class="input-label">身份证号</view>
-    <view class="input-area icon-input {{form.identity.focus ? 'focus-area' : ''}} {{form.identity.error ? 'error-area' : ''}}">
-      <input class="input" type="text" value="{{form.identity.value}}" data-key="identity" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入18位身份证号" placeholder-class="placeholder-class" />
-      <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
+    <view class="input-box">
+      <view class="input-label">身份证号</view>
+      <view class="input-area icon-input {{form.identity.focus ? 'focus-area' : ''}} {{form.identity.error ? 'error-area' : ''}}">
+        <input class="input" type="text" value="{{form.identity.value}}" data-key="identity" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入18位身份证号" placeholder-class="placeholder-class" />
+        <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
       <iconfont wx:else /> -->
-      <text class="error-msg" wx:if="{{form.identity.error}}">{{form.identity.errorMsg}}</text>
+        <text class="error-msg" wx:if="{{form.identity.error}}">{{form.identity.errorMsg}}</text>
+      </view>
     </view>
-  </view>
-  <view class="step">
-    <view class="step-icon">1</view>
-    <view class="step-text">上传身份证正面照片</view>
-  </view>
-  <view class="image-choose-1">
-    <image wx:if="{{!identityBase64}}" class="image" bindtap="chooseImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
-    <!-- <image wx:else class="image" bindtap="chooseImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image> -->
-    <image wx:else class="image" bindtap="chooseImage" src="{{identityPath}}" lazy-load="false" binderror="" bindload=""></image>
-  </view>
-  <!-- <view class="tips">上传身份证照片后，身份证号、姓名，自动识别</view>
+    <view class="step">
+      <view class="step-icon">1</view>
+      <view class="step-text">上传身份证正面照片</view>
+    </view>
+    <view class="image-choose-1">
+      <image wx:if="{{!identityBase64}}" class="image" bindtap="chooseImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
+      <!-- <image wx:else class="image" bindtap="chooseImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image> -->
+      <image wx:else class="image" bindtap="chooseImage" src="{{identityPath}}" lazy-load="false" binderror="" bindload=""></image>
+    </view>
+    <!-- <view class="tips">上传身份证照片后，身份证号、姓名，自动识别</view>
   <view class="user-input">
     <input type="text" disabled="{{true}}" value="{{userName}}" class="input" placeholder="姓名" placeholder-class="placeholder-class" />
   </view>
   <view class="user-input">
     <input type="text" disabled="{{true}}" value="{{userNumber}}" class="input" placeholder="身份证号" placeholder-class="placeholder-class" />
   </view> -->
-  <view class="step">
-    <view class="step-icon">2</view>
-    <view class="step-text">上传身份证反面照片</view>
-  </view>
-  <view class="image-choose-1">
-    <image wx:if="{{!passportBase64}}" class="image" bindtap="chooseBackImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
-    <!-- <image wx:else class="image" bindtap="chooseBackImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image> -->
-    <image wx:else class="image" bindtap="chooseBackImage" src="{{passportPath}}" lazy-load="false" binderror="" bindload=""></image>
-  </view>
-  <!-- <view class="step">
+    <view class="step">
+      <view class="step-icon">2</view>
+      <view class="step-text">上传身份证反面照片</view>
+    </view>
+    <view class="image-choose-1">
+      <image wx:if="{{!passportBase64}}" class="image" bindtap="chooseBackImage" src="../../assets/image/chooseImage.png" lazy-load="false" binderror="" bindload=""></image>
+      <!-- <image wx:else class="image" bindtap="chooseBackImage" src="data:image/png;base64,{{identityBase64}}" lazy-load="false" binderror="" bindload=""></image> -->
+      <image wx:else class="image" bindtap="chooseBackImage" src="{{passportPath}}" lazy-load="false" binderror="" bindload=""></image>
+    </view>
+    <!-- <view class="step">
     <view class="step-icon">3</view>
     <view class="step-text">人像认证</view>
   </view>
@@ -61,9 +70,10 @@
       <image class="image" bind:tap="handleChooseImage" src="../../assets/image/chooseImage-3.png" lazy-load="false" binderror="" bindload=""></image>
     </view>
   </view> -->
-  <view class="tips">1. 与您沟通的专柜在寄送货品给您时，需要您的身份证信息进行报关申请。</view>
-  <view class="tips">2. 上传的身份证信息必须清晰可读，并且与您个人信息中的姓名一致，否则会导致清关延误或扣留。</view>
-  <view class="btn">
-    <rss-button label="提交" bind:onTap="handleCommit" disabled="{{commitBtnDisabled}}" className="fill-btn" width="{{544}}" height="{{88}}" fontSize="{{34}}"></rss-button>
+    <view class="tips">1. 与您沟通的专柜在寄送货品给您时，需要您的身份证信息进行报关申请。</view>
+    <view class="tips">2. 上传的身份证信息必须清晰可读，并且与您个人信息中的姓名一致，否则会导致清关延误或扣留。</view>
+    <view class="btn">
+      <rss-button label="提交" bind:onTap="handleCommit" disabled="{{commitBtnDisabled}}" className="fill-btn" width="{{544}}" height="{{88}}" fontSize="{{34}}"></rss-button>
+    </view>
   </view>
 </view>

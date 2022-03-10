@@ -1,8 +1,31 @@
 @import url(../../style/global.less);
 
 .ocr-page {
-  padding: 0 48rpx;
   padding-bottom: 236rpx;
+
+  .flag {
+    
+    display: flex;
+    // justify-content: center;
+    padding-left: 48rpx;
+
+    &-text {
+      font-size: 23rpx;
+      color: white;
+    }
+  }
+
+  .success-tips {
+    background: #69E192;
+  }
+
+  .warning-tips {
+    background-color: #FFBC68;
+  }
+  
+  .ocr-container {
+    padding: 0 48rpx;
+  }
 
   .input-box {
     display: flex;
