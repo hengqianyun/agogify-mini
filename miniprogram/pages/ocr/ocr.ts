@@ -128,13 +128,27 @@ Page({
       sourceType: ['album', 'camera'],
       async success(res) {
         let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
+        
+        var size = res.tempFiles[0].size
+        const maxSize = 5 * 1024 * 1024
+        if (size > maxSize) {
+          const quality = Math.floor(maxSize / size)
+          wx.compressImage({
+            src: tempPath,
+            quality,
+            async success(res) {
+              tempPath = res.tempFilePath
+            } 
+          })
+        } 
         var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
+          console.log(base64)
+          that.setData({
+            identityBase64: base64,
+            identityPath: tempPath,
+          })
+        
         // wx.getFileInfo()
-        console.log(base64)
-        that.setData({
-          identityBase64: base64,
-          identityPath: tempPath,
-        })
         return
         try {
           wx.showLoading({title: '上传识别中'})
