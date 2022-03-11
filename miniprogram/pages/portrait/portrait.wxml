@@ -20,32 +20,17 @@
         <input class="input" type="text" value="{{userName}}" bindinput="handleInput"></input>
       </view>
     </view>
-    <view class="form-item language">
+    <!-- <view class="form-item language">
       <view class="form-label" hover-class="none" hover-stop-propagation="false">语言</view>
       <view class="language-area" hover-class="none" hover-stop-propagation="false">
         <block wx:for="{{languages}}" wx:key="{{item.value}}">
           <view class="checkbox-item" hover-class="none" hover-stop-propagation="false" data-index="{{index}}" bind:tap="handleLanguageChange">
             <text class="" selectable="false" space="false" decode="false">{{item.label}}</text>
-            <!-- <view class="check-box" hover-class="none" hover-stop-propagation="false">
-              
-            </view> -->
             <checkbox class="" value="{{item.value}}" checked="{{item.checked}}" color=""></checkbox>
           </view>
         </block>
-        <!-- <view class="checkbox-item" hover-class="none" hover-stop-propagation="false">
-            <text class="" selectable="false" space="false" decode="false">仅接受使用中文沟通的专柜</text>
-            <checkbox class="" value="1" disabled="false" checked="true" color=""></checkbox>
-          </view>
-          <view class="checkbox-item" hover-class="none" hover-stop-propagation="false">
-            <text class="" selectable="false" space="false" decode="false">接受中英文翻译</text>
-            <checkbox class="" value="2" disabled="false" checked="" color=""></checkbox>
-          </view>
-          <view class="checkbox-item" hover-class="none" hover-stop-propagation="false">
-            <text class="" selectable="false" space="false" decode="false">中英文沟通均无障碍</text>
-            <checkbox class="" value="3" disabled="false" checked="" color=""></checkbox>
-          </view> -->
       </view>
-    </view>
+    </view> -->
   </view>
   <view class="btn-area" hover-class="none" hover-stop-propagation="false">
     <rss-button className="fill-btn" label="保存" width="{{654}}" height="{{88}}" borderRadius="{{8}}" bind:onTap="handleSave"></rss-button>
