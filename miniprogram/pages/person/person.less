@@ -34,9 +34,21 @@
     width: 100%;
     // margin-top: calc(40px + 48rpx);
     display: flex;
+    justify-content: space-between;
     align-items: center;
     height: 108rpx;
     box-sizing: border-box;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-controller {
+      width: 168rpx;
+      color: @defaultColor2;
+      font-size: 28rpx;
+    }
 
     .avatar-box {
       width: 108rpx;
@@ -54,6 +66,7 @@
       color: @defaultColor;
       font-size: 32rpx;
       letter-spacing: 2px;
+      max-width: 330rpx;
     }
   }
 

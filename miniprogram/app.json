@@ -25,7 +25,8 @@
     "pages/privacy/privacy",
     "pages/salesChoose/salesChoose",
     "pages/languageSetting/languageSetting",
-    "pages/share/share"
+    "pages/share/share",
+    "pages/portrait/portrait"
   ],
   "window": {
     "backgroundTextStyle": "light",

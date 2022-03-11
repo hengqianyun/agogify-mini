@@ -1,0 +1,114 @@
+/* pages/portrait/portrait.wxss */
+@import url(../../style/global.less);
+
+.portrait-page {
+  .avatar-area {
+    padding: 80rpx 160rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    .avatar-container {
+      position: relative;
+
+      .avatar {
+        width: 200rpx;
+        height: 200rpx;
+        border-radius: 50%;
+      }
+
+      .icons {
+        position: absolute;
+        right: -14rpx;
+        bottom: 0;
+        height: 76rpx;
+        width: 76rpx;
+        border-radius: 50%;
+        background-color: @defaultColor;
+      }
+    }
+
+    .text-tips {
+      color: #9A9A9A;
+      font-size: 24rpx;
+      text-align: center;
+    }
+  }
+
+  .form {
+    
+
+    .form-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .nickname {
+      margin-bottom: 90rpx;
+    }
+  }
+
+  .form-area {
+    padding: 0 48rpx;
+    color: @defaultColor;
+
+    .form-label {
+      font-size: 36rpx;
+    }
+
+    .input {
+      width: 534rpx;
+      height: 68rpx;
+      border: 2rpx solid #c5c5c5;
+      border-radius: 8rpx;
+      padding: 0 32rpx;
+      box-sizing: border-box;
+      font-size: 28rpx;
+      line-height: 40rpx;
+    }
+
+    .checkbox-item {
+      width: 534rpx;
+      display: flex;
+      justify-content: space-between;
+      height: 72rpx;
+      line-height: 72rpx;
+
+      .check-box {
+        width: 36rpx;
+        height: 36rpx;
+      }
+
+      .wx-checkbox-input {
+        height: 36rpx;
+        width: 36rpx;
+      }
+
+      .wx-checkbox-input.wx-checkbox-input-checked {
+        background: @defaultColor;
+      }
+
+      .wx-checkbox-input.wx-checkbox-input-checked::before {
+        width: 18rpx;
+        height: 18rpx;
+        line-height: 18rpx;
+        text-align: center;
+        font-size: 18rpx;
+        color: #fff;
+        background: transparent;
+        transform: translate(-50%, -50%) scale(1);
+        -webkit-transform: translate(-50%, -50%) scale(1);
+      }
+    }
+  }
+
+  .btn-area {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    width: 100vw;
+    bottom: 152rpx;
+  }
+}

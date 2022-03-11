@@ -1,11 +1,16 @@
 <!-- <view class="person-page" style="padding-top: {{height}}px"> -->
 <view class="person-page">
   <view class="user-container">
-    <view class="avatar-box">
-      <image class="avatar" src="{{avatar || '../../assets/image/userAvator.png'}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+    <view class="user-info" hover-class="none" hover-stop-propagation="false">
+      <view class="avatar-box">
+        <image class="avatar" src="{{avatar || '../../assets/image/userAvator.png'}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+      </view>
+      <view class="user-simple-info" data-url="loginPage/loginPage" bind:tap="navigateTo">
+        {{userName || '账号登录'}}
+      </view>
     </view>
-    <view class="user-simple-info" data-url="loginPage/loginPage" bind:tap="navigateTo">
-      {{userName || '账号登录'}}
+    <view wx:if="{{!!userName && !!avatar}}" class="user-controller" data-url="portrait/portrait" bind:tap="navigateTo" hover-class="none" hover-stop-propagation="false">
+      个人肖像   >
     </view>
   </view>
   <view class="btn-container" hover-class="none" hover-stop-propagation="false">
