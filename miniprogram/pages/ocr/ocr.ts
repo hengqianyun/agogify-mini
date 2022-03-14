@@ -25,10 +25,14 @@ Page({
     identityBase64: '' as string | ArrayBuffer,
     identityPath: '',
     commitBtnDisabled: false,
+    hasRealNameCertified: false,
     form: {
-      firstName: { focus: false, error: false, value: '', errorMsg: '请输入正确的姓氏' },
-      lastName: { focus: false, error: false, value: '', errorMsg: '请输入正确的名字' },
-      identity: { focus: false, error: false, value: '', errorMsg: '请输入正确的身份证号' },
+      firstName: { focus: false, error: false, value: '磊', errorMsg: '请输入正确的姓氏' },
+      lastName: { focus: false, error: false, value: '衡', errorMsg: '请输入正确的名字' },
+      identity: { focus: false, error: false, value: '510922199606248173', errorMsg: '请输入正确的身份证号' },
+      // firstName: { focus: false, error: false, value: '浩', errorMsg: '请输入正确的姓氏' },
+      // lastName: { focus: false, error: false, value: '徐', errorMsg: '请输入正确的名字' },
+      // identity: { focus: false, error: false, value: '330922199803070032', errorMsg: '请输入正确的身份证号' },
     },
   },
 
@@ -83,15 +87,16 @@ Page({
 
   },
 
-   async queryUserInfo() {
+  async queryUserInfo() {
     const oauthData = wx.getStorageSync('oauth.data')
     try {
       const res = await loginModule.getUserInfo(getIdFromString(oauthData.customer))
-      const {identityNumber, firstName, lastName} = res.data
+      const { identityNumber, firstName, lastName } = res.data
       this.setData({
         'form.firstName.value': firstName,
         'form.identity.value': identityNumber,
         'form.lastName.value': lastName,
+        hasRealNameCertified: true
       })
     } catch {
       wx.showToast({
@@ -128,7 +133,6 @@ Page({
       sourceType: ['album', 'camera'],
       async success(res) {
         let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
-        
         var size = res.tempFiles[0].size
         const maxSize = 5 * 1024 * 1024
         if (size > maxSize) {
@@ -138,28 +142,28 @@ Page({
             quality,
             async success(res) {
               tempPath = res.tempFilePath
-            } 
+            }
           })
-        } 
+        }
         var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
-          console.log(base64)
-          that.setData({
-            identityBase64: base64,
-            identityPath: tempPath,
-          })
-        
+        console.log(base64)
+        that.setData({
+          identityBase64: base64,
+          identityPath: tempPath,
+        })
+
         // wx.getFileInfo()
         return
         try {
-          wx.showLoading({title: '上传识别中'})
+          wx.showLoading({ title: '上传识别中' })
           await that.uploadImage(that.data.identityPath, 'identity-front')
           const ocrRes = await userModule.getOcrInfo()
-          const {IdNum, Name} = ocrRes.data["identity-front"]
+          const { IdNum, Name } = ocrRes.data["identity-front"]
           that.setData({
             userName: Name,
             userNumber: IdNum
           })
-        } catch(err: any) {
+        } catch (err: any) {
           if (err.data.code == 500) {
             console.log(err)
             wx.showModal({
@@ -177,13 +181,13 @@ Page({
         } finally {
           wx.hideLoading()
         }
-        
+
 
         return
         wx.uploadFile({
           filePath: tempPath,
           name: 'file',
-          header: {authorization: http.defaultConfig.header.authorization},
+          header: { authorization: http.defaultConfig.header.authorization },
           // url: `https://api.weixin.qq.com/cv/ocr/idcard?type=photo&access_token=${wxTokenRes.data.access_token}`,
           url: BASEURL + 'store/id-card-ocr-requests',
           success(res) {
@@ -260,7 +264,7 @@ Page({
         'form.firstName.error': true
       })
       return
-    }  else {
+    } else {
       this.setData({
         'form.firstName.error': false
       })
@@ -270,7 +274,7 @@ Page({
         'form.lastName.error': true
       })
       return
-    }  else {
+    } else {
       this.setData({
         'form.lastName.error': false
       })
@@ -280,7 +284,7 @@ Page({
         'form.identity.error': true
       })
       return
-    }  else {
+    } else {
       this.setData({
         'form.identity.error': false
       })
@@ -304,27 +308,60 @@ Page({
     // wx.showLoading({ title: '正在对比人像...' })
     wx.showLoading({ title: '正在提交...' })
     try {
-      await this.uploadImage(this.data.passportPath, 'identity-back')
       await this.uploadImage(this.data.identityPath, 'identity-front')
+    } catch (err: any) {
+      if (err.statusCode === 500) {
+        wx.showModal({
+          title: "网络错误",
+          showCancel: false,
+          confirmText: "我知道了"
+        })
+        wx.hideLoading()
+        this.setData({
+          commitBtnDisabled: false
+        })
+        return
+      }
+    }
+    try {
+      await this.uploadImage(this.data.passportPath, 'identity-back')
       // await this.uploadImage(this.data.portraitPath, 'portrait')
       await this.putUserInfo()
-    } catch {
-      wx.showModal({
-        title: "网络错误",
-        showCancel: false,
-        confirmText: "我知道了"
-      })
+    } catch (err: any) {
+      console.log('err ---->', err)
+
+      if (!!err && err.statusCode === 400) {
+        const data = JSON.parse(err.data)
+        wx.showModal({
+          title: '识别失败',
+          showCancel: false,
+          confirmText: "我知道了"
+        })
+      } else {
+        wx.showModal({
+          title: "网络错误",
+          showCancel: false,
+          confirmText: "我知道了"
+        })
+      }
       wx.hideLoading()
+      this.setData({
+        commitBtnDisabled: false
+      })
       return
     }
     wx.hideLoading()
+    this.setData({
+      hasRealNameCertified: true
+    })
     wx.showModal({
       title: "提交成功",
       showCancel: false,
       confirmText: "我知道了",
       success() {
         setIfUserHasTheRealNameBeenCertified(true)
-        wx.navigateBack()
+
+        // wx.navigateBack()
       }
     })
     return
@@ -349,7 +386,7 @@ Page({
           showCancel: false,
           confirmText: "我知道了"
         })
-      }else {
+      } else {
         try {
           await this.uploadImage(this.data.passportPath, 'identity-back')
           await this.uploadImage(this.data.identityPath, 'identity-front')
@@ -398,15 +435,16 @@ Page({
     const token: string = wx.getStorageSync('oauth.data').token
     return new Promise((resove, rej) => {
       wx.uploadFile({
+        timeout: 600000,
         filePath: path,
         name: 'file',
         url: BASEURL + 'store/customer-images',
-        header: {Authorization: 'Bearer ' + token},
+        header: { Authorization: 'Bearer ' + token },
         formData: {
           type: type,
         },
         success(res) {
-          if (res.statusCode === 500) {
+          if (res.statusCode === 500 || res.statusCode === 400) {
             rej(res)
           }
           console.log('success')
@@ -422,7 +460,7 @@ Page({
   },
 
   async putUserInfo() {
-    const {firstName, lastName, identity} = this.data.form
+    const { firstName, lastName, identity } = this.data.form
     try {
       await userModule.putCustomerInfo({
         lastName: lastName.value,
@@ -433,8 +471,8 @@ Page({
         // identityNumber: this.data.userNumber.toString(),
         identityNumber: identity.value,
       }, getIdFromString(wx.getStorageSync('oauth.data').customer))
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
-  } 
+  }
 })

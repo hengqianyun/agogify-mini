@@ -2,9 +2,45 @@ import loginModule from "../../http/module/login";
 import http from "../../libs/http";
 import { getIdFromString } from "../../utils/util";
 
+interface IUser {
+  id: number
+  pathId: string
+  avatar: string
+  nickname: string
+  defaultAddressId: number
+  login: () => void
+  logout: () => void
+}
+
 type LoginType = 'wxLogin' | 'mobileLogin'
 
 type OauthProviderPathsKey = 'wechat_mini_program' | 'mobile'
+
+// class User implements IUser {
+//   _id: number
+//   _pathId: string
+//   _wxAvatar: string
+//   _serviceAvatar?: string
+//   _wxNickName: string
+//   _serviceNickName?: string
+//   _defaultAddressId: number;
+
+//   get id() {
+//     return this._id
+//   }
+
+//   get pathId() {
+//     return this._pathId
+//   }
+
+//   get avatar() {
+//     return this._serviceAvatar ?? this._wxAvatar
+//   }
+
+//   get nickname() {
+//     return this._serviceNickName ?? this._wxNickName
+//   }
+// }
 
 const LoginKey = {
   oauthDataKey: 'oauth.data',
@@ -24,7 +60,13 @@ const userProfile = {
   hasTheRealNameBeenCertified: false,
 }
 
+const userData = {
+  id: null as unknown as number,
+  pathId: '',
+}
+
 Object.seal(userProfile)
+Object.seal(userData)
 
 // const 
 
@@ -40,14 +82,19 @@ const login = async ({
 }) => {
   wx.login({
     async success(res) {
-      return await loginModule[LoginKey.oauthProviderPaths[provider]]({
+      const loginRes = await loginModule[LoginKey.oauthProviderPaths[provider]]({
         code: res.code,
         mobile_number: mobileNumber,
         is_mobile_number_required: isMobileNumberRequired,
         verification_code: verificationCode,
         verification_type: 'login',
       })
+      setOautoData(loginRes.data)
+      http.setToken(loginRes.data.token)
+      queryUserInfo(loginRes.data.customer);
+      return loginRes
     }
+
   })
 }
 
@@ -83,10 +130,13 @@ export const queryUserInfo = async (strId: string) => {
   const id = getIdFromString(strId)
   try {
     const res = await loginModule.getUserInfo(id)
-    const {identityNumber} = res.data
-    if (!!identityNumber && (identityNumber.length === 18 || identityNumber.length === 15)) {
+    const {user} = res.data
+    if (user.verifiedAt !== null) {
       setIfUserHasTheRealNameBeenCertified(true)
     }
+    // if (!!identityNumber && (identityNumber.length === 18 || identityNumber.length === 15)) {
+    //   setIfUserHasTheRealNameBeenCertified(true)
+    // }
   } catch (err) {
 
   }

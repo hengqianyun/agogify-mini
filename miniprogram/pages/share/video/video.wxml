@@ -9,7 +9,7 @@
           加入直播后可以协助好友挑选商品
         </view>
       </view>
-      <view class="btn-area" hover-class="none" hover-stop-propagation="false">
+      <view wx:if="{{showBtn}}" class="btn-area" hover-class="none" hover-stop-propagation="false">
         <rss-btn label="{{btnLabel}}" disabled="{{btnDisabled}}" width="{{654}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleTap"></rss-btn>
       </view>
   </view>

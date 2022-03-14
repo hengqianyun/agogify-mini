@@ -73,10 +73,12 @@ export const queryUserInfo = async (strId: string) => {
   const id = getIdFromString(strId)
   try {
     const res = await loginModule.getUserInfo(id)
-    const {identityNumber} = res.data
-    if (!!identityNumber && (identityNumber.length === 18 || identityNumber.length === 15)) {
+    const {user} = res.data
+
+    if (user.verifiedAt !== null) {
       setIfUserHasTheRealNameBeenCertified(true)
     }
+
   } catch (err) {
 
   }

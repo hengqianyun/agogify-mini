@@ -1,9 +1,9 @@
 <view class="ocr-page border-top">
-  <view class="success-tips flag" hover-class="none" hover-stop-propagation="false">
+  <view wx:if="{{hasRealNameCertified}}" class="success-tips flag" hover-class="none" hover-stop-propagation="false">
     <icon class="" type="success" size="34rpx" color="white"></icon>
     <text class="flag-text" selectable="false" space="false" decode="false">您已成功上传个人信息，如需重新上传请编辑后再次提交</text>
   </view>
-  <view class="warning-tips flag" hover-class="none" hover-stop-propagation="false">
+  <view wx:else class="warning-tips flag" hover-class="none" hover-stop-propagation="false">
     <icon class="" type="warn" size="34rpx" color="white"></icon>
     <text class="flag-text" selectable="false" space="false" decode="false">您上传的信息不匹配，请仔细核对后再次提交</text>
   </view>

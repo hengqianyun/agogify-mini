@@ -1,5 +1,7 @@
 // pages/share/video/video.ts
 
+import sessionModule from "../../../http/module/session"
+
 const app = getApp()
 Component({
   /**
@@ -14,20 +16,24 @@ Component({
    * 组件的初始数据
    */
   data: {
-    btnLabel: ''
+    btnLabel: '',
+    showBtn: true,
   },
 
   lifetimes: {
-    attached() {
-      wx.showLoading({title: '加载中'})
+    async attached() {
+      wx.showLoading({ title: '加载中' })
       app.tokenCallback = async () => {
         try {
-          const userInfo = wx.getStorageSync('oauth.data')
-          const userId = userInfo.customer
+          // const userInfo = wx.getStorageSync('oauth.data')
+          // const userId = userInfo.customer
           /// TODO check wether user can join
-          this.checkSession()
+          
+          await this.checkSession() ?
           this.setData({
             btnLabel: '加入直播'
+          }) : this.setData({
+            showBtn: false
           })
         } catch {
           this.setData({
@@ -55,13 +61,24 @@ Component({
      * 查询房间是否已满
      */
     async checkSession() {
-
+      try {
+        return !!(await sessionModule.checkGuestAvailability(this.data.sessionCode))
+      } catch {
+        return false
+      }
     },
     /**
      * 用户加入session
      */
     async joinSession() {
+      try {
+        await sessionModule.gusetCheckIn(this.data.sessionCode)
+        wx.navigateTo({
+          url: '../../room/room?type=4'
+        })
+      } catch {
 
+      }
     }
   }
 })

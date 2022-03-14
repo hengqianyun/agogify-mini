@@ -158,11 +158,11 @@ declare namespace orderDesign {
   interface unionPayParams {
     orderId: string
     user: 'info@yabandmedia.com'
-    amount: string
-    currency: payment.Currency
+    amount?: string
+    currency?: payment.Currency
     description: string
     demo: 'test'
-    timeout: '0'
+    timeout?: '0'
   }
 
   interface queryOrderListParams extends swaggerI.pageRequestParams {

@@ -1011,11 +1011,11 @@ Component({
         const res = await orderModule.unionPayPayment({
           orderId: this.data.tokenValue,
           user: "info@yabandmedia.com",
-          amount: (this.data.orderInfo.items[0].total / 100).toString(),
-          currency: "EUR",
+          // amount: (this.data.orderInfo.items[0].total / 100).toString(),
+          // currency: "EUR",
           description: "YabandPay / UnionPay / test",
           demo: "test",
-          timeout: "0"
+          // timeout: "0"
 
         })
         return res.data.url

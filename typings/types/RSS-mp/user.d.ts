@@ -32,6 +32,9 @@ declare namespace userDesign {
     firstName: string
     lastName: string
     defaultAddress: {id: number}
+    user: {
+      verifiedAt?: string
+    }
   }
 
   interface putUserInfoParams {
