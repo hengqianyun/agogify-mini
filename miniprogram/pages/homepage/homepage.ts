@@ -2,10 +2,8 @@
 
 // import Store from "wxministore"
 
-import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
 import { checkSessionAsync, clearSessionAsync, querySessionAsync } from "../../utils/querySession"
-import { getIdFromString } from "../../utils/util"
 import { BANNERS } from '../../serviceStaticResource/index'
 
 // 获取应用实例

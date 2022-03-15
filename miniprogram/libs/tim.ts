@@ -193,7 +193,7 @@ async function onReadyStateUpdate({ name }: TIMEvent) {
   }
 }
 
-function kickOut(event: TIMEvent) {
+function kickOut(_: TIMEvent) {
   // store.dispatch('resetStore')
   wx.showToast({
     title: '你已被踢下线',
@@ -224,7 +224,7 @@ function messageReceived(event: TIMEvent) {
   })
 }
 
-function groupListUpdate(event: TIMEvent) {
+function groupListUpdate(_: TIMEvent) {
   // store.commit('updateGroupList', event.data)
 }
 
@@ -279,7 +279,7 @@ function clearHistort(historyList: TIMHistory) {
 const joinStoreGroup = async () => {
   try {
     // 加入店铺Meeting 群
-    const res = await _tim.joinGroup({ groupID: _StoreMeetingGroupId, type: 'ChatRoom' })
+    await _tim.joinGroup({ groupID: _StoreMeetingGroupId, type: 'ChatRoom' })
   } catch {
     // 加入异常处理
     console.log('加入群聊失败')

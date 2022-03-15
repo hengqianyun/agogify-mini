@@ -1,12 +1,12 @@
 // pages/room/components/chat/chat.ts
 import { $on, $remove } from '../../../../utils/event'
-import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
+import { initTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
 import genTestUserSig from '../../../../debug/GenerateTestUserSig'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
 import { HmacSHA256, enc } from 'crypto-js'
-import { getIdFromString, sortByCharCode } from '../../../../utils/util'
+import { sortByCharCode } from '../../../../utils/util'
 import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
@@ -999,7 +999,7 @@ Component({
     async _handleSaveQrcode() {
       wx.saveImageToPhotosAlbum({
         filePath: this.data.qrcode,
-        success(res) {
+        success(_) {
           console.log('saved');
         }
       })
@@ -1090,15 +1090,15 @@ Component({
       }
     },
     async putAddress(tokenValue: string, address: addressDesign.address) {
-      const { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
-      const res = await orderModule.putAddress(tokenValue, { shippingAddress: { firstName, lastName, countryCode: "CN", provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
+      const { firstName, lastName, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
+      await orderModule.putAddress(tokenValue, { shippingAddress: { firstName, lastName, countryCode: "CN", provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
       // TODO 设置用户地址
     },
     async putShipment(tokenValue: string, shipmentId: string) {
-      const res = await orderModule.putShipment(tokenValue, shipmentId, { shippingMethodCode: 'dhl' })
+      await orderModule.putShipment(tokenValue, shipmentId, { shippingMethodCode: 'dhl' })
     },
     async putPayment(tokenValue: string, paymentId: string) {
-      const res = await orderModule.putPayment(tokenValue, paymentId, { paymentMethodCode: 'wechat_offline' })
+      await orderModule.putPayment(tokenValue, paymentId, { paymentMethodCode: 'wechat_offline' })
     },
     async payment() {
       // hash.hmac(hash.sha256(), '111').update('000')

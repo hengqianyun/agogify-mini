@@ -1,7 +1,7 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
 import { userProfile } from "../../libs/user/user"
-import { getIdFromString, getStringCode, timeFormat } from "../../utils/util"
+import { getStringCode, timeFormat } from "../../utils/util"
 
 type reserveTagType = '待进行' | '已结束'
 

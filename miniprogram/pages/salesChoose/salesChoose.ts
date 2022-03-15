@@ -1,9 +1,7 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
-import loginModule from "../../http/module/login"
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
 import { userProfile } from "../../libs/user/user"
-import { getIdFromString } from "../../utils/util"
 
 // pages/salesChoose/salesChoose.ts
 Page({
@@ -122,7 +120,6 @@ Page({
     
 
     // 
-    const saleId = getIdFromString(id)
     const currentStore = this.data.stores[this.data.currentStoreIndex]
     // this.setData({
     //   [key]: 'online'

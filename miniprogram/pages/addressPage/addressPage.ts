@@ -1,7 +1,5 @@
 import addressModule from "../../http/module/address"
-import loginModule from "../../http/module/login"
 import { userProfile } from "../../libs/user/user"
-import { getIdFromString } from "../../utils/util"
 
 // pages/addressPage/addressPage.ts
 Page({
@@ -29,7 +27,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   async onReady() {
-    const flag = await this.queryDefaulAddress()
+    // const flag = await this.queryDefaulAddress()
   },
 
   /**

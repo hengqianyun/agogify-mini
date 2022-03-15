@@ -5,7 +5,6 @@ import { $emit } from '../../utils/event.js'
 import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
 import { $on, $remove } from '../../utils/event'
-import { getIdFromString } from '../../utils/util.js'
 import { shareVideo } from '../../libs/share.js'
 import { userProfile } from '../../libs/user/user.js'
 

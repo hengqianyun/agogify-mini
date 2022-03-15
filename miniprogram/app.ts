@@ -8,7 +8,7 @@ const judgeProgram = () => {
   if (weid !== 'wx785fd7d9a9dd6412') {
     wx.showModal({
       title: '当前小程序行为异常，请搜索"Agogify爱购季"进入正版小程序',
-      success(res) {
+      success(_) {
         wx.exitMiniProgram({
           fail() {
             judgeProgram()

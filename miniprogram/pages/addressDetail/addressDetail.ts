@@ -1,8 +1,5 @@
 import addressModule from "../../http/module/address";
-import loginModule from "../../http/module/login";
-import userModule from "../../http/module/user";
 import { userProfile } from "../../libs/user/user";
-import { getFirstNameAndLastName, getIdFromString } from "../../utils/util";
 
 const chooseLocation = requirePlugin('chooseLocation');
 

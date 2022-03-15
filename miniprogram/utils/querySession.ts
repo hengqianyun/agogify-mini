@@ -1,6 +1,5 @@
 import sessionModule from "../http/module/session"
 import { userProfile } from "../libs/user/user"
-import { getIdFromString } from "./util"
 
 export const querySessionAsync = async () => {
   try {
