@@ -1,7 +1,3 @@
-
-
-// import Store from "wxministore"
-
 import storeModule from "../../http/module/store"
 import { checkSessionAsync, clearSessionAsync, querySessionAsync } from "../../utils/querySession"
 import { BANNERS } from '../../serviceStaticResource/index'

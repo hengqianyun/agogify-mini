@@ -3,7 +3,6 @@ import TIMUploadPlugin from 'tim-upload-plugin';
 import { $emit } from '../utils/event';
 import sessionModule from '../http/module/session.js';
 import { userProfile } from './user/user.js';
-// import store from '../store';
 
 let _tim: TIMSKD
 let _userID = ''

@@ -44,31 +44,6 @@ App<RSSDesign.RSSAppOptions>({
       }
     }
 
-
-
-
-    // if (option.query.type === 'share') {
-    //   initTim('tempuser',genTestUserSig('tempuser'))
-    //   this.globalData.hasLaunched = true
-    // } else {
-    //   initTim('user1', genTestUserSig('user1'))
-    //   const userInfo = await wx.getStorageSync('userInfo')
-    //   if (userInfo) {
-    //     console.log('userinfo success')
-    //   }
-    //   console.log('userInfo ------------------>')
-    //   console.log(userInfo)
-    //   const that = this
-    //   wx.getUserInfo({
-    //     success(res) {
-    //       console.log(res)
-    //       const userInfo = res.userInfo
-    //       initTim(userInfo.nickName, genTestUserSig('userInfo.nickName'))
-    //       that.globalData.hasLaunched = true
-    //     }
-    //   })
-    // }
-
     // 登录
     wx.login({
       success: res => {

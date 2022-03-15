@@ -11,6 +11,7 @@ import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
 import { userProfile } from '../../../../libs/user/user'
+import IMClient from '../../../../libs/tim/tim_core'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -117,6 +118,9 @@ Component({
           wx.navigateBack()
         }, 60000)
       })
+      /**
+       * 绑定事件
+       */
       $on({
         name: "onMessageEvent",
         tg: this,
@@ -450,8 +454,7 @@ Component({
       if (this.data.inputValue.trim() === "") {
         return
       }
-
-      const res = await sendTextMessage(this.properties.groupId, this.data.inputValue)
+      const res = await IMClient.getInstance().sendGroupTextMessage(this.properties.groupId, this.data.inputValue)
       const item = this.encodeMessage(res.data.message)
       if (item && item.status === 'success') {
         this.setData({
@@ -600,7 +603,6 @@ Component({
             }
           })
           console.log(message)
-          // self.$store.commit('sendMessage', message)
           tim.sendMessage(message).then(() => {
             self.data.percent = 0
           }).catch(() => {
