@@ -1,6 +1,6 @@
 <!--pages/share/share.wxml-->
 <view class="" hover-class="none" hover-stop-propagation="false">
   <block wx:if="{{isVideo}}">
-    <video-share from="{{videoParams.userName}}" sessionCode="{{videoParams.sessionCode}}"></video-share>
+    <video-share from="{{videoParams.userName}}" sessionCode="{{videoParams.sessionCode}}" roomId="{{videoParams.roomId}}" salesId="{{videoParams.salesId}}" storeId='{{videoParams.storeId}}'></video-share>
   </block>
 </view>

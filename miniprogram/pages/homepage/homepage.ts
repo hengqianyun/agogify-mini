@@ -4,7 +4,7 @@
 
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
-import { checkSessionAsync, clearSessuibAsync, querySessionAsync } from "../../utils/querySession"
+import { checkSessionAsync, clearSessionAsync, querySessionAsync } from "../../utils/querySession"
 import { getIdFromString } from "../../utils/util"
 import { BANNERS } from '../../serviceStaticResource/index'
 
@@ -30,7 +30,7 @@ Page({
     timer: 0,
   },
   async onLoad() {
-    
+    console.debug('homepage load')
     app.tokenCallback = async () => {
       await querySessionAsync()
       const session = await checkSessionAsync()

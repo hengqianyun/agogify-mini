@@ -1,4 +1,4 @@
-import { getIfUserHasTheRealNameBeenCertified } from "./oauth"
+import { getIfUserHasTheRealNameBeenCertified } from "../libs/user/user"
 
 export const checkloginAndRealNameCertifiedAsync = (): boolean => {
   if (!wx.getStorageSync('oauth.data')) {

@@ -1,8 +1,8 @@
 import TIM from './tim_SDK.js'
 import TIMUploadPlugin from 'tim-upload-plugin';
 import { $emit } from '../utils/event';
-import userInfo from '../store/modules/user';
 import sessionModule from '../http/module/session.js';
+import { userProfile } from './user/user.js';
 // import store from '../store';
 
 let _tim: TIMSKD
@@ -186,13 +186,7 @@ async function onReadyStateUpdate({ name }: TIMEvent) {
     _tim.getMyProfile().then((res) => {
       console.log('用户个人信息', res)
       if (res.data.nick == '') {
-        wx.getStorage({
-          key: 'userInfo',
-          success(userinfo) {
-
-            _tim.updateMyProfile({ nick: userinfo.data.userName, avatar: userinfo.data.avatarUrl })
-          }
-        })
+        _tim.updateMyProfile({ nick: userProfile.nickName, avatar: userProfile.nickName })
       }
     })
 

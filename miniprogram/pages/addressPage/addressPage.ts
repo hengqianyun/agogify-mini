@@ -1,5 +1,6 @@
 import addressModule from "../../http/module/address"
 import loginModule from "../../http/module/login"
+import { userProfile } from "../../libs/user/user"
 import { getIdFromString } from "../../utils/util"
 
 // pages/addressPage/addressPage.ts
@@ -126,17 +127,11 @@ Page({
 
   async queryDefaulAddress() {
     try {
-      const wxUserInfo = wx.getStorageSync('oauth.data')
-
-      const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
-
-      const { defaultAddress } = res.data
-      if (defaultAddress == null) {
+      if (userProfile.defaultAddressId == -1) {
         return false
       } else {
-        const { id } = defaultAddress
         this.setData({
-          defaultAddressId: id
+          defaultAddressId:  userProfile.defaultAddressId
         })
       }
       return true

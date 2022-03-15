@@ -7,6 +7,7 @@ import storeModule from '../../http/module/store.js'
 import { $on, $remove } from '../../utils/event'
 import { getIdFromString } from '../../utils/util.js'
 import { shareVideo } from '../../libs/share.js'
+import { userProfile } from '../../libs/user/user.js'
 
 let trtcClient: TRTC
 Page({
@@ -53,6 +54,8 @@ Page({
         isReconnect: true,
         isReserve: true
       })
+    } else if (type === '3') {
+      const { roomId } = this.options
     }
     this.queryStore(storeId)
     wx.setKeepScreenOn({
@@ -60,20 +63,19 @@ Page({
 
     })
 
-    const user = wx.getStorageSync('oauth.data')
 
     this.setData({
-      userId: user.customer,
+      userId: userProfile.pathId,
       saleId,
       storeId,
       firstIn: false
     })
 
 
-    const { userSig, sdkAppID } = genTestUserSig(user.customer)
+    const { userSig, sdkAppID } = genTestUserSig(userProfile.pathId)
     // tim = initTim(user.customer, { sdkAppID, userSig }, storeId, saleId, this.data.isReserve, this.data.isReconnect)
     trtcClient = new TRTC(this)
-    this.init({ userID: user.customer, userSig, sdkAppID: sdkAppID + '' })
+    this.init({ userID: userProfile.pathId, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
 
     // $on({
@@ -129,9 +131,8 @@ Page({
 
   onShareAppMessage(option) {
     const { from } = option
-    const {nickName} = wx.getStorageSync('userInfo')
     if (from === 'button') {
-      return shareVideo(nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share')
+      return shareVideo(userProfile.nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share', this.data.groupId, {salesId: this.data.saleId, storeId: this.data.storeId})
     }
   },
 

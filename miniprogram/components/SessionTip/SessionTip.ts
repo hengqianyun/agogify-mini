@@ -1,5 +1,5 @@
 import sessionModule from "../../http/module/session"
-import { clearSessuibAsync } from "../../utils/querySession"
+import { clearSessionAsync } from "../../utils/querySession"
 import { getIdFromString } from "../../utils/util"
 
 // components/SessionTip/SessionTip.ts
@@ -58,7 +58,7 @@ Component({
         this.setData({
           showDialog: false
         })
-        clearSessuibAsync()
+        clearSessionAsync()
         this.triggerEvent('handleCancel', true)
       } catch {
         wx.hideLoading()

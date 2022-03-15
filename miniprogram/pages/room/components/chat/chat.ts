@@ -7,9 +7,10 @@ import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
 import { HmacSHA256, enc } from 'crypto-js'
 import { getIdFromString, sortByCharCode } from '../../../../utils/util'
-import { clearSessuibAsync } from '../../../../utils/querySession'
+import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
+import { userProfile } from '../../../../libs/user/user'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -112,7 +113,7 @@ Component({
       this.setData({
         callTimer: setTimeout(async () => {
           await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-          clearSessuibAsync()
+          clearSessionAsync()
           wx.navigateBack()
         }, 60000)
       })
@@ -159,7 +160,7 @@ Component({
                 // this.queryOrderDetail(tokenValue)
                 break
               case CustomMessageTypes.DISPOSE:
-                clearSessuibAsync()
+                clearSessionAsync()
                 wx.navigateBack()
                 break
               case CustomMessageTypes.PAY_CANCELED:
@@ -228,7 +229,7 @@ Component({
           this.joinGroup(this.properties.groupId)
           this.initRecording()
           await this.queryAddressList()
-          const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+          const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + userProfile.id + '&itemsPerPage=1&page=1')
           const session = sessionRes.data
           let unfinishedOrder: sessionDesign.SessionOrder | null = null
           const { orders } = session
@@ -322,7 +323,7 @@ Component({
         tg: this,
         async success() {
           await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-          clearSessuibAsync()
+          clearSessionAsync()
           wx.navigateBack()
         }
       })
@@ -441,7 +442,7 @@ Component({
         // endTime: (new Date()).toISOString(),
         // state: 'ended',
       }, code)
-      clearSessuibAsync()
+      clearSessionAsync()
       wx.navigateBack()
     },
 

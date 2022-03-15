@@ -37,6 +37,10 @@ declare namespace userDesign {
     }
   }
 
+  interface userAvatarRes extends swaggerI.requestSimpleBase {
+    path: string
+  }
+
   interface putUserInfoParams {
     "identityType"?: string,
     "identityNumber"?: string,

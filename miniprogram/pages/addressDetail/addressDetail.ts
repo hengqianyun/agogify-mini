@@ -1,6 +1,7 @@
 import addressModule from "../../http/module/address";
 import loginModule from "../../http/module/login";
 import userModule from "../../http/module/user";
+import { userProfile } from "../../libs/user/user";
 import { getFirstNameAndLastName, getIdFromString } from "../../utils/util";
 
 const chooseLocation = requirePlugin('chooseLocation');
@@ -190,8 +191,6 @@ Page({
     this.setData({
       commitBtnDisabled: true
     })
-    const userInfo = wx.getStorageSync('oauth.data')
-    const { customer } = userInfo
     let cityName = '';
     const cityData = this.data.region[1];
     if (cityData.includes('自治州')) {
@@ -203,7 +202,7 @@ Page({
     try {
       const params = {
         type: 'customer',
-        customer: customer,
+        customer: userProfile.pathId,
         firstName,
         lastName,
         mobileNumber: phone.value,
@@ -240,12 +239,8 @@ Page({
 
   async queryUserName() {
     try {
-      const wxUserInfo = wx.getStorageSync('oauth.data')
-
-      const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
-
-      const { firstName, lastName } = res.data
-       if (!firstName || !lastName) {
+      const { hasTheRealNameBeenCertified, firstName, lastName } = userProfile
+       if (!hasTheRealNameBeenCertified) {
       wx.showModal({
         title: '添加地址前需要完善个人信息',
         confirmText: '立即前往',

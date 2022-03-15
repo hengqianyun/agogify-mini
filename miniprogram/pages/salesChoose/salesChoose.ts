@@ -2,6 +2,7 @@ import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import loginModule from "../../http/module/login"
 import sessionModule from "../../http/module/session"
 import storeModule from "../../http/module/store"
+import { userProfile } from "../../libs/user/user"
 import { getIdFromString } from "../../utils/util"
 
 // pages/salesChoose/salesChoose.ts
@@ -168,14 +169,8 @@ Page({
   },
   async queryDefaulAddress() {
     try {
-      const wxUserInfo = wx.getStorageSync('oauth.data')
-
-      const res = await loginModule.getUserInfo(getIdFromString(wxUserInfo.customer))
-
-      const { defaultAddress } = res.data
-      if (defaultAddress == null) {
+      if (userProfile.defaultAddressId !== -1) {
         return false
-        
       }
       return true
     } catch (err) {
@@ -185,13 +180,7 @@ Page({
   },
   async querySession() {
     try {
-      // const res = await sessionModule.querySession({
-      //   itemsPerPage: 1,
-      //   page: 1,
-      //   "state[]": ['ended', 'paused'],
-      //   'customer.id': getIdFromString(wx.getStorageSync('oauth.data').customer),
-      // })
-      const res = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+      const res = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + userProfile.id + '&itemsPerPage=1&page=1')
       const { "hydra:member": list } = res.data
       if (list.length > 0) {
         this.setData({

@@ -8,6 +8,9 @@ interface ShareParams {
 interface VideoParams extends ShareParams {
   sessionCode: string
   userName: string
+  roomId: string
+  salesId: string
+  storeId: string
 }
 
 Page({
@@ -20,7 +23,10 @@ Page({
     isVideo: false,
     videoParams: {
       sessionCode: '',
-      userName: ''
+      userName: '',
+      roomId: '',
+      salesId: '',
+      storeId: '',
     }
   },
 
@@ -33,11 +39,14 @@ Page({
     let key = ''
     switch (type) {
       case 'video':
-        const {sessionCode, userName} = this.options
+        const {sessionCode, userName, roomId, saleId, storeId} = this.options
         this.setData({
           videoParams: {
             sessionCode: sessionCode!, 
-            userName: userName!
+            userName: userName!,
+            roomId: roomId!,
+            salesId: saleId!,
+            storeId: storeId!
           }
         })
         key = 'isVideo'

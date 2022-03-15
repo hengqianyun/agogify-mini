@@ -2,9 +2,8 @@ import { BASEURL } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
 import userModule from "../../http/module/user"
 import http from "../../libs/http"
-import { getIfUserHasTheRealNameBeenCertified, setIfUserHasTheRealNameBeenCertified } from "../../utils/oauth"
-import { getFirstNameAndLastName, getIdFromString } from "../../utils/util"
-import loginModule from "../../http/module/login"
+import { getIfUserHasTheRealNameBeenCertified, setIfUserHasTheRealNameBeenCertified } from "../../libs/user/user"
+import { userProfile } from "../../libs/user/user"
 
 type inputKeyType = 'firstName' | 'lastName' | 'identity'
 
@@ -88,15 +87,12 @@ Page({
   },
 
   async queryUserInfo() {
-    const oauthData = wx.getStorageSync('oauth.data')
     try {
-      const res = await loginModule.getUserInfo(getIdFromString(oauthData.customer))
-      const { identityNumber, firstName, lastName } = res.data
       this.setData({
-        'form.firstName.value': firstName,
-        'form.identity.value': identityNumber,
-        'form.lastName.value': lastName,
-        hasRealNameCertified: true
+        'form.firstName.value': userProfile.firstName,
+        'form.identity.value': userProfile.identityNumber,
+        'form.lastName.value': userProfile.lastName,
+        hasRealNameCertified: userProfile.hasTheRealNameBeenCertified
       })
     } catch {
       wx.showToast({
@@ -432,14 +428,13 @@ Page({
   },
 
   async uploadImage(path: string, type: string) {
-    const token: string = wx.getStorageSync('oauth.data').token
     return new Promise((resove, rej) => {
       wx.uploadFile({
         timeout: 600000,
         filePath: path,
         name: 'file',
         url: BASEURL + 'store/customer-images',
-        header: { Authorization: 'Bearer ' + token },
+        header: { Authorization: 'Bearer ' + userProfile.token },
         formData: {
           type: type,
         },
@@ -470,7 +465,7 @@ Page({
         identityType: 'identity',
         // identityNumber: this.data.userNumber.toString(),
         identityNumber: identity.value,
-      }, getIdFromString(wx.getStorageSync('oauth.data').customer))
+      }, userProfile.id)
     } catch (err) {
       throw err;
     }

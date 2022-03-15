@@ -1,5 +1,6 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
+import { userProfile } from "../../libs/user/user"
 import { getIdFromString, getStringCode, timeFormat } from "../../utils/util"
 
 type reserveTagType = '待进行' | '已结束'
@@ -94,11 +95,10 @@ Page({
   },
 
   async queryReserveList() {
-    // const strId = wx.getStorageSync('oauth.data').customer
     const res = await reserveModule.queryMyReserveList({
       "startTime[after]": (new Date()).toISOString(),
       "order[startTime]": 'desc',
-      "customer.id": getIdFromString(wx.getStorageSync('oauth.data').customer),
+      "customer.id": userProfile.id,
     })
 
     const { "hydra:member": reserveList } = res.data
@@ -127,7 +127,7 @@ Page({
     const res = await reserveModule.queryMyReserveList({
       "endTime[before]": (new Date()).toISOString(),
       "order[startTime]": 'desc',
-      "customer.id": getIdFromString(wx.getStorageSync('oauth.data').customer),
+      "customer.id": userProfile.id,
     })
     const { "hydra:member": reserveList } = res.data
 

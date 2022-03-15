@@ -1,7 +1,6 @@
 import loginModule from "../../http/module/login"
-import http from "../../libs/http"
+import { login, LoginKey, userProfile } from "../../libs/user/user"
 import { $emit } from '../../utils/event.js'
-import { queryUserInfo, setOautoData } from "../../utils/oauth"
 import { querySessionAsync } from "../../utils/querySession"
 
 // pages/loginPage/loginPage.ts
@@ -116,7 +115,6 @@ Page({
       this.setData({
         userInfo
       })
-      wx.setStorageSync('userInfo', userInfo)
       if (this.data.isRegister) {
         // 是否为第一次注册
         wx.navigateTo({
@@ -124,21 +122,15 @@ Page({
         })
       } else {
         wx.showLoading({ title: 'loading' })
+       
         // 直接登录
-        const { code } = await wx.login()
         try {
-          const loginRes = await loginModule.wxLogin({
-            code,
-            mobile_number: null,
-            verification_code: null,
-            is_mobile_number_required: false,
-            verification_type: 'login'
+          userProfile.avatar = userInfo.avatarUrl
+          userProfile.nickName = userInfo.nickName
+          await login({
+            provider: LoginKey.wechatMiniProgramProvider
           })
-          await setOautoData(loginRes.data)
-          http.setToken(loginRes.data.token)
           await querySessionAsync()
-          const uauthData = wx.getStorageSync('oauth.data')
-          await queryUserInfo(uauthData.customer)
           wx.navigateBack({
             delta: 1
           });
@@ -170,8 +162,7 @@ Page({
       const res = await wx.getUserProfile({
         desc: '用于获取您的微信个人信息'
       })
-      const { userInfo } = res
-      wx.setStorageSync('userInfo', userInfo)
+      const { userInfo } = res    
       wx.navigateTo({
         url: `../bindPhone/bindPhone?type=1&userName=${userInfo.nickName}&avatarUrl=${userInfo.avatarUrl}`
       })

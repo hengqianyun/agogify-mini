@@ -1,4 +1,5 @@
 // pages/person/person.ts
+import { userProfile } from '../../libs/user/user'
 import { $on, $remove } from '../../utils/event'
 
 Page({
@@ -103,11 +104,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    const userInfo = wx.getStorageSync<WechatMiniprogram.UserInfo>('userInfo')
-    if (!!userInfo && !!userInfo.nickName && !!userInfo.avatarUrl) {
+    if (!!userProfile && !!userProfile.nickName && !!userProfile.avatar) {
       this.setData({
-        userName: userInfo.nickName,
-        avatar: userInfo.avatarUrl
+        userName: userProfile.nickName,
+        avatar: userProfile.avatar
       })
     }
   },

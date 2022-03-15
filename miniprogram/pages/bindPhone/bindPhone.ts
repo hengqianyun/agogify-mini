@@ -1,6 +1,5 @@
 import loginModule from "../../http/module/login"
-import http from "../../libs/http"
-import { queryUserInfo, setOautoData } from "../../utils/oauth"
+import { login } from "../../libs/user/user"
 import { querySessionAsync } from "../../utils/querySession"
 
 // pages/bindPhone/bindPhone.ts
@@ -140,24 +139,19 @@ Page({
     this.setData({
       commitBtnDisabled: true
     })
-    const { code } = await wx.login()
+    // const { code } = await wx.login()
     if (this.data.type === '0' || this.data.type === '1') {
       // wx.navigateTo({url: '../person/person'})
       try {
         wx.showLoading({title: '正在登陆'})
-        const loginRes = await loginModule.wxLogin({
-          code,
-          mobile_number: this.data.phoneNumber,
-          verification_code: this.data.verifyCode,
-          is_mobile_number_required: true,
-          verification_type: 'login'
+         await login({
+          mobileNumber: this.data.phoneNumber,
+          verificationCode: this.data.verifyCode,
+          isMobileNumberRequired: true,
+          provider: 'mobile'
         })
-        await setOautoData(loginRes.data)
         wx.switchTab({ url: '../person/person' })
-        http.setToken(loginRes.data.token)
         await querySessionAsync()
-        const uauthData = wx.getStorageSync('oauth.data')
-        await queryUserInfo(uauthData.customer)
       } catch {
         wx.showToast({title: '登录失败', icon: 'error'})
       } finally {

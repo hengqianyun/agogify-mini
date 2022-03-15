@@ -1,6 +1,6 @@
 // import initTim from "./libs/tim"
 // import genTestUserSig from './debug/GenerateTestUserSig.js'
-import { autoLogin } from './utils/oauth'
+import { autoLogin } from './libs/user/user'
 
 const judgeProgram = () => {
   const weid = wx.getAccountInfoSync().miniProgram.appId
@@ -35,10 +35,10 @@ App<RSSDesign.RSSAppOptions>({
     wx.setStorageSync('category', undefined)
     wx.setStorageSync('categoryMap', undefined)
     this.globalData.position = wx.getMenuButtonBoundingClientRect()
-    console.log(statusBarHeight)
     try {
       await autoLogin()
     } catch { } finally {
+      console.debug('app launch')
       if (this.tokenCallback) {
         this.tokenCallback()
       }

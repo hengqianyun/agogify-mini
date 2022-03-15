@@ -4,9 +4,12 @@
  * @param sessionCode 
  * @returns 
  */
-export const shareVideo = (userName: string, sessionCode: string, page: string) => {
+export const shareVideo = (userName: string, sessionCode: string, page: string, roomId: string, {
+  salesId = '',
+  storeId = '',
+}) => {
   return {
     title: 'hahaha',
-    path: `${page}?userName=${userName}&type=video&sessionCode=${sessionCode}`
+    path: `${page}?userName=${userName}&type=video&sessionCode=${sessionCode}&roomId=${roomId}&salesId=${salesId}&storeId=${storeId}`
   }
 }

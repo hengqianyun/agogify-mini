@@ -16,33 +16,21 @@ type LoginType = 'wxLogin' | 'mobileLogin'
 
 type OauthProviderPathsKey = 'wechat_mini_program' | 'mobile'
 
-// class User implements IUser {
-//   _id: number
-//   _pathId: string
-//   _wxAvatar: string
-//   _serviceAvatar?: string
-//   _wxNickName: string
-//   _serviceNickName?: string
-//   _defaultAddressId: number;
+export const userProfile = {
+  nickName: '',
+  avatar: '',
+  id: -1,
+  pathId: '',
+  defaultAddressId: -1,
+  hasTheRealNameBeenCertified: false,
+  firstName: '',
+  lastName: '',
+  identityNumber: '',
+  token: ''
+}
+Object.seal(userProfile)
 
-//   get id() {
-//     return this._id
-//   }
-
-//   get pathId() {
-//     return this._pathId
-//   }
-
-//   get avatar() {
-//     return this._serviceAvatar ?? this._wxAvatar
-//   }
-
-//   get nickname() {
-//     return this._serviceNickName ?? this._wxNickName
-//   }
-// }
-
-const LoginKey = {
+export const LoginKey = {
   oauthDataKey: 'oauth.data',
   wechatMiniProgramProvider: 'wechat_mini_program' as OauthProviderPathsKey,
   mobileProvider: 'mobile',
@@ -54,45 +42,46 @@ const LoginKey = {
   } as OauthProviderPaths
 }
 
-const userProfile = {
-  nickName: '',
-  avatar: '',
-  hasTheRealNameBeenCertified: false,
-}
-
-const userData = {
-  id: null as unknown as number,
-  pathId: '',
-}
-
-Object.seal(userProfile)
-Object.seal(userData)
-
 // const 
 
 type OauthProviderPaths = {
   [key in OauthProviderPathsKey]: LoginType;
 };
 
-const login = async ({
+interface ILoginFnParams {
+  mobileNumber?: null | number
+  isMobileNumberRequired?: boolean
+  verificationCode?: null | number
+  provider: OauthProviderPathsKey
+}
+
+export const login = async ({
   mobileNumber = null,
   isMobileNumberRequired = false,
   verificationCode = null,
   provider = LoginKey.mobileProvider as OauthProviderPathsKey
-}) => {
+}: ILoginFnParams) => {
   wx.login({
     async success(res) {
-      const loginRes = await loginModule[LoginKey.oauthProviderPaths[provider]]({
-        code: res.code,
-        mobile_number: mobileNumber,
-        is_mobile_number_required: isMobileNumberRequired,
-        verification_code: verificationCode,
-        verification_type: 'login',
-      })
-      setOautoData(loginRes.data)
-      http.setToken(loginRes.data.token)
-      queryUserInfo(loginRes.data.customer);
-      return loginRes
+      try {
+        const loginRes = await loginModule[LoginKey.oauthProviderPaths[provider]]({
+          code: res.code,
+          mobile_number: mobileNumber,
+          is_mobile_number_required: isMobileNumberRequired,
+          verification_code: verificationCode,
+          verification_type: 'login',
+        })
+        setOautoData(loginRes.data)
+        http.setToken(loginRes.data.token)
+        userProfile.pathId = loginRes.data.customer
+        userProfile.token = loginRes.data.token
+        userProfile.id = getIdFromString(userProfile.pathId)
+        queryUserInfo(userProfile.id);
+        return loginRes
+      } catch {
+        wx.clearStorage()
+      }
+      
     }
 
   })
@@ -104,39 +93,45 @@ export const autoLogin = async () => {
     // const resData = await login({
     //   provider: LoginKey.wechatMiniProgramProvider
     // })
-    const {code} = await wx.login()
-    console.log(code)
-    try {
-      const resData = await loginModule.wxLogin({
-        code,
-        mobile_number: null,
-        is_mobile_number_required: false,
-        verification_code: null,
-        verification_type: 'login'
-      })
-      console.log(resData)
-      setOautoData(resData.data)
-      http.setToken(resData.data.token)
-      queryUserInfo(resData.data.customer);
-    } catch {
-      wx.clearStorage()
-    }
+    login({
+      provider: LoginKey.wechatMiniProgramProvider
+    })
+    // const {code} = await wx.login()
+    // console.log(code)
+    // try {
+    //   const resData = await loginModule.wxLogin({
+    //     code,
+    //     mobile_number: null,
+    //     is_mobile_number_required: false,
+    //     verification_code: null,
+    //     verification_type: 'login'
+    //   })
+    //   console.log(resData)
+    //   setOautoData(resData.data)
+    //   http.setToken(resData.data.token)
+    // } catch {
+    //   wx.clearStorage()
+    // }
   } else {
     wx.clearStorage()
   }
 }
 
-export const queryUserInfo = async (strId: string) => {
-  const id = getIdFromString(strId)
+export const queryUserInfo = async (id: number) => {
   try {
     const res = await loginModule.getUserInfo(id)
     const {user} = res.data
+    userProfile.defaultAddressId = res.data.defaultAddress.id
+    const avatarRes = await loginModule.getCustomerAvatar(userProfile.id)
+    console.log(avatarRes)
     if (user.verifiedAt !== null) {
+      userProfile.hasTheRealNameBeenCertified = true
+      userProfile.firstName = res.data.firstName
+      userProfile.lastName = res.data.lastName
+      userProfile.identityNumber = res.data.identityNumber
       setIfUserHasTheRealNameBeenCertified(true)
     }
-    // if (!!identityNumber && (identityNumber.length === 18 || identityNumber.length === 15)) {
-    //   setIfUserHasTheRealNameBeenCertified(true)
-    // }
+    
   } catch (err) {
 
   }

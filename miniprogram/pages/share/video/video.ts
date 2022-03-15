@@ -9,7 +9,10 @@ Component({
    */
   properties: {
     sessionCode: String,
-    from: String
+    from: String,
+    roomId: String,
+    salesId: String,
+    storeId: String
   },
 
   /**
@@ -25,8 +28,6 @@ Component({
       wx.showLoading({ title: '加载中' })
       app.tokenCallback = async () => {
         try {
-          // const userInfo = wx.getStorageSync('oauth.data')
-          // const userId = userInfo.customer
           /// TODO check wether user can join
           
           await this.checkSession() ?
@@ -74,7 +75,7 @@ Component({
       try {
         await sessionModule.gusetCheckIn(this.data.sessionCode)
         wx.navigateTo({
-          url: '../../room/room?type=4'
+          url: `../../room/room?type=4&roomId=${this.data.roomId}$saleId=${this.data.salesId}&storeId=${this.data.storeId}`
         })
       } catch {
 

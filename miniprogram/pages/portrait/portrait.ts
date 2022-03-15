@@ -1,3 +1,5 @@
+import { userProfile } from "../../libs/user/user"
+
 // pages/portrait/portrait.ts
 Page({
 
@@ -19,13 +21,10 @@ Page({
    */
   onLoad() {
     // wx.
-    const userInfo = wx.getStorageSync<WechatMiniprogram.UserInfo>('userInfo')
-    if (!!userInfo && !!userInfo.nickName && !!userInfo.avatarUrl) {
-      this.setData({
-        userName: userInfo.nickName,
-        avatar: userInfo.avatarUrl
-      })
-    }
+    this.setData({
+      userName: userProfile.nickName,
+      avatar: userProfile.avatar
+    })
   },
 
   /**
@@ -39,13 +38,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    const userInfo = wx.getStorageSync<WechatMiniprogram.UserInfo>('userInfo')
-    if (!!userInfo && !!userInfo.nickName && !!userInfo.avatarUrl) {
-      this.setData({
-        userName: userInfo.nickName,
-        avatar: userInfo.avatarUrl
-      })
-    }
+    this.setData({
+      userName: userProfile.nickName,
+      avatar: userProfile.avatar
+    })
   },
 
   /**
