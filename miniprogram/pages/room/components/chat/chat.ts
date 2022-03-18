@@ -133,10 +133,6 @@ Component({
           if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
             switch (payloadData.type) {
-              case CustomMessageTypes.START_VIDEO:
-                // 进入房间
-                this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-                break
               case CustomMessageTypes.PAY:
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
@@ -173,9 +169,6 @@ Component({
                   showPopup: false,
                   canLeave: true
                 })
-                break
-              case CustomMessageTypes.NOW_BUSY:
-                this.triggerEvent('busy')
                 break
               case CustomMessageTypes.TIMELEFT_CHECK:
                 if (!this.data.hasGetTime) {

@@ -3,6 +3,8 @@ import TIMUploadPlugin from 'tim-upload-plugin';
 import { $emit } from '../../utils/event';
 import genTestUserSig, { SDKAPPID } from '../../debug/GenerateTestUserSig.js';
 import sessionModule from '../../http/module/session.js';
+import CustomMessageTypes from './custom_message_types'
+import { userProfile } from '../user/user.js';
 
 let hasReady = false
 
@@ -74,7 +76,7 @@ export default class IMClient {
    * @param data 
    * @param inserDB 
    */
-  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string, data: {
+  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: {
     success?: Function,
     failed?: Function,
     send?: Function,
@@ -87,7 +89,7 @@ export default class IMClient {
       const message = await this.tim.createCustomMessage({
         to: groupid,
         conversationType: "GROUP",
-        payload: { ...options, description: JSON.stringify({ userID, saleId }) }
+        payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId }) }
       })
       const res = await this.tim.sendMessage(message)
 
@@ -100,7 +102,7 @@ export default class IMClient {
             try {
               await sessionModule.createMessageLocks({
                 code: seq,
-                customer: userID,
+                customer: userProfile.pathId,
                 sales: saleId,
               })
               console.debug('创建messageLock成功，说明对方未收到消息，执行failed')
@@ -169,8 +171,32 @@ export default class IMClient {
   /**
    * 重置计时器map
    */
-  public resetTimerAndSeq (){
+  public resetTimerAndSeq() {
     this.timerMap.clear()
+  }
+
+  /**
+   * 加入群组
+   * @param groupID 
+   * @param options
+   */
+  public async joinGroup(groupID: string, options: { type: TIMGroupTypes }) {
+    try {
+      await this.tim.joinGroup({ groupID, type: options.type })
+    } catch {
+      // 加入异常处理
+      console.debug('加入群聊失败')
+      throw Error('加入群聊失败')
+    }
+  }
+
+  
+
+  /**
+   * 立即通话
+   */
+  public needService() {
+
   }
 }
 
@@ -250,5 +276,7 @@ const messageReceived = (event: TIMEvent) => {
  * 群组更新回调
  */
 const groupListUpdate = () => { }
+
+
 
 IMClient.getInstance()
