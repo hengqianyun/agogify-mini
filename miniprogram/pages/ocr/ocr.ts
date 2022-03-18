@@ -323,6 +323,20 @@ Page({
       await this.uploadImage(this.data.passportPath, 'identity-back')
       // await this.uploadImage(this.data.portraitPath, 'portrait')
       await this.putUserInfo()
+      const ocrRes = await userModule.getOcrInfo()
+      const { ValidDate } = ocrRes.data["identity-back"]
+      const lastDate = ValidDate.split('-')[1]
+      if (Date.parse(lastDate) < Date.now()) {
+        wx.showModal({
+          title: '错误',
+          content: '身份证有效期错误',
+          showCancel: false,
+          confirmText: '我知道了'
+        })
+      } else {
+
+      }
+      
     } catch (err: any) {
       console.log('err ---->', err)
 
@@ -356,8 +370,7 @@ Page({
       confirmText: "我知道了",
       success() {
         setIfUserHasTheRealNameBeenCertified(true)
-
-        // wx.navigateBack()
+        wx.navigateBack()
       }
     })
     return

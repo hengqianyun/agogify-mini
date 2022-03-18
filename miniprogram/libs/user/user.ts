@@ -77,7 +77,8 @@ export const login = async ({
         userProfile.token = loginRes.data.token
         userProfile.id = getIdFromString(userProfile.pathId)
         queryUserInfo(userProfile.id);
-        return loginRes
+        getWxProfile()
+        // return loginRes
       } catch {
         wx.clearStorage()
       }
@@ -135,6 +136,12 @@ export const queryUserInfo = async (id: number) => {
   } catch (err) {
 
   }
+}
+
+const getWxProfile = () => {
+  const userInfo = wx.getStorageSync<WechatMiniprogram.UserInfo>('userInfo')
+  userProfile.nickName = userInfo.nickName
+  userProfile.avatar = userInfo.avatarUrl
 }
 
 export const setOautoData = async (data: userDesign.loginRes) => {

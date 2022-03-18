@@ -18,17 +18,19 @@ declare namespace ocrDesign {
 
   interface ocrRes {
     'identity-front': identityFrontRes
-    'identity-back': identityBackRes
+    'identity-back': identityFrontRes
   }
 
   interface identityFrontRes {
     Address: string
+    AdvancedInfo: string // jsonString
+    Authority: string
     Birth: string
     IdNum: string
     Name: string
     Nation: string
-  }
-  interface identityBackRes {
-
+    RequestId: string
+    Sex: string
+    ValidDate: string
   }
 }

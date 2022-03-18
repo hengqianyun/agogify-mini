@@ -112,6 +112,7 @@ Page({
       })
 
       const { userInfo } = res
+      wx.setStorageSync('userInfo', userInfo)
       this.setData({
         userInfo
       })
@@ -162,7 +163,9 @@ Page({
       const res = await wx.getUserProfile({
         desc: '用于获取您的微信个人信息'
       })
+      
       const { userInfo } = res    
+      wx.setStorageSync('userInfo', userInfo)
       wx.navigateTo({
         url: `../bindPhone/bindPhone?type=1&userName=${userInfo.nickName}&avatarUrl=${userInfo.avatarUrl}`
       })
