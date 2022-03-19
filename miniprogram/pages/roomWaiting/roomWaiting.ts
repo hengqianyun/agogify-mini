@@ -1,5 +1,5 @@
 import CustomMessageTypes from "../../libs/tim/custom_message_types"
-import { joinStoreGroup, needService, quitGroup, sendCustomMessage } from "../../libs/tim/tim"
+import { joinStoreGroup, quitGroup, sendCustomMessage } from "../../libs/tim/tim"
 import { userProfile } from "../../libs/user/user"
 import { $on, $remove } from '../../utils/event'
 import { clearSessionAsync } from "../../utils/querySession"
@@ -21,7 +21,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    debugger
     const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
     this.setData({
       storeGroupId: `${storeId}_Meeting`
@@ -78,7 +77,7 @@ Page({
         })
     }
     $on({
-      name: "onMessageEvent",
+      name: "onCustomMessageRecvEvent",
       tg: this,
       success: (res: TIMMessageReceive) => {
         const data = res.data[0]
@@ -90,7 +89,7 @@ Page({
           switch (payloadData.type) {
             case CustomMessageTypes.START_VIDEO:
               wx.navigateTo({
-                url: `../room/room/roomId=${payloadData.roomId}`
+                url: `../room/room/roomId=${payloadData.roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${payloadData.groupId}&storeId=${storeId}`
               })
               break
             case CustomMessageTypes.NOW_BUSY:
@@ -121,7 +120,7 @@ Page({
 
   onUnload() {
     $remove({
-      name: "onMessageEvent",
+      name: "onCustomMessageRecvEvent",
       tg: this,
     })
   },

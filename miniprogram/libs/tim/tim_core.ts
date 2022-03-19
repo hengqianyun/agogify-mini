@@ -63,6 +63,24 @@ export default class IMClient {
     this.tim.quitGroup(groupID)
   }
 
+  public async createCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string) {
+    return await this.tim.createCustomMessage({
+      to: groupid,
+      conversationType: "GROUP",
+      payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId }) }
+    })
+  }
+
+  public async createTextMessage(groupId: string, text: string) {
+    return await this.tim.createTextMessage({
+      to: groupId,
+      conversationType: "GROUP",
+      payload: {
+        text: text
+      }
+    })
+  }
+
   /**
    * 发送群组文本消息
    * @param groupId 
@@ -70,13 +88,7 @@ export default class IMClient {
    * @returns TIMSendMessageRes
    */
   public async sendGroupTextMessage(groupId: string, text: string) {
-    const message = await this.tim.createTextMessage({
-      to: groupId,
-      conversationType: "GROUP",
-      payload: {
-        text: text
-      }
-    })
+    const message = await this.createTextMessage(groupId, text)
     const res = await this.tim.sendMessage(message)
     return res
   }
@@ -96,11 +108,7 @@ export default class IMClient {
     }
 
     try {
-      const message = await this.tim.createCustomMessage({
-        to: groupid,
-        conversationType: "GROUP",
-        payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId }) }
-      })
+      const message = await this.createCustomMessage(options, groupid, saleId)
       const res = await this.tim.sendMessage(message)
 
       if (inserDB) {
@@ -154,11 +162,7 @@ export default class IMClient {
         sales: saleId,
         customer: userID,
       })
-      const message = await this.tim.createCustomMessage({
-        to: groupid,
-        conversationType: "GROUP",
-        payload: { ...options, description: JSON.stringify({ userID, saleId, seq }), }
-      })
+      const message = await this.createCustomMessage(options, groupid, saleId)
       await this.tim.sendMessage(message)
     } catch { }
   }
@@ -167,7 +171,7 @@ export default class IMClient {
    * 清除计时器
    * @param seq 设置定时器，自定义消息需要严格同步
    */
-  private clearAckTimeout(seq: string) {
+  public clearAckTimeout(seq: string) {
     if (this.timerMap.has(seq)) {
       if (!!this.timerMap.get(seq)!.success) {
         this.timerMap.get(seq)!.success!()
@@ -220,7 +224,7 @@ const registerEvents = (tim: TIMSKD) => {
  * tim sdk ready 回调
  * @param param0 
  */
-const onReadyStateUpdate = ({ name }: TIMEvent) => {
+const onReadyStateUpdate = ({ name }: TIMEvent<Array<any>>) => {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
   console.debug('IM SDK ready')
   console.debug(isSDKReady)
@@ -268,12 +272,25 @@ const onError = () => { }
  * tim收到消息回调
  * @param event 
  */
-const messageReceived = (event: TIMEvent) => {
+const messageReceived = (event: TIMEvent<TIMMessage>) => {
   // 分发至视频页面
-  $emit({
-    name: 'onMessageEvent',
-    data: event
-  })
+  let payloadData: any;
+  if (payloadData && payloadData.to === userProfile.pathId) {
+
+    $emit({
+      name: 'onMessageEvent',
+      data: event
+    })
+    $emit({
+      name: 'onCustomMessageRecvEvent',
+      data: event
+    })
+  } else {
+    $emit({
+      name: 'onGroupMessageRecvEvent',
+      data: event
+    })
+  }
 }
 
 /**
@@ -283,4 +300,4 @@ const groupListUpdate = () => { }
 
 
 
-IMClient.getInstance()
+Object.seal(IMClient.getInstance())

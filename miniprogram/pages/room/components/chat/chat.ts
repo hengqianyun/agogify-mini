@@ -1,6 +1,6 @@
 // pages/room/components/chat/chat.ts
 import { $on, $remove } from '../../../../utils/event'
-import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
+import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
 import genTestUserSig from '../../../../debug/GenerateTestUserSig'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
@@ -10,6 +10,7 @@ import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
+import { clearAckTimeout, sendAck } from '../../../../libs/tim/tim'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -104,10 +105,6 @@ Component({
   lifetimes: {
     async ready() {
       const userID = this.properties.userId
-      const { userSig, sdkAppID } = genTestUserSig(userID)
-      // return
-
-      tim = initTim(userID, { sdkAppID, userSig }, this.properties.storeId, this.properties.saleId, this.properties.isReserve, this.properties.isReconnect)
       this.initRecording()
       this.setData({
         callTimer: setTimeout(async () => {
@@ -117,7 +114,7 @@ Component({
         }, 60000)
       })
       $on({
-        name: "onMessageEvent",
+        name: "onCustomMessageRecvEvent",
         tg: this,
         success: (res: TIMMessageReceive) => {
           const data = res.data[0]
@@ -125,13 +122,12 @@ Component({
           try {
             payloadData = JSON.parse(data.payload.data)
           } catch (err) { }
-          if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
             switch (payloadData.type) {
-              case CustomMessageTypes.START_VIDEO:
-                // 进入房间
-                this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-                break
+              // case CustomMessageTypes.START_VIDEO:
+              //   // 进入房间
+              //   this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
+              //   break
               case CustomMessageTypes.PAY:
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
@@ -169,9 +165,9 @@ Component({
                   canLeave: true
                 })
                 break
-              case CustomMessageTypes.NOW_BUSY:
-                this.triggerEvent('busy')
-                break
+              // case CustomMessageTypes.NOW_BUSY:
+              //   this.triggerEvent('busy')
+              //   break
               case CustomMessageTypes.TIMELEFT_CHECK:
                 if (!this.data.hasGetTime) {
 
@@ -194,7 +190,6 @@ Component({
             if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
               sendAck({ data: 'ack', description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, data.time.toString())
             }
-          }
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
             try {

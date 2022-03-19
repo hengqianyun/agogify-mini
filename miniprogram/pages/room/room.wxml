@@ -11,9 +11,9 @@
     </view>
     <waiting wx:if="{{isWaiting}}"></waiting>
     <!-- <chat isReserve="{{isReserve}}" isReconnect="{{isReconnect}}" storeName="{{store.name}}" isWaiting="{{isWaiting}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" userId="{{userId}}" groupId="{{groupId}}" saleId="{{saleId}}" bind:startVideo="startVideo" bind:busy="handleShowBusyDialog"></chat> -->
-    <chat wx:if="{{!showDialog && showChat}}" isReserve="{{isReserve}}" isReconnect="{{isReconnect}}" storeName="{{store.name}}" isWaiting="{{isWaiting}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" userId="{{userId}}" groupId="{{groupId}}" saleId="{{saleId}}" bind:startVideo="startVideo" bind:busy="handleShowBusyDialog"></chat>
+    <chat storeName="{{store.name}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" userId="{{userId}}" groupId="{{groupId}}" saleId="{{saleId}}"></chat>
   </view>
-  <RssDialog wx:if="{{showDialog}}" title="请注意" commitText="同意并继续" cancelText="不同意" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
+  <!-- <RssDialog wx:if="{{showDialog}}" title="请注意" commitText="同意并继续" cancelText="不同意" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
     <view class="dialog-content">
       <view class="dialog-item flex">
         <view class="dialog-title-left">1)</view>
@@ -26,7 +26,7 @@
         <view class="dialog-title-right">通过本平台在实体专柜远程购物仅限您本人自用，且每天仅限购一件商品，否则您将承担由此产生的额外费用。</view>
       </view>
     </view>
-  </RssDialog>
+  </RssDialog> -->
   <!-- <RssDialog wx:if="{{showYunDialog}}" title="请注意" commitText="同意并继续" cancelText="不同意" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
     <view class="dialog-content">
       <view class="dialog-item flex">
@@ -46,5 +46,5 @@
       }
     }
   </wxs>
-  <RssDialog wx:if="{{showBusyDialog}}" title="销售忙碌中，请稍后再拨" commitText="确定" showCancel="{{true}}" bind:handleCommit="handleBusy"></RssDialog>
+  <!-- <RssDialog wx:if="{{showBusyDialog}}" title="销售忙碌中，请稍后再拨" commitText="确定" showCancel="{{true}}" bind:handleCommit="handleBusy"></RssDialog> -->
 </view>

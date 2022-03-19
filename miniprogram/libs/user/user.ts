@@ -91,7 +91,7 @@ export const login = async ({
         userProfile.token = loginRes.data.token
         userProfile.id = getIdFromString(userProfile.pathId)
         await queryUserInfo(userProfile.id);
-        // imLogin(userProfile.pathId)
+        imLogin(userProfile.pathId)
         getWxProfile()
         await querySessionAsync()
         // return loginRes

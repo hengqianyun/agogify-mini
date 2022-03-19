@@ -8,6 +8,7 @@ import { $on, $remove } from '../../utils/event'
 import { getIdFromString } from '../../utils/util.js'
 import { shareVideo } from '../../libs/share.js'
 import { userProfile } from '../../libs/user/user.js'
+import CustomMessageTypes from '../../libs/tim/custom_message_types.js'
 
 let trtcClient: TRTC
 Page({
@@ -24,14 +25,11 @@ Page({
     playerList: [] as PlayerListItem[],
     // store
     store: { name: '', avatar: '', id: '' },
-    isWaiting: false, // false
-    showDialog: true,
     isReconnect: false,
     isReserve: false,
     showChat: false,
     canTap: true,
     canLeave: true,
-    showBusyDialog: false,
     saleId: '',
     storeId: '',
     firstIn: true,
@@ -43,20 +41,7 @@ Page({
    */
   async onLoad() {
     
-    const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
-    if (type === '1') {
-      this.setData({
-        isReconnect: true,
-      })
-    } else if (type === '2') {
-
-      this.setData({
-        isReconnect: true,
-        isReserve: true
-      })
-    } else if (type === '3') {
-      const { roomId } = this.options
-    }
+    const { roomId, saleId, storeId, avGroupId, storeGroupId } = this.options as { roomId: string, storeId: string, saleId: string, avGroupId: string, storeGroupId: string}
     this.queryStore(storeId)
     wx.setKeepScreenOn({
       keepScreenOn: true,
@@ -68,7 +53,10 @@ Page({
       userId: userProfile.pathId,
       saleId,
       storeId,
-      firstIn: false
+      firstIn: false,
+      groupId: avGroupId,
+      roomId: roomId,
+      strRoomID: roomId,
     })
 
 
@@ -77,35 +65,7 @@ Page({
     trtcClient = new TRTC(this)
     this.init({ userID: userProfile.pathId, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
-
-    // $on({
-    //   name: "onMessageEvent",
-    //   tg: this,
-    //   success: (res: TIMMessageReceive) => {
-    //     const data = res.data[0]
-    //     let payloadData: any;
-    //     try {
-    //       payloadData = JSON.parse(data.payload.data)
-    //     } catch (err) { }
-    //     if (payloadData && payloadData.to === this.data.userId) {
-    //       
-    //       // 判断消息是否发给自己
-    //       switch (payloadData.type) {
-            
-    //         case CustomMessageTypes.NOW_BUSY:
-    //           this.setData({
-    //             showBusyDialog: true
-    //           })
-    //           break
-    //         case CustomMessageTypes.READY_ENTER_ROOM:
-    //           sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.data.storeId}_Meeting`, this.data.userId, this.data.saleId)
-    //           break
-    //       }
-    //     }
-    //   }
-    // })
-
-    
+    this.startVideo()
   },
 
   onShow() {
@@ -137,41 +97,10 @@ Page({
   },
 
   startVideo(option: WechatMiniprogram.TouchEvent) {
-    const { publicGroupId, roomId } = option.detail as { publicGroupId: string, roomId: string }
-    console.log('room console: option -->', option)
-    this.setData({
-      groupId: publicGroupId,
-      roomId: roomId,
-      strRoomID: roomId,
-      isWaiting: false
-    })
-    console.log('start video --->', roomId)
-    this.enterRoom({ roomID: roomId })
+    this.enterRoom({ roomID: this.data.roomId })
     $emit({
       name: 'joined_room'
     })
-  },
-
-  handleDialogCommit() {
-    // if (this.data.isReconnect) {
-    //   const id = `${this.data.storeId}_Meeting-${getIdFromString(this.data.saleId)}`
-    //   console.log( 'commit  --->', id)
-    //   this.startVideo({ publicGroupId: id, roomId: id })
-    // } 
-    if (!this.data.canTap) return;
-      let flag = true
-      if (this.data.isReserve && this.data.isReconnect) flag = false
-      
-      this.setData({
-      isWaiting: flag,
-      showDialog: false,
-      showChat: true,
-    })
-  },
-
-  handleDialogCancel() {
-    if (!this.data.canTap) return;
-    wx.navigateBack()
   },
 
   async queryStore(code: string) {
@@ -323,19 +252,6 @@ Page({
     wx.navigateBack({
       delta: 1,
     })
-  },
-
-  handleShowBusyDialog() {
-    this.setData({
-      showBusyDialog: true
-    })
-  },
-
-  handleBusy() {
-    this.setData({
-      showDialog: false,
-    })
-    wx.navigateBack()
   },
 
   setCanLeaveState(status: boolean ) {

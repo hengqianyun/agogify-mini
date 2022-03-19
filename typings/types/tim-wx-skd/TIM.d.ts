@@ -9,9 +9,9 @@ declare class TIMSKD {
 
   logout: () => Promise<void>
 
-  on: (eventName: String, handle: (event: TIMEvent) => void, context?: TIMSKD) => void
+  on: <T>(eventName: String, handle: (event: TIMEvent<T>) => void, context?: TIMSKD) => void
 
-  off: (eventName: String, handle: (event: TIMEvent) => void, context?: TIMSKD) => void
+  off: <T>(eventName: String, handle: (event: TIMEvent<T>) => void, context?: TIMSKD) => void
 
   destroy: () => void
 
@@ -62,14 +62,14 @@ declare interface TIMCreateCustomMessageParamsPayload {
   extension?: string // 自定义消息的扩展字段
 }
 
-declare interface TIMEvent {
+declare interface TIMEvent<T> {
   name: string
-  data?: TIMEventData
+  data: T[]
 }
 
-declare interface TIMEventData {
-  code: number
-  message: string
+declare interface TIMRecvMsgEvent {
+  name: string
+  data: TIMMessageReceive[]
 }
 
 declare interface TIMUserInfo {
