@@ -1,9 +1,7 @@
 import storeModule from "../../http/module/store"
 import { checkSessionAsync, clearSessionAsync, querySessionAsync } from "../../utils/querySession"
 import { BANNERS } from '../../serviceStaticResource/index'
-
-// 获取应用实例
-const app = getApp()
+import { autoLogin } from "../../libs/user/user"
 
 
 Page({
@@ -25,15 +23,13 @@ Page({
   },
   async onLoad() {
     console.debug('homepage load')
-    app.tokenCallback = async () => {
-      await querySessionAsync()
-      const session = await checkSessionAsync()
+    await autoLogin()
+    const session = await checkSessionAsync()
       if (session) {
         this.setData({
           showIcon: true
         })
       }
-    }
     await this.queryNewStore(1)
     this.setData({
       bannerList: BANNERS

@@ -1,17 +1,15 @@
 // pages/room/components/chat/chat.ts
 import { $on, $remove } from '../../../../utils/event'
-import { initTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
+import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, sendAck, clearAckTimeout, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
 import genTestUserSig from '../../../../debug/GenerateTestUserSig'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
 import { HmacSHA256, enc } from 'crypto-js'
-import { sortByCharCode } from '../../../../utils/util'
+import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
-import { userProfile } from '../../../../libs/user/user'
-import IMClient from '../../../../libs/tim/tim_core'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -118,9 +116,6 @@ Component({
           wx.navigateBack()
         }, 60000)
       })
-      /**
-       * 绑定事件
-       */
       $on({
         name: "onMessageEvent",
         tg: this,
@@ -133,6 +128,10 @@ Component({
           if (payloadData && payloadData.to === this.properties.userId) {
             // 判断消息是否发给自己
             switch (payloadData.type) {
+              case CustomMessageTypes.START_VIDEO:
+                // 进入房间
+                this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
+                break
               case CustomMessageTypes.PAY:
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
@@ -169,6 +168,9 @@ Component({
                   showPopup: false,
                   canLeave: true
                 })
+                break
+              case CustomMessageTypes.NOW_BUSY:
+                this.triggerEvent('busy')
                 break
               case CustomMessageTypes.TIMELEFT_CHECK:
                 if (!this.data.hasGetTime) {
@@ -226,7 +228,7 @@ Component({
           this.joinGroup(this.properties.groupId)
           this.initRecording()
           await this.queryAddressList()
-          const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + userProfile.id + '&itemsPerPage=1&page=1')
+          const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
           const session = sessionRes.data
           let unfinishedOrder: sessionDesign.SessionOrder | null = null
           const { orders } = session
@@ -447,7 +449,8 @@ Component({
       if (this.data.inputValue.trim() === "") {
         return
       }
-      const res = await IMClient.getInstance().sendGroupTextMessage(this.properties.groupId, this.data.inputValue)
+
+      const res = await sendTextMessage(this.properties.groupId, this.data.inputValue)
       const item = this.encodeMessage(res.data.message)
       if (item && item.status === 'success') {
         this.setData({
@@ -596,6 +599,7 @@ Component({
             }
           })
           console.log(message)
+          // self.$store.commit('sendMessage', message)
           tim.sendMessage(message).then(() => {
             self.data.percent = 0
           }).catch(() => {
@@ -994,7 +998,7 @@ Component({
     async _handleSaveQrcode() {
       wx.saveImageToPhotosAlbum({
         filePath: this.data.qrcode,
-        success(_) {
+        success(res) {
           console.log('saved');
         }
       })
@@ -1085,15 +1089,15 @@ Component({
       }
     },
     async putAddress(tokenValue: string, address: addressDesign.address) {
-      const { firstName, lastName, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
-      await orderModule.putAddress(tokenValue, { shippingAddress: { firstName, lastName, countryCode: "CN", provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
+      const { firstName, lastName, countryCode, provinceName, provinceCode, street, city, postcode, mobileNumber, county } = address
+      const res = await orderModule.putAddress(tokenValue, { shippingAddress: { firstName, lastName, countryCode: "CN", provinceName, provinceCode, street, city, postcode, county, mobileNumber } })
       // TODO 设置用户地址
     },
     async putShipment(tokenValue: string, shipmentId: string) {
-      await orderModule.putShipment(tokenValue, shipmentId, { shippingMethodCode: 'dhl' })
+      const res = await orderModule.putShipment(tokenValue, shipmentId, { shippingMethodCode: 'dhl' })
     },
     async putPayment(tokenValue: string, paymentId: string) {
-      await orderModule.putPayment(tokenValue, paymentId, { paymentMethodCode: 'wechat_offline' })
+      const res = await orderModule.putPayment(tokenValue, paymentId, { paymentMethodCode: 'wechat_offline' })
     },
     async payment() {
       // hash.hmac(hash.sha256(), '111').update('000')

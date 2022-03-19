@@ -1,3 +1,5 @@
+import { autoLogin } from "../../libs/user/user"
+
 // pages/share/share.ts
 type shareType = 'video'
 
@@ -33,10 +35,15 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad() {
+  async onLoad() {
     console.log(this.options)
     const {type} = this.options
     let key = ''
+    wx.showLoading({
+      title: '加载中'
+    })
+    await autoLogin()
+    wx.hideLoading()
     switch (type) {
       case 'video':
         const {sessionCode, userName, roomId, saleId, storeId} = this.options

@@ -29,34 +29,16 @@ App<RSSDesign.RSSAppOptions>({
   },
   async onLaunch() {
     judgeProgram()
-    const { system, statusBarHeight } = await wx.getSystemInfoSync()
-    this.globalData.isIOS = system.indexOf('iOS') > -1
-    this.globalData.height = statusBarHeight
     wx.setStorageSync('category', undefined)
     wx.setStorageSync('categoryMap', undefined)
-    this.globalData.position = wx.getMenuButtonBoundingClientRect()
     try {
-      await autoLogin()
+      
     } catch { } finally {
       console.debug('app launch')
       if (this.tokenCallback) {
         this.tokenCallback()
       }
     }
-
-    // 登录
-    wx.login({
-      success: res => {
-        console.log(res.code)
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      },
-    })
-
-    wx.checkSession({
-      success: res => {
-        console.log(res)
-      }
-    })
   },
 })
 

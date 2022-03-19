@@ -5,10 +5,9 @@ import { $emit } from '../../utils/event.js'
 import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
 import { $on, $remove } from '../../utils/event'
+import { getIdFromString } from '../../utils/util.js'
 import { shareVideo } from '../../libs/share.js'
 import { userProfile } from '../../libs/user/user.js'
-import { CustomMessageTypes } from '../../libs/tim.js'
-import { joinReserve, needService, sessionIn } from '../../libs/tim/tim.js'
 
 let trtcClient: TRTC
 Page({
@@ -36,7 +35,6 @@ Page({
     saleId: '',
     storeId: '',
     firstIn: true,
-    enableAlertBeforeUnloadMessage: '确认挂断通话？'
   },
 
   /**
@@ -44,7 +42,7 @@ Page({
    * @param {String} type
    */
   async onLoad() {
-
+    
     const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
     if (type === '1') {
       this.setData({
@@ -59,10 +57,10 @@ Page({
     } else if (type === '3') {
       const { roomId } = this.options
     }
-    
     this.queryStore(storeId)
     wx.setKeepScreenOn({
       keepScreenOn: true,
+
     })
 
 
@@ -79,33 +77,35 @@ Page({
     trtcClient = new TRTC(this)
     this.init({ userID: userProfile.pathId, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
-    $on({
-      name: "onMessageEvent",
-      tg: this,
-      success: (res: TIMMessageReceive) => {
-        const data = res.data[0]
-        let payloadData: any;
-        try {
-          payloadData = JSON.parse(data.payload.data)
-        } catch (err) { }
-        if (payloadData && payloadData.to === this.properties.userId) {
-          switch (payloadData.type) {
-            case CustomMessageTypes.START_VIDEO:
-                // 进入房间
-                this.startVideo(payloadData.groupId, payloadData.roomId)
-                break
-                case CustomMessageTypes.NOW_BUSY:
-                  this.handleShowBusyDialog()
-                  break
-          }
-        }
-      }
-    })
 
-    wx.enableAlertBeforeUnload({
-      message: this.data.enableAlertBeforeUnloadMessage
-    })
+    // $on({
+    //   name: "onMessageEvent",
+    //   tg: this,
+    //   success: (res: TIMMessageReceive) => {
+    //     const data = res.data[0]
+    //     let payloadData: any;
+    //     try {
+    //       payloadData = JSON.parse(data.payload.data)
+    //     } catch (err) { }
+    //     if (payloadData && payloadData.to === this.data.userId) {
+    //       
+    //       // 判断消息是否发给自己
+    //       switch (payloadData.type) {
+            
+    //         case CustomMessageTypes.NOW_BUSY:
+    //           this.setData({
+    //             showBusyDialog: true
+    //           })
+    //           break
+    //         case CustomMessageTypes.READY_ENTER_ROOM:
+    //           sendCustomMessage({ data: CustomMessageTypes.READY_ENTER_ROOM }, `${this.data.storeId}_Meeting`, this.data.userId, this.data.saleId)
+    //           break
+    //       }
+    //     }
+    //   }
+    // })
 
+    
   },
 
   onShow() {
@@ -119,26 +119,26 @@ Page({
   },
 
   onReady() {
-    console.debug('room ready')
+    console.log('room ready')
   },
   onUnload() {
-    console.debug('room unload')
-    $remove({
-      name: "onMessageEvent",
-      tg: this,
-    })
+    console.log('room unload')
+    // $remove({
+    //   name: "onMessageEvent",
+    //   tg: this,
+    // })
   },
 
   onShareAppMessage(option) {
     const { from } = option
     if (from === 'button') {
-      return shareVideo(userProfile.nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share', this.data.groupId, { salesId: this.data.saleId, storeId: this.data.storeId })
+      return shareVideo(userProfile.nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share', this.data.groupId, {salesId: this.data.saleId, storeId: this.data.storeId})
     }
   },
 
-  startVideo(publicGroupId: string, roomId: string) {
-    // const { publicGroupId, roomId } = option.detail as { publicGroupId: string, roomId: string }
-    // console.log('room console: option -->', option)
+  startVideo(option: WechatMiniprogram.TouchEvent) {
+    const { publicGroupId, roomId } = option.detail as { publicGroupId: string, roomId: string }
+    console.log('room console: option -->', option)
     this.setData({
       groupId: publicGroupId,
       roomId: roomId,
@@ -159,16 +159,10 @@ Page({
     //   this.startVideo({ publicGroupId: id, roomId: id })
     // } 
     if (!this.data.canTap) return;
-    let flag = true
-    if (this.data.isReserve && this.data.isReconnect) flag = false
-    if (this.data.isReserve) {
-      joinReserve(`${this.data.storeId}_Meeting`, this.data.saleId)
-    } else if (this.data.isReconnect) {
-      sessionIn(`${this.data.storeId}_Meeting`)
-    } else {
-      needService(`${this.data.storeId}_Meeting`, this.data.saleId)
-    }
-    this.setData({
+      let flag = true
+      if (this.data.isReserve && this.data.isReconnect) flag = false
+      
+      this.setData({
       isWaiting: flag,
       showDialog: false,
       showChat: true,
@@ -182,12 +176,12 @@ Page({
 
   async queryStore(code: string) {
     this.data.canTap = false
-    wx.showLoading({ title: '' })
+    wx.showLoading({title: ''})
     const resData = await storeModule.queryStoreDetails(code)
     if (resData.data.logo)
-      resData.data.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + resData.data?.logo?.path
+      resData.data.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
-      resData.data.images[0].path = IMAGEBASEURL + IMAGEPATHS.storeSmall1x + resData.data.images[0].path
+      resData.data.images[0].path = IMAGEBASEURL+ IMAGEPATHS.storeSmall1x + resData.data.images[0].path
     }
     this.data.canTap = true
     wx.hideLoading()
@@ -344,7 +338,7 @@ Page({
     wx.navigateBack()
   },
 
-  setCanLeaveState(status: boolean) {
+  setCanLeaveState(status: boolean ) {
     this.data.canLeave = status
   },
 

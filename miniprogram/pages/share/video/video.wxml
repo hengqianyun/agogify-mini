@@ -3,10 +3,10 @@
   <view class="video-container" hover-class="none" hover-stop-propagation="false">
       <view class="text-info" hover-class="none" hover-stop-propagation="false">
         <view class="text-title" hover-class="none" hover-stop-propagation="false">
-          {{from}}邀请您协助参谋
+          {{title}}
         </view>
         <view class="text-desc" hover-class="none" hover-stop-propagation="false">
-          加入直播后可以协助好友挑选商品
+          {{desc}}
         </view>
       </view>
       <view wx:if="{{showBtn}}" class="btn-area" hover-class="none" hover-stop-propagation="false">

@@ -1,5 +1,6 @@
 import loginModule from "../../http/module/login";
 import http from "../../libs/http";
+import { querySessionAsync } from "../../utils/querySession";
 import { getIdFromString } from "../../utils/util";
 import { imLogin } from "../tim/tim";
 
@@ -56,14 +57,26 @@ interface ILoginFnParams {
   provider: OauthProviderPathsKey
 }
 
+const wxLogin = (): Promise<WechatMiniprogram.LoginSuccessCallbackResult> => {
+  return new Promise((resolve, rej) => {
+    wx.login({
+      success: (res) => {
+        resolve(res)
+      },
+      fail: (err) => {
+        rej(err)
+      }
+    })
+  }) 
+}
+
 export const login = async ({
   mobileNumber = null,
   isMobileNumberRequired = false,
   verificationCode = null,
   provider = LoginKey.mobileProvider as OauthProviderPathsKey
 }: ILoginFnParams) => {
-  wx.login({
-    async success(res) {
+  const res = await wxLogin()
       try {
         const loginRes = await loginModule[LoginKey.oauthProviderPaths[provider]]({
           code: res.code,
@@ -77,17 +90,15 @@ export const login = async ({
         userProfile.pathId = loginRes.data.customer
         userProfile.token = loginRes.data.token
         userProfile.id = getIdFromString(userProfile.pathId)
-        queryUserInfo(userProfile.id);
-        imLogin(userProfile.pathId)
+        await queryUserInfo(userProfile.id);
+        // imLogin(userProfile.pathId)
         getWxProfile()
+        await querySessionAsync()
         // return loginRes
       } catch {
         wx.clearStorage()
       }
       
-    }
-
-  })
 }
 
 export const autoLogin = async () => {
@@ -96,7 +107,7 @@ export const autoLogin = async () => {
     // const resData = await login({
     //   provider: LoginKey.wechatMiniProgramProvider
     // })
-    login({
+    await login({
       provider: LoginKey.wechatMiniProgramProvider
     })
     // const {code} = await wx.login()

@@ -66,8 +66,6 @@ Page({
       //   size: 58
       // },
     ],
-    height: 0,
-    position: {},
     userName: '',
     avatar: '',
   },
@@ -76,11 +74,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    this.setData({
-      height: getApp().globalData.height,
-      position: getApp().globalData.position
-    })
-    console.log(this.data.position)
     $on({
       name: 'login_error',
       tg: this,
