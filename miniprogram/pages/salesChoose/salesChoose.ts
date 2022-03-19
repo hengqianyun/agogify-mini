@@ -96,7 +96,7 @@ Page({
       })
       return
     }
-    if (!(await this.queryDefaulAddress())) {
+    if (await this.queryDefaulAddress()) {
       this.setData({
         [key]: 'online'
       })
@@ -125,7 +125,7 @@ Page({
     //   [key]: 'online'
     // })
     wx.navigateTo({
-      url: `../room/room?storeName=${currentStore.name}&avatar=${currentStore.logo?.path}&storeId=${currentStore.code}&saleId=${id}`
+      url: `../roomWaiting/roomWaiting?storeId=${currentStore.code}&saleId=${id}&type=needService`
     })
   },
 

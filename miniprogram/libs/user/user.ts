@@ -1,6 +1,7 @@
 import loginModule from "../../http/module/login";
 import http from "../../libs/http";
 import { getIdFromString } from "../../utils/util";
+import { imLogin } from "../tim/tim";
 
 interface IUser {
   id: number
@@ -77,6 +78,7 @@ export const login = async ({
         userProfile.token = loginRes.data.token
         userProfile.id = getIdFromString(userProfile.pathId)
         queryUserInfo(userProfile.id);
+        imLogin(userProfile.pathId)
         getWxProfile()
         // return loginRes
       } catch {

@@ -1,11 +1,19 @@
-import IMClient from "./tim_core";
+import IMClient, { IMessageCallBack } from "./tim_core";
 import CustomMessageTypes from './custom_message_types'
 
 export const logout = () => IMClient.getInstance().logout()
 
-export const login = (userId: string) => IMClient.getInstance().login(userId)
+export const imLogin = (userId: string) => IMClient.getInstance(true).login(userId)
 
-export const sendCustomMessage = () => IMClient.getInstance()
+export const sendCustomMessage = (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, inserDB: boolean = true) => IMClient.getInstance().sendGroupCustomMessage(options, groupid, saleId, data, inserDB)
+
+export const joinStoreGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, {type: 'ChatRoom'})
+
+export const joinSessionGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, {type: 'AVChatRoom'})
+
+export const quitGroup = (groupId: string) => IMClient.getInstance().quitGroup(groupId)
+
+// export const clearAckTimeout = (seq: string) => IMClient.getInstance().
 
 export const needService = async (groupID: string, saleId: string) => {
   await IMClient.getInstance().joinGroup(groupID, {type: 'ChatRoom'})
@@ -39,4 +47,8 @@ export const joinReserve = async (groupID: string, saleId: string) => {
       })
     }
   });
+}
+
+export const sessionIn = async (groupID: string) => {
+  await IMClient.getInstance().joinGroup(groupID, {type: 'ChatRoom'})
 }

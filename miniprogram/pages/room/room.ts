@@ -8,6 +8,7 @@ import { $on, $remove } from '../../utils/event'
 import { shareVideo } from '../../libs/share.js'
 import { userProfile } from '../../libs/user/user.js'
 import { CustomMessageTypes } from '../../libs/tim.js'
+import { joinReserve, needService, sessionIn } from '../../libs/tim/tim.js'
 
 let trtcClient: TRTC
 Page({
@@ -35,6 +36,7 @@ Page({
     saleId: '',
     storeId: '',
     firstIn: true,
+    enableAlertBeforeUnloadMessage: '确认挂断通话？'
   },
 
   /**
@@ -57,10 +59,10 @@ Page({
     } else if (type === '3') {
       const { roomId } = this.options
     }
+    
     this.queryStore(storeId)
     wx.setKeepScreenOn({
       keepScreenOn: true,
-
     })
 
 
@@ -77,7 +79,6 @@ Page({
     trtcClient = new TRTC(this)
     this.init({ userID: userProfile.pathId, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
-    const that = this
     $on({
       name: "onMessageEvent",
       tg: this,
@@ -99,6 +100,10 @@ Page({
           }
         }
       }
+    })
+
+    wx.enableAlertBeforeUnload({
+      message: this.data.enableAlertBeforeUnloadMessage
     })
 
   },
@@ -156,7 +161,13 @@ Page({
     if (!this.data.canTap) return;
     let flag = true
     if (this.data.isReserve && this.data.isReconnect) flag = false
-
+    if (this.data.isReserve) {
+      joinReserve(`${this.data.storeId}_Meeting`, this.data.saleId)
+    } else if (this.data.isReconnect) {
+      sessionIn(`${this.data.storeId}_Meeting`)
+    } else {
+      needService(`${this.data.storeId}_Meeting`, this.data.saleId)
+    }
     this.setData({
       isWaiting: flag,
       showDialog: false,

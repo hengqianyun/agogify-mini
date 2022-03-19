@@ -8,11 +8,16 @@ import { userProfile } from '../user/user.js';
 
 let hasReady = false
 
+ export interface IMessageCallBack {
+  success?: Function,
+  failed?: Function,
+  send?: Function,
+}
+
 export default class IMClient {
   private static instance: IMClient
 
   private tim: TIMSKD
-  private userId: string | null = null
   private timerMap: Map<String, { timer: number, success?: Function }> = new Map()
 
   private constructor() {
@@ -23,13 +28,17 @@ export default class IMClient {
     registerEvents(this.tim)
   }
 
-  public static getInstance(): IMClient {
+  public static getInstance(isLogin = false): IMClient {
+    if (isLogin) {
+      return this.instance
+    }
     if (!this.instance) {
       this.instance = new IMClient()
       return this.instance
     } else if (!hasReady) {
       throw Error('IMSDK not ready')
     } else {
+      console.debug('获取到了IMClient 的 instance')
       return this.instance
     }
   }
@@ -40,13 +49,18 @@ export default class IMClient {
 
   public login(userID: string) {
     const { userSig } = genTestUserSig(userID)
-    this.userId = userID
     try {
       this.tim.login({
         userID,
         userSig,
       })
-    } catch { }
+    } catch {
+      throw Error('im login 失败')
+    }
+  }
+
+  public quitGroup(groupID: string) {
+    this.tim.quitGroup(groupID)
   }
 
   /**
@@ -76,11 +90,7 @@ export default class IMClient {
    * @param data 
    * @param inserDB 
    */
-  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: {
-    success?: Function,
-    failed?: Function,
-    send?: Function,
-  }, inserDB: boolean = true) {
+  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, inserDB: boolean = true) {
     if (!!data.send) {
       data.send()
     }
@@ -190,19 +200,12 @@ export default class IMClient {
     }
   }
 
-  
-
-  /**
-   * 立即通话
-   */
-  public needService() {
-
-  }
 }
 
 
 
 const registerEvents = (tim: TIMSKD) => {
+  console.debug('im bind event')
   tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate)
   tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate)
 
@@ -219,10 +222,11 @@ const registerEvents = (tim: TIMSKD) => {
  */
 const onReadyStateUpdate = ({ name }: TIMEvent) => {
   const isSDKReady = (name === TIM.EVENT.SDK_READY)
-
+  console.debug('IM SDK ready')
+  console.debug(isSDKReady)
   if (isSDKReady) {
     wx.hideLoading()
-
+    hasReady = true
     // _hasReady = true
   } else {
     /// TODO 小程序需要重新login

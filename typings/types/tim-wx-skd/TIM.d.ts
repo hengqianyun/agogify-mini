@@ -17,7 +17,7 @@ declare class TIMSKD {
 
   joinGroup: (option: {groupID: string, applyMessage?: string, type: TIMGroupTypes}) => Promise<any>
 
-  quiteGroup: (groupId: string) => Promise<any>
+  quitGroup: (groupId: string) => Promise<any>
 
   getMyProfile: () => Promise<TIMUserInfoRequestData>
 

@@ -1,0 +1,68 @@
+@import url(../../style/global.less);
+
+.waitting-page {
+  // position: absolute;
+  // z-index: 999999;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  padding: 254rpx 0 184rpx 0;
+  box-sizing: border-box;
+  color: @defaultColor;
+  z-index: 101;
+  background: #fff;
+
+  .top-content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    .avatar-box {
+      height: 196rpx;
+      width: 196rpx;
+      border-radius: 50%;
+
+      .avatar {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .text-1 {
+      font-size: 36rpx;
+      font-weight: bold;
+    }
+
+    .text-2 {
+      color: @defaultColor2;
+      font-size: 24rpx;
+    }
+  }
+
+  .bottom-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+
+    .text-3 {
+      margin-top: 42rpx;
+      color: @defaultColor2;
+      font-size: 24rpx;
+    }
+  }
+
+  .dialog-content {
+    font-size: 34rpx;
+    color: #000000aa;
+
+    .dialog-item {
+      display: flex;
+      align-items: flex-start;
+    }
+  }
+}
