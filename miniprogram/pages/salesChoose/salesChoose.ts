@@ -124,12 +124,12 @@ Page({
     // this.setData({
     //   [key]: 'online'
     // })
-    // wx.navigateTo({
-    //   url: `../roomWaiting/roomWaiting?storeId=${currentStore.code}&saleId=${id}&type=needService`
-    // })
     wx.navigateTo({
-      url: `../room/room?storeName=${currentStore.name}&avatar=${currentStore.logo?.path}&storeId=${currentStore.code}&saleId=${id}`
+      url: `../roomWaiting/roomWaiting?storeId=${currentStore.code}&saleId=${id}&type=needService`
     })
+    // wx.navigateTo({
+    //   url: `../room/room?storeName=${currentStore.name}&avatar=${currentStore.logo?.path}&storeId=${currentStore.code}&saleId=${id}`
+    // })
   },
 
   async querySales() {

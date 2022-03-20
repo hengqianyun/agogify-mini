@@ -155,15 +155,16 @@ export default class IMClient {
    * @param saleId 
    * @param seq 
    */
-  public async sendAck(options: TIMCreateCustomMessageParamsPayload, groupid: string, userID: string, saleId: string, seq: string) {
+  public async sendAck(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, seq: string) {
     try {
       sessionModule.createMessageLocks({
         code: seq,
         sales: saleId,
-        customer: userID,
+        customer: userProfile.pathId,
       })
       const message = await this.createCustomMessage(options, groupid, saleId)
       await this.tim.sendMessage(message)
+      console.debug(`发送了seq为${seq}的ack`)
     } catch { }
   }
 
@@ -274,13 +275,12 @@ const onError = () => { }
  */
 const messageReceived = (event: TIMEvent<TIMMessage>) => {
   // 分发至视频页面
+  const data = event.data[0]
   let payloadData: any;
+  try {
+    payloadData = JSON.parse(data.payload.data)
+  } catch (err) { }
   if (payloadData && payloadData.to === userProfile.pathId) {
-
-    $emit({
-      name: 'onMessageEvent',
-      data: event
-    })
     $emit({
       name: 'onCustomMessageRecvEvent',
       data: event

@@ -26,7 +26,7 @@ export const $on = function(params) {
     ];
   }
   console.log(event)
-  pageStatus(params.tg);
+  // pageStatus(params.tg);
 }
 
 export const $emit = function(params) {

@@ -1,5 +1,5 @@
 import CustomMessageTypes from "../../libs/tim/custom_message_types"
-import { joinStoreGroup, quitGroup, sendCustomMessage } from "../../libs/tim/tim"
+import { clearAckTimeout, joinStoreGroup, quitGroup, sendAck, sendCustomMessage } from "../../libs/tim/tim"
 import { userProfile } from "../../libs/user/user"
 import { $on, $remove } from '../../utils/event'
 import { clearSessionAsync } from "../../utils/querySession"
@@ -15,6 +15,9 @@ Page({
     saleId: '',
     showBusyDialog: false,
     showDialog: true,
+    callTimer: 0,
+    type: '',
+    storeId: '',
   },
 
   /**
@@ -23,59 +26,15 @@ Page({
   async onLoad() {
     const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
     this.setData({
-      storeGroupId: `${storeId}_Meeting`
+      storeGroupId: `${storeId}_Meeting`,
+      type,
+      storeId,
+      saleId,
     })
-    await joinStoreGroup(this.data.storeGroupId)
-    switch (type) {
-      case 'needService':
-        sendCustomMessage({ data: CustomMessageTypes.NEED_SERVICE, }, this.data.storeGroupId, saleId, {
-          failed: () => {
-            wx.showModal({
-              title: '链接失败，请重试',
-              showCancel: false,
-              success: async () => {
-                sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, saleId, {}, false)
-                wx.setStorageSync('session', null)
-                wx.navigateBack()
-              }
-            })
-          }
-        })
-        break;
-      case 'reserveIn':
-        await sendCustomMessage({
-          data: CustomMessageTypes.RESERVE_ENTER_ROOM
-        }, this.data.storeGroupId, saleId, {
-          failed: () => {
-            wx.showModal({
-              title: '链接失败，请重试',
-              showCancel: false,
-              success: () => {
-                wx.navigateBack()
-              }
-            })
-          }
-        });
-        break
-      case "sessionIn":
-        wx.navigateTo({
-          url: `../room/room?groupID=${this.data.storeGroupId}&saleId=${saleId}`
-        })
-        break
-      default:
-        const that = this
-        wx.showModal({
-          title: '错误',
-          content: '未知错误',
-          showCancel: false,
-          confirmText: '我知道了',
-          success() {
-            quitGroup(that.data.storeGroupId)
-            wx.navigateBack()
-          }
 
-        })
-    }
+    /**
+     * 接受storeGroup信息，包含进入房间、挂断电话
+     */
     $on({
       name: "onCustomMessageRecvEvent",
       tg: this,
@@ -88,15 +47,29 @@ Page({
         if (payloadData && payloadData.to === userProfile.pathId) {
           switch (payloadData.type) {
             case CustomMessageTypes.START_VIDEO:
-              wx.navigateTo({
-                url: `../room/room/roomId=${payloadData.roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${payloadData.groupId}&storeId=${storeId}`
+              /**
+               * 销售接通电话，通知用户进入房间，携带房间id和AVChatGroupId
+               * 跳转至roomPage，携带房间id，avChatRoomId,店铺ID，销售id
+               */
+              clearTimeout(this.data.callTimer)
+              wx.redirectTo({
+                url: `../room/room?roomId=${payloadData.roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${payloadData.groupId}&storeId=${storeId}&saleId=${saleId}`
               })
               break
             case CustomMessageTypes.NOW_BUSY:
               this.setData({
                 showBusyDialog: true
               })
+              quitGroup(this.data.storeGroupId)
               break
+            case 'ack':
+              clearAckTimeout(payloadData.seq)
+              break
+          }
+          if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
+            
+            sendAck({ data: 'ack', description: "succesee" }, `${this.data.storeId}_Meeting`, this.data.saleId, data.time.toString())
+            console.debug(`接受了seq为${data.time.toString()}的ack`)
           }
         }
       }
@@ -104,35 +77,23 @@ Page({
     // if ()
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  onUnload() {
-    $remove({
-      name: "onCustomMessageRecvEvent",
-      tg: this,
-    })
-  },
+  // onUnload() {
+  //   $remove({
+  //     name: "onCustomMessageRecvEvent",
+  //     tg: this,
+  //   })
+  // },
 
   handleBusy() {
     this.setData({
       showDialog: false,
     })
-    quitGroup(this.data.storeGroupId)
     wx.navigateBack()
   },
 
+  /**
+   * 取消通话，发送对应消息
+   */
   async handleHangUp() {
     await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {})
     quitGroup(this.data.storeGroupId)
@@ -140,14 +101,93 @@ Page({
     wx.navigateBack()
   },
 
+  /**
+   * 注意事项弹框确认,开始初始化
+   */
   handleDialogCommit() {
     this.setData({
       showDialog: false,
     })
+    this.init()
   },
+  /**
+   * 在用户接受弹框条款后的初始化，主要为消息模块
+   */
+  async init() {
+    await joinStoreGroup(this.data.storeGroupId)
+    switch (this.data.type) {
+      case 'needService':
+        /**
+         * 用户点击立即通话，8秒未收到回执则连接失败，弹框提示并退出，清除拨打电话计时器
+         */
+        sendCustomMessage({ data: CustomMessageTypes.NEED_SERVICE, }, this.data.storeGroupId, this.data.saleId, {
+          failed: () => {
+            clearTimeout(this.data.callTimer)
+            wx.showModal({
+              title: '链接失败，请重试',
+              showCancel: false,
+              success: async () => {
+                sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {}, false)
+                wx.setStorageSync('session', null)
+                wx.navigateBack()
+              }
+            })
+          }
+        })
+        this.setCallTimeOut()
+        break;
+      case 'reserveIn':
+        /**
+         * 预约进入房间，用户可提前进入。进入房间不需求得到回执，也无需计时
+         */
+        await sendCustomMessage({
+          data: CustomMessageTypes.RESERVE_ENTER_ROOM
+        }, this.data.storeGroupId, this.data.saleId, {});
+        break
+      case "sessionIn":
+        /**
+         * 用户通过未完成session进入房间，直接进入即可，携带一个sessionCode以表示由session进入
+         */
+        const sessionCode = this.options
+        const roomId = this.data.storeGroupId + '-' + sessionCode
+        wx.redirectTo({
+          url: `../room/room?roomId=${roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${roomId}&storeId=${this.data.storeId}&saleId=${this.data.saleId}&sessionCode=${sessionCode}`
+        })
+        break
+      default:
+        /**
+         * 跳转到当前页面未携带type参数，报错并退出
+         */
+        const that = this
+        wx.showModal({
+          title: '错误',
+          content: '未知错误',
+          showCancel: false,
+          confirmText: '我知道了',
+          success() {
+            quitGroup(that.data.storeGroupId)
+            wx.navigateBack()
+          }
+        })
+    }
+  },
+  /**
+   * 用户不同意弹框条款，退出界面
+   */
   handleDialogCancel() {
-    quitGroup(this.data.storeGroupId)
     wx.navigateBack()
+  },
+  /**
+   * 设置拨打电话的倒计时，60s无应答则退出
+   */
+  setCallTimeOut() {
+    this.setData({
+      callTimer: setTimeout(async () => {
+        await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {})
+        clearSessionAsync()
+        wx.navigateBack()
+      }, 60000)
+    })
   }
 
 })

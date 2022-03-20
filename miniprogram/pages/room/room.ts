@@ -4,11 +4,12 @@ import TRTC from 'trtc-wx-sdk'
 import { $emit } from '../../utils/event.js'
 import { IMAGEBASEURL, IMAGEPATHS } from '../../http/index.js'
 import storeModule from '../../http/module/store.js'
-import { $on, $remove } from '../../utils/event'
-import { getIdFromString } from '../../utils/util.js'
 import { shareVideo } from '../../libs/share.js'
 import { userProfile } from '../../libs/user/user.js'
+import { joinSessionGroup, sendCustomMessage } from '../../libs/tim/tim.js'
 import CustomMessageTypes from '../../libs/tim/custom_message_types.js'
+import sessionModule from '../../http/module/session.js'
+import { clearSessionAsync } from '../../utils/querySession.js'
 
 let trtcClient: TRTC
 Page({
@@ -19,58 +20,67 @@ Page({
       userSig: '', // 必要参数 身份签名，相当于登录密码的作用
     },
     groupId: '',
-    userId: '',
     roomId: null as unknown as string,
     pusher: null as any,
     playerList: [] as PlayerListItem[],
     // store
     store: { name: '', avatar: '', id: '' },
     isReconnect: false,
-    isReserve: false,
-    showChat: false,
-    canTap: true,
     canLeave: true,
     saleId: '',
     storeId: '',
-    firstIn: true,
+    enableAlertBeforeUnloadMsg: '',
   },
 
   /**
    * 生命周期函数--监听页面加载
-   * @param {String} type
    */
-  async onLoad() {
-    
-    const { roomId, saleId, storeId, avGroupId, storeGroupId } = this.options as { roomId: string, storeId: string, saleId: string, avGroupId: string, storeGroupId: string}
+  onLoad() {
+
+    const { roomId, saleId, storeId, avGroupId, storeGroupId, sessionCode } = this.options as { roomId: string, storeId: string, saleId: string, avGroupId: string, storeGroupId: string, sessionCode?: string }
+    joinSessionGroup(avGroupId)
+    // 查询店铺信息
     this.queryStore(storeId)
     wx.setKeepScreenOn({
       keepScreenOn: true,
-
     })
 
-
+    // 初始化部分数据
     this.setData({
-      userId: userProfile.pathId,
       saleId,
       storeId,
-      firstIn: false,
       groupId: avGroupId,
       roomId: roomId,
       strRoomID: roomId,
+      isReconnect: !!sessionCode
     })
-
-
     const { userSig, sdkAppID } = genTestUserSig(userProfile.pathId)
-    // tim = initTim(user.customer, { sdkAppID, userSig }, storeId, saleId, this.data.isReserve, this.data.isReconnect)
     trtcClient = new TRTC(this)
+    console.log(trtcClient)
     this.init({ userID: userProfile.pathId, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
-    this.startVideo()
+    setTimeout(() => {
+      this.enterRoom({ roomID: this.data.roomId })
+    }, 0)
+    const that = this
+    /**
+     * 返回时间拦截
+     */
+    wx.enableAlertBeforeUnload({
+      message: this.data.canLeave ? '销售还未操作完，是否离开房间？' : '',
+      success() {
+        that.exitRoom()
+        sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {})
+        const code = that.data.groupId.split('Meeting-')[1]
+        sessionModule.putSession({
+          droppedByCustomer: true
+        }, code)
+        clearSessionAsync()
+      }
+    })
   },
 
   onShow() {
-    if (this.data.firstIn) return
-    // trtcClient.getPusherInstance().start()
     setTimeout(() => {
       this.setData({
         playerList: this.data.playerList
@@ -79,40 +89,27 @@ Page({
   },
 
   onReady() {
-    console.log('room ready')
+    console.debug('room ready')
   },
   onUnload() {
-    console.log('room unload')
-    // $remove({
-    //   name: "onMessageEvent",
-    //   tg: this,
-    // })
+    console.debug('room unload')
   },
 
   onShareAppMessage(option) {
     const { from } = option
     if (from === 'button') {
-      return shareVideo(userProfile.nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share', this.data.groupId, {salesId: this.data.saleId, storeId: this.data.storeId})
+      return shareVideo(userProfile.nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share', this.data.groupId, { salesId: this.data.saleId, storeId: this.data.storeId })
     }
-  },
-
-  startVideo(option: WechatMiniprogram.TouchEvent) {
-    this.enterRoom({ roomID: this.data.roomId })
-    $emit({
-      name: 'joined_room'
-    })
   },
 
   async queryStore(code: string) {
-    this.data.canTap = false
-    wx.showLoading({title: ''})
+    wx.showLoading({ title: '' })
     const resData = await storeModule.queryStoreDetails(code)
     if (resData.data.logo)
-      resData.data.logo.path = IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + resData.data?.logo?.path
+      resData.data.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
-      resData.data.images[0].path = IMAGEBASEURL+ IMAGEPATHS.storeSmall1x + resData.data.images[0].path
+      resData.data.images[0].path = IMAGEBASEURL + IMAGEPATHS.storeSmall1x + resData.data.images[0].path
     }
-    this.data.canTap = true
     wx.hideLoading()
     this.setData({
       store: { id: code, avatar: resData.data.logo.path, name: resData.data.name },
@@ -143,7 +140,6 @@ Page({
 
   enterRoom({ roomID }: { roomID: string }) {
     const trtcConfig = { ...this.data._rtcConfig, strRoomID: roomID } as EnterRoomParams
-    console.log('trtcConfig ---->', trtcConfig)
     this.setData({
       pusher: trtcClient.enterRoom(trtcConfig),
     }, () => {
@@ -177,8 +173,13 @@ Page({
   bindTRTCRoomEvent() {
     const TRTC_EVENT = trtcClient.EVENT
     // 初始化事件订阅
-    // trtcClient.on(TRTC_EVENT.LOCAL_JOIN, (event: OnEvent) => {
-    // })
+    trtcClient.on(TRTC_EVENT.LOCAL_JOIN, (_: OnEvent) => {
+      wx.showToast({
+        title: `进入了房间成功`,
+        icon: 'none',
+        duration: 2000,
+      })
+    })
     // trtcClient.on(TRTC_EVENT.LOCAL_LEAVE, (event: OnEvent) => {
     // })
     // trtcClient.on(TRTC_EVENT.ERROR, (event: OnEvent) => {
@@ -238,23 +239,7 @@ Page({
     })
   },
 
-
-
-  // 挂断退出房间
-  _hangUp() {
-    if (!this.data.canLeave) {
-      wx.showLoading({
-        title: '销售还未操作完，请勿挂断电话'
-      })
-      return
-    }
-    this.exitRoom()
-    wx.navigateBack({
-      delta: 1,
-    })
-  },
-
-  setCanLeaveState(status: boolean ) {
+  setCanLeaveState(status: boolean) {
     this.data.canLeave = status
   },
 

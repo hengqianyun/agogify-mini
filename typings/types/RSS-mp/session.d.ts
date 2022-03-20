@@ -47,7 +47,7 @@ declare namespace sessionDesign {
     items: { id: string }[]
     notes: ''
     paymentState: string
-    shippingAddress: {} | null
+    shippingAddress: addressDesign.address
     shippingState: string
     tokenValue: string
     shipments: { id: number }[]

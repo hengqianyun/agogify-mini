@@ -1,7 +1,5 @@
 // pages/room/components/chat/chat.ts
 import { $on, $remove } from '../../../../utils/event'
-import { initTim, getHistory, setHistory, logoutTim, CustomMessageTypes, sendCustomMessage, sendTextMessage, resetTimerAndSeq, quiteGroup } from "../../../../libs/tim"
-import genTestUserSig from '../../../../debug/GenerateTestUserSig'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
@@ -10,7 +8,8 @@ import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
-import { clearAckTimeout, sendAck } from '../../../../libs/tim/tim'
+import { clearAckTimeout, quitGroup, resetTimerAndSeq, sendAck, sendCustomMessage, sendTextMessage } from '../../../../libs/tim/tim'
+import CustomMessageTypes from '../../../../libs/tim/custom_message_types'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -30,12 +29,9 @@ Component({
     storeName: String,
     storeAvatar: String,
     storeId: String,
-    userId: String,
     groupId: String,
-    isWaiting: Boolean,
     saleId: String,
     isReconnect: Boolean,
-    isReserve: Boolean,
   },
 
   /**
@@ -86,14 +82,12 @@ Component({
     productSize: '',
     payDialogLabel: '',
     qrcode: '',
-    showHandUpDialog: false,
     showMoreAddress: false,
     hasGetTime: false,
     showQrcode: false,
     hasPaid: false,
     canLeave: true,
     payDialogBtnDisabled: false,
-    callTimer: 0,
     itemsTotal: '',
     shippingTotal: '',
     total: '',
@@ -104,15 +98,7 @@ Component({
 
   lifetimes: {
     async ready() {
-      const userID = this.properties.userId
       this.initRecording()
-      this.setData({
-        callTimer: setTimeout(async () => {
-          await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-          clearSessionAsync()
-          wx.navigateBack()
-        }, 60000)
-      })
       $on({
         name: "onCustomMessageRecvEvent",
         tg: this,
@@ -124,10 +110,6 @@ Component({
           } catch (err) { }
             // 判断消息是否发给自己
             switch (payloadData.type) {
-              // case CustomMessageTypes.START_VIDEO:
-              //   // 进入房间
-              //   this.triggerEvent('startVideo', { publicGroupId: payloadData.groupId, roomId: payloadData.roomId })
-              //   break
               case CustomMessageTypes.PAY:
                 const that = this
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
@@ -165,9 +147,6 @@ Component({
                   canLeave: true
                 })
                 break
-              // case CustomMessageTypes.NOW_BUSY:
-              //   this.triggerEvent('busy')
-              //   break
               case CustomMessageTypes.TIMELEFT_CHECK:
                 if (!this.data.hasGetTime) {
 
@@ -177,7 +156,7 @@ Component({
                     timeleftSec: payloadData.timeleft
                   })
                 }
-                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {}, false)
+                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.saleId, {}, false)
                 break
               case CustomMessageTypes.SCAN_FINISH:
                 this.setData({
@@ -188,8 +167,16 @@ Component({
                 clearAckTimeout(payloadData.seq)
             }
             if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
-              sendAck({ data: 'ack', description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, data.time.toString())
+              sendAck({ data: 'ack', description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.saleId, data.time.toString())
             }
+        }
+      })
+
+      $on({
+        name: 'onGroupMessageRecvEvent',
+        tg:this,
+        async success(res: TIMMessageReceive) {
+          const data = res.data[0]
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
             try {
@@ -214,13 +201,9 @@ Component({
         }
       })
 
-      $on({
-        name: 'joined_room',
-        tg: this,
-        async success() {
-          clearTimeout(this.data.callTimer)
-          // 
-          this.joinGroup(this.properties.groupId)
+      await this.queryAddressList()
+      if (this.properties.isReconnect) {
+        this.joinGroup(this.properties.groupId)
           this.initRecording()
           await this.queryAddressList()
           const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
@@ -272,8 +255,8 @@ Component({
               payDialogLabel: '确认订单',
               tokenValue,
               productName,
-              paymentId,
-              shipmentId,
+              paymentId: paymentId.toString(),
+              shipmentId: shipmentId.toString(),
               productBrand: brand,
               productSize: size,
               productCategory1CnName: category1,
@@ -283,8 +266,6 @@ Component({
             })
             if (this.data.orderStep === 4) {
               await this.queryOrder(tokenValue)
-              // const addressList = [shippingAddress, ...this.data.addressList]
-              // console.log(addressList)
               this.setData({
                 payDialogLabel: '已付款',
                 showQrcode: true,
@@ -310,17 +291,7 @@ Component({
             //   show
             // })
           }
-        }
-      })
-      $on({
-        name: 'hang_up',
-        tg: this,
-        async success() {
-          await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.userId, this.properties.saleId, {})
-          clearSessionAsync()
-          wx.navigateBack()
-        }
-      })
+      }
       // 
       if (this.properties.isReconnect) {
         const that = this
@@ -340,21 +311,20 @@ Component({
 
     detached() {
       $remove({
-        name: "onMessageEvent",
+        name: "onCustomMessageRecvEvent",
+        tg: this,
+      })
+      $remove({
+        name: "onGroupMessageRecvEvent",
         tg: this,
       })
       $remove({
         name: "joined_room",
         tg: this,
       })
-      $remove({
-        name: "hang_up",
-        tg: this,
-      })
       clearInterval(this.data.timeleftTimer)
       resetTimerAndSeq()
-      clearTimeout(this.data.callTimer)
-      quiteGroup(`${this.properties.storeId}_Meeting`)
+      quitGroup(`${this.properties.storeId}_Meeting`)
     }
   },
 
@@ -410,35 +380,9 @@ Component({
     },
 
     handleExitTab() {
-      // if (!this.data.canLeave) {
-      //   wx.showToast({
-      //     title: '销售还未操作完,请勿挂断电话'
-      //   })
-      //   return
-      // }
-      // if (!this.data.canLeave) {
-      //   this.setData({
-      //     hangupText: '销售还未操作完，确认挂断通话？'
-      //   })
-      // }
-      this.setData({ showHandUpDialog: true })
-    },
-    handleHangUpCancel() {
-      this.setData({ showHandUpDialog: false })
-    },
-
-    async handleHangUp() {
-      // TODO 挂断电话
-      sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, this.data.groupId, this.properties.userId, this.properties.saleId, {})
-      const code = this.properties.groupId.split('Meeting-')[1]
-      await sessionModule.putSession({
-        droppedByCustomer: true
-        // endTime: (new Date()).toISOString(),
-        // state: 'ended',
-      }, code)
-      clearSessionAsync()
       wx.navigateBack()
     },
+
 
     async sendMessage() {
       if (this.data.inputValue.trim() === "") {
@@ -652,7 +596,7 @@ Component({
           return
         }
       }
-      await sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.userId, this.properties.saleId, {
+      await sendCustomMessage({ data: CustomMessageTypes.PAY_CANCELED }, this.data.groupId, this.properties.saleId, {
         send: () => {
           wx.showLoading({ title: '' })
         },
@@ -703,7 +647,7 @@ Component({
             wx.hideLoading()
             return
           }
-          await sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId, {
+          await sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.saleId, {
             success: () => {
               this.setData({
                 showPopup: false,
@@ -858,7 +802,7 @@ Component({
           // qrcodeUrl = await this.queryQrcode()
           // this.showQrcode(qrcodeUrl)
 
-          await sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.userId, this.properties.saleId, {
+          await sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.saleId, {
             // send: () => {
             //   wx.showLoading({title: ''})
             // },
@@ -893,38 +837,8 @@ Component({
           })
           wx.hideLoading()
         }
-        // sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED }, this.data.groupId, this.properties.userId, this.properties.saleId)
-
-
       }
-
-
-
-
-
       return
-      // const paymentRes = await this.payment()
-      // const _that = this
-      // wx.requestPayment({
-      //   timeStamp: paymentRes.timeStamp,
-      //   nonceStr: paymentRes.nonceStr,
-      //   package: paymentRes.package,
-      //   signType: paymentRes.signType,
-      //   paySign: paymentRes.paySign,
-      //   async success(res) {
-      //     console.log(res)
-      //     const completeRes = await orderModule.orderComplete(_that.data.tokenValue, { notes: 'finished' })
-      //     // 付款
-      //     sendCustomMessage({ data: CustomMessageTypes.PAY_FINISHED, description: "succesee" }, _that.data.groupId, _that.properties.userId, _that.properties.saleId, {})
-      //     _that.setData({
-      //       showPopup: false,
-      //     })
-      //     _that.resetOrder()
-      //   },
-      //   fail(err) {
-      //     console.log(err)
-      //   }
-      // })
 
     },
     async userHasPaid(): Promise<boolean> {

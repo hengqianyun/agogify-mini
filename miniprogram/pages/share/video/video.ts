@@ -29,7 +29,6 @@ Component({
 
   lifetimes: {
     async attached() {
-      debugger
       if (!!userProfile.pathId && !!userProfile.avatar) {
         try {
           /// TODO check wether user can join
