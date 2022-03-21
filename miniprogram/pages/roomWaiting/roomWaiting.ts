@@ -59,6 +59,7 @@ Page({
               })
               break
             case CustomMessageTypes.NOW_BUSY:
+              clearTimeout(this.data.callTimer)
               this.setData({
                 showBusyDialog: true
               })
