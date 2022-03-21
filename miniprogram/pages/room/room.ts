@@ -26,7 +26,6 @@ Page({
     // store
     store: { name: '', avatar: '', id: '' },
     isReconnect: false,
-    canLeave: true,
     saleId: '',
     storeId: '',
     enableAlertBeforeUnloadMsg: '',
@@ -65,7 +64,7 @@ Page({
      * 返回时间拦截
      */
     wx.enableAlertBeforeUnload({
-      message: this.data.canLeave ? '销售还未操作完，是否离开房间？' : '',
+      message: '是否离开房间？',
       success() {
         that.exitRoom()
         sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
@@ -241,10 +240,6 @@ Page({
         pusher: pusher
       })
     })
-  },
-
-  setCanLeaveState(status: boolean) {
-    this.data.canLeave = status
   },
 
   // 请保持跟 wxml 中绑定的事件名称一致
