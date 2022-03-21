@@ -96,7 +96,7 @@ Page({
    * 取消通话，发送对应消息
    */
   async handleHangUp() {
-    await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {})
+    await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {}, {})
     quitGroup(this.data.storeGroupId)
     clearSessionAsync()
     wx.navigateBack()
@@ -130,13 +130,13 @@ Page({
               title: '链接失败，请重试',
               showCancel: false,
               success: async () => {
-                sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {}, false)
+                sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: userProfile.avatar }, this.data.storeGroupId, this.data.saleId, {}, {} , false)
                 wx.setStorageSync('session', null)
                 wx.navigateBack()
               }
             })
           }
-        })
+        }, {avatar: userProfile.avatar})
         this.setCallTimeOut()
         break;
       case 'reserveIn':
@@ -145,7 +145,7 @@ Page({
          */
         await sendCustomMessage({
           data: CustomMessageTypes.RESERVE_ENTER_ROOM
-        }, this.data.storeGroupId, this.data.saleId, {});
+        }, this.data.storeGroupId, this.data.saleId, {}, {});
         break
       case "sessionIn":
         /**
@@ -191,7 +191,7 @@ Page({
   setCallTimeOut() {
     this.setData({
       callTimer: setTimeout(async () => {
-        await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {})
+        await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {}, {})
         clearSessionAsync()
         wx.navigateBack()
       }, 60000)

@@ -3,7 +3,6 @@ import TIMUploadPlugin from 'tim-upload-plugin';
 import { $emit } from '../../utils/event';
 import genTestUserSig, { SDKAPPID } from '../../debug/GenerateTestUserSig.js';
 import sessionModule from '../../http/module/session.js';
-import CustomMessageTypes from './custom_message_types'
 import { userProfile } from '../user/user.js';
 
 let hasReady = false
@@ -12,6 +11,7 @@ let hasReady = false
   success?: Function,
   failed?: Function,
   send?: Function,
+  avatar?: string
 }
 
 export default class IMClient {
@@ -63,11 +63,11 @@ export default class IMClient {
     this.tim.quitGroup(groupID)
   }
 
-  public async createCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string) {
+  public async createCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, avatar?: string) {
     return await this.tim.createCustomMessage({
       to: groupid,
       conversationType: "GROUP",
-      payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId }) }
+      payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId, avatar }) }
     })
   }
 
@@ -102,13 +102,15 @@ export default class IMClient {
    * @param data 
    * @param inserDB 
    */
-  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, inserDB: boolean = true) {
+  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, {
+    avatar = ''
+  }, inserDB: boolean = true) {
     if (!!data.send) {
       data.send()
     }
 
     try {
-      const message = await this.createCustomMessage(options, groupid, saleId)
+      const message = await this.createCustomMessage(options, groupid, saleId, avatar)
       const res = await this.tim.sendMessage(message)
 
       if (inserDB) {

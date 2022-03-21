@@ -59,9 +59,7 @@ Page({
     console.log(trtcClient)
     this.init({ userID: userProfile.pathId, userSig, sdkAppID: sdkAppID + '' })
     this.bindTRTCRoomEvent()
-    setTimeout(() => {
-      this.enterRoom({ roomID: this.data.roomId })
-    }, 0)
+
     const that = this
     /**
      * 返回时间拦截
@@ -70,7 +68,7 @@ Page({
       message: this.data.canLeave ? '销售还未操作完，是否离开房间？' : '',
       success() {
         that.exitRoom()
-        sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {})
+        sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
         const code = that.data.groupId.split('Meeting-')[1]
         sessionModule.putSession({
           droppedByCustomer: true
@@ -90,6 +88,9 @@ Page({
 
   onReady() {
     console.debug('room ready')
+    setTimeout(() => {
+      this.enterRoom({ roomID: this.data.roomId })
+    }, 0)
   },
   onUnload() {
     console.debug('room unload')
@@ -139,12 +140,15 @@ Page({
   },
 
   enterRoom({ roomID }: { roomID: string }) {
+    console.log(trtcClient.getPusherInstance())
     const trtcConfig = { ...this.data._rtcConfig, strRoomID: roomID } as EnterRoomParams
     this.setData({
       pusher: trtcClient.enterRoom(trtcConfig),
     }, () => {
-      trtcClient.getPusherInstance().start() // 开始推流
+      wx.createLivePusherContext().start()
+      // trtcClient.getPusherInstance().start() // 开始推流
     })
+
   },
 
   exitRoom() {

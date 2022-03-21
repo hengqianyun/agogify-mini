@@ -156,7 +156,7 @@ Component({
                     timeleftSec: payloadData.timeleft
                   })
                 }
-                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.saleId, {}, false)
+                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.saleId, {}, {}, false)
                 break
               case CustomMessageTypes.SCAN_FINISH:
                 this.setData({
@@ -600,7 +600,7 @@ Component({
             }
           })
         }
-      })
+      }, {})
 
     },
     async _handleCommit() {
@@ -640,7 +640,7 @@ Component({
               this.resetOrder()
               this.data.canLeave = false
             }
-          })
+          }, {})
 
         } catch {
           wx.showToast({ title: '请求失败，请重新尝试' })
@@ -796,7 +796,7 @@ Component({
             //     payDialogBtnDisabled: false
             //   })
             // }
-          }, false)
+          }, {}, false)
           this.setData({
             payDialogLabel: '已付款',
             showQrcode: true,
