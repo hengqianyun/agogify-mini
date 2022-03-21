@@ -37,7 +37,7 @@ Page({
    */
   onLoad() {
 
-    const { roomId, saleId, storeId, avGroupId, storeGroupId, sessionCode } = this.options as { roomId: string, storeId: string, saleId: string, avGroupId: string, storeGroupId: string, sessionCode?: string }
+    const { roomId, saleId, storeId, avGroupId, storeGroupId, sessionCode, share } = this.options as { roomId: string, storeId: string, saleId: string, avGroupId: string, storeGroupId: string, sessionCode?: string, share?: string }
     joinSessionGroup(avGroupId)
     // 查询店铺信息
     this.queryStore(storeId)
@@ -52,7 +52,7 @@ Page({
       groupId: avGroupId,
       roomId: roomId,
       strRoomID: roomId,
-      isReconnect: !!sessionCode
+      isReconnect: !!sessionCode && !share
     })
     const { userSig, sdkAppID } = genTestUserSig(userProfile.pathId)
     trtcClient = new TRTC(this)

@@ -38,12 +38,12 @@ Component({
               desc: '加入直播后可以协助好友挑选商品'
             })
           }
-          // await this.checkSession() ?
-          // this.setData({
-          //   btnLabel: '加入直播'
-          // }) : this.setData({
-          //   showBtn: false
-          // })
+          await this.checkSession() ?
+          this.setData({
+            btnLabel: '加入直播'
+          }) : this.setData({
+            showBtn: false
+          })
         } catch {
           
         }
@@ -62,7 +62,7 @@ Component({
     handleTap() {
       if (this.data.btnLabel === '加入直播') {
         wx.navigateTo({
-          url: `../room/room?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=3&sessionCode=${this.properties.sessionCode}`
+          url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=3&sessionCode=${this.properties.sessionCode}`
         })
       } else {
         wx.navigateTo({

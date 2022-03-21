@@ -154,6 +154,13 @@ Page({
           url: `../room/room?roomId=${roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${roomId}&storeId=${this.data.storeId}&saleId=${this.data.saleId}&sessionCode=${sessionCode}`
         })
         break
+      case "shareIn":
+        const sessionCode = this.options
+        const roomId = this.data.storeGroupId + '-' + sessionCode
+        wx.redirectTo({
+          url: `../room/room?roomId=${roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${roomId}&storeId=${this.data.storeId}&saleId=${this.data.saleId}&sessionCode=${sessionCode}&share=1`
+        })
+        break
       default:
         /**
          * 跳转到当前页面未携带type参数，报错并退出
