@@ -42,16 +42,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    const resData = await ocrModule.getToken()
-    console.log(resData)
-    const { access_token } = resData.data
-    this.setData({
-      access_token: access_token
-    })
-    const hasRealNameCertified = getIfUserHasTheRealNameBeenCertified()
-    if (hasRealNameCertified) {
-      await this.queryUserInfo()
-    }
+    this.queryUserInfo()
+    // const resData = await ocrModule.getToken()
+    // console.log(resData)
+    // debugger
+    // const { access_token } = resData.data
+    // this.setData({
+    //   access_token: access_token
+    // })
+    // const hasRealNameCertified = getIfUserHasTheRealNameBeenCertified()
+    // console.log(hasRealNameCertified)
+    // if (hasRealNameCertified) {
+    //   await this.queryUserInfo()
+    // }
   },
 
   /**
@@ -153,69 +156,6 @@ Page({
 
         // wx.getFileInfo()
         return
-        try {
-          wx.showLoading({ title: '上传识别中' })
-          await that.uploadImage(that.data.identityPath, 'identity-front')
-          const ocrRes = await userModule.getOcrInfo()
-          const { IdNum, Name } = ocrRes.data["identity-front"]
-          that.setData({
-            userName: Name,
-            userNumber: IdNum
-          })
-        } catch (err: any) {
-          if (err.data.code == 500) {
-            console.log(err)
-            wx.showModal({
-              title: "图片无法识别",
-              showCancel: false,
-              confirmText: "我知道了"
-            })
-          } else {
-            wx.showModal({
-              title: "发生错误，请重试",
-              showCancel: false,
-              confirmText: "我知道了"
-            })
-          }
-        } finally {
-          wx.hideLoading()
-        }
-
-
-        return
-        wx.uploadFile({
-          filePath: tempPath,
-          name: 'file',
-          header: { authorization: http.defaultConfig.header.authorization },
-          // url: `https://api.weixin.qq.com/cv/ocr/idcard?type=photo&access_token=${wxTokenRes.data.access_token}`,
-          url: BASEURL + 'store/id-card-ocr-requests',
-          success(res) {
-            console.log(res.data)
-            const { name, id, errcode } = JSON.parse(res.data)
-            if (errcode === 101001) {
-              // wx.showToast({
-              //   title: "未找到身份证照片",
-              //   icon: "error"
-              // })
-              wx.showModal({
-                title: "图片无法识别",
-                showCancel: false,
-                confirmText: "我知道了"
-              })
-            }
-            that.setData({
-              userName: name,
-              userNumber: id
-            })
-          },
-          fail(err) {
-            console.log(err)
-            wx.showToast({
-              title: "网络错误",
-              icon: "error"
-            })
-          }
-        })
       }
     })
   },
@@ -296,15 +236,10 @@ Page({
       wx.showToast({ title: "上传证件背面照", icon: "error" })
       return
     }
-    // if (!this.data.base64) {
-    //   wx.showToast({ title: "请选择人像照片", icon: "error" })
-    //   return
-    // }
     this.setData({
       commitBtnDisabled: true
     })
 
-    // wx.showLoading({ title: '正在对比人像...' })
     wx.showLoading({ title: '正在提交...' })
     try {
       await this.uploadImage(this.data.identityPath, 'identity-front')
@@ -316,6 +251,9 @@ Page({
           confirmText: "我知道了"
         })
         wx.hideLoading()
+        userProfile.firstName = ''
+        userProfile.lastName = ''
+        userProfile.hasTheRealNameBeenCertified = false
         this.setData({
           commitBtnDisabled: false
         })
@@ -324,7 +262,6 @@ Page({
     }
     try {
       await this.uploadImage(this.data.passportPath, 'identity-back')
-      // await this.uploadImage(this.data.portraitPath, 'portrait')
       await this.putUserInfo()
       const ocrRes = await userModule.getOcrInfo()
       const { ValidDate } = ocrRes.data["identity-back"]
@@ -344,7 +281,6 @@ Page({
       console.log('err ---->', err)
 
       if (!!err && err.statusCode === 400) {
-        const data = JSON.parse(err.data)
         wx.showModal({
           title: '识别失败',
           showCancel: false,
@@ -367,76 +303,21 @@ Page({
     this.setData({
       hasRealNameCertified: true
     })
+    const that = this
     wx.showModal({
       title: "提交成功",
       showCancel: false,
       confirmText: "我知道了",
       success() {
-        setIfUserHasTheRealNameBeenCertified(true)
+        const { firstName, lastName, identity } = that.data.form
+        userProfile.firstName = firstName.value
+        userProfile.lastName = lastName.value
+        userProfile.identityNumber = identity.value
+        userProfile.hasTheRealNameBeenCertified = true
         wx.navigateBack()
       }
     })
     return
-    try {
-      const res = await ocrModule.baiduOCR(this.data.access_token, {
-        image: this.data.base64,
-        id_card_number: this.data.userNumber,
-        name: this.data.userName
-      })
-      const { result, error_code } = res.data
-      if (error_code === 222356) {
-        wx.hideLoading()
-        wx.showModal({
-          title: "图片无法识别",
-          showCancel: false,
-          confirmText: "我知道了"
-        })
-      } else if (result.score < 80) {
-        wx.hideLoading()
-        wx.showModal({
-          title: "认证失败",
-          showCancel: false,
-          confirmText: "我知道了"
-        })
-      } else {
-        try {
-          await this.uploadImage(this.data.passportPath, 'identity-back')
-          await this.uploadImage(this.data.identityPath, 'identity-front')
-          // await this.uploadImage(this.data.portraitPath, 'portrait')
-          await this.putUserInfo()
-        } catch {
-          wx.showModal({
-            title: "网络错误",
-            showCancel: false,
-            confirmText: "我知道了"
-          })
-          wx.hideLoading()
-          return
-        }
-        wx.hideLoading()
-        wx.showModal({
-          title: "实名认证已通过",
-          showCancel: false,
-          confirmText: "我知道了",
-          success() {
-            setIfUserHasTheRealNameBeenCertified(true)
-            wx.navigateBack()
-          }
-        })
-      }
-    } catch (err) {
-      wx.showModal({
-        title: "网络错误",
-        showCancel: false,
-        confirmText: "我知道了"
-      })
-      wx.hideLoading()
-      return
-    } finally {
-      this.setData({
-        commitBtnDisabled: false
-      })
-    }
   },
 
   success() {

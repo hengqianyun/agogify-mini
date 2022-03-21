@@ -1,5 +1,6 @@
 {
   "usingComponents": {
     "video-share": "./video/video"
-  }
+  },
+  "navigationBarTitleText": "Agogify"
 }
