@@ -66,9 +66,6 @@ Component({
       freight: 20,
       sum: 2000
     },
-    timeleft: '00:00',
-    timeleftTimer: 0,
-    timeleftSec: 0,
     productName: '',
     paymentId: '',
     shipmentId: '',
@@ -146,17 +143,6 @@ Component({
                   showPopup: false,
                   canLeave: true
                 })
-                break
-              case CustomMessageTypes.TIMELEFT_CHECK:
-                if (!this.data.hasGetTime) {
-
-                  this.formatTimeleft(payloadData.timeleft)
-                } else {
-                  this.setData({
-                    timeleftSec: payloadData.timeleft
-                  })
-                }
-                sendCustomMessage({ data: CustomMessageTypes.TIMELEFT_CHECK }, `${this.properties.storeId}_Meeting`, this.properties.saleId, {}, {}, false)
                 break
               case CustomMessageTypes.SCAN_FINISH:
                 this.setData({
@@ -278,21 +264,6 @@ Component({
             }
           }
       }
-      // 
-      if (this.properties.isReconnect) {
-        const that = this
-        // const session = 
-        wx.getStorage({
-          key: 'session',
-          success(res) {
-            console.log(res)
-            console.log(that.properties.storeId)
-            const id = `${that.properties.storeId}_Meeting-${res.data.code}`
-            that.triggerEvent('startVideo', { publicGroupId: id, roomId: id })
-          }
-        })
-        // const id = `${that.properties.storeId}_Meeting-${getIdFromString(this.properties.saleId)}`
-      }
     },
 
     detached() {
@@ -308,7 +279,6 @@ Component({
         name: "joined_room",
         tg: this,
       })
-      clearInterval(this.data.timeleftTimer)
       resetTimerAndSeq()
       quitGroup(`${this.properties.storeId}_Meeting`)
     }
@@ -1033,25 +1003,6 @@ Component({
       })
       const { parameters } = res.data
       return parameters
-    },
-
-    formatTimeleft(left: number) {
-      if (!this.data.hasGetTime) {
-        this.data.timeleftTimer = setInterval(() => {
-          this.data.timeleftSec--;
-          this.formatTimeleft(this.data.timeleftSec)
-        }, 1000)
-        this.setData({
-          timeleftSec: left,
-          hasGetTime: true
-        })
-      }
-      let min = Math.floor(left / 60);
-      let sec = left % 60
-      this.setData({
-        timeleft: `${min > 9 ? min : '0' + min}:${sec > 9 ? sec : '0' + sec}`,
-        timeleftSec: left
-      })
     },
 
 
