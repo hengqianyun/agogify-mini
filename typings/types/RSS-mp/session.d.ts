@@ -12,6 +12,7 @@ declare namespace sessionDesign {
     endTime: string
     state: sessionTypes
     type?: sessionTypes
+    orders: SessionOrder[]
     booking?: reserveDesign.Reserve
   }
 

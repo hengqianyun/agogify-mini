@@ -209,7 +209,8 @@ Component({
           // const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
           const sessionRes = await sessionModule.querySession('droppedByCustomer=true&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
           
-          const session = sessionRes.data
+          const session = sessionRes.data['hydra:member'][0]
+          console.log('session -->', session)
           let unfinishedOrder: sessionDesign.SessionOrder | null = null
           const { orders } = session
           for (let orderItem of orders) {

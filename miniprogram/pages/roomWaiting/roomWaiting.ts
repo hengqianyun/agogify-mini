@@ -53,6 +53,7 @@ Page({
                */
               clearTimeout(this.data.callTimer)
               await sendAckAsync({ data: 'ack', description: "succesee" }, `${this.data.storeId}_Meeting`, this.data.saleId, data.time.toString())
+              console.debug('发送进入房间ack完成')
               wx.redirectTo({
                 url: `../room/room?roomId=${payloadData.roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${payloadData.groupId}&storeId=${storeId}&saleId=${saleId}`
               })
