@@ -205,6 +205,24 @@ export default class IMClient {
     }
   }
 
+  public async createImageMessage(groupID: string, conversationType: conversationType, file: WechatMiniprogram.ChooseImageSuccessCallbackResult, onProgress: (percent: number) => void) {
+    const res = await this.tim.createImageMessage({
+      to: groupID,
+      conversationType,
+      payload: {
+        file,
+      },
+      onProgress: onProgress
+    })
+    return res
+  }
+
+  public async sendImageMessage(groupID: string, conversationType: conversationType, file: WechatMiniprogram.ChooseImageSuccessCallbackResult, onProgress: (percent: number) => void, sendCb: () => void) {
+    const message = await this.createImageMessage(groupID, conversationType, file, onProgress)
+    this.tim.sendMessage(message).then(sendCb)
+    return message
+  }
+
 }
 
 

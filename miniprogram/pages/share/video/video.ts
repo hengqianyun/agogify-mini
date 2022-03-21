@@ -59,11 +59,12 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    handleTap() {
+    async handleTap() {
       if (this.data.btnLabel === '加入直播') {
-        wx.navigateTo({
-          url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=shareIn&sessionCode=${this.properties.sessionCode}`
-        })
+        await this.joinSession()
+        // wx.navigateTo({
+        //   url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=shareIn&sessionCode=${this.properties.sessionCode}`
+        // })
       } else {
         wx.navigateTo({
           url: '../loginPage/loginPage'
@@ -95,7 +96,7 @@ Component({
       try {
         await sessionModule.gusetCheckIn(this.data.sessionCode)
         wx.navigateTo({
-          url: `../../room/room?type=4&roomId=${this.data.roomId}$saleId=${this.data.salesId}&storeId=${this.data.storeId}`
+          url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=shareIn&sessionCode=${this.properties.sessionCode}`
         })
       } catch {
 

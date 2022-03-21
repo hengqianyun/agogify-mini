@@ -8,7 +8,7 @@ import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
-import { clearAckTimeout, quitGroup, resetTimerAndSeq, sendAck, sendCustomMessage, sendTextMessage } from '../../../../libs/tim/tim'
+import { clearAckTimeout, quitGroup, resetTimerAndSeq, sendAck, sendCustomMessage, sendImageMessage, sendTextMessage } from '../../../../libs/tim/tim'
 import CustomMessageTypes from '../../../../libs/tim/custom_message_types'
 
 const recorderManager = wx.getRecorderManager()
@@ -276,22 +276,6 @@ Component({
             } else {
               this.queryCart(tokenValue)
             }
-            // if (!!shippingAddress) {
-            //   await this.queryOrder(tokenValue)
-            //   // const addressList = [shippingAddress, ...this.data.addressList]
-            //   // console.log(addressList)
-            //   this.setData({
-            //     payDialogLabel: '已付款',
-            //     showQrcode: true,
-            //     address: shippingAddress,
-            //   })
-            // } else {
-
-            //   this.queryCart(tokenValue)
-            // }
-            // this.setData({
-            //   show
-            // })
           }
       }
       // 
@@ -529,21 +513,10 @@ Component({
         sourceType: ['album'],
         count: 1,
         success: async function (res) {
-          const message = await tim.createImageMessage({
-            to: self.properties.groupId,
-            conversationType: "GROUP",
-            payload: {
-              file: res
-            },
-            onProgress: (percent: number) => {
-              self.data.percent = percent
-            }
-          })
-          console.log(message)
-          // self.$store.commit('sendMessage', message)
-          tim.sendMessage(message).then(() => {
+          const message = await sendImageMessage(self.properties.groupId, 'GROUP', res, (percent: number) => {
+            self.data.percent = percent
+          }, () => {
             self.data.percent = 0
-          }).catch(() => {
           })
           self.setData({
             chatHistory: [...self.data.chatHistory, message],

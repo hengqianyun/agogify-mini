@@ -22,4 +22,6 @@ export const sendAckAsync = async (options: TIMCreateCustomMessageParamsPayload,
 export const clearAckTimeout = (seq: string) => IMClient.getInstance().clearAckTimeout(seq)
 
 export const resetTimerAndSeq = () => IMClient.getInstance().resetTimerAndSeq()
+
+export const sendImageMessage = async (groupID: string, conversationType: conversationType, file: WechatMiniprogram.ChooseImageSuccessCallbackResult, onProgress: (percent: number) => void, sendCb: () => void) => IMClient.getInstance().sendImageMessage(groupID, conversationType, file, onProgress, sendCb)
 // export const clearAckTimeout = (seq: string) => IMClient.getInstance().

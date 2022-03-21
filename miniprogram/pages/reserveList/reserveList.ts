@@ -176,7 +176,7 @@ Page({
     const { '@id': pathCode } = store
     const code = getStringCode(pathCode)
     wx.navigateTo({
-      url: `../room/room?storeId=${code}&saleId=${saleId}&type=2`
+      url: `../roomWaiting/roomWaiting?storeId=${code}&saleId=${saleId}&type=reserveIn`
     })
 
 
