@@ -32,27 +32,34 @@ Component({
       if (!!userProfile.pathId && !!userProfile.avatar) {
         try {
           /// TODO check wether user can join
-          if (await this.checkSession()) {
+          // if (await this.checkSession()) {
+          //   this.setData({
+          //     title: this.properties.from + '邀请您协助参谋',
+          //     desc: '加入直播后可以协助好友挑选商品'
+          //   })
+          // }
+          await this.checkSession() ?
             this.setData({
+              btnLabel: '加入直播',
               title: this.properties.from + '邀请您协助参谋',
               desc: '加入直播后可以协助好友挑选商品'
+            }) : this.setData({
+              btnLabel: '去逛一逛',
+              title: '房间人数已达上限，暂时无法进入，先到处逛逛？',
+              desc: '直播间仅可邀请2人协助参谋，请联系好友确认或到处逛一逛'
             })
-          }
-          await this.checkSession() ?
-          this.setData({
-            btnLabel: '加入直播'
-          }) : this.setData({
-            showBtn: false
-          })
         } catch {
-          
+
         }
       } else {
         this.setData({
-          btnLabel: '前往注册'
+          title: this.properties.from + '邀请您协助参谋',
+          desc: '请登录或注册后加入直播，协助好友挑选商品',
+          btnLabel: '前往注册/登录'
         })
       }
-    }
+    },
+    
   },
 
   /**
@@ -65,6 +72,10 @@ Component({
         // wx.navigateTo({
         //   url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=shareIn&sessionCode=${this.properties.sessionCode}`
         // })
+      } else if (this.data.btnLabel === '去逛一逛') {
+        wx.switchTab({
+          url: '../homepage/homepage'
+        })
       } else {
         wx.navigateTo({
           url: '../loginPage/loginPage'
@@ -76,16 +87,17 @@ Component({
      */
     async checkSession() {
       try {
-        return !!(await sessionModule.checkGuestAvailability(this.data.sessionCode))
+        const res = await sessionModule.checkGuestAvailability(this.data.sessionCode)
+        return !!(res.data as any)['available']
       } catch (err: any) {
         // 多种错误处理
         if (err.message == '') {
           this.setData({
             title: '房间人数已达上限，暂时无法进入，先到处逛逛？',
             desc: '直播间仅可邀请2人协助参谋，请联系好友确认或到处逛一逛',
-            btnLabel: '前往主页',
+            btnLabel: '去逛一逛',
           })
-        } else {}
+        } else { }
         return false
       }
     },

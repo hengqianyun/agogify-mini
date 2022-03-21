@@ -37,13 +37,27 @@ Page({
    */
   async onLoad() {
     console.log(this.options)
-    const {type} = this.options
-    let key = ''
+    
     wx.showLoading({
       title: '加载中'
     })
     await autoLogin()
     wx.hideLoading()
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  async onShow() {
+    const {type} = this.options
+    let key = ''
     switch (type) {
       case 'video':
         const {sessionCode, userName, roomId, salesId, storeId} = this.options
@@ -66,24 +80,12 @@ Page({
   },
 
   /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
    * 生命周期函数--监听页面隐藏
    */
   onHide() {
-
+    this.setData({
+      isVideo: false
+    })
   },
 
   /**

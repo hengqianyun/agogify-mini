@@ -180,7 +180,6 @@ Component({
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
             try {
-
               if (message && message.payload.text.indexOf("///:") < 0) {
                 this.setData({
                   chatHistory: this.data.chatHistory.concat([message])
