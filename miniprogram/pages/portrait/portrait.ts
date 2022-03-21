@@ -1,3 +1,4 @@
+import { BASEURL } from "../../http/index"
 import { userProfile } from "../../libs/user/user"
 
 // pages/portrait/portrait.ts
@@ -13,7 +14,8 @@ Page({
       {label: '仅接受使用中文沟通的专柜', value: '1', checked: false},
       {label: '接受中英文翻译', value: '2', checked: false},
       {label: '中英文沟通均无障碍', value: '3', checked: true},
-    ]
+    ],
+    commitBtnDisabled: false
   },
 
   /**
@@ -129,5 +131,29 @@ Page({
     })
   },
 
-  handleSave() {}
+  handleSave() {
+    const that = this
+    this.setData({
+      commitBtnDisabled: true
+    })
+    wx.uploadFile({
+      timeout: 600000,
+        filePath: that.data.avatar,
+        name: 'file',
+        url: BASEURL + 'store/customer-images',
+        header: { Authorization: 'Bearer ' + userProfile.token },
+        success() {
+          that.setData({
+            commitBtnDisabled: false
+          })
+          wx.showToast({
+            title: '成功',
+            duration: 1000
+          })
+          setTimeout(() => {
+            wx.navigateBack()
+          }, 1000)
+        }
+    })
+  }
 })

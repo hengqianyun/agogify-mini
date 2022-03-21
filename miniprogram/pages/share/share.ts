@@ -46,13 +46,13 @@ Page({
     wx.hideLoading()
     switch (type) {
       case 'video':
-        const {sessionCode, userName, roomId, saleId, storeId} = this.options
+        const {sessionCode, userName, roomId, salesId, storeId} = this.options
         this.setData({
           videoParams: {
             sessionCode: sessionCode!, 
             userName: userName!,
             roomId: roomId!,
-            salesId: saleId!,
+            salesId: salesId!,
             storeId: storeId!
           }
         })

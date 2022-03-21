@@ -33,6 +33,6 @@
     </view> -->
   </view>
   <view class="btn-area" hover-class="none" hover-stop-propagation="false">
-    <rss-button className="fill-btn" label="保存" width="{{654}}" height="{{88}}" borderRadius="{{8}}" bind:onTap="handleSave"></rss-button>
+    <rss-button disabled="{{commitBtnDisabled}}" className="fill-btn" label="保存" width="{{654}}" height="{{88}}" borderRadius="{{8}}" bind:onTap="handleSave"></rss-button>
   </view>
 </view>
