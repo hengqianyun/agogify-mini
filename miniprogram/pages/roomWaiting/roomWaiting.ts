@@ -1,5 +1,5 @@
 import CustomMessageTypes from "../../libs/tim/custom_message_types"
-import { clearAckTimeout, joinStoreGroup, quitGroup, sendAck, sendCustomMessage } from "../../libs/tim/tim"
+import { clearAckTimeout, joinStoreGroup, quitGroup, sendAck, sendAckAsync, sendCustomMessage } from "../../libs/tim/tim"
 import { userProfile } from "../../libs/user/user"
 import { $on, $remove } from '../../utils/event'
 import { clearSessionAsync } from "../../utils/querySession"
@@ -38,7 +38,7 @@ Page({
     $on({
       name: "onCustomMessageRecvEvent",
       tg: this,
-      success: (res: TIMMessageReceive) => {
+      success: async (res: TIMMessageReceive) => {
         const data = res.data[0]
         let payloadData: any;
         try {
@@ -52,6 +52,7 @@ Page({
                * 跳转至roomPage，携带房间id，avChatRoomId,店铺ID，销售id
                */
               clearTimeout(this.data.callTimer)
+              await sendAckAsync({ data: 'ack', description: "succesee" }, `${this.data.storeId}_Meeting`, this.data.saleId, data.time.toString())
               wx.redirectTo({
                 url: `../room/room?roomId=${payloadData.roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${payloadData.groupId}&storeId=${storeId}&saleId=${saleId}`
               })
@@ -66,7 +67,7 @@ Page({
               clearAckTimeout(payloadData.seq)
               break
           }
-          if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
+          if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK && payloadData.type != CustomMessageTypes.START_VIDEO) {
             
             sendAck({ data: 'ack', description: "succesee" }, `${this.data.storeId}_Meeting`, this.data.saleId, data.time.toString())
             console.debug(`接受了seq为${data.time.toString()}的ack`)
@@ -114,6 +115,8 @@ Page({
    * 在用户接受弹框条款后的初始化，主要为消息模块
    */
   async init() {
+    const {sessionCode} = this.options
+    const roomId = this.data.storeGroupId + '-' + sessionCode
     await joinStoreGroup(this.data.storeGroupId)
     switch (this.data.type) {
       case 'needService':
@@ -148,15 +151,13 @@ Page({
         /**
          * 用户通过未完成session进入房间，直接进入即可，携带一个sessionCode以表示由session进入
          */
-        const sessionCode = this.options
-        const roomId = this.data.storeGroupId + '-' + sessionCode
         wx.redirectTo({
           url: `../room/room?roomId=${roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${roomId}&storeId=${this.data.storeId}&saleId=${this.data.saleId}&sessionCode=${sessionCode}`
         })
         break
       case "shareIn":
-        const sessionCode = this.options
-        const roomId = this.data.storeGroupId + '-' + sessionCode
+        // const sessionCode = this.options
+        // const roomId = this.data.storeGroupId + '-' + sessionCode
         wx.redirectTo({
           url: `../room/room?roomId=${roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${roomId}&storeId=${this.data.storeId}&saleId=${this.data.saleId}&sessionCode=${sessionCode}&share=1`
         })

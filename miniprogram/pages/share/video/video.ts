@@ -62,7 +62,7 @@ Component({
     handleTap() {
       if (this.data.btnLabel === '加入直播') {
         wx.navigateTo({
-          url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=3&sessionCode=${this.properties.sessionCode}`
+          url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=shareIn&sessionCode=${this.properties.sessionCode}`
         })
       } else {
         wx.navigateTo({

@@ -180,7 +180,8 @@ Page({
   },
   async querySession() {
     try {
-      const res = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + userProfile.id + '&itemsPerPage=1&page=1')
+      // const res = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + userProfile.id + '&itemsPerPage=1&page=1')
+      const res = await sessionModule.querySession('droppedByCustomer=true&state[]=active&state[]=paused&customer.id=' + userProfile.id + '&itemsPerPage=1&page=1')
       const { "hydra:member": list } = res.data
       if (list.length > 0) {
         this.setData({

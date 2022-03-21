@@ -206,7 +206,9 @@ Component({
         this.joinGroup(this.properties.groupId)
           this.initRecording()
           await this.queryAddressList()
-          const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+          // const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+          const sessionRes = await sessionModule.querySession('droppedByCustomer=true&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+          
           const session = sessionRes.data
           let unfinishedOrder: sessionDesign.SessionOrder | null = null
           const { orders } = session

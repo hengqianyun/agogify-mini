@@ -17,6 +17,8 @@ export const quitGroup = (groupId: string) => IMClient.getInstance().quitGroup(g
 
 export const sendAck = (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, seq: string) => IMClient.getInstance().sendAck(options, groupid, saleId, seq)
 
+export const sendAckAsync = async (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, seq: string) => new Promise((res, _) => res(sendAck(options, groupid, saleId, seq)))
+
 export const clearAckTimeout = (seq: string) => IMClient.getInstance().clearAckTimeout(seq)
 
 export const resetTimerAndSeq = () => IMClient.getInstance().resetTimerAndSeq()
