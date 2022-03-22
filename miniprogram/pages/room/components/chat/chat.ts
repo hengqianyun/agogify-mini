@@ -163,6 +163,7 @@ Component({
         tg:this,
         async success(res: TIMMessageReceive) {
           const data = res.data[0]
+          console.log( 'recv new text message -->', res)
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
             try {

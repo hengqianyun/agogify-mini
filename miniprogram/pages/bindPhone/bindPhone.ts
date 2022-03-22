@@ -1,5 +1,6 @@
 import loginModule from "../../http/module/login"
-import { login } from "../../libs/user/user"
+import { updateProfile } from "../../libs/tim/tim"
+import { login, userProfile } from "../../libs/user/user"
 import { querySessionAsync } from "../../utils/querySession"
 
 // pages/bindPhone/bindPhone.ts
@@ -150,6 +151,9 @@ Page({
           isMobileNumberRequired: true,
           provider: 'mobile'
         })
+        userProfile.avatar = this.data.userInfo.avatarUrl
+        userProfile.nickName = this.data.userInfo.userName
+        updateProfile()
         wx.switchTab({ url: '../person/person' })
         await querySessionAsync()
       } catch {

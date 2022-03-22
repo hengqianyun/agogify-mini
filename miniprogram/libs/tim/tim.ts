@@ -1,17 +1,18 @@
 import IMClient, { IMessageCallBack } from "./tim_core";
 import CustomMessageTypes from './custom_message_types'
+import { userProfile } from "../user/user";
 
 export const logout = () => IMClient.getInstance().logout()
 
 export const imLogin = (userId: string) => IMClient.getInstance(true).login(userId)
 
-export const sendCustomMessage = (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, {avatar = ''}, inserDB: boolean = true) => IMClient.getInstance().sendGroupCustomMessage(options, groupid, saleId, data, {avatar:avatar} , inserDB)
+export const sendCustomMessage = (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, { avatar = '' }, inserDB: boolean = true) => IMClient.getInstance().sendGroupCustomMessage(options, groupid, saleId, data, { avatar: avatar }, inserDB)
 
 export const sendTextMessage = (groupID: string, text: string) => IMClient.getInstance().sendGroupTextMessage(groupID, text)
 
-export const joinStoreGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, {type: 'ChatRoom'})
+export const joinStoreGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, { type: 'ChatRoom' })
 
-export const joinSessionGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, {type: 'AVChatRoom'})
+export const joinSessionGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, { type: 'AVChatRoom' })
 
 export const quitGroup = (groupId: string) => IMClient.getInstance().quitGroup(groupId)
 
@@ -24,4 +25,6 @@ export const clearAckTimeout = (seq: string) => IMClient.getInstance().clearAckT
 export const resetTimerAndSeq = () => IMClient.getInstance().resetTimerAndSeq()
 
 export const sendImageMessage = async (groupID: string, conversationType: conversationType, file: WechatMiniprogram.ChooseImageSuccessCallbackResult, onProgress: (percent: number) => void, sendCb: () => void) => IMClient.getInstance().sendImageMessage(groupID, conversationType, file, onProgress, sendCb)
+
+export const updateProfile = () => IMClient.getInstance().updateProfile(userProfile.nickName, userProfile.avatar)
 // export const clearAckTimeout = (seq: string) => IMClient.getInstance().

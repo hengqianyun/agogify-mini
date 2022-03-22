@@ -121,8 +121,9 @@ Page({
             } 
           })
         } 
-        var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
-          console.log(base64)
+        console.log(tempPath)
+        // var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
+          // console.log(base64)
           that.setData({
             // identityBase64: base64,
             avatar: tempPath,
@@ -142,10 +143,20 @@ Page({
         name: 'file',
         url: BASEURL + 'store/customer-images',
         header: { Authorization: 'Bearer ' + userProfile.token },
-        success() {
+        success(res) {
           that.setData({
             commitBtnDisabled: false
           })
+          if (res.statusCode > 300) {
+            wx.showModal({
+              title: '错误',
+              content: '系统错误',
+              confirmText: '确定',
+              showCancel: false
+            })
+            return
+          }
+          
           wx.showToast({
             title: '成功',
             duration: 1000

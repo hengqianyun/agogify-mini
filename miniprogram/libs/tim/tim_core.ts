@@ -59,6 +59,13 @@ export default class IMClient {
     }
   }
 
+  public updateProfile(nick: string, avatar: string) {
+    this.tim.updateMyProfile({
+      nick,
+      avatar
+    })
+  }
+
   public quitGroup(groupID: string) {
     this.tim.quitGroup(groupID)
   }

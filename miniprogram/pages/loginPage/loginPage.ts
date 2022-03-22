@@ -1,4 +1,5 @@
 import loginModule from "../../http/module/login"
+import { updateProfile } from "../../libs/tim/tim"
 import { login, LoginKey, userProfile } from "../../libs/user/user"
 import { $emit } from '../../utils/event.js'
 import { querySessionAsync } from "../../utils/querySession"
@@ -126,11 +127,12 @@ Page({
        
         // 直接登录
         try {
-          userProfile.avatar = userInfo.avatarUrl
-          userProfile.nickName = userInfo.nickName
           await login({
             provider: LoginKey.wechatMiniProgramProvider
           })
+          userProfile.avatar = userInfo.avatarUrl
+          userProfile.nickName = userInfo.nickName
+          updateProfile()
           await querySessionAsync()
           wx.navigateBack({
             delta: 1

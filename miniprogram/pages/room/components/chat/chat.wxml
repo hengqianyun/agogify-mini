@@ -22,7 +22,7 @@
         <block wx:for="{{chatHistory}}" wx:key="id">
           <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
             <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
-              {{item.payload.text}}
+              {{item.nick}}: {{item.payload.text}}
             </view>
             <view wx:else class="message image-message-box border-radius-8">
               <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
