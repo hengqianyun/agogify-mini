@@ -925,7 +925,7 @@ Component({
           orderInfo: orderItem,
           showPopup: true,
           payDialogBtnDisabled: false,
-          itemsTotal: (orderItem.items[0].total / 100).toFixed(2),
+          itemsTotal: (orderItem.items[0].unitPrice / 100).toFixed(2),
           shippingTotal: (orderItem.shippingTotal / 100).toFixed(2),
           total: (orderItem.total / 100).toFixed(2),
         })
