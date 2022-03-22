@@ -164,7 +164,12 @@ export default class IMClient {
         sales: saleId,
         customer: userProfile.pathId,
       })
-      const message = await this.createCustomMessage(options, groupid, saleId)
+      // const message = await this.createCustomMessage(options, groupid, saleId)
+      const message = await this.tim.createCustomMessage({
+        to: groupid,
+        conversationType: "GROUP",
+        payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId, seq }) }
+      })
       await this.tim.sendMessage(message)
       console.debug(`发送了seq为${seq}的ack`)
     } catch { }

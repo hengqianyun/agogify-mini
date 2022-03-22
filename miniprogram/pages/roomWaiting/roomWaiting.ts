@@ -70,7 +70,7 @@ Page({
               break
           }
           if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK && payloadData.type != CustomMessageTypes.START_VIDEO) {
-            
+            console.debug(`waitingRoom has send ack witch seq = ${data.time.toString()}`)
             sendAck({ data: 'ack', description: "succesee" }, `${this.data.storeId}_Meeting`, this.data.saleId, data.time.toString())
             console.debug(`接受了seq为${data.time.toString()}的ack`)
           }
@@ -80,12 +80,12 @@ Page({
     // if ()
   },
 
-  // onUnload() {
-  //   $remove({
-  //     name: "onCustomMessageRecvEvent",
-  //     tg: this,
-  //   })
-  // },
+  onUnload() {
+    $remove({
+      name: "onCustomMessageRecvEvent",
+      tg: this,
+    })
+  },
 
   handleBusy() {
     this.setData({

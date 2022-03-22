@@ -153,7 +153,7 @@ Component({
                 clearAckTimeout(payloadData.seq)
             }
             if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
-              sendAck({ data: 'ack', description: "succesee" }, `${this.properties.storeId}_Meeting`, this.properties.saleId, data.time.toString())
+              sendAck({ data: 'ack', description: "succesee" }, this.data.groupId, this.properties.saleId, data.time.toString())
             }
         }
       })
@@ -188,7 +188,7 @@ Component({
 
       await this.queryAddressList()
       if (this.properties.isReconnect) {
-        this.joinGroup(this.properties.groupId)
+        // joinSessionGroup(this.data.groupId)
           this.initRecording()
           await this.queryAddressList()
           // const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
@@ -306,16 +306,6 @@ Component({
         showQrcode: false,
         canLeave: true
       })
-    },
-
-    async joinGroup(groupId: string) {
-      try {
-        console.log('groupId -->', groupId)
-        await tim.joinGroup({ groupID: groupId, type: 'AVChatRoom' })
-      } catch (err) {
-        console.log(err)
-      }
-
     },
     handleShowMoreAddress() {
       if (this.data.addressSelectDisabled || this.data.showQrcode) return
