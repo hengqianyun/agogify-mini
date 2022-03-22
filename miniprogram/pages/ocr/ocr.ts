@@ -295,8 +295,10 @@ Page({
       }
       wx.hideLoading()
       this.setData({
-        commitBtnDisabled: false
+        commitBtnDisabled: false,
+        hasRealNameCertified: false
       })
+      userProfile.hasTheRealNameBeenCertified =false
       return
     }
     wx.hideLoading()

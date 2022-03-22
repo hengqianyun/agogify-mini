@@ -199,7 +199,7 @@ Page({
     try {
       const params = {
         type: 'customer',
-        customer: userProfile.pathId,
+        // customer: userProfile.pathId,
         firstName,
         lastName,
         mobileNumber: phone.value,
