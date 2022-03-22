@@ -67,7 +67,7 @@ Page({
     sale: 0,
     times: [] as string[],
     scrollTitles: [] as SimpleTitme[],
-    tableItems: [] as SimpleTableItem[][],
+    tableItems: [[], [], [], [], [], [], []] as SimpleTableItem[][],
     duration: 45 as DurationType,
     reserveRes: {} as ReserveRes,
     startTime: '',
@@ -163,7 +163,7 @@ Page({
     try {
       const res = await storeModule.querySales(params)
       const { "hydra:member": list } = res.data
-      sales[stores[currentStoreIndex].code] = list
+      sales[stores[currentStoreIndex].code] = list.reverse()
       this.setData({
         sales: this.data.sales,
         saleLanguage: list[0].languages.map(e => {
@@ -252,13 +252,11 @@ Page({
         'startTime[after]': this.data.startTime,
         'endTime[before]': this.data.endTime,
       })
-
       const { "hydra:member": list } = res.data
       /**
        * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
        */
       const timeZone = 8;
-
 
       for (const slot of list) {
         const { state } = slot
@@ -269,10 +267,9 @@ Page({
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
           const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-          console.log(hour)
           // TODO 9 变为 12
           const j = (hour - 16) * 4 + min / 15
-          if (!!this.data.tableItems[i][j]) {
+          if (!!this.data.tableItems[i] && !!this.data.tableItems[i][j]) {
 
             this.data.tableItems[i][j].disabled = false
             this.data.tableItems[i][j].paramsVersion = version
@@ -291,23 +288,23 @@ Page({
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
           const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-          console.log(hour)
           // TODO 9 变为 12
           const j = (hour - 16) * 4 + min / 15
-          if (hour < earliest) earliest = hour
+          let tempHour = hour >= 24 ? hour - 24 : hour
+          if (tempHour < earliest) earliest = tempHour
 
-          if (hour > latest) latest = hour
-          timeList[i].push([hour, min, version, getIdFromString(id)])
-
-          // if (!!this.data.tableItems[i][j]) {
-
-          //   this.data.tableItems[i][j].disabled = false
-          //   this.data.tableItems[i][j].paramsVersion = version
-          //   this.data.tableItems[i][j].paramsId = getIdFromString(id)
-          // }
+          if (tempHour > latest) latest = tempHour
+          if (tempHour === 0) latest = 24
+          if (hour >= 24) {
+            try {
+              timeList[i + 1].push([tempHour, min, version, getIdFromString(id)])
+            } catch {}
+          } else {
+            timeList[i].push([tempHour, min, version, getIdFromString(id)])
+          }
         }
       }
-      const length = (latest - earliest + 1) * 4
+      const length = (latest - earliest) * 4
       this.initDurations(earliest, length)
       const tableItems: SimpleTableItem[][] = [[], [], [], [], [], [], []]
       for (let i = 0; i < tableItems.length; i++) {
@@ -315,18 +312,21 @@ Page({
           tableItems[i].push({ checked: false, x: i, y: j, id: `${i}${j}`, disabled: true, startTime: this.getTime(i, j, true), endTime: this.getTime(i, j, false), })
         }
       }
+      console.log('timeList -->', timeList)
       for (let i = 0; i < timeList.length; i++) {
+        console.debug(`i等于${i}`)
         for (let j = 0; j < timeList[i].length; j++) {
           const [hour, min, version, id] = timeList[i][j]
           const index = (hour - earliest) * 4 + min / 15
+          console.debug(`index等于${index}`)
           if (!!tableItems[i][index]) {
-            tableItems[i][j].disabled = false
-            tableItems[i][j].paramsVersion = version
-            tableItems[i][j].paramsId = id
+            tableItems[i][index].disabled = false
+            tableItems[i][index].paramsVersion = version
+            tableItems[i][index].paramsId = id
           }
         }
       }
-      
+
       this.setData({
         // tableItems: this.data.tableItems
         tableItems,

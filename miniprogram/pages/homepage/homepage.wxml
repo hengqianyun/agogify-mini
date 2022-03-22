@@ -34,4 +34,8 @@
     </view>
   </view>
   <SessionTip wx:if="{{showIcon}}" bind:handleCancel="handleDialogCancel"></SessionTip>
+  <!-- <button bind:tap="handleTestTap">test</button>
+  <view class="" hover-class="none" hover-stop-propagation="false">
+    {{resMessage}}
+  </view> -->
 </view>

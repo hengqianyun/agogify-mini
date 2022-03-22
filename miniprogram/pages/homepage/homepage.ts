@@ -2,6 +2,7 @@ import storeModule from "../../http/module/store"
 import { checkSessionAsync, clearSessionAsync, querySessionAsync } from "../../utils/querySession"
 import { BANNERS } from '../../serviceStaticResource/index'
 import { autoLogin } from "../../libs/user/user"
+import http from "../../libs/http"
 
 
 Page({
@@ -20,6 +21,7 @@ Page({
     showDialog: false,
     showIcon: false,
     timer: 0,
+    resMessage: '',
   },
   async onLoad() {
     console.debug('homepage load')
@@ -93,5 +95,30 @@ Page({
         showIcon: false
       })
     }
-  }
+  },
+  // handleTestTap() {
+  //   const that = this
+  //   wx.request({
+  //     url: 'https://rss1.agogify.cn/api/v2/admin/store/sales/video-session/bookings/release-time-slots',
+  //     method: 'POST',
+  //     header: {
+  //       // 'Content-Type': 'application/ld+json',
+  //       authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NDc5MzE0NjcsImV4cCI6MTY0ODAxNzg2Nywicm9sZXMiOlsiUk9MRV9BUElfQUNDRVNTIiwiUk9MRV9TVE9SRV9TQUxFU19BQ0NFU1MiLCJST0xFX1NUT1JFX1NBTEVTX0FQSV9BQ0NFU1MiXSwidXNlcm5hbWUiOiJoZW5nbGVpIn0.uNtigaIhCQiWQhlUY6z5l62qC04Pqb6jpLmM4NW6wHFY6h5_NAjTiY8yxwJQVBz6unAv_tq5oby7bp-3M6dMMthHE583QwuaDjj9tRSVYQ1CBgLWC_lT-FxUrKdewzg8-SjolGbWhQJmMF_9R1yudlZvdJ6_QXFZJ8ObAnQbOG5qokRqS4AHPEhOYDtxUSgjkN23lfMwSrgdnPIEvOtpV-cdEFzIajSKmSXLHFT0CrE4rAbhl2CPD0StyhpU4AEKJQu3fOA3xwnJd3OYQB0emaIeoWSAhFbyy5hFjCSeiuLdonrOOcZdpC3UulgzmbE4y3tZHELQypLiGo3Xo7B5ow',
+  //     },
+  //     data: {
+  //       "timeSlots": [
+  //         {
+  //           "id": 487,
+  //           "version": 1
+  //         }
+  //       ]
+  //     },
+  //     success(res) {
+  //       that.setData({
+  //         resMessage: res.data.message
+  //       })
+  //       console.log(res)
+  //     }
+  //   })
+  // }
 })
