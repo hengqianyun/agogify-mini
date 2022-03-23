@@ -148,7 +148,7 @@ Page({
           })
         }
         var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
-        console.log(base64)
+        console.log(tempPath)
         that.setData({
           identityBase64: base64,
           identityPath: tempPath,
@@ -192,6 +192,7 @@ Page({
           base64: base64,
           portraitPath: tempPath,
         })
+        console.log(tempPath)
       }
     })
   },

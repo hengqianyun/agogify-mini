@@ -11,9 +11,9 @@ Page({
     avatar: '',
     userName: '',
     languages: [
-      {label: '仅接受使用中文沟通的专柜', value: '1', checked: false},
-      {label: '接受中英文翻译', value: '2', checked: false},
-      {label: '中英文沟通均无障碍', value: '3', checked: true},
+      { label: '仅接受使用中文沟通的专柜', value: '1', checked: false },
+      { label: '接受中英文翻译', value: '2', checked: false },
+      { label: '中英文沟通均无障碍', value: '3', checked: true },
     ],
     commitBtnDisabled: false
   },
@@ -84,8 +84,8 @@ Page({
   handleLanguageChange(event: WechatMiniprogram.TouchEvent) {
     console.log(event)
     const { index } = event.currentTarget.dataset
-    const {languages} = this.data
-    languages.forEach((e ,i) => {
+    const { languages } = this.data
+    languages.forEach((e, i) => {
       e.checked = i === index
     })
     this.setData({
@@ -93,12 +93,12 @@ Page({
     })
   },
 
-  handleInput({detail}: WechatMiniprogram.TouchEvent) {
-    const {value} = detail
+  handleInput({ detail }: WechatMiniprogram.TouchEvent) {
+    const { value } = detail
     this.setData({
       userName: value
     })
-  } ,
+  },
 
   handleChooseImage() {
     const that = this
@@ -108,7 +108,7 @@ Page({
       sourceType: ['album', 'camera'],
       async success(res) {
         let tempPath = res.tempFilePaths[0]; //获取选择的图片的地址
-        
+
         var size = res.tempFiles[0].size
         const maxSize = 5 * 1024 * 1024
         if (size > maxSize) {
@@ -118,16 +118,16 @@ Page({
             quality,
             async success(res) {
               tempPath = res.tempFilePath
-            } 
+            }
           })
-        } 
+        }
         console.log(tempPath)
         // var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
-          // console.log(base64)
-          that.setData({
-            // identityBase64: base64,
-            avatar: tempPath,
-          })
+        // console.log(base64)
+        that.setData({
+          // identityBase64: base64,
+          avatar: tempPath,
+        })
       }
     })
   },
@@ -137,34 +137,36 @@ Page({
     this.setData({
       commitBtnDisabled: true
     })
+    console.log(this.data.avatar)
     wx.uploadFile({
       timeout: 600000,
-        filePath: that.data.avatar,
-        name: 'file',
-        url: BASEURL + 'store/customer-images',
-        header: { Authorization: 'Bearer ' + userProfile.token },
-        success(res) {
-          that.setData({
-            commitBtnDisabled: false
+      filePath: that.data.avatar,
+      name: 'file',
+      url: BASEURL + 'store/customer-images',
+      header: { Authorization: 'Bearer ' + userProfile.token },
+      formData: {},
+      success(res) {
+        that.setData({
+          commitBtnDisabled: false
+        })
+        if (res.statusCode > 300) {
+          wx.showModal({
+            title: '错误',
+            content: '系统错误',
+            confirmText: '确定',
+            showCancel: false
           })
-          if (res.statusCode > 300) {
-            wx.showModal({
-              title: '错误',
-              content: '系统错误',
-              confirmText: '确定',
-              showCancel: false
-            })
-            return
-          }
-          
-          wx.showToast({
-            title: '成功',
-            duration: 1000
-          })
-          setTimeout(() => {
-            wx.navigateBack()
-          }, 1000)
+          return
         }
+
+        wx.showToast({
+          title: '成功',
+          duration: 1000
+        })
+        setTimeout(() => {
+          wx.navigateBack()
+        }, 1000)
+      }
     })
   }
 })
