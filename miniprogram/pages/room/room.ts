@@ -29,6 +29,7 @@ Page({
     saleId: '',
     storeId: '',
     enableAlertBeforeUnloadMsg: '',
+    isGuest: false
   },
 
   /**
@@ -51,7 +52,8 @@ Page({
       groupId: avGroupId,
       roomId: roomId,
       strRoomID: roomId,
-      isReconnect: !!sessionCode && !share
+      isReconnect: !!sessionCode && !share,
+      isGuest: !!share
     })
     const { userSig, sdkAppID } = genTestUserSig(userProfile.pathId)
     trtcClient = new TRTC(this)

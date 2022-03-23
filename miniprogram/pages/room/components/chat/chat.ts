@@ -3,7 +3,6 @@ import { $on, $remove } from '../../../../utils/event'
 import videoModule from '../../../../http/module/video'
 import addressModule from '../../../../http/module/address'
 import orderModule from '../../../../http/module/order'
-import { HmacSHA256, enc } from 'crypto-js'
 import { getIdFromString, sortByCharCode } from '../../../../utils/util'
 import { clearSessionAsync } from '../../../../utils/querySession'
 import drawQrcode from 'weapp-qrcode-canvas-2d'
@@ -32,6 +31,7 @@ Component({
     groupId: String,
     saleId: String,
     isReconnect: Boolean,
+    isGuest: Boolean
   },
 
   /**
@@ -943,57 +943,6 @@ Component({
     },
     async putPayment(tokenValue: string, paymentId: string) {
       const res = await orderModule.putPayment(tokenValue, paymentId, { paymentMethodCode: 'wechat_offline' })
-    },
-    async payment() {
-      // hash.hmac(hash.sha256(), '111').update('000')
-      const secret_key = '62184c09df1aeb63239e07079875be81'
-      const user = 'info@yabandmedia.com'
-      const method = 'v3.CreatePaymentsWechatMiniPay'
-      const time = Date.now()
-      const description = this.data.productName
-      const pay_method = 'online'
-      const sub_pay_method = 'WeChat Pay'
-      const order_id = this.data.tokenValue
-      const amount = '0.1'
-      const currency = 'EUR'
-      const notify_url = ''
-      const sub_app_id = 'wxe7456276eeb43fbe'
-      const sub_open_id = 'oXNjT4qiP2ZhtvtrgwQu4PGTvhjg'
-      const params: payment.paymentSignParams = {
-        pay_method,
-        sub_pay_method,
-        order_id,
-        amount,
-        currency,
-        description,
-        notify_url,
-        sub_app_id,
-        sub_open_id,
-        user,
-        method,
-        time
-      }
-      let stringA = sortByCharCode(params)
-      let sign = enc.Hex.stringify(HmacSHA256(stringA, secret_key))
-      const res = await orderModule.pay({
-        user,
-        sign,
-        method,
-        time,
-        data: {
-          description,
-          pay_method,
-          sub_pay_method,
-          order_id,
-          amount,
-          currency,
-          notify_url,
-          sub_app_id,
-          sub_open_id,
-        }
-      })
-      const { parameters } = res.data
-      return parameters
     },
 
 

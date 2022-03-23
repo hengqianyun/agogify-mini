@@ -54,13 +54,11 @@
         <view class="icons border-radius-8" bind:tap="chooseImage">
           <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
         </view>
-        <button class="icons border-radius-8 share-button" open-type="share">
-          <iconfont name="zhibojian_yaoqing" size="{{40}}"></iconfont>
+        <button wx:if="{{!!isGuest}}" class="share-button" open-type="share">
+          <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload="">
+            
+          </image>
         </button>
-        <view class="invite-tips border-radius-8">
-          邀请好友参谋
-          <view class="tri"></view>
-        </view>
       </view>
     </view>
   <!-- </view> -->

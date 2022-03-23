@@ -9,7 +9,7 @@ export const shareVideo = (userName: string, sessionCode: string, page: string, 
   storeId = '',
 }) => {
   return {
-    title: 'hahaha',
+    title: 'Agogify爱购季好友邀请',
     path: `${page}?userName=${userName}&type=video&sessionCode=${sessionCode}&roomId=${roomId}&salesId=${salesId}&storeId=${storeId}`
   }
 }
