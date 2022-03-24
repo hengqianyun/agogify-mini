@@ -69,12 +69,14 @@ Page({
       message: '是否离开房间？',
       success() {
         that.exitRoom()
-        sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
-        const code = that.data.groupId.split('Meeting-')[1]
-        sessionModule.putSession({
-          droppedByCustomer: true
-        }, code)
-        clearSessionAsync()
+        if (!that.data.isGuest) {
+          sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
+          const code = that.data.groupId.split('Meeting-')[1]
+          sessionModule.putSession({
+            droppedByCustomer: true
+          }, code)
+          clearSessionAsync()
+        }
       }
     })
   },
