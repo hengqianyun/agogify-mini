@@ -25,7 +25,10 @@
               {{item.nick}}: {{item.payload.text}}
             </view>
             <view wx:else class="message image-message-box border-radius-8">
-              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+              <view class="message-nick" hover-class="none" hover-stop-propagation="false">
+                {{item.nick}}: 
+              </view>
+              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
             </view>
           </view>
           <view wx:else class="right-message" id="{{item.ID}}">
@@ -33,7 +36,7 @@
               {{item.payload.text}}
             </view>
             <view wx:else class="message image-message-box border-radius-8">
-              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
+              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
             </view>
           </view>
         </block>
