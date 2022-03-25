@@ -37,6 +37,9 @@ Page({
     console.log(this.options)
     console.log('onshow')
     this.queryAddressList()
+    this.setData({
+      defaultAddressId: userProfile.defaultAddressId
+    })
   },
 
   /**
