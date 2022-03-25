@@ -344,13 +344,21 @@ Component({
       if (this.data.inputValue.trim() === "") {
         return
       }
-
-      const res = await sendTextMessage(this.properties.groupId, this.data.inputValue)
+      let res: TIMSendMessageRes
+      let msg = this.data.inputValue
+      this.setData({
+        inputValue: ''
+      })
+      try {
+        res = await sendTextMessage(this.properties.groupId, msg)
+      } catch (err) {
+        wx.showToast({ title: "发送失败", icon: "error" , duration: 2000})
+        return
+      }
       const item = this.encodeMessage(res.data.message)
       if (item && item.status === 'success') {
         this.setData({
           chatHistory: [...this.data.chatHistory, item],
-          inputValue: ''
         })
         this.setData({
           messageView: item.ID
