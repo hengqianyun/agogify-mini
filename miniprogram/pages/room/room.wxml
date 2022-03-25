@@ -13,7 +13,7 @@
       </live-player>
     </view> -->
     <waiting wx:if="{{isWaiting}}"></waiting>
-    <chat bind:changeMic="{{setMicStatus}}" isGuest='{{isGuest}}' isReconnect="{{isReconnect}}" storeName="{{store.name}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" groupId="{{groupId}}" saleId="{{saleId}}"></chat>
+    <chat bind:changeMic="setMicStatus" isGuest='{{isGuest}}' isReconnect="{{isReconnect}}" storeName="{{store.name}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" groupId="{{groupId}}" saleId="{{saleId}}"></chat>
   </view>
   <wxs module="hasUser">
     module.exports = {

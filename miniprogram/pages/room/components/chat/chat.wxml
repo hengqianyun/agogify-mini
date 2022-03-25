@@ -42,8 +42,8 @@
         </block>
       </scroll-view>
       <view class="bottom-controllers">
-         <view class="icons border-radius-8">
-          <iconfont name="zhibojian_yuyin_bai" size="{{40}}" id="record"></iconfont>
+         <view class="icons border-radius-8" bind:tap="handleChangeMic">
+          <iconfont name="{{enabledMic ? 'zhibojian_yuyin_bai' : 'maikefengguanbizhuangtai'}}" size="{{40}}" id="record"></iconfont>
         </view>
         <view class="input-area border-radius-8">
           <iconfont name="zhibojian_shurukuangicon" size="{{40}}"></iconfont>
@@ -55,7 +55,7 @@
         <!-- <view class="icons border-radius-8 send-btn-box" >
         </view> -->
         <view class="icons border-radius-8">
-          <iconfont name="zhibojian_yuyin_bai" size="{{40}}" id="record"></iconfont>
+          <iconfont name="yuyin2" size="{{40}}" id="record"></iconfont>
         </view>
         <view class="icons border-radius-8" bind:tap="chooseImage">
           <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>

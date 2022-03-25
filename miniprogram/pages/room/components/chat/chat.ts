@@ -85,6 +85,7 @@ Component({
     hasPaid: false,
     canLeave: true,
     payDialogBtnDisabled: false,
+    enabledMic: true,
     itemsTotal: '',
     shippingTotal: '',
     total: '',
@@ -316,6 +317,10 @@ Component({
     },
 
     handleChangeMic() {
+      console.debug('tap 麦克风开关')
+      this.setData({
+        enabledMic: !this.data.enabledMic
+      })
       this.triggerEvent('changeMic')
     },
 
