@@ -105,65 +105,65 @@ Component({
           try {
             payloadData = JSON.parse(data.payload.data)
           } catch (err) { }
-            // 判断消息是否发给自己
-            switch (payloadData.type) {
-              case CustomMessageTypes.PAY:
-                const that = this
-                const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
-                that.setData({
-                  payDialogLabel: '确认订单',
-                  tokenValue,
-                  productName,
-                  paymentId,
-                  shipmentId,
-                  productBrand,
-                  productCategory1,
-                  productCategory2,
-                  productCategory3,
-                  productSize: size,
-                  productCategory1CnName,
-                  productCategory2CnName,
-                  productCategory3CnName,
-                  hasPaid: false
-                })
-                try {
-                  this.queryCart(tokenValue)
-                } catch (err) {
-                  this.resetOrder()
-                }
-                // this.queryOrderDetail(tokenValue)
-                break
-              case CustomMessageTypes.DISPOSE:
-                clearSessionAsync()
-                wx.navigateBack()
-                break
-              case CustomMessageTypes.PAY_CANCELED:
+          // 判断消息是否发给自己
+          switch (payloadData.type) {
+            case CustomMessageTypes.PAY:
+              const that = this
+              const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
+              that.setData({
+                payDialogLabel: '确认订单',
+                tokenValue,
+                productName,
+                paymentId,
+                shipmentId,
+                productBrand,
+                productCategory1,
+                productCategory2,
+                productCategory3,
+                productSize: size,
+                productCategory1CnName,
+                productCategory2CnName,
+                productCategory3CnName,
+                hasPaid: false
+              })
+              try {
+                this.queryCart(tokenValue)
+              } catch (err) {
                 this.resetOrder()
-                this.setData({
-                  showPopup: false,
-                  canLeave: true
-                })
-                break
-              case CustomMessageTypes.SCAN_FINISH:
-                this.setData({
-                  canLeave: true
-                })
-                break
-              case 'ack':
-                clearAckTimeout(payloadData.seq)
-            }
-            if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
-              sendAck({ data: 'ack', description: "succesee" }, this.data.groupId, this.properties.saleId, data.time.toString())
-            }
+              }
+              // this.queryOrderDetail(tokenValue)
+              break
+            case CustomMessageTypes.DISPOSE:
+              clearSessionAsync()
+              wx.navigateBack()
+              break
+            case CustomMessageTypes.PAY_CANCELED:
+              this.resetOrder()
+              this.setData({
+                showPopup: false,
+                canLeave: true
+              })
+              break
+            case CustomMessageTypes.SCAN_FINISH:
+              this.setData({
+                canLeave: true
+              })
+              break
+            case 'ack':
+              clearAckTimeout(payloadData.seq)
+          }
+          if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
+            sendAck({ data: 'ack', description: "succesee" }, this.data.groupId, this.properties.saleId, data.time.toString())
+          }
         }
       })
 
       $on({
         name: 'onGroupMessageRecvEvent',
-        tg:this,
+        tg: this,
         async success(res: TIMMessageReceive) {
           const data = res.data[0]
-          console.log( 'recv new text message -->', res)
+          console.log('recv new text message -->', res)
           if (data.to === this.properties.groupId) {
             const message = this.encodeMessage(data)
             try {
@@ -190,80 +190,80 @@ Component({
       await this.queryAddressList()
       if (this.properties.isReconnect) {
         // joinSessionGroup(this.data.groupId)
-          this.initRecording()
-          await this.queryAddressList()
-          // const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
-          const sessionRes = await sessionModule.querySession('droppedByCustomer=true&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
-          
-          const session = sessionRes.data['hydra:member'][0]
-          console.log('session -->', session)
-          let unfinishedOrder: sessionDesign.SessionOrder | null = null
-          const { orders } = session
-          for (let orderItem of orders) {
-            const { items, paymentState, shippingState, checkoutState } = orderItem
+        this.initRecording()
+        await this.queryAddressList()
+        // const sessionRes = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
+        const sessionRes = await sessionModule.querySession('droppedByCustomer=true&state[]=active&state[]=paused&customer.id=' + getIdFromString(wx.getStorageSync('oauth.data').customer) + '&itemsPerPage=1&page=1')
 
-            if (items.length === 0 || paymentState === 'cancelled') {
-              continue
-            }
-            if (paymentState === 'awaiting_payment') {
-              this.setData({
-                orderStep: 4,
-                addressSelectDisabled: true,
-              })
-              unfinishedOrder = orderItem
-            } else if (paymentState == 'cart' && shippingState == 'cart' && checkoutState == 'cart') {
-              unfinishedOrder = orderItem
-            } else if (checkoutState === 'addressed') {
-              this.setData({
-                orderStep: 1
-              })
-              unfinishedOrder = orderItem
-            } else if (checkoutState === 'shipping_selected') {
-              this.setData({
-                orderStep: 2,
-                addressSelectDisabled: true,
-              })
-              unfinishedOrder = orderItem
-            } else if (checkoutState === 'payment_selected') {
-              this.setData({
-                orderStep: 3,
-                addressSelectDisabled: true,
-              })
-              unfinishedOrder = orderItem
-            }
+        const session = sessionRes.data['hydra:member'][0]
+        console.log('session -->', session)
+        let unfinishedOrder: sessionDesign.SessionOrder | null = null
+        const { orders } = session
+        for (let orderItem of orders) {
+          const { items, paymentState, shippingState, checkoutState } = orderItem
+
+          if (items.length === 0 || paymentState === 'cancelled') {
+            continue
           }
-          if (!!unfinishedOrder) {
-            let strnote = unfinishedOrder.notes
-            let note = JSON.parse(strnote)
-            note = note[unfinishedOrder.items[0].id.toString()]
-            const { brand, category1, category2, category3, size, productName } = note['zh_Hans_CN']
-            const { tokenValue, shipments, payments, shippingAddress } = unfinishedOrder
-            const { id: shipmentId } = shipments[0]
-            const { id: paymentId } = payments[0]
+          if (paymentState === 'awaiting_payment') {
             this.setData({
-              payDialogLabel: '确认订单',
-              tokenValue,
-              productName,
-              paymentId: paymentId.toString(),
-              shipmentId: shipmentId.toString(),
-              productBrand: brand,
-              productSize: size,
-              productCategory1CnName: category1,
-              productCategory2CnName: category2,
-              productCategory3CnName: category3,
-              hasPaid: false
+              orderStep: 4,
+              addressSelectDisabled: true,
             })
-            if (this.data.orderStep === 4) {
-              await this.queryOrder(tokenValue)
-              this.setData({
-                payDialogLabel: '已付款',
-                showQrcode: true,
-                address: shippingAddress,
-              })
-            } else {
-              this.queryCart(tokenValue)
-            }
+            unfinishedOrder = orderItem
+          } else if (paymentState == 'cart' && shippingState == 'cart' && checkoutState == 'cart') {
+            unfinishedOrder = orderItem
+          } else if (checkoutState === 'addressed') {
+            this.setData({
+              orderStep: 1
+            })
+            unfinishedOrder = orderItem
+          } else if (checkoutState === 'shipping_selected') {
+            this.setData({
+              orderStep: 2,
+              addressSelectDisabled: true,
+            })
+            unfinishedOrder = orderItem
+          } else if (checkoutState === 'payment_selected') {
+            this.setData({
+              orderStep: 3,
+              addressSelectDisabled: true,
+            })
+            unfinishedOrder = orderItem
           }
+        }
+        if (!!unfinishedOrder) {
+          let strnote = unfinishedOrder.notes
+          let note = JSON.parse(strnote)
+          note = note[unfinishedOrder.items[0].id.toString()]
+          const { brand, category1, category2, category3, size, productName } = note['zh_Hans_CN']
+          const { tokenValue, shipments, payments, shippingAddress } = unfinishedOrder
+          const { id: shipmentId } = shipments[0]
+          const { id: paymentId } = payments[0]
+          this.setData({
+            payDialogLabel: '确认订单',
+            tokenValue,
+            productName,
+            paymentId: paymentId.toString(),
+            shipmentId: shipmentId.toString(),
+            productBrand: brand,
+            productSize: size,
+            productCategory1CnName: category1,
+            productCategory2CnName: category2,
+            productCategory3CnName: category3,
+            hasPaid: false
+          })
+          if (this.data.orderStep === 4) {
+            await this.queryOrder(tokenValue)
+            this.setData({
+              payDialogLabel: '已付款',
+              showQrcode: true,
+              address: shippingAddress,
+            })
+          } else {
+            this.queryCart(tokenValue)
+          }
+        }
       }
     },
 
@@ -313,6 +313,10 @@ Component({
       this.setData({
         showMoreAddress: !this.data.showMoreAddress
       })
+    },
+
+    handleChangeMic() {
+      this.triggerEvent('changeMic')
     },
 
     handleChoose({ currentTarget }: WechatMiniprogram.TouchEvent) {
@@ -579,7 +583,7 @@ Component({
            * TODO 完善用户未付款逻辑
            */
           if (!(await this.userHasPaid())) {
-            wx.showToast({ title: '款项暂未到账，请稍等片刻' })
+            wx.showToast({ title: '款项暂未到账，请稍等片刻', icon: 'none' })
             wx.hideLoading()
             return
           }
@@ -604,7 +608,7 @@ Component({
           }, {})
 
         } catch {
-          wx.showToast({ title: '请求失败，请重新尝试' })
+          wx.showToast({ title: '请求失败，请重新尝试', icon: 'error' })
 
         } finally {
           this.setData({

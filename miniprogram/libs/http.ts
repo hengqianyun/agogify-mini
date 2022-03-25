@@ -13,20 +13,20 @@ const wxrequest = <T>(option: RSSHTTPModule.requestOption, interceptor: RSSHTTPM
     wx.request({
       ..._option,
       success: async (res: WechatMiniprogram.RequestSuccessCallbackResult<T>) => {
-        console.log('成功')
+        console.log('发送请求成功')
         let data = res
         if (interceptor.response) {
           try {
             data = await interceptor.response.success(res)
           } catch(err) {
-            console.log('报错')
+            console.log('接口报错')
             reject(err)
           }
         }
         resolve(data)
       },
       fail: async (res) => {
-        console.log('报错')
+        console.log('发送请求失败')
         let data = res
         if (interceptor.response) {
           data = await interceptor.response.error(res)
@@ -105,13 +105,20 @@ class RSSHTTP {
   }
 
   async put<T>(url: string, params?: any, option = {}) {
-    return await wxrequest<T>({
-      url,
-      data: params,
-      method: 'PUT',
-      ...this.defaultConfig,
-      ...option
-    }, this.interceptor)
+    try {
+      return await wxrequest<T>({
+        url,
+        data: params,
+        method: 'PUT',
+        ...this.defaultConfig,
+        ...option
+      }, this.interceptor)
+    } catch (err) {
+      console.debug('err')
+      console.log(err)
+      throw err
+    }
+    
   }
 
   async delete<T>(url: string, params?: any, option = {}) {

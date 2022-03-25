@@ -43,11 +43,12 @@ http.setTimeout(1600000)
         if (res.statusCode === SUCCESS_STATUS_CODE_DEF.OK || res.statusCode === SUCCESS_STATUS_CODE_DEF.Created || res.statusCode === SUCCESS_STATUS_CODE_DEF.Accepted || res.statusCode === SUCCESS_STATUS_CODE_DEF.no_content) {
           resolve(res)
         } else {
+          console.log('报错了拉')
           reject(res)
         }
       })
     },
-    error: (res) => new Promise((_, reject) => {console.log('报错拉') ;reject(res)})
+    error: (res) => new Promise((resolve, _) => {console.log('报错拉') ;resolve(res)})
   })
 
 export function post<T, S>(url: string, data?: S): Promise<WechatMiniprogram.RequestSuccessCallbackResult<T>> {
@@ -65,8 +66,10 @@ export function put<T, S>(url: string, data?: S): Promise<WechatMiniprogram.Requ
   return new Promise((resolve, resject) => {
     http.put<T>(url, data)
       .then(res => {
+        console.debug('resolve res')
         resolve(res)
       }).catch(err => {
+        console.debug('resject res')
         resject(err)
       })
   })

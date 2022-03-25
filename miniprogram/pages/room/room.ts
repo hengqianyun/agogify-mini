@@ -29,7 +29,8 @@ Page({
     saleId: '',
     storeId: '',
     enableAlertBeforeUnloadMsg: '',
-    isGuest: false
+    isGuest: false,
+    enabledMic: true,
   },
 
   /**
@@ -124,7 +125,7 @@ Page({
     const pusherConfig: PusherAttributesParams = {
       mode: 'live', // RTC：实时通话，live：直播模式
       enableCamera: false, // 是否开启摄像头
-      enableMic: true, // 是否开启麦克风
+      enableMic: this.data.enabledMic, // 是否开启麦克风
       enableAgc: false, // 是否开启音频自动增益，该特性可以补偿部分手机麦克风音量太小的问题，但也会放大噪音，建议配合 ANS 同时开启
       enableAns: false, // 是否开启音频噪声抑制，该特性会自动检测背景噪音并进行过滤，但也会误伤周围的音乐，只有会议、教学等场景才适合开启
       minBitrate: 600, // 
@@ -152,6 +153,16 @@ Page({
       // trtcClient.getPusherInstance().start() // 开始推流
     })
 
+  },
+
+  setMicStatus() {
+    this.setData({
+      enabledMic: !this.data.enabledMic
+    }, () => {
+      wx.createLivePusherContext().setMICVolume({
+        volume: Number(this.data.enabledMic)
+      })
+    })
   },
 
   exitRoom() {

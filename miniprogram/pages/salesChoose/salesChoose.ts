@@ -174,7 +174,10 @@ Page({
       }
       return true
     } catch (err) {
-      wx.showToast({ title: '网络异常' })
+      wx.showToast({
+        title: '请求失败',
+        icon: 'error'
+      })
       return false
     }
   },
@@ -192,7 +195,10 @@ Page({
       return true
     } catch (err) {
       console.log(err)
-      this.onLoad()
+      wx.showToast({
+        title: '请求失败',
+        icon: 'error'
+      })
       return false
     }
   },

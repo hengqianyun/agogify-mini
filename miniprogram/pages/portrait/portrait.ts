@@ -137,12 +137,11 @@ Page({
     this.setData({
       commitBtnDisabled: true
     })
-    console.log(this.data.avatar)
     wx.uploadFile({
       timeout: 600000,
       filePath: that.data.avatar,
       name: 'file',
-      url: BASEURL + 'store/customer-images',
+      url: BASEURL + 'store/customer-avatars',
       header: { Authorization: 'Bearer ' + userProfile.token },
       formData: {},
       success(res) {
