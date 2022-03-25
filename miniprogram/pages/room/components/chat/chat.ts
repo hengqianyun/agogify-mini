@@ -356,7 +356,7 @@ Component({
           messageView: item.ID
         })
       } else {
-        wx.showToast({ title: "发送失败", icon: "error" })
+        wx.showToast({ title: "发送失败", icon: "error" , duration: 2000})
       }
     },
 
@@ -588,7 +588,7 @@ Component({
            * TODO 完善用户未付款逻辑
            */
           if (!(await this.userHasPaid())) {
-            wx.showToast({ title: '款项暂未到账，请稍等片刻', icon: 'none' })
+            wx.showToast({ title: '款项暂未到账，请稍等片刻', icon: 'none', duration: 2000 })
             wx.hideLoading()
             return
           }
@@ -613,7 +613,7 @@ Component({
           }, {})
 
         } catch {
-          wx.showToast({ title: '请求失败，请重新尝试', icon: 'error' })
+          wx.showToast({ title: '请求失败，请重新尝试', icon: 'error', duration: 2000 })
 
         } finally {
           this.setData({
