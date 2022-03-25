@@ -102,7 +102,8 @@ Page({
       } catch {
         wx.showToast({
           title: '网络错误',
-          icon: 'error'
+          icon: 'error',
+          duration: 2000,
         })
         return
       } finally {
@@ -147,7 +148,7 @@ Page({
     wx.scanCode({
       success(res) {
         if (res.errMsg !== "scanCode:ok") {
-          wx.showToast({ title: '扫描失败', icon: 'error' })
+          wx.showToast({ title: '扫描失败', icon: 'error', duration: 2000, })
           return
         }
         wx.showModal({
@@ -157,7 +158,7 @@ Page({
         })
       },
       fail() {
-        wx.showToast({ title: '扫描失败，请重试', icon: 'error' })
+        wx.showToast({ title: '扫描失败，请重试', icon: 'error', duration: 2000, })
       }
     })
   }

@@ -218,7 +218,8 @@ Page({
       }
       wx.showToast({
         title: 'success',
-        icon: 'success'
+        icon: 'success',
+        duration: 2000,
       })
       setTimeout(() => {
         wx.navigateBack()
@@ -226,7 +227,8 @@ Page({
     } catch {
       wx.showToast({
         title: '创建地址错误，请稍后重试',
-        icon: 'error'
+        icon: 'error',
+        duration: 2000,
       })
       this.setData({
         commitBtnDisabled: false
@@ -262,7 +264,7 @@ Page({
         lastName,
       })
     } catch (err) {
-      wx.showToast({ title: '网络异常' })
+      wx.showToast({ title: '网络异常', icon: 'error', duration: 2000, })
     }
   },
 
@@ -283,7 +285,8 @@ Page({
     } catch {
       wx.showToast({
         title: '查询失败',
-        icon: 'error'
+        icon: 'error',
+        duration: 2000,
       })
     }
   }

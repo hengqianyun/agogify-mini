@@ -65,7 +65,8 @@ Component({
         wx.hideLoading()
         wx.showToast({
           title: '处理失败，请重试',
-          icon: 'error'
+          icon: 'error',
+          duration: 2000,
         })
       }
     },

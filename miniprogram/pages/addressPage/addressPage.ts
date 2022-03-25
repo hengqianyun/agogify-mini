@@ -115,7 +115,8 @@ Page({
           } catch {
             wx.showToast({
               title: '删除失败，请稍后重试',
-              icon: 'error'
+              icon: 'error',
+              duration: 2000,
             })
           }
         }
@@ -134,7 +135,7 @@ Page({
       }
       return true
     } catch (err) {
-      wx.showToast({ title: '网络异常' })
+      wx.showToast({ title: '网络异常', icon: 'error', duration: 2000, })
       return false
     }
   },

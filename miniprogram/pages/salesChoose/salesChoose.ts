@@ -175,8 +175,9 @@ Page({
       return true
     } catch (err) {
       wx.showToast({
-        title: '请求失败',
-        icon: 'error'
+        title: '呼叫失败',
+        icon: 'error',
+        duration: 2000,
       })
       return false
     }
@@ -196,8 +197,9 @@ Page({
     } catch (err) {
       console.log(err)
       wx.showToast({
-        title: '请求失败',
-        icon: 'error'
+        title: '呼叫失败',
+        icon: 'error',
+        duration: 2000,
       })
       return false
     }

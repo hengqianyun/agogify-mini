@@ -86,7 +86,8 @@ Page({
     if (!this.data.status) {
       wx.showToast({
         title: '请先阅读条例',
-        icon: 'none'
+        icon: 'none',
+        duration: 2000,
       })
       return
     }
@@ -98,7 +99,8 @@ Page({
     } else {
       wx.showToast({
         title: "系统异常",
-        icon: "error"
+        icon: "error",
+        duration: 2000,
       })
     }
   },
@@ -147,7 +149,8 @@ Page({
     } catch (err) {
       wx.showToast({
         title: "获取信息失败",
-        icon: "error"
+        icon: "error",
+        duration: 2000,
       })
     } finally {
       wx.hideLoading()

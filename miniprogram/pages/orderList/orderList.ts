@@ -129,7 +129,8 @@ Page({
     } catch (err) {
       wx.showToast({
         title: '网络错误，请重试',
-        icon: 'error'
+        icon: 'error',
+        duration: 2000,
       })
     } finally {
       wx.hideLoading()
@@ -159,7 +160,8 @@ Page({
     } catch (err) {
       wx.showToast({
         title: '网络错误，请重试',
-        icon: 'error'
+        icon: 'error',
+        duration: 2000,
       })
     } finally {
       wx.hideLoading()

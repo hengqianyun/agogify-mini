@@ -366,7 +366,7 @@ Page({
 
     const res = this.judgeDate(x, y)
     if (!res) {
-      wx.showToast({ title: '当前时间不满足' })
+      wx.showToast({ title: '当前时间不满足', icon: 'error', duration: 2000, })
       return
     }
     const { y1, y2 } = res
@@ -417,6 +417,7 @@ Page({
       wx.showToast({
         title: '请选择预约时间',
         icon: 'error',
+        duration: 2000,
       })
       this.setData({
         reserveBtnDisabled: false
@@ -428,6 +429,7 @@ Page({
       wx.showToast({
         title: '预约成功',
         icon: 'success',
+        duration: 2000,
       })
       setTimeout(() => {
         wx.navigateBack()
@@ -435,7 +437,8 @@ Page({
     } catch {
       wx.showToast({
         title: '请求异常，请刷新重试',
-        icon: 'error'
+        icon: 'error',
+        duration: 2000,
       })
     } finally {
       this.setData({

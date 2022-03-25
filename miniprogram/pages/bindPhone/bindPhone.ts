@@ -62,7 +62,8 @@ Page({
       default:
         wx.showToast({
           title: "系统异常",
-          icon: "error"
+          icon: "error",
+          duration: 2000,
         })
     }
   },
@@ -130,7 +131,7 @@ Page({
       this.setData({
         btnDisable: false
       })
-      wx.showToast({ title: '获取验证码失败，请重新尝试' })
+      wx.showToast({ title: '获取验证码失败，请重新尝试', icon: 'error', duration: 2000, })
     }
 
   },
@@ -157,7 +158,7 @@ Page({
         wx.switchTab({ url: '../person/person' })
         await querySessionAsync()
       } catch {
-        wx.showToast({title: '登录失败', icon: 'error'})
+        wx.showToast({title: '登录失败', icon: 'error', duration: 2000,})
       } finally {
         wx.hideLoading()
         this.setData({
@@ -171,7 +172,8 @@ Page({
     } else {
       wx.showToast({
         title: "系统错误",
-        icon: "error"
+        icon: "error",
+        duration: 2000,
       })
     }
   },

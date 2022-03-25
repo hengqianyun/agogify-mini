@@ -102,7 +102,9 @@ Page({
       })
     } catch {
       wx.showToast({
-        title: '网络错误'
+        title: '网络错误',
+        icon: 'error',
+        duration: 2000,
       })
     }
   },
@@ -230,11 +232,11 @@ Page({
       })
     }
     if (!this.data.identityPath) {
-      wx.showToast({ title: "上传证件正面照", icon: "error" })
+      wx.showToast({ title: "上传证件正面照", icon: "error", duration: 2000, })
       return
     }
     if (!this.data.passportBase64) {
-      wx.showToast({ title: "上传证件背面照", icon: "error" })
+      wx.showToast({ title: "上传证件背面照", icon: "error", duration: 2000, })
       return
     }
     this.setData({
