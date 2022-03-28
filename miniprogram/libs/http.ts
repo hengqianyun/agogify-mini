@@ -42,12 +42,19 @@ class RSSHTTP {
   defaultConfig: RSSHTTPModule.DefaultConfig = {
     header: {
       'content-type': 'application/json'
+      // 'content-type': 'application/ld+json'
     },
     dataType: 'json',
   };
   publicReqConfig: RSSHTTPModule.DefaultConfig = {
     header: {
       'content-type': 'application/json'
+    },
+    dataType: 'json',
+  };
+  diffConfig: RSSHTTPModule.DefaultConfig = {
+    header: {
+      'content-type': 'application/ld+json'
     },
     dataType: 'json',
   };
@@ -73,6 +80,7 @@ class RSSHTTP {
   setToken(token: string) {
     console.log(token)
     this.defaultConfig.header['authorization'] = 'Bearer ' + token;
+    this.diffConfig.header['authorization'] = 'Bearer ' + token;
   }
 
   async post<T>(url: string, params?: any, option = {}) {
@@ -81,6 +89,16 @@ class RSSHTTP {
       data: params,
       method: 'POST',
       ...this.defaultConfig,
+      ...option
+    }, this.interceptor)
+  }
+
+  async typePost<T>(url: string, params?: any, option = {}) {
+    return await wxrequest<T>({
+      url,
+      data: params,
+      method: 'POST',
+      ...this.diffConfig,
       ...option
     }, this.interceptor)
   }
@@ -121,7 +139,9 @@ class RSSHTTP {
     
   }
 
-  async delete<T>(url: string, params?: any, option = {}) {
+  async delete<T>(url: string, params?: any, option = {
+    
+  }) {
     return await wxrequest<T>({
       url,
       data: params,

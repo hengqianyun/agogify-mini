@@ -62,6 +62,17 @@ export function post<T, S>(url: string, data?: S): Promise<WechatMiniprogram.Req
   })
 }
 
+export function typePost<T, S>(url: string, data?: S): Promise<WechatMiniprogram.RequestSuccessCallbackResult<T>> {
+  return new Promise((resolve, resject) => {
+    http.typePost<T>(url, data)
+      .then(res => {
+        resolve(res)
+      }).catch(err => {
+        resject(err)
+      })
+  })
+}
+
 export function put<T, S>(url: string, data?: S): Promise<WechatMiniprogram.RequestSuccessCallbackResult<T>> {
   return new Promise((resolve, resject) => {
     http.put<T>(url, data)

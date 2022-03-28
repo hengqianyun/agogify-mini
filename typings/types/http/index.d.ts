@@ -22,6 +22,7 @@ declare namespace RSSHTTPModule {
     url: string,
     method: MethodTypes
     data?: any
+    header?: AnyObject
   }
 
   interface DefaultConfig {

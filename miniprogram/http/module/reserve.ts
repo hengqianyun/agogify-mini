@@ -1,4 +1,4 @@
-import { post, get } from "../index";
+import { post, get, typePost } from "../index";
 
 const reserveModule = {
   queryReserveList: async () => await post<swaggerI.reserveListResult, undefined>('https://www.fastmock.site/mock/7a84f5def9c899423230775fc860efb5/ss-mini/api/reserve/queryReserveList'),
@@ -11,7 +11,7 @@ const reserveModule = {
   // queryMyReserveList: async (params: reserveDesign.queryMySalesTimeSlotsParams) => await get<swaggerI.querySalesTimeSlotsResult, reserveDesign.queryMySalesTimeSlotsParams>('store/video-session/booking/time-slots', params),
   queryMyReserveList: async (params: reserveDesign.queryMySalesTimeSlotsParams) => await get<swaggerI.querySalesTimeSlotsResult, reserveDesign.queryMySalesTimeSlotsParams>('store/video-session/bookings', params),
 
-  bookTimeSlot: async (params: reserveDesign.bookTimeSlotParams) => post<any, reserveDesign.bookTimeSlotParams>('store/video-session/bookings/book-time-slots', params)
+  bookTimeSlot: async (params: reserveDesign.bookTimeSlotParams) => typePost<any, reserveDesign.bookTimeSlotParams>('store/video-session/bookings/book-time-slots', params)
 }
 
 export default reserveModule

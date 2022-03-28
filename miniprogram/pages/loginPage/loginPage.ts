@@ -28,7 +28,8 @@ Page({
     try {
       let res = await wx.login()
       try {
-        const { provider } = (await loginModule.verifyOauthLoginState(res.code)).data
+        const res2 = await loginModule.verifyOauthLoginState(res.code)
+        const { provider } = res2.data
         console.log('没报错')
         if (provider === 'mobile') { }
         else if (provider === 'wechat_mini_program') { }

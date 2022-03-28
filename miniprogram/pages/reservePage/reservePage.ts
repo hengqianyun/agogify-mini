@@ -82,7 +82,7 @@ Page({
   async onLoad() {
     const today = new Date()
     const [year, month, date] = [today.getFullYear(), today.getMonth(), today.getDate()]
-    const newDay = new Date(year, month, date, 16, 0)
+    const newDay = new Date(year, month, date)
     const startTime = this.getGMTTimerString(newDay)
     const endTime = this.getGMTTimerString(new Date(newDay.setDate(date + weekLength)))
     const stores = wx.getStorageSync<storeDesign.storeItem[]>('reserveStores')
@@ -256,7 +256,7 @@ Page({
       /**
        * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
        */
-      const timeZone = 8;
+      const timeZone = -(new Date().getTimezoneOffset()) / 60;
 
       for (const slot of list) {
         const { state } = slot
@@ -278,7 +278,7 @@ Page({
         }
       }
       const timeList: number[][][] = [[], [], [], [], [], [], []]
-      let latest = 0, earliest = 0
+      let latest = 0, earliest = -1
       for (const slot of list) {
         const { state } = slot
         if (state === 'available') {
@@ -288,10 +288,8 @@ Page({
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
           const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-          // TODO 9 变为 12
-          const j = (hour - 16) * 4 + min / 15
           let tempHour = hour >= 24 ? hour - 24 : hour
-          if (tempHour < earliest) earliest = tempHour
+          if (tempHour < earliest || earliest < 0) earliest = tempHour
 
           if (tempHour > latest) latest = tempHour
           if (tempHour === 0) latest = 24
@@ -304,7 +302,7 @@ Page({
           }
         }
       }
-      const length = (latest - earliest) * 4
+      const length = (latest - earliest + 1) * 4
       this.initDurations(earliest, length)
       const tableItems: SimpleTableItem[][] = [[], [], [], [], [], [], []]
       for (let i = 0; i < tableItems.length; i++) {
