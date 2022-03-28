@@ -1,7 +1,8 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
+import { shareBooking } from "../../libs/share"
 import { userProfile } from "../../libs/user/user"
-import { getStringCode, timeFormat } from "../../utils/util"
+import { getStringCode, localMonth, timeFormat } from "../../utils/util"
 
 type reserveTagType = '待进行' | '已结束'
 
@@ -11,6 +12,8 @@ interface pageReserve extends reserveDesign.salesReserveItem {
   tag: reserveTagType
   address: string
 }
+
+const timezone = -(new Date().getTimezoneOffset()) / 60
 
 // pages/reserveList/reserveList.ts
 Page({
@@ -81,8 +84,11 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() {
-
+  onShareAppMessage(option) {
+    const { from } = option
+    if (from === 'button') {
+      return shareBooking(userProfile.nickName!)
+    }
   },
 
   onChange({ detail }: WechatMiniprogram.TouchEvent) {
@@ -96,7 +102,7 @@ Page({
 
   async queryReserveList() {
     const res = await reserveModule.queryMyReserveList({
-      "startTime[after]": (new Date()).toISOString(),
+      "endTime[after]": (new Date()).toISOString(),
       "order[startTime]": 'desc',
       "customer.id": userProfile.id,
     })
@@ -107,11 +113,11 @@ Page({
       e.sales.store.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
       let startTime = new Date(e.startTime.split('GMT')[0])
       let endTime = new Date(e.endTime.split('GMT')[0])
-      startTime = new Date(startTime.setHours(startTime.getHours() + 8))
-      endTime = new Date(endTime.setHours(endTime.getHours() + 8))
+      startTime = new Date(startTime.setHours(startTime.getHours() + timezone))
+      endTime = new Date(endTime.setHours(endTime.getHours() + timezone))
       return {
         ...e,
-        date: timeFormat(startTime, 'yyyy-MM-dd'),
+        date: localMonth(startTime),
         duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
         tag: '待进行',
         address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
@@ -135,11 +141,11 @@ Page({
       e.sales.store.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + e.sales.store.logo.path
       let startTime = new Date(e.startTime.split('GMT')[0])
       let endTime = new Date(e.endTime.split('GMT')[0])
-      startTime = new Date(startTime.setHours(startTime.getHours() + 8))
-      endTime = new Date(endTime.setHours(endTime.getHours() + 8))
+      startTime = new Date(startTime.setHours(startTime.getHours() + timezone))
+      endTime = new Date(endTime.setHours(endTime.getHours() + timezone))
       return {
         ...e,
-        date: timeFormat(startTime, 'yyyy-MM-dd'),
+        date: localMonth(startTime),
         duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
         tag: '已结束',
         address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
@@ -152,6 +158,7 @@ Page({
   },
 
   handleCall({ currentTarget }: WechatMiniprogram.TouchEvent) {
+    debugger
     const { index } = currentTarget.dataset as { index: number }
     const reserveItem = this.data.reserveLists[0][index]
     console.log(reserveItem)

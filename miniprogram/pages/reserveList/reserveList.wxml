@@ -8,10 +8,12 @@
               <view class="reserve-item">
                 <view class="item-top">
                   <view class="i-t-left">
-                    <view class="reserve-duration">{{reserve.duration}}</view>
-                    <view class="reserve-status">{{reserve.tag}}</view>
+                    <view class="reserve-date" hover-class="none" hover-stop-propagation="false">
+                      {{reserve.date}} 
+                    </view>
+                    <view class="reserve-duration"> {{reserve.duration}}</view>
                   </view>
-                  <view class="i-t-right">{{reserve.date}}</view>
+                  <view class="i-t-right">预约</view>
                 </view>
                 <view class="item-content">
                   <view class="content-left">
@@ -27,12 +29,21 @@
                       </view>
                     </view>
                   </view>
-                  <view class="content-controller">
+                  
+                  <!-- <view class="content-controller">
                     <iconfont wx:if="{{reserve.tag === '待进行'}}" name="store_hujiao" data-index="{{index}}" size="{{40}}" bind:tap="handleCall"></iconfont>
                     <view wx:else></view>
                     <iconfont name="collection_g" size="{{40}}"></iconfont>
                     <iconfont name="share" size="{{40}}"></iconfont>
+                  </view> -->
+                </view>
+                <view class="item-controller" wx:if="{{reserve.tag === '待进行'}}">
+                  <view class="controller-btn deep-btn" data-index="{{index}}" bind:tap="handleCall">
+                    进入房间
                   </view>
+                  <button class="controller-btn light-btn" open-type="share">
+                    邀请好友顾问
+                  </button>
                 </view>
               </view>
             </block>

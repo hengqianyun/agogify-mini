@@ -27,6 +27,12 @@ export const timeFormat = (date: Date, format: formatType) => {
   return str
 }
 
+export const localMonth = (date: Date) => {
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  return `${formatNumber(month)}月${formatNumber(day)}日`
+}
+
 
 
 const formatNumber = (n: number) => {

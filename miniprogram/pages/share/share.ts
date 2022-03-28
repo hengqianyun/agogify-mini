@@ -1,7 +1,7 @@
 import { autoLogin } from "../../libs/user/user"
 
 // pages/share/share.ts
-type shareType = 'video'
+type shareType = 'video' | 'bookingVideo'
 
 interface ShareParams {
   type: shareType
@@ -23,12 +23,14 @@ Page({
    */
   data: {
     isVideo: false,
+    isBookingVideo: false,
     videoParams: {
       sessionCode: '',
       userName: '',
       roomId: '',
       salesId: '',
       storeId: '',
+      bookingCode: ''
     }
   },
 
@@ -58,20 +60,32 @@ Page({
   async onShow() {
     const {type} = this.options
     let key = ''
+    const {sessionCode, bookingCode, userName, roomId, salesId, storeId} = this.options
     switch (type) {
       case 'video':
-        const {sessionCode, userName, roomId, salesId, storeId} = this.options
         this.setData({
-          videoParams: {
+          videoParams: Object.assign(this.data.videoParams, {
             sessionCode: sessionCode!, 
             userName: userName!,
             roomId: roomId!,
             salesId: salesId!,
             storeId: storeId!
-          }
+          }) 
         })
         key = 'isVideo'
       break
+      case 'bookingVideo':
+        
+        this.setData({
+          videoParams: Object.assign(this.data.videoParams, {
+            sessionCode: sessionCode!, 
+            userName: userName!,
+            salesId: salesId!,
+            storeId: storeId!
+          }) 
+        })
+        key = 'bookingVideo'
+        break
       default:
     }
     this.setData({

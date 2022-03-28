@@ -158,8 +158,6 @@ Page({
         })
         break
       case "shareIn":
-        // const sessionCode = this.options
-        // const roomId = this.data.storeGroupId + '-' + sessionCode
         wx.redirectTo({
           url: `../room/room?roomId=${roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${roomId}&storeId=${this.data.storeId}&saleId=${this.data.saleId}&sessionCode=${sessionCode}&share=1`
         })

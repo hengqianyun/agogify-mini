@@ -13,3 +13,7 @@ export const shareVideo = (userName: string, sessionCode: string, page: string, 
     path: `${page}?userName=${userName}&type=video&sessionCode=${sessionCode}&roomId=${roomId}&salesId=${salesId}&storeId=${storeId}`
   }
 }
+
+export const shareBooking = (userName: string) => {
+  
+}

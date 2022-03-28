@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "video-share": "./video/video"
+    "video-share": "./video/video",
+    "booking-share": "./bookingVideo/bookingVideo"
   },
   "navigationBarTitleText": "Agogify"
 }

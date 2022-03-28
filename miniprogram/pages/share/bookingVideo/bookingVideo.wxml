@@ -1,0 +1,15 @@
+<view class="video-box" hover-class="none" hover-stop-propagation="false">
+  <view class="video-container" hover-class="none" hover-stop-propagation="false">
+      <view class="text-info" hover-class="none" hover-stop-propagation="false">
+        <view class="text-title" hover-class="none" hover-stop-propagation="false">
+          {{title}}
+        </view>
+        <view class="text-desc" hover-class="none" hover-stop-propagation="false">
+          {{desc}}
+        </view>
+      </view>
+      <view wx:if="{{showBtn}}" class="btn-area" hover-class="none" hover-stop-propagation="false">
+        <rss-btn label="{{btnLabel}}" disabled="{{btnDisabled}}" width="{{654}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleTap"></rss-btn>
+      </view>
+  </view>
+</view>

@@ -35,6 +35,7 @@ declare namespace reserveDesign {
 
   interface queryMySalesTimeSlotsParams {
     'startTime[after]'?: string
+    'endTime[after]'?: string
     'customer.id': number
     'endTime[before]'?: string
     'order[startTime]': string
