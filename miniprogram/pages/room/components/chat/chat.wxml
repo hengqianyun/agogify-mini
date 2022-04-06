@@ -1,5 +1,13 @@
 <view class="controllers-page" bind:longpress="handleRecording" bind:touchend="handleTouchEnd">
   <!-- <view class="page-body" wx:if="{{!isWaiting}}"> -->
+    <view wx:if="{{isRecording}}" class="record-area">
+      <view class="recore-icon-area">
+        <image class="record-icon" src="../../../../assets/record.png"></image>
+      </view>
+      <view class="recorde-text">
+        正在录制，松开后输入结果
+      </view>
+    </view>
     <view class="top-container">
       <view class="shop-info">
         <view class="store-avatar-box">
@@ -87,7 +95,7 @@
                 <view class="user-phone">{{address.phoneNumber}}</view>
               </view>
               <view class="address-detail text-ellipsis-2">
-                {{address.provinceName + ' ' + address.cityName + ' ' + address.street}}
+                {{address.provinceName + ' ' + address.city + ' ' + address.street}}
               </view>
             </view>
           </view>

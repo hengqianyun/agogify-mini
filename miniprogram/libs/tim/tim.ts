@@ -6,7 +6,7 @@ export const logout = () => IMClient.getInstance().logout()
 
 export const imLogin = (userId: string) => IMClient.getInstance(true).login(userId)
 
-export const sendCustomMessage = (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, { avatar = '' }, inserDB: boolean = true) => IMClient.getInstance().sendGroupCustomMessage(options, groupid, saleId, data, { avatar: avatar }, inserDB)
+export const sendCustomMessage = (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, excess: Object, inserDB: boolean = true) => IMClient.getInstance().sendGroupCustomMessage(options, groupid, saleId, data, excess, inserDB)
 
 export const sendTextMessage = (groupID: string, text: string) => IMClient.getInstance().sendGroupTextMessage(groupID, text)
 

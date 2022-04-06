@@ -5,9 +5,11 @@ const sessionModule = {
   querySession: async (params: string) => await get<swaggerI.querySessionRes, sessionDesign.querySessionParams>('store/video-session/sessions?' + params),
   putSession: async (params: sessionDesign.putSessionParams, code: string) => await put<swaggerI.putSessionRes, sessionDesign.putSessionParams>('store/video-session/sessions/' + code, params),
   createMessageLocks: async (params: sessionDesign.createMessageLocksParams) => await post<any, sessionDesign.createMessageLocksParams>('private/video-session/message-locks', params),
-  checkGuestAvailability: async (sessionCode: string) => await get(`store/video-session/sessions/${sessionCode}/check-guest-availability`),
-  checkBookingGuestAvailability: async (bookingCode: string) => await get(`store/video-session/bookings/${bookingCode}/check-guest-availability`),
-  gusetCheckIn: async (sessionCode: string) => await put(`store/video-session/sessions/${sessionCode}/guest-check-in`, {}),
+  checkIsSessionGuest: async (sessionCode: string, guestCode: number) => await get(`store/video-session/sessions/${sessionCode}/guest/${guestCode}`),
+  checkIsBookingGuest: async (bookingCode: string, guestCode: number) => await get(`store/video-session/bookings/${bookingCode}/guest/${guestCode}`),
+  checkSessionTickets: async (sessionCode: string) => await get(`store/video-session/sessions/${sessionCode}/enquiry-tickets`),
+  checkBookingTickets: async (bookingCode: string) => await get(`store/video-session/bookings/${bookingCode}/enquiry-tickets`),
+  sessionGusetCheckIn: async (sessionCode: string) => await put(`store/video-session/bookings/${sessionCode}/guest-check-in`, {}),
   bookingGusetCheckIn: async (bookingCode: string) => await put(`store/video-session/bookings/${bookingCode}/guest-check-in`, {}),
 }
 

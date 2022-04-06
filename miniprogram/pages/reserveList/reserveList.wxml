@@ -37,11 +37,12 @@
                     <iconfont name="share" size="{{40}}"></iconfont>
                   </view> -->
                 </view>
-                <view class="item-controller" wx:if="{{reserve.tag === '待进行'}}">
-                  <view class="controller-btn deep-btn" data-index="{{index}}" bind:tap="handleCall">
+                <!-- <view class="item-controller" wx:if="{{reserve.tag === '待进行'}}"> -->
+                <view class="item-controller">
+                  <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="handleCall">
                     进入房间
                   </view>
-                  <button class="controller-btn light-btn" open-type="share">
+                  <button data-index="{{index}}" class="controller-btn light-btn" open-type="share">
                     邀请好友顾问
                   </button>
                 </view>

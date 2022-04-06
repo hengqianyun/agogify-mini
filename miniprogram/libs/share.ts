@@ -14,6 +14,12 @@ export const shareVideo = (userName: string, sessionCode: string, page: string, 
   }
 }
 
-export const shareBooking = (userName: string) => {
-  
+export const shareBooking = (userName: string, bookingCode: string, page: string, {
+  salesId = '',
+  storeId = '',
+}) => {
+  return {
+    title: 'Agogify爱购季好友邀请',
+    path: `${page}?userName=${userName}&type=bookingVideo&sessionCode=${bookingCode}&salesId=${salesId}&storeId=${storeId}`
+  }
 }

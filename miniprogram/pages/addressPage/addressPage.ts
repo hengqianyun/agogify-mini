@@ -1,4 +1,5 @@
 import addressModule from "../../http/module/address"
+import userModule from "../../http/module/user"
 import { userProfile } from "../../libs/user/user"
 
 // pages/addressPage/addressPage.ts
@@ -77,19 +78,29 @@ Page({
 
   },
 
-  handleRadioTap(event: WechatMiniprogram.TouchEvent) {
+  async handleRadioTap(event: WechatMiniprogram.TouchEvent) {
     const { id } = event.currentTarget.dataset
     const item = this.data.addressList.find(e => e.id === id)
     if (item) {
-      if (item.isDefault) return
-      // TODO
-      // requset for change default address
-      const list = this.data.addressList.map(e => {
-        e.isDefault = e.id === id
-        return e
+      if (item.id === this.data.defaultAddressId) return
+      wx.showLoading({
+        title: 'loading'
       })
+      try {
+        await userModule.putCustomerInfo({
+          defaultAddress: item["@id"]
+        }, userProfile.id)
+      } catch {
+        wx.showToast({
+          title: '修改默认地址失败'
+        })
+        return
+      } finally {
+        wx.hideLoading()
+      }
+      userProfile.defaultAddressId = item.id
       this.setData({
-        addressList: [...list]
+        defaultAddressId: item.id
       })
     }
   },

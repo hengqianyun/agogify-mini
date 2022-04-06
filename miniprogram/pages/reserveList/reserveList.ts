@@ -85,9 +85,15 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage(option) {
-    const { from } = option
+    const { from, target } = option
+    const {index} = target.dataset
+    console.log(option)
+    const item = this.data.reserveLists[0][index]
     if (from === 'button') {
-      return shareBooking(userProfile.nickName!)
+      return shareBooking(userProfile.nickName!, getStringCode(item["@id"]), '/pages/share/share', {
+        salesId: item.sales['@id'],
+        storeId: getStringCode(item.sales.store['@id'])
+      })
     }
   },
 
@@ -103,7 +109,7 @@ Page({
   async queryReserveList() {
     const res = await reserveModule.queryMyReserveList({
       "endTime[after]": (new Date()).toISOString(),
-      "order[startTime]": 'desc',
+      "order[startTime]": 'asc',
       "customer.id": userProfile.id,
     })
 
@@ -158,7 +164,6 @@ Page({
   },
 
   handleCall({ currentTarget }: WechatMiniprogram.TouchEvent) {
-    debugger
     const { index } = currentTarget.dataset as { index: number }
     const reserveItem = this.data.reserveLists[0][index]
     console.log(reserveItem)
@@ -180,10 +185,11 @@ Page({
     // } else {
     // }
     const { '@id': saleId, store } = reserveItem.sales
+    const {'@id': reservePath} = reserveItem
     const { '@id': pathCode } = store
     const code = getStringCode(pathCode)
     wx.navigateTo({
-      url: `../roomWaiting/roomWaiting?storeId=${code}&saleId=${saleId}&type=reserveIn`
+      url: `../roomWaiting/roomWaiting?storeId=${code}&saleId=${saleId}&type=reserveIn&bookingCode=${getStringCode(reservePath)}`
     })
 
 

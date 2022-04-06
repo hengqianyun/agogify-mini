@@ -18,18 +18,20 @@ Page({
     callTimer: 0,
     type: '',
     storeId: '',
+    bookingCode: '',
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    const { storeId, saleId, type } = this.options as { storeId: string, saleId: string, type: string }
+    const { storeId, saleId, type, bookingCode } = this.options as { storeId: string, saleId: string, type: string, bookingCode: string }
     this.setData({
       storeGroupId: `${storeId}_Meeting`,
       type,
       storeId,
       saleId,
+      bookingCode,
     })
 
     /**
@@ -147,7 +149,9 @@ Page({
          */
         await sendCustomMessage({
           data: CustomMessageTypes.RESERVE_ENTER_ROOM
-        }, this.data.storeGroupId, this.data.saleId, {}, {});
+        }, this.data.storeGroupId, this.data.saleId, {}, {
+          bookingCode: this.data.bookingCode
+        });
         break
       case "sessionIn":
         /**

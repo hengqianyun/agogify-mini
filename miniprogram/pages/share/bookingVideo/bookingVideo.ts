@@ -87,8 +87,12 @@ Component({
      */
     async checkSession() {
       try {
-        const res = await sessionModule.checkBookingGuestAvailability(this.data.bookingCode)
-        return !!(res.data as any)['available']
+        // const res = await sessionModule.checkIsBookingGuest(this.data.bookingCode, userProfile.id)
+        // return !!(res.data as any)['available']
+        const ticketRes = await sessionModule.checkBookingTickets(this.data.bookingCode)
+        if ((ticketRes.data as any)['tickets'] == 0) {
+          return false;
+        }
       } catch (err: any) {
         // 多种错误处理
         if (err.message == '') {

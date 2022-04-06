@@ -1,1 +1,33 @@
-/* pages/share/bookingVideo/bookingVideo.wxss */
+@import url(../../../style/global.less);
+
+.video-box {
+  width: 100vw;
+  height: 100vh;
+  padding: 30vh 48rpx 0 48rpx;
+  display: flex;
+  // justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  .video-container {
+    height: 35%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    .text-info {
+      color: @defaultColor;
+      text-align: center;
+
+      .text-title {
+        font-size: 42rpx;
+        font-weight: bold;
+      }
+
+      .text-desc {
+        font-size: 28rpx;
+        margin-top: 32rpx;
+      }
+    }
+  }
+}

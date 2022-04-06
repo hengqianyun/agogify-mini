@@ -78,13 +78,13 @@ Page({
         
         this.setData({
           videoParams: Object.assign(this.data.videoParams, {
-            sessionCode: sessionCode!, 
+            bookingCode: bookingCode!, 
             userName: userName!,
             salesId: salesId!,
             storeId: storeId!
           }) 
         })
-        key = 'bookingVideo'
+        key = 'isBookingVideo'
         break
       default:
     }

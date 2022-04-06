@@ -28,7 +28,8 @@
     </view> -->
   </view>
   <view class="sale-info-container text-ellipsis">{{saleLanguage}}</view>
-  <view class="table-container">
+  <view class="empty" wx:if="{{isEmpty}}"> 抱歉，这位销售暂无可预约时间</view>
+  <view wx:else class="table-container">
     <view class="time-list">
       <view class="duration-choose">
         <view class="duration-30 duration" bind:tap="handleCheckBoxChange" data-duration="{{30}}">

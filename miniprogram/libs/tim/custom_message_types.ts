@@ -47,4 +47,6 @@ export default class CustomMessageTypes {
 
   /// 销售通知用户扫描完毕
   static SCAN_FINISH = 'SCAN_FINISH'
+
+  static CHECK_ONLINE = 'CHECK_ONLINE';
 }

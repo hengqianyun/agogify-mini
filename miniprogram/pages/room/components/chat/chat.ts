@@ -9,6 +9,7 @@ import drawQrcode from 'weapp-qrcode-canvas-2d'
 import sessionModule from '../../../../http/module/session'
 import { clearAckTimeout, quitGroup, resetTimerAndSeq, sendAck, sendCustomMessage, sendImageMessage, sendTextMessage } from '../../../../libs/tim/tim'
 import CustomMessageTypes from '../../../../libs/tim/custom_message_types'
+import { userProfile } from '../../../../libs/user/user'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -45,6 +46,7 @@ Component({
     canSend: false,
     percent: 0,
     showPopup: false,
+    isRecording: false,
     address: {} as addressDesign.address,
     addressList: [] as addressDesign.address[],
     pageInfo: {
@@ -92,6 +94,7 @@ Component({
     hangupText: '确认挂断通话？',
     orderStep: 0, // 0 没有订单， 1 put address 2 put shipment 3 put payment 4 complete
     addressSelectDisabled: false,
+    onlineTimer: 0
   },
 
   lifetimes: {
@@ -154,6 +157,7 @@ Component({
               clearAckTimeout(payloadData.seq)
           }
           if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
+            
             sendAck({ data: 'ack', description: "succesee" }, this.data.groupId, this.properties.saleId, data.time.toString())
           }
         }
@@ -266,6 +270,12 @@ Component({
           }
         }
       }
+      
+      sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, {avatar: userProfile.avatar}, false)
+      this.data.onlineTimer = setInterval(() => {
+        console.log(userProfile.avatar)
+        sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, {avatar: userProfile.avatar}, false)
+      }, 10000)
     },
 
     detached() {
@@ -282,6 +292,7 @@ Component({
         tg: this,
       })
       resetTimerAndSeq()
+      clearInterval(this.data.onlineTimer)
       quitGroup(`${this.properties.storeId}_Meeting`)
     }
   },
@@ -890,10 +901,11 @@ Component({
     async queryAddressList() {
       const resData = await addressModule.queryAddressList({ ...this.data.pageInfo, type: 'customer' })
       const { 'hydra:member': list } = resData.data
+      const defaultAddress = list.find(e => e.id == userProfile.defaultAddressId)
       this.setData({
         // addressList: [...this.data.addressList, ...list]
-        addressList: list.filter(e => e.id != list[0].id),
-        address: list[0]
+        addressList: list.filter(e => e.id != userProfile.defaultAddressId),
+        address: defaultAddress!
       })
     },
     async queryCart(tokenValue: string) {

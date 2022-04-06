@@ -87,8 +87,12 @@ Component({
      */
     async checkSession() {
       try {
-        const res = await sessionModule.checkGuestAvailability(this.data.sessionCode)
-        return !!(res.data as any)['available']
+        // const res = await sessionModule.checkIsSessionGuest(this.data.sessionCode, userProfile.id)
+        // return !!(res.data as any)['available']
+        const ticketRes = await sessionModule.checkSessionTickets(this.data.sessionCode)
+        if ((ticketRes.data as any)['tickets'] == 0) {
+          return false;
+        }
       } catch (err: any) {
         // 多种错误处理
         if (err.message == '') {
@@ -106,7 +110,7 @@ Component({
      */
     async joinSession() {
       try {
-        await sessionModule.gusetCheckIn(this.data.sessionCode)
+        await sessionModule.sessionGusetCheckIn(this.data.sessionCode)
         wx.navigateTo({
           url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=shareIn&sessionCode=${this.properties.sessionCode}`
         })

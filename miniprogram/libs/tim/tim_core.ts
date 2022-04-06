@@ -70,11 +70,11 @@ export default class IMClient {
     this.tim.quitGroup(groupID)
   }
 
-  public async createCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, avatar?: string) {
+  public async createCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, excess?: Object) {
     return await this.tim.createCustomMessage({
       to: groupid,
       conversationType: "GROUP",
-      payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId, avatar }) }
+      payload: { ...options, description: JSON.stringify({ userID: userProfile.pathId, saleId, ...excess }) }
     })
   }
 
@@ -109,15 +109,13 @@ export default class IMClient {
    * @param data 
    * @param inserDB 
    */
-  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, {
-    avatar = ''
-  }, inserDB: boolean = true) {
+  public async sendGroupCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, data: IMessageCallBack, excess: Object = {}, inserDB: boolean = true) {
     if (!!data.send) {
       data.send()
     }
 
     try {
-      const message = await this.createCustomMessage(options, groupid, saleId, avatar)
+      const message = await this.createCustomMessage(options, groupid, saleId, excess)
       const res = await this.tim.sendMessage(message)
 
       if (inserDB) {

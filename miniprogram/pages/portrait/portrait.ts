@@ -1,5 +1,5 @@
 import { BASEURL } from "../../http/index"
-import { userProfile } from "../../libs/user/user"
+import { updateServiceAvatar, userProfile } from "../../libs/user/user"
 
 // pages/portrait/portrait.ts
 Page({
@@ -9,6 +9,7 @@ Page({
    */
   data: {
     avatar: '',
+    newAvatar: '',
     userName: '',
     languages: [
       { label: '仅接受使用中文沟通的专柜', value: '1', checked: false },
@@ -126,7 +127,8 @@ Page({
         // console.log(base64)
         that.setData({
           // identityBase64: base64,
-          avatar: tempPath,
+          newAvatar: tempPath,
+          // avatar: tempPath,
         })
       }
     })
@@ -134,20 +136,21 @@ Page({
 
   handleSave() {
     const that = this
+    wx.showLoading({
+      title: '上传中'
+    })
     this.setData({
       commitBtnDisabled: true
     })
     wx.uploadFile({
       timeout: 600000,
-      filePath: that.data.avatar,
+      filePath: that.data.newAvatar,
       name: 'file',
       url: BASEURL + 'store/customer-avatars',
       header: { Authorization: 'Bearer ' + userProfile.token },
       formData: {},
       success(res) {
-        that.setData({
-          commitBtnDisabled: false
-        })
+        
         if (res.statusCode > 300) {
           wx.showModal({
             title: '错误',
@@ -162,10 +165,27 @@ Page({
           title: '成功',
           duration: 1000
         })
+        updateServiceAvatar();
         setTimeout(() => {
+          userProfile.avatar = that.data.newAvatar
           wx.navigateBack()
         }, 1000)
+      },
+      fail() {
+        wx.showModal({
+          title: '错误',
+          content: '系统错误',
+          confirmText: '确定',
+          showCancel: false
+        })
+      },
+      complete() {
+        that.setData({
+          commitBtnDisabled: false
+        })
+        wx.hideLoading()
       }
+      
     })
   }
 })

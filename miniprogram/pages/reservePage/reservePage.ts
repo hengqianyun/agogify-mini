@@ -73,7 +73,8 @@ Page({
     startTime: '',
     endTime: '',
     saleLanguage: '',
-    reserveBtnDisabled: false
+    reserveBtnDisabled: false,
+    isEmpty: false
   },
 
   /**
@@ -163,7 +164,8 @@ Page({
     try {
       const res = await storeModule.querySales(params)
       const { "hydra:member": list } = res.data
-      sales[stores[currentStoreIndex].code] = list.reverse()
+      // sales[stores[currentStoreIndex].code] = list.reverse()
+      sales[stores[currentStoreIndex].code] = list
       this.setData({
         sales: this.data.sales,
         saleLanguage: list[0].languages.map(e => {
@@ -253,11 +255,19 @@ Page({
         'endTime[before]': this.data.endTime,
       })
       const { "hydra:member": list } = res.data
+      // if (list.length === 0) {
+      //   this.setData({
+      //     isEmpty: true
+      //   })
+      //   return
+      // }
+      this.setData({
+        isEmpty: false
+      })
       /**
        * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
        */
       const timeZone = -(new Date().getTimezoneOffset()) / 60;
-
       for (const slot of list) {
         const { state } = slot
         if (state === 'available') {
@@ -302,6 +312,7 @@ Page({
           }
         }
       }
+      earliest = earliest === -1 ? 0 : earliest
       const length = (latest - earliest + 1) * 4
       this.initDurations(earliest, length)
       const tableItems: SimpleTableItem[][] = [[], [], [], [], [], [], []]

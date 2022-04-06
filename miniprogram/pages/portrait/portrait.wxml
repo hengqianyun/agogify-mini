@@ -2,9 +2,13 @@
 <view class="portrait-page" hover-class="none" hover-stop-propagation="false">
   <view class="avatar-area" hover-class="none" hover-stop-propagation="false">
     <view class="avatar-container" hover-class="none" hover-stop-propagation="false" bind:tap="handleChooseImage">
-      <image class="avatar" src="{{avatar}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+      <image wx:if="{{!newAvatar}}" class="avatar" src="{{avatar}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
         
       </image>
+      <image wx:else class="avatar" src="{{newAvatar}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="">
+        
+      </image>
+
       <view class="icons" hover-class="none" hover-stop-propagation="false">
         
       </view>

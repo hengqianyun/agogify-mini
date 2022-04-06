@@ -69,7 +69,7 @@ Page({
     wx.enableAlertBeforeUnload({
       message: '是否离开房间？',
       success() {
-        that.exitRoom()
+        
         if (!that.data.isGuest) {
           sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
           const code = that.data.groupId.split('Meeting-')[1]
@@ -78,6 +78,7 @@ Page({
           }, code)
           clearSessionAsync()
         }
+        that.exitRoom()
       }
     })
   },
