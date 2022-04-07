@@ -5,7 +5,7 @@
     },
     "miniprogramRoot": "miniprogram/",
     "compileType": "miniprogram",
-    "libVersion": "2.23.2",
+    "libVersion": "2.23.3",
     "projectname": "rss-re-mp",
     "setting": {
         "urlCheck": true,
@@ -17,7 +17,7 @@
         "newFeature": false,
         "coverView": true,
         "nodeModules": true,
-        "autoAudits": false,
+        "autoAudits": true,
         "showShadowRootInWxmlPanel": true,
         "scopeDataCheck": false,
         "uglifyFileName": false,

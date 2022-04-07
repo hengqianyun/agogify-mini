@@ -91,8 +91,14 @@ Component({
         // return !!(res.data as any)['available']
         const ticketRes = await sessionModule.checkSessionTickets(this.data.sessionCode)
         if ((ticketRes.data as any)['tickets'] == 0) {
-          return false;
+          try {
+            await sessionModule.checkIsSessionGuest(this.data.sessionCode, userProfile.id)
+            return true
+          } catch(err) {
+            return false
+          }
         }
+        return true
       } catch (err: any) {
         // 多种错误处理
         if (err.message == '') {
@@ -110,12 +116,17 @@ Component({
      */
     async joinSession() {
       try {
+        wx.showLoading({
+          title: 'loading'
+        })
         await sessionModule.sessionGusetCheckIn(this.data.sessionCode)
         wx.navigateTo({
           url: `../roomWaiting/roomWaiting?storeId=${this.properties.storeId}&saleId=${this.properties.salesId}&type=shareIn&sessionCode=${this.properties.sessionCode}`
         })
       } catch {
 
+      } finally {
+        wx.hideLoading()
       }
     }
   }

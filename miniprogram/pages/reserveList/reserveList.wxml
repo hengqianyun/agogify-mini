@@ -9,11 +9,11 @@
                 <view class="item-top">
                   <view class="i-t-left">
                     <view class="reserve-date" hover-class="none" hover-stop-propagation="false">
-                      {{reserve.date}} 
+                      {{reserve.date}}
                     </view>
                     <view class="reserve-duration"> {{reserve.duration}}</view>
                   </view>
-                  <view class="i-t-right">预约</view>
+                  <view class="i-t-right">{{reserve.isOwner ? '预约' : '顾问'}}</view>
                 </view>
                 <view class="item-content">
                   <view class="content-left">
@@ -29,7 +29,7 @@
                       </view>
                     </view>
                   </view>
-                  
+
                   <!-- <view class="content-controller">
                     <iconfont wx:if="{{reserve.tag === '待进行'}}" name="store_hujiao" data-index="{{index}}" size="{{40}}" bind:tap="handleCall"></iconfont>
                     <view wx:else></view>
@@ -38,14 +38,24 @@
                   </view> -->
                 </view>
                 <!-- <view class="item-controller" wx:if="{{reserve.tag === '待进行'}}"> -->
-                <view class="item-controller">
-                  <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="handleCall">
-                    进入房间
-                  </view>
-                  <button data-index="{{index}}" class="controller-btn light-btn" open-type="share">
-                    邀请好友顾问
-                  </button>
+                <view wx:if="{{reserve.isOwner && reserve.count > 0}}" class="user-count">
+                  {{reserve.count}}位好友已接受邀请
                 </view>
+                <view class="item-controller-container">
+                  <view wx:if="{{!reserve.isOwner}}" class="controller-text">
+                    来自好友的邀请
+                  </view>
+                  <view wx:else></view>
+                  <view wx:if="{{!reserve.isFinish}}" class="item-controller">
+                    <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="handleCall">
+                      进入房间
+                    </view>
+                    <button  wx:if="{{reserve.isOwner}}" data-index="{{index2}}" class="controller-btn light-btn" open-type="share">
+                      邀请好友顾问
+                    </button>
+                  </view>
+                </view>
+
               </view>
             </block>
           </view>

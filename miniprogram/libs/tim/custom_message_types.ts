@@ -49,4 +49,6 @@ export default class CustomMessageTypes {
   static SCAN_FINISH = 'SCAN_FINISH'
 
   static CHECK_ONLINE = 'CHECK_ONLINE';
+
+  static RESERVE = 'RESERVE';
 }

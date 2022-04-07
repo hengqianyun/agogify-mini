@@ -21,6 +21,7 @@ declare namespace reserveDesign {
     customer: string
     code: string
     sales: storeDesign.saleWithStore
+    guests: string[]
   }
 
   interface booking extends swaggerI.requestBase {

@@ -98,7 +98,8 @@ Page({
    */
   onHide() {
     this.setData({
-      isVideo: false
+      isVideo: false,
+      isBookingVideo: false
     })
   },
 

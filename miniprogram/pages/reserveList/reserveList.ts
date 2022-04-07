@@ -121,12 +121,16 @@ Page({
       let endTime = new Date(e.endTime.split('GMT')[0])
       startTime = new Date(startTime.setHours(startTime.getHours() + timezone))
       endTime = new Date(endTime.setHours(endTime.getHours() + timezone))
+      let count = e.guests.length
+      let isOwner = e.customer === userProfile.pathId
       return {
         ...e,
         date: localMonth(startTime),
         duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
-        tag: '待进行',
-        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
+        isFinish: false,
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name,
+        count,
+        isOwner,
       }
     })
 
@@ -149,12 +153,16 @@ Page({
       let endTime = new Date(e.endTime.split('GMT')[0])
       startTime = new Date(startTime.setHours(startTime.getHours() + timezone))
       endTime = new Date(endTime.setHours(endTime.getHours() + timezone))
+      let count = e.guests.length
+      let isOwner = e.customer === userProfile.pathId
       return {
         ...e,
         date: localMonth(startTime),
         duration: `${timeFormat(startTime, 'hh:mm')}~${timeFormat(endTime, 'hh:mm')}`,
-        tag: '已结束',
-        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name
+        isFinish: true,
+        address: e.sales.store.billingData.country?.name + ' ' + e.sales.store.billingData.city?.name,
+        count,
+        isOwner,
       }
     })
 

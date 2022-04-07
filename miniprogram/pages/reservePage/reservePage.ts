@@ -1,6 +1,8 @@
 import reserveModule from "../../http/module/reserve"
 import storeModule from "../../http/module/store"
-import { getIdFromString } from "../../utils/util"
+import CustomMessageTypes from "../../libs/tim/custom_message_types"
+import { joinStoreGroup, quitGroup, sendCustomMessage } from "../../libs/tim/tim"
+import { getIdFromString, getStringCode } from "../../utils/util"
 
 interface SimpleTitme {
   date: string
@@ -255,12 +257,12 @@ Page({
         'endTime[before]': this.data.endTime,
       })
       const { "hydra:member": list } = res.data
-      // if (list.length === 0) {
-      //   this.setData({
-      //     isEmpty: true
-      //   })
-      //   return
-      // }
+      if (list.length === 0) {
+        this.setData({
+          isEmpty: true
+        })
+        return
+      }
       this.setData({
         isEmpty: false
       })
@@ -440,6 +442,9 @@ Page({
         icon: 'success',
         duration: 2000,
       })
+      await joinStoreGroup(`${this.data.stores[0].code}_Meeting`);
+      await sendCustomMessage({ data: CustomMessageTypes.RESERVE, description: "succesee" },`${this.data.stores[0].code}_Meeting`, this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"], {}, {})
+      await quitGroup(`${this.data.stores[0].code}_Meeting`)
       setTimeout(() => {
         wx.navigateBack()
       }, 1000)

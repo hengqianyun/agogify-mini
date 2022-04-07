@@ -9,8 +9,8 @@ const sessionModule = {
   checkIsBookingGuest: async (bookingCode: string, guestCode: number) => await get(`store/video-session/bookings/${bookingCode}/guest/${guestCode}`),
   checkSessionTickets: async (sessionCode: string) => await get(`store/video-session/sessions/${sessionCode}/enquiry-tickets`),
   checkBookingTickets: async (bookingCode: string) => await get(`store/video-session/bookings/${bookingCode}/enquiry-tickets`),
-  sessionGusetCheckIn: async (sessionCode: string) => await put(`store/video-session/bookings/${sessionCode}/guest-check-in`, {}),
-  bookingGusetCheckIn: async (bookingCode: string) => await put(`store/video-session/bookings/${bookingCode}/guest-check-in`, {}),
+  sessionGusetCheckIn: async (sessionCode: string) => await put(`store/video-session/sessions/${sessionCode}/get-ticket`, {}),
+  bookingGusetCheckIn: async (bookingCode: string) => await put(`store/video-session/bookings/${bookingCode}/get-ticket`, {}),
 }
 
 export default sessionModule

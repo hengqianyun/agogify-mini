@@ -18,6 +18,7 @@
       flex-direction: column;
       justify-content: space-between;
       padding-bottom: 16rpx;
+      margin-bottom: 30rpx;
 
       .item-top {
         display: flex;
@@ -112,30 +113,52 @@
         }
       }
 
-      .item-controller {
-        height: 76rpx;
-        width: 100%;
-        padding-bottom: 16rpx;
-        display: flex;
-        flex-direction: row-reverse;
+      .user-count {
+        text-align: right;
+        font-size: 24rpx;
+        height: 42rpx;
+        color: @defaultColor3;
+        padding-right: 32rpx;
+      }
 
-        .controller-btn {
-          width: 204rpx;
+      .item-controller-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 32rpx;
+
+        .controller-text {
+          font-size: 24rpx;
+          // height: 42rpx;
+          color: @defaultColor3;
           height: 76rpx;
-          border: 2rpx solid @defaultColor;
-          color: @defaultColor;
           line-height: 76rpx;
-          text-align: center;
-          border-radius: 38rpx;
-          margin: 0;
-          margin-left:16rpx ;
-          font-size: 28rpx;
         }
 
-        .light-btn {
-          border-color: #c5c5c5;
-          padding: 0;
-          font-weight: normal;
+        .item-controller {
+          height: 76rpx;
+          // width: 100%;
+          padding-bottom: 16rpx;
+          display: flex;
+          flex-direction: row-reverse;
+
+          .controller-btn {
+            width: 204rpx;
+            height: 76rpx;
+            border: 2rpx solid @defaultColor;
+            color: @defaultColor;
+            line-height: 76rpx;
+            text-align: center;
+            border-radius: 38rpx;
+            margin: 0;
+            margin-left: 16rpx;
+            font-size: 28rpx;
+          }
+
+          .light-btn {
+            border-color: #c5c5c5;
+            padding: 0;
+            font-weight: normal;
+          }
         }
       }
     }
