@@ -3,7 +3,7 @@
     <view class="avatar-box">
       <image class="avatar" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
     </view>
-    <view class="text-1">正在呼叫中……</view>
+    <view class="text-1">{{waitingText}}</view>
     <view class="text-2">正在等待店员接入，请稍后</view>
   </view>
   <view class="bottom-content">

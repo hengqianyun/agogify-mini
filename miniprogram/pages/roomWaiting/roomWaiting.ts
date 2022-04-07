@@ -19,6 +19,7 @@ Page({
     type: '',
     storeId: '',
     bookingCode: '',
+    waitingText: ''
   },
 
   /**
@@ -32,6 +33,7 @@ Page({
       storeId,
       saleId,
       bookingCode,
+      waitingText: type === 'reserveIn' ? '等待销售开启视频' : '正在呼叫中……'
     })
 
     /**

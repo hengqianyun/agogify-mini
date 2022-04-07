@@ -1,5 +1,6 @@
 {
   "usingComponents": {
     "RssDialog": "../../components/RssDialog/RssDialog"
-  }
+  },
+  "navigationBarTitleText": "预约"
 }
