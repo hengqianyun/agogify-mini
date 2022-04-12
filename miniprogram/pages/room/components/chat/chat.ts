@@ -21,6 +21,19 @@ const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
 }
 let tim: TIMSKD
 
+interface _Customer {
+  pathId: string
+  nickname: string
+  avatar: string
+}
+
+type _SystemMessageType = 'enter' | 'leave'
+
+interface _SystemMessage {
+  type: _SystemMessageType
+  nickName: string
+}
+
 Component({
   /**
    * 组件的属性列表
@@ -40,7 +53,7 @@ Component({
    */
   data: {
     messageView: '',
-    chatHistory: [] as TIMMessage[],
+    chatHistory: [] as Array<TIMMessage | _SystemMessage>,
     inputValue: '',
     conversationID: '',
     canSend: false,
@@ -94,7 +107,9 @@ Component({
     hangupText: '确认挂断通话？',
     orderStep: 0, // 0 没有订单， 1 put address 2 put shipment 3 put payment 4 complete
     addressSelectDisabled: false,
-    onlineTimer: 0
+    onlineTimer: 0,
+    customers: [] as _Customer[],
+    cusTimer: 0
   },
 
   lifetimes: {
@@ -110,56 +125,82 @@ Component({
             payloadData = JSON.parse(data.payload.data)
           } catch (err) { }
           // 判断消息是否发给自己
-          switch (payloadData.type) {
-            case CustomMessageTypes.PAY:
-              const that = this
-              const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
-              that.setData({
-                payDialogLabel: '确认订单',
-                tokenValue,
-                productName,
-                paymentId,
-                shipmentId,
-                productBrand,
-                productCategory1,
-                productCategory2,
-                productCategory3,
-                productSize: size,
-                productCategory1CnName,
-                productCategory2CnName,
-                productCategory3CnName,
-                hasPaid: false
-              })
-              try {
-                this.queryCart(tokenValue)
-              } catch (err) {
+          if (payloadData.to === userProfile.pathId) {
+            switch (payloadData.type) {
+              case CustomMessageTypes.PAY:
+                const that = this
+                const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
+                that.setData({
+                  payDialogLabel: '确认订单',
+                  tokenValue,
+                  productName,
+                  paymentId,
+                  shipmentId,
+                  productBrand,
+                  productCategory1,
+                  productCategory2,
+                  productCategory3,
+                  productSize: size,
+                  productCategory1CnName,
+                  productCategory2CnName,
+                  productCategory3CnName,
+                  hasPaid: false
+                })
+                try {
+                  this.queryCart(tokenValue)
+                } catch (err) {
+                  this.resetOrder()
+                }
+                // this.queryOrderDetail(tokenValue)
+                break
+              case CustomMessageTypes.DISPOSE:
+                clearSessionAsync()
+                wx.navigateBack()
+                break
+              case CustomMessageTypes.PAY_CANCELED:
                 this.resetOrder()
-              }
-              // this.queryOrderDetail(tokenValue)
-              break
-            case CustomMessageTypes.DISPOSE:
-              clearSessionAsync()
-              wx.navigateBack()
-              break
-            case CustomMessageTypes.PAY_CANCELED:
-              this.resetOrder()
+                this.setData({
+                  showPopup: false,
+                  canLeave: true
+                })
+                break
+              case CustomMessageTypes.SCAN_FINISH:
+                this.setData({
+                  canLeave: true
+                })
+                break
+              case 'ack':
+                clearAckTimeout(payloadData.seq)
+                break
+              case 'CHECK_ONLINE':
+                console.log('CHECK_ONLINE', payloadData)
+            }
+            if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
+
+              sendAck({ data: 'ack', description: "succesee" }, this.data.groupId, this.properties.saleId, data.time.toString())
+            }
+          } else {
+            if (payloadData.type === CustomMessageTypes.CUSTOMER_IN) {
+              console.log('customer in --->',payloadData)
+              // if (payloadData.pathId !== userProfile.pathId) {
+                this.setData({
+                  chatHistory: this.data.chatHistory.concat([{
+                    type: 'enter',
+                    nickName: payloadData.nickname
+                  }])
+                })
+              // }
+            } else if (payloadData.type === CustomMessageTypes.CUSTOMER_OUT) {
+              console.log('customer out --->',payloadData)
               this.setData({
-                showPopup: false,
-                canLeave: true
+                chatHistory: this.data.chatHistory.concat([{
+                  type: 'leave',
+                  nickName: payloadData.nickname
+                }])
               })
-              break
-            case CustomMessageTypes.SCAN_FINISH:
-              this.setData({
-                canLeave: true
-              })
-              break
-            case 'ack':
-              clearAckTimeout(payloadData.seq)
+            }
           }
-          if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
-            
-            sendAck({ data: 'ack', description: "succesee" }, this.data.groupId, this.properties.saleId, data.time.toString())
-          }
+
         }
       })
 
@@ -169,25 +210,51 @@ Component({
         async success(res: TIMMessageReceive) {
           const data = res.data[0]
           console.log('recv new text message -->', res)
+
           if (data.to === this.properties.groupId) {
-            const message = this.encodeMessage(data)
-            try {
-              if (message && message.payload.text.indexOf("///:") < 0) {
+            if (data.type === 'TIMCustomElem') {
+              const payload = data.payload
+              const desc = JSON.parse(payload.description)
+              if (!!desc) {
+                if (desc.data === 'CHECK_ONLINE') {
+                  let flag = false
+                  for (let i = 0; i < this.data.customers.length; i++) {
+                    if (this.data.customers[i].pathId === data.from) {
+                      flag = true
+                      break
+                    }
+                  }
+                  if (!flag) {
+                    this.setData({
+                      chatHistory: this.data.chatHistory.concat([{
+                        type: 'enter',
+                        nickName: data.nick
+                      }])
+                    })
+                  }
+                }
+              }
+            } else {
+              const message = this.encodeMessage(data)
+              try {
+                if (message && message.payload.text.indexOf("///:") < 0) {
+                  this.setData({
+                    chatHistory: this.data.chatHistory.concat([message])
+                  })
+                  this.setData({
+                    messageView: message.ID
+                  })
+                }
+              } catch {
                 this.setData({
-                  chatHistory: this.data.chatHistory.concat([message])
+                  chatHistory: this.data.chatHistory.concat([message!])
                 })
                 this.setData({
-                  messageView: message.ID
+                  messageView: message!.ID
                 })
               }
-            } catch {
-              this.setData({
-                chatHistory: this.data.chatHistory.concat([message!])
-              })
-              this.setData({
-                messageView: message!.ID
-              })
             }
+
           }
         }
       })
@@ -270,12 +337,12 @@ Component({
           }
         }
       }
-      
-      sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, {avatar: userProfile.avatar}, false)
+
+      sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, { avatar: userProfile.avatar, nickName: userProfile.nickName }, false)
       this.data.onlineTimer = setInterval(() => {
         console.log(userProfile.avatar)
-        sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, {avatar: userProfile.avatar}, false)
-      }, 10000)
+        sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, { avatar: userProfile.avatar, nickName: userProfile.nickName }, false)
+      }, 5000)
     },
 
     detached() {
@@ -363,7 +430,7 @@ Component({
       try {
         res = await sendTextMessage(this.properties.groupId, msg)
       } catch (err) {
-        wx.showToast({ title: "发送失败", icon: "error" , duration: 2000})
+        wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
         return
       }
       const item = this.encodeMessage(res.data.message)
@@ -375,7 +442,7 @@ Component({
           messageView: item.ID
         })
       } else {
-        wx.showToast({ title: "发送失败", icon: "error" , duration: 2000})
+        wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
       }
     },
 

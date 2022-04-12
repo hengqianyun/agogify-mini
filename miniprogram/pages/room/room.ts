@@ -194,11 +194,11 @@ Page({
     const TRTC_EVENT = trtcClient.EVENT
     // 初始化事件订阅
     trtcClient.on(TRTC_EVENT.LOCAL_JOIN, (_: OnEvent) => {
-      wx.showToast({
-        title: `进入了房间成功`,
-        icon: 'none',
-        duration: 2000,
-      })
+      // wx.showToast({
+      //   title: `进入了房间成功`,
+      //   icon: 'none',
+      //   duration: 2000,
+      // })
     })
     // trtcClient.on(TRTC_EVENT.LOCAL_LEAVE, (event: OnEvent) => {
     // })
@@ -206,23 +206,25 @@ Page({
     // })
     trtcClient.on(TRTC_EVENT.REMOTE_USER_JOIN, (event: OnEvent) => {
       const { userID } = event.data
-      wx.showToast({
-        title: `${userID} 进入了房间`,
-        icon: 'none',
-        duration: 2000,
-      })
+      console.log(event.data)
+      // wx.showToast({
+      //   title: `${userID} 进入了房间`,
+      //   icon: 'none',
+      //   duration: 2000,
+      // })
     })
     // 远端用户退出
     trtcClient.on(TRTC_EVENT.REMOTE_USER_LEAVE, (event: OnEvent) => {
       const { userID, playerList } = event.data
+      console.log(event.data)
       this.setData({
         playerList: playerList
       })
-      wx.showToast({
-        title: `${userID} 离开了房间`,
-        icon: 'none',
-        duration: 2000,
-      })
+      // wx.showToast({
+      //   title: `${userID} 离开了房间`,
+      //   icon: 'none',
+      //   duration: 2000,
+      // })
     })
     // 远端用户推送视频
     trtcClient.on(TRTC_EVENT.REMOTE_VIDEO_ADD, (event: OnEvent) => {

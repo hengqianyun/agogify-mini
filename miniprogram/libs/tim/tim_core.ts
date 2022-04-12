@@ -310,7 +310,8 @@ const messageReceived = (event: TIMEvent<TIMMessage>) => {
   try {
     payloadData = JSON.parse(data.payload.data)
   } catch (err) { }
-  if (payloadData && payloadData.to === userProfile.pathId) {
+  console.log('msg --->', data)
+  if (payloadData) {
     $emit({
       name: 'onCustomMessageRecvEvent',
       data: event
@@ -321,6 +322,17 @@ const messageReceived = (event: TIMEvent<TIMMessage>) => {
       data: event
     })
   }
+  // if (payloadData && payloadData.to === userProfile.pathId) {
+  //   $emit({
+  //     name: 'onCustomMessageRecvEvent',
+  //     data: event
+  //   })
+  // } else {
+  //   $emit({
+  //     name: 'onGroupMessageRecvEvent',
+  //     data: event
+  //   })
+  // }
 }
 
 /**

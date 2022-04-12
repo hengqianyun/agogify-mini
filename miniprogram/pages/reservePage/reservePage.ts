@@ -442,9 +442,14 @@ Page({
         icon: 'success',
         duration: 2000,
       })
-      await joinStoreGroup(`${this.data.stores[0].code}_Meeting`);
-      await sendCustomMessage({ data: CustomMessageTypes.RESERVE, description: "succesee" },`${this.data.stores[0].code}_Meeting`, this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"], {}, {})
-      await quitGroup(`${this.data.stores[0].code}_Meeting`)
+      try {
+        await joinStoreGroup(`${this.data.stores[0].code}_Meeting`);
+        await sendCustomMessage({ data: CustomMessageTypes.RESERVE, description: "succesee" },`${this.data.stores[0].code}_Meeting`, this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"], {}, {})
+        await quitGroup(`${this.data.stores[0].code}_Meeting`)
+      } catch (err) {
+        console.log(err)
+      }
+      
       setTimeout(() => {
         wx.navigateBack()
       }, 1000)

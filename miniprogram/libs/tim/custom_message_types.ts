@@ -51,4 +51,6 @@ export default class CustomMessageTypes {
   static CHECK_ONLINE = 'CHECK_ONLINE';
 
   static RESERVE = 'RESERVE';
+  static CUSTOMER_IN = 'CUSTOMER_IN';
+  static CUSTOMER_OUT = 'CUSTOMER_OUT';
 }

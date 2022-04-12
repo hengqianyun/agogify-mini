@@ -35,6 +35,7 @@ Page({
       bookingCode,
       waitingText: type === 'reserveIn' ? '等待销售开启视频' : '正在呼叫中……'
     })
+    wx.setNavigationBarTitle({ title: type === 'reserveIn' ? '预约' : '通话' })
 
     /**
      * 接受storeGroup信息，包含进入房间、挂断电话
@@ -105,6 +106,7 @@ Page({
     await sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: "succesee" }, this.data.storeGroupId, this.data.saleId, {}, {})
     quitGroup(this.data.storeGroupId)
     clearSessionAsync()
+    clearTimeout(this.data.callTimer)
     wx.navigateBack()
   },
 

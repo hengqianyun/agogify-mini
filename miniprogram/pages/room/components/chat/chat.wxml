@@ -39,6 +39,17 @@
               <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
             </view>
           </view>
+          <view class="sys-message-box" wx:elif="{{item.type === 'enter'}}">
+          <view class="sys-message">
+            {{item.nickName}} 进入房间
+          </view>
+          </view>
+          <view class="sys-message-box" wx:elif="{{item.type === 'leave'}}">
+          <view class="sys-message">
+        
+            {{item.nickName}} 离开房间
+          </view>
+          </view>
           <view wx:else class="right-message" id="{{item.ID}}">
             <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
               {{item.payload.text}}
@@ -47,6 +58,7 @@
               <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
             </view>
           </view>
+          
         </block>
       </scroll-view>
       <view class="bottom-controllers">

@@ -57,6 +57,18 @@ Component({
               title: this.properties.from + '邀请您协助参谋',
               desc: '您已接受过该邀请'
             })
+          } else if (state === 3) {
+            this.setData({
+              btnLabel: '去逛一逛',
+              title: '当前通话已结束',
+              desc: '通话已结束，请联系好友确认或到处逛一逛'
+            })
+          } else {
+            wx.showModal({
+              title: '系统错误',
+              showCancel: false,
+              confirmText: '确定'
+            })
           }
              
         } catch {
@@ -100,20 +112,23 @@ Component({
     },
     /**
      * 查询房间是否已满
+     * 0人满   1加入   2已加入   3已结束
      */
     async checkSession() {
       try {
-        const ticketRes = await sessionModule.checkBookingTickets(this.data.bookingCode)
-        if ((ticketRes.data as any)['tickets'] == 0) {
-          try {
-            await sessionModule.checkIsBookingGuest(this.data.bookingCode, userProfile.id)
-            return 2
-          } catch {
-            return 0;
+        try {
+          await sessionModule.checkIsBookingGuest(this.data.bookingCode, userProfile.id)
+          return 2
+        } catch (err) {
+          if (err.statusCode === 500) {
+            /// session 结束
+            return 3;
           }
         }
-       
-        // return !!(res.data as any)['available']
+        const ticketRes = await sessionModule.checkBookingTickets(this.data.bookingCode)
+        if ((ticketRes.data as any)['tickets'] == 0) {
+          return 0
+        }
         
         return 1
       } catch (err: any) {

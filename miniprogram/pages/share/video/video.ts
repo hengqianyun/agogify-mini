@@ -38,16 +38,26 @@ Component({
           //     desc: '加入直播后可以协助好友挑选商品'
           //   })
           // }
-          await this.checkSession() ?
+          let state = await this.checkSession() 
+          if (state === 0) {
             this.setData({
-              btnLabel: '加入直播',
-              title: this.properties.from + '邀请您协助参谋',
-              desc: '加入直播后可以协助好友挑选商品'
-            }) : this.setData({
               btnLabel: '去逛一逛',
               title: '房间人数已达上限，暂时无法进入，先到处逛逛？',
               desc: '直播间仅可邀请2人协助参谋，请联系好友确认或到处逛一逛'
             })
+          } else if (state === 1 || state === 2) {
+            this.setData({
+              btnLabel: '加入直播',
+              title: this.properties.from + '邀请您协助参谋',
+              desc: '加入直播后可以协助好友挑选商品'
+            })
+          } else if (state === 3) {
+            this.setData({
+              btnLabel: '去逛一逛',
+              title: '当前通话已结束',
+              desc: '当前通话已结束，请联系好友确认或到处逛一逛'
+            })
+          }
         } catch {
 
         }
@@ -84,21 +94,27 @@ Component({
     },
     /**
      * 查询房间是否已满
+     * 0人满   1加入   2已加入   3已结束
      */
     async checkSession() {
       try {
         // const res = await sessionModule.checkIsSessionGuest(this.data.sessionCode, userProfile.id)
         // return !!(res.data as any)['available']
-        const ticketRes = await sessionModule.checkSessionTickets(this.data.sessionCode)
-        if ((ticketRes.data as any)['tickets'] == 0) {
-          try {
-            await sessionModule.checkIsSessionGuest(this.data.sessionCode, userProfile.id)
-            return true
-          } catch(err) {
-            return false
+        try {
+          await sessionModule.checkIsSessionGuest(this.data.sessionCode, userProfile.id)
+          return 2
+        } catch(err) {
+           if (err.statusCode === 500) {
+            /// session结束了
+            return 3
           }
         }
-        return true
+        const ticketRes = await sessionModule.checkSessionTickets(this.data.sessionCode)
+        if ((ticketRes.data as any)['tickets'] == 0) {
+          return 0
+        } else {
+          return 1
+        }
       } catch (err: any) {
         // 多种错误处理
         if (err.message == '') {
@@ -108,7 +124,7 @@ Component({
             btnLabel: '去逛一逛',
           })
         } else { }
-        return false
+        return 0
       }
     },
     /**
