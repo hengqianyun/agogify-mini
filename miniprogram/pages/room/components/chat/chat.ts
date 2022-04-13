@@ -10,6 +10,7 @@ import sessionModule from '../../../../http/module/session'
 import { clearAckTimeout, quitGroup, resetTimerAndSeq, sendAck, sendCustomMessage, sendImageMessage, sendTextMessage } from '../../../../libs/tim/tim'
 import CustomMessageTypes from '../../../../libs/tim/custom_message_types'
 import { userProfile } from '../../../../libs/user/user'
+import storeModule from '../../../../http/module/store'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -109,7 +110,8 @@ Component({
     addressSelectDisabled: false,
     onlineTimer: 0,
     customers: [] as _Customer[],
-    cusTimer: 0
+    cusTimer: 0,
+    needTrans: true,
   },
 
   lifetimes: {
@@ -181,17 +183,17 @@ Component({
             }
           } else {
             if (payloadData.type === CustomMessageTypes.CUSTOMER_IN) {
-              console.log('customer in --->',payloadData)
+              console.log('customer in --->', payloadData)
               // if (payloadData.pathId !== userProfile.pathId) {
-                this.setData({
-                  chatHistory: this.data.chatHistory.concat([{
-                    type: 'enter',
-                    nickName: payloadData.nickname
-                  }])
-                })
+              this.setData({
+                chatHistory: this.data.chatHistory.concat([{
+                  type: 'enter',
+                  nickName: payloadData.nickname
+                }])
+              })
               // }
             } else if (payloadData.type === CustomMessageTypes.CUSTOMER_OUT) {
-              console.log('customer out --->',payloadData)
+              console.log('customer out --->', payloadData)
               this.setData({
                 chatHistory: this.data.chatHistory.concat([{
                   type: 'leave',
@@ -343,6 +345,7 @@ Component({
         console.log(userProfile.avatar)
         sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, { avatar: userProfile.avatar, nickName: userProfile.nickName }, false)
       }, 5000)
+      this.checkSalesLanuage()
     },
 
     detached() {
@@ -368,6 +371,19 @@ Component({
    * 组件的方法列表
    */
   methods: {
+    async checkSalesLanuage() {
+      try {
+        const res = await storeModule.querySingleSales(getIdFromString(this.data.saleId))
+        const { languages } = res.data
+        if (languages.includes('chinese')) {
+          this.setData({
+            needTrans: false
+          })
+        }
+      } catch (err) {
+        /// 获取上一级sales的language
+      }
+    },
     resetOrder() {
       this.setData({
         tokenValue: '',
@@ -417,22 +433,15 @@ Component({
       wx.navigateBack()
     },
 
-
-    async sendMessage() {
-      if (this.data.inputValue.trim() === "") {
-        return
-      }
+    async sendTextMessage(text: string) {
       let res: TIMSendMessageRes
-      let msg = this.data.inputValue
-      this.setData({
-        inputValue: ''
-      })
       try {
-        res = await sendTextMessage(this.properties.groupId, msg)
+        res = await sendTextMessage(this.properties.groupId, text)
       } catch (err) {
         wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
         return
       }
+
       const item = this.encodeMessage(res.data.message)
       if (item && item.status === 'success') {
         this.setData({
@@ -444,6 +453,36 @@ Component({
       } else {
         wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
       }
+    },
+    async handleSendMessage() {
+      if (this.data.inputValue.trim() === "") {
+        return
+      }
+
+      let msg = this.data.inputValue
+      let targetMsg = ''
+      if (this.data.needTrans) {
+        try {
+          const res = await videoModule.translateText(msg)
+          const { TargetText } = res.data
+          if (TargetText == '') {
+            wx.showToast({
+              title: '翻译错误',
+              icon: 'error',
+              duration: 2000
+            })
+            return
+          }
+          targetMsg = TargetText
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      this.setData({
+        inputValue: ''
+      })
+      this.sendTextMessage(msg + (this.data.needTrans ? `(${targetMsg})` : ''))
+
     },
 
     handleInput(event: WechatMiniprogram.TouchEvent) {
@@ -533,12 +572,9 @@ Component({
             });
           } else {
             const recordeFile = wx.getFileSystemManager().readFileSync(res.tempFilePath, 'base64')
-            const reqData = await videoModule.translate(recordeFile)
+            const reqData = await videoModule.translateSpeech(recordeFile, Date.now())
             const { data } = reqData
-
-            this.setData({
-              inputValue: this.data.inputValue + data.TargetText + '. '
-            })
+            this.sendTextMessage(data.SourceText + (this.data.needTrans ? `(${data.TargetText})` : ''))
           }
         }
       })

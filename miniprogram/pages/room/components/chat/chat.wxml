@@ -1,96 +1,96 @@
 <view class="controllers-page" bind:longpress="handleRecording" bind:touchend="handleTouchEnd">
   <!-- <view class="page-body" wx:if="{{!isWaiting}}"> -->
-    <view wx:if="{{isRecording}}" class="record-area">
-      <view class="recore-icon-area">
-        <image class="record-icon" src="../../../../assets/record.png"></image>
+  <view wx:if="{{isRecording}}" class="record-area">
+    <view class="recore-icon-area">
+      <image class="record-icon" src="../../../../assets/record.png"></image>
+    </view>
+    <view class="recorde-text">
+      正在录制，松开后输入结果
+    </view>
+  </view>
+  <view class="top-container">
+    <view class="shop-info">
+      <view class="store-avatar-box">
+        <image class="store-avatar" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
       </view>
-      <view class="recorde-text">
-        正在录制，松开后输入结果
+      <view class="store-name">{{storeName}}</view>
+    </view>
+    <view class="time-and-exit">
+      <view class="time-left border-radius-8"></view>
+      <view class="exit-icon border-radius-8" bind:tap="handleExitTab">
+        <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
       </view>
     </view>
-    <view class="top-container">
-      <view class="shop-info">
-        <view class="store-avatar-box">
-          <image class="store-avatar" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
-        </view>
-        <view class="store-name">{{storeName}}</view>
-      </view>
-      <view class="time-and-exit">
-        <view class="time-left border-radius-8"></view>
-        <view class="exit-icon border-radius-8" bind:tap="handleExitTab">
-          <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
-        </view>
-      </view>
-    </view>
-    <!-- <view class="recording-tips" hover-class="none" hover-stop-propagation="false">
+  </view>
+  <!-- <view class="recording-tips" hover-class="none" hover-stop-propagation="false">
       正在录音
     </view> -->
-    <view class="bottom-container" wx:if="{{!isWaiting}}">
-      <scroll-view class="chat-content" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}">
-        <block wx:for="{{chatHistory}}" wx:key="id">
-          <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
-            <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
-              {{item.nick}}: {{item.payload.text}}
-            </view>
-            <view wx:else class="message image-message-box border-radius-8">
-              <view class="message-nick" hover-class="none" hover-stop-propagation="false">
-                {{item.nick}}: 
-              </view>
-              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
-            </view>
+  <view class="bottom-container" wx:if="{{!isWaiting}}">
+    <scroll-view class="chat-content" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}">
+      <block wx:for="{{chatHistory}}" wx:key="id">
+        <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
+          <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
+            {{item.nick}}: {{item.payload.text}}
           </view>
-          <view class="sys-message-box" wx:elif="{{item.type === 'enter'}}">
+          <view wx:else class="message image-message-box border-radius-8">
+            <view class="message-nick" hover-class="none" hover-stop-propagation="false">
+              {{item.nick}}:
+            </view>
+            <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
+          </view>
+        </view>
+        <view class="sys-message-box" wx:elif="{{item.type === 'enter'}}">
           <view class="sys-message">
             {{item.nickName}} 进入房间
           </view>
-          </view>
-          <view class="sys-message-box" wx:elif="{{item.type === 'leave'}}">
+        </view>
+        <view class="sys-message-box" wx:elif="{{item.type === 'leave'}}">
           <view class="sys-message">
-        
+
             {{item.nickName}} 离开房间
           </view>
-          </view>
-          <view wx:else class="right-message" id="{{item.ID}}">
-            <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
-              {{item.payload.text}}
-            </view>
-            <view wx:else class="message image-message-box border-radius-8">
-              <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
-            </view>
-          </view>
-          
-        </block>
-      </scroll-view>
-      <view class="bottom-controllers">
-         <view class="icons border-radius-8" bind:tap="handleChangeMic">
-          <iconfont name="{{enabledMic ? 'zhibojian_yuyin_bai' : 'maikefengguanbizhuangtai'}}" size="{{40}}" id="record"></iconfont>
         </view>
-        <view class="input-area border-radius-8">
-          <iconfont name="zhibojian_shurukuangicon" size="{{40}}"></iconfont>
-          <input type="text" bindconfirm="sendMessage" value="{{inputValue}}" confirm-type="发送" bindinput="handleInput" class="live-input" placeholder="询问想了解的" placeholder-class="input-placeholder" />
-          <view class="send-btn" bind:tap="sendMessage" hover-class="none" hover-stop-propagation="false">
-            发送
+        <view wx:else class="right-message" id="{{item.ID}}">
+          <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
+            {{item.payload.text}}
+          </view>
+          <view wx:else class="message image-message-box border-radius-8">
+            <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
           </view>
         </view>
-        <!-- <view class="icons border-radius-8 send-btn-box" >
-        </view> -->
-        <view class="icons border-radius-8">
-          <iconfont name="yuyin2" size="{{40}}" id="record"></iconfont>
-        </view>
-        <view class="icons border-radius-8" bind:tap="chooseImage">
-          <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
-        </view>
-        <button wx:if="{{!isGuest}}" class="share-button" open-type="share">
-          <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload="">
-            
-          </image>
-        </button>
+
+      </block>
+    </scroll-view>
+    <view class="bottom-controllers">
+      <view class="icons border-radius-8" bind:tap="handleChangeMic">
+        <iconfont name="{{enabledMic ? 'zhibojian_yuyin_bai' : 'maikefengguanbizhuangtai'}}" size="{{40}}" id="record"></iconfont>
       </view>
+      <view class="input-area border-radius-8">
+        <iconfont name="zhibojian_shurukuangicon" size="{{40}}"></iconfont>
+        <input type="text" bindconfirm="handleSendMessage" value="{{inputValue}}" confirm-type="发送" bindinput="handleInput" class="live-input" placeholder="询问想了解的" placeholder-class="input-placeholder" />
+        <view class="send-btn" bind:tap="handleSendMessage" hover-class="none" hover-stop-propagation="false">
+          发送
+        </view>
+      </view>
+      <!-- <view class="icons border-radius-8 send-btn-box" >
+        </view> -->
+      <view class="icons border-radius-8">
+        <iconfont name="yuyin2" size="{{40}}" id="record"></iconfont>
+      </view>
+      <view class="icons border-radius-8" bind:tap="chooseImage">
+        <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+      </view>
+      <button wx:if="{{!isGuest}}" class="share-button" open-type="share">
+        <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload="">
+
+        </image>
+      </button>
     </view>
+  </view>
   <!-- </view> -->
   <view wx:if="{{showPopup}}" class="pay-popup">
-    
-      
+
+
     <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
       <view class="popup-title">确认订单</view>
       <view class="popup-container">
@@ -129,7 +129,7 @@
                 </view>
               </view>
             </block>
-          </scroll-view >
+          </scroll-view>
         </view>
         <view class="product-item">
           <view class="product-title">

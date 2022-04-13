@@ -9,6 +9,7 @@ declare namespace swaggerI {
 
   interface TranslateRes {
     TargetText: string
+    SourceText: string
   }
 
   type BaiduOcrErrorCode = 222356 | 0
@@ -30,9 +31,7 @@ declare namespace swaggerI {
     'hydra:member': T[]
   }
 
-  interface requestSingleBase<T> extends requestBase {
-    'hydra:member': T
-  }
+
 
   // interface requestFlatBase<T> extends requestBase, T {
 
@@ -123,6 +122,8 @@ declare namespace swaggerI {
   type querySalesTimeSlotsResult = reserveDesign.querySalesTimeSlotsRes
 
   type querySalesResult = storeDesign.QuerySalesRes
+
+  type querySingleSalesResult = storeDesign.QuerySingleSalesRes
 
   type baiduOauth = ocrDesign.tokenGet
 

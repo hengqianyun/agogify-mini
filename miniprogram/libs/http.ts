@@ -54,7 +54,7 @@ class RSSHTTP {
   };
   diffConfig: RSSHTTPModule.DefaultConfig = {
     header: {
-      'content-type': 'application/ld+json'
+      'content-type': 'application/ld+json; charset=utf-8'
     },
     dataType: 'json',
   };

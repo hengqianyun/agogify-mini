@@ -14,6 +14,7 @@ const storeModule = {
   
   
   querySales: async (params: storeDesign.QuerySalesParams) => await publicGet<swaggerI.querySalesResult, storeDesign.QuerySalesParams>('public/sales', params),
+  querySingleSales: async (id: number) => await publicGet<swaggerI.querySingleSalesResult, number>('public/sales/' + id),
   queryStore: async (params: storeDesign.QueryStoresParams) => await publicGet<swaggerI.newStoreListResult, storeDesign.QueryStoresParams>('public/stores', params),
   queryStoreWhitString: async (params: string) => await publicGet<swaggerI.newStoreListResult, undefined>('public/stores?' + params),
   queryStoreDetails: async (storeId: string) => await publicGet<swaggerI.storeDetailResult, undefined>('public/stores/' + storeId),

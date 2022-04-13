@@ -188,6 +188,8 @@ declare namespace storeDesign {
 
   interface QuerySalesRes extends swaggerI.requsetListBase<sale> { }
 
+  interface QuerySingleSalesRes extends sale { }
+
   interface queryCitiesRes extends swaggerI.requsetListBase<city> { }
 
 
