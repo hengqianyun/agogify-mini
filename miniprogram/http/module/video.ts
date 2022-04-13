@@ -1,10 +1,11 @@
+import { uuid } from "../../utils/util";
 import { post, typePost } from "../index";
 
 const videoModule = {
-  translateSpeech: (recordeFile: string | ArrayBuffer, id: number) => post<swaggerI.translateRes, { 'data': string | ArrayBuffer, 'sessionUuid': number, [key: string]: any }>('private/tmt/speech-inputs', {
+  translateSpeech: (recordeFile: string | ArrayBuffer) => post<swaggerI.translateRes, { 'data': string | ArrayBuffer,  [key: string]: any }>('private/tmt/speech-inputs', {
 
     "region": "ap-shanghai",
-    "sessionUuid": id,
+    "sessionUuid": uuid(),
     "source": "zh",
     "target": "en",
     "audioFormat": "mp3",

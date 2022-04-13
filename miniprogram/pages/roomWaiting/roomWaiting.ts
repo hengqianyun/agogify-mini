@@ -19,7 +19,8 @@ Page({
     type: '',
     storeId: '',
     bookingCode: '',
-    waitingText: ''
+    waitingText: '',
+    isGuest: false
   },
 
   /**
@@ -59,8 +60,12 @@ Page({
               clearTimeout(this.data.callTimer)
               await sendAckAsync({ data: 'ack', description: "succesee" }, `${this.data.storeId}_Meeting`, this.data.saleId, data.time.toString())
               console.debug('发送进入房间ack完成')
+              let url =  `../room/room?roomId=${payloadData.roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${payloadData.groupId}&storeId=${storeId}&saleId=${saleId}`
+              if (this.data.isGuest) {
+                url += '&share=1'
+              }
               wx.redirectTo({
-                url: `../room/room?roomId=${payloadData.roomId}&storeGroupId=${this.data.storeGroupId}&avGroupId=${payloadData.groupId}&storeId=${storeId}&saleId=${saleId}`
+                url,
               })
               break
             case CustomMessageTypes.NOW_BUSY:
@@ -156,6 +161,10 @@ Page({
         }, this.data.storeGroupId, this.data.saleId, {}, {
           bookingCode: this.data.bookingCode
         });
+        const {owner} = this.options
+        if (owner != userProfile.pathId) {
+          this.data.isGuest = true
+        }
         break
       case "sessionIn":
         /**

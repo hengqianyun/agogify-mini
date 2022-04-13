@@ -112,6 +112,7 @@ Component({
     customers: [] as _Customer[],
     cusTimer: 0,
     needTrans: true,
+    canSendTextMsg: true
   },
 
   lifetimes: {
@@ -434,25 +435,32 @@ Component({
     },
 
     async sendTextMessage(text: string) {
-      let res: TIMSendMessageRes
+      if (!this.data.canSendTextMsg) return
+      this.data.canSendTextMsg = false
       try {
-        res = await sendTextMessage(this.properties.groupId, text)
-      } catch (err) {
-        wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
-        return
+        let res: TIMSendMessageRes
+        try {
+          res = await sendTextMessage(this.properties.groupId, text)
+        } catch (err) {
+          wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
+          return
+        }
+  
+        const item = this.encodeMessage(res.data.message)
+        if (item && item.status === 'success') {
+          this.setData({
+            chatHistory: [...this.data.chatHistory, item],
+          })
+          this.setData({
+            messageView: item.ID
+          })
+        } else {
+          wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
+        }
+      } catch {} finally {
+        this.data.canSendTextMsg = true
       }
-
-      const item = this.encodeMessage(res.data.message)
-      if (item && item.status === 'success') {
-        this.setData({
-          chatHistory: [...this.data.chatHistory, item],
-        })
-        this.setData({
-          messageView: item.ID
-        })
-      } else {
-        wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
-      }
+      
     },
     async handleSendMessage() {
       if (this.data.inputValue.trim() === "") {
@@ -572,7 +580,7 @@ Component({
             });
           } else {
             const recordeFile = wx.getFileSystemManager().readFileSync(res.tempFilePath, 'base64')
-            const reqData = await videoModule.translateSpeech(recordeFile, Date.now())
+            const reqData = await videoModule.translateSpeech(recordeFile)
             const { data } = reqData
             this.sendTextMessage(data.SourceText + (this.data.needTrans ? `(${data.TargetText})` : ''))
           }
