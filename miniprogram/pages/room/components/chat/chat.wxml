@@ -213,5 +213,8 @@
         <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
       </view>
     </van-popup>
+    <!-- <RssDialog wx:if="{{showChangRoomDialog}}" title="" commitText="{{changRoomDiloagCommitText}}" cancelText="立刻前往" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
+      <view class="dialog-content">您有一条通话记录未正常结束，是否继续前往？</view>
+    </RssDialog> -->
   </view>
 </view>

@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "rss-button": "../../components/RssButton/RssButton"
+  },
+  "navigationBarTitleText": "设计师直播"
+}

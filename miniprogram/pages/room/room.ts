@@ -31,6 +31,7 @@ Page({
     enableAlertBeforeUnloadMsg: '',
     isGuest: false,
     enabledMic: true,
+    isFirstIn: true
   },
 
   /**
@@ -69,16 +70,18 @@ Page({
     wx.enableAlertBeforeUnload({
       message: '是否离开房间？',
       success() {
-        
-        if (!that.data.isGuest) {
-          sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
-          const code = that.data.groupId.split('Meeting-')[1]
-          sessionModule.putSession({
-            droppedByCustomer: true
-          }, code)
-          clearSessionAsync()
-        }
-        that.exitRoom()
+        // if (that.data.isFirstIn) {
+
+        // }
+        // if (!that.data.isGuest) {
+        //   sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
+        //   const code = that.data.groupId.split('Meeting-')[1]
+        //   sessionModule.putSession({
+        //     droppedByCustomer: true
+        //   }, code)
+        //   clearSessionAsync()
+        // }
+        // that.exitRoom()
       }
     })
   },
@@ -91,6 +94,16 @@ Page({
     }, 1000)
   },
 
+  changeRoom(e: any) {
+    const detail = e.detail
+    console.log(detail)
+    this.setData({
+      roomId: detail.roomId,
+      saleId: detail.saleId
+    })
+    this.enterRoom({ roomID: this.data.roomId })
+  },
+
   onReady() {
     console.debug('room ready')
     setTimeout(() => {
@@ -99,6 +112,7 @@ Page({
   },
   onUnload() {
     console.debug('room unload')
+    this.exitRoom()
   },
 
   onShareAppMessage(option) {
@@ -145,6 +159,7 @@ Page({
   },
 
   enterRoom({ roomID }: { roomID: string }) {
+    console.log('roomID', roomID)
     console.log(trtcClient.getPusherInstance())
     const trtcConfig = { ...this.data._rtcConfig, strRoomID: roomID } as EnterRoomParams
     this.setData({
@@ -174,6 +189,11 @@ Page({
       pusher: result.pusher,
       playerList: result.playerList,
     })
+    const code = this.data.groupId.split('Meeting-')[1]
+    sessionModule.putSession({
+      droppedByCustomer: true
+    }, code)
+    clearSessionAsync()
   },
 
   // 设置 pusher 属性
@@ -216,7 +236,7 @@ Page({
     // 远端用户退出
     trtcClient.on(TRTC_EVENT.REMOTE_USER_LEAVE, (event: OnEvent) => {
       const { userID, playerList } = event.data
-      console.log(event.data)
+      console.log('用户退出',event.data)
       this.setData({
         playerList: playerList
       })
@@ -229,6 +249,7 @@ Page({
     // 远端用户推送视频
     trtcClient.on(TRTC_EVENT.REMOTE_VIDEO_ADD, (event: OnEvent) => {
       const { player } = event.data
+      console.log('用户开始推送',event.data)
       // 开始播放远端的视频流，默认是不播放的
       this.setPlayerAttributesHandler(player, { muteVideo: false })
     })
@@ -249,6 +270,7 @@ Page({
     })
     trtcClient.on(TRTC_EVENT.REMOTE_AUDIO_VOLUME_UPDATE, (event: OnEvent) => {
       const { playerList } = event.data
+      console.log('用户音量变化',playerList)
       this.setData({
         playerList: playerList
       })

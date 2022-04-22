@@ -49,6 +49,9 @@ Component({
     backgroundColor: {
       type: String,
     },
+    backgroundImage: {
+      type: String,
+    },
     disabled: {
       type: Boolean,
       value: false

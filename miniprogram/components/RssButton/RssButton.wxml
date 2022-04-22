@@ -1,5 +1,5 @@
 <view class="rss-btn">
-  <view class="btn {{className}} {{disabled ? 'disable-btn' : 'btn-static'}}" style="height: {{height}}rpx; width: {{width}}rpx; font-size: {{fontSize}}rpx; font-weight: {{fontWeight}}; border-radius: {{borderRadius}}; {{backgroundColor ? 'background-color: ' + backgroundColor + ';' : ';'}} {{backgroundColor ? 'border-color: ' + backgroundColor + ';' : ';'}} {{fontColor ? 'color: ' + fontColor + ';' : ''}} " bind:tap="handleTap">
+  <view class="btn {{className}} {{disabled ? 'disable-btn' : 'btn-static'}}" style="height: {{height}}rpx; width: {{width}}rpx; font-size: {{fontSize}}rpx; font-weight: {{fontWeight}}; border-radius: {{borderRadius}}rpx; {{backgroundColor ? 'background-color: ' + backgroundColor + ';' : ';'}} {{backgroundColor ? 'border-color: ' + backgroundColor + ';' : ';'}} {{backgroundImage ? 'background-image: ' + backgroundImage + ';border: none;' : ';'}} {{fontColor ? 'color: ' + fontColor + ';' : ''}} " bind:tap="handleTap">
     <iconfont class="btn-icon" wx:if="{{icon}}" size="{{iconSize}}" name="{{icon}}" color="{{[color, color]}}" />
     <text>{{label}}</text>
   </view>

@@ -1,0 +1,20 @@
+<view class="activity-page">
+    <!-- <button bindtap="enterRoom">enter room</button> -->
+    <block wx:for="{{acList}}" wx:key="{{item.id}}">
+        <view class="activity" bindtap="handleTap">
+            <view class="activity-main">
+                <view class="activity-main-left">
+                    <view class="activity-date">{{item.date}}</view>
+                    <view class="activity-title">{{item.title}}</view>
+                    <view class="activity-brand">{{item.brand}}</view>
+                </view>
+                <view class="activity-main-right">
+                    <view class="activity-img">
+                        <image class="activity-img-item" src="{{item.img}}" mode="aspectFit"></image>
+                    </view>
+                </view>
+            </view>
+            <view class="activity-bottom">特邀搭配师：{{item.artist}}</view>
+        </view>
+    </block>
+</view>

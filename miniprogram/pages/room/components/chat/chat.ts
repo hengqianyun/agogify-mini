@@ -112,12 +112,16 @@ Component({
     customers: [] as _Customer[],
     cusTimer: 0,
     needTrans: true,
-    canSendTextMsg: true
+    canSendTextMsg: true,
+    showChangRoomDialog: false,
+    changRoomDiloagCommitText: '',
+    roomId: ''
   },
 
   lifetimes: {
     async ready() {
       this.initRecording()
+      const that = this
       $on({
         name: "onCustomMessageRecvEvent",
         tg: this,
@@ -130,8 +134,30 @@ Component({
           // 判断消息是否发给自己
           if (payloadData.to === userProfile.pathId) {
             switch (payloadData.type) {
+              case 'changeVideoRoom':
+                this.setData({
+                  showChangRoomDialog: true,
+                  roomId: payloadData.roomId,
+                  
+                })
+                // const that = this
+                wx.showModal({
+                  title: '收到销售助理的购买服务请求，是否前往?',
+                  confirmText: '立即前往',
+                  cancelText: '再等一会',
+                  success(res) {
+                    if (res.confirm) {
+                      that.triggerEvent('changeRoom', {
+                        roomId: payloadData.roomId,
+                        saleId: payloadData.saleId
+                      })
+                    }
+                  }
+                })
+                console.log(this.data.showChangRoomDialog)
+                break
               case CustomMessageTypes.PAY:
-                const that = this
+                
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
                 that.setData({
                   payDialogLabel: '确认订单',
@@ -372,6 +398,18 @@ Component({
    * 组件的方法列表
    */
   methods: {
+    handleDialogCommit() {
+
+      this.setData({
+        showChangRoomDialog: false
+      })
+    },
+    handleDialogCancel() {
+      this.triggerEvent('changeRoom', this.data.roomId)
+      this.setData({
+        showChangRoomDialog: false
+      })
+    },
     async checkSalesLanuage() {
       try {
         const res = await storeModule.querySingleSales(getIdFromString(this.data.saleId))
@@ -435,8 +473,7 @@ Component({
     },
 
     async sendTextMessage(text: string) {
-      if (!this.data.canSendTextMsg) return
-      this.data.canSendTextMsg = false
+
       try {
         let res: TIMSendMessageRes
         try {
@@ -445,7 +482,7 @@ Component({
           wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
           return
         }
-  
+
         const item = this.encodeMessage(res.data.message)
         if (item && item.status === 'success') {
           this.setData({
@@ -457,15 +494,19 @@ Component({
         } else {
           wx.showToast({ title: "发送失败", icon: "error", duration: 2000 })
         }
-      } catch {} finally {
+      } catch { } finally {
         this.data.canSendTextMsg = true
       }
-      
+
     },
     async handleSendMessage() {
+      if (!this.data.canSendTextMsg) return
+
       if (this.data.inputValue.trim() === "") {
         return
       }
+      this.data.canSendTextMsg = false
+      console.log("canSendTextMsg --> false")
 
       let msg = this.data.inputValue
       let targetMsg = ''
@@ -486,8 +527,10 @@ Component({
           console.log(err)
         }
       }
+      console.log("canSendTextMsg --> true")
       this.setData({
-        inputValue: ''
+        inputValue: '',
+        canSendTextMsg: true
       })
       this.sendTextMessage(msg + (this.data.needTrans ? `(${targetMsg})` : ''))
 
@@ -733,12 +776,19 @@ Component({
               this.data.canLeave = false
             },
             failed: () => {
+              const that = this
               wx.showModal({
                 title: '若已支付成功，请通知销售',
                 showCancel: false,
+                success() {
+                  that.setData({
+                    showPopup: false,
+                  })
+                }
               })
               this.resetOrder()
               this.data.canLeave = false
+
             }
           }, {})
 

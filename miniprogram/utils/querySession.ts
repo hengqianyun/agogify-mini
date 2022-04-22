@@ -9,11 +9,14 @@ export const querySessionAsync = async () => {
     const {"hydra:member": list} = res.data
     if (list.length > 0) {
       wx.setStorageSync('session', list[0])
+      return true
     } else {
       clearSessionAsync()
+      return false
     }
   } catch(err) {
     console.log(err)
+    return false
   }
 }
 

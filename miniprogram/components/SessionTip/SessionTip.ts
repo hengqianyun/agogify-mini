@@ -1,5 +1,5 @@
 import sessionModule from "../../http/module/session"
-import { clearSessionAsync } from "../../utils/querySession"
+import { clearSessionAsync, querySessionAsync } from "../../utils/querySession"
 import { getIdFromString } from "../../utils/util"
 
 // components/SessionTip/SessionTip.ts
@@ -27,7 +27,7 @@ Component({
         showDialog: true
       })
     },
-    handleDialogCommit() {
+    async handleDialogCommit() {
       const session = wx.getStorageSync<sessionDesign.session>('session')
       const {"@id": salesId, store} = session.sales
       const {code} = store
@@ -39,10 +39,32 @@ Component({
         showDialog: false
       })
       // const type = session.type === 'booking' ? 2 : '1'
-      
-      wx.navigateTo({
-        url: `../roomWaiting/roomWaiting?storeId=${code}&saleId=${salesId}&type=sessionIn&sessionCode=${session.code}`
-      })
+      try {
+       const flag = await querySessionAsync()
+       if (flag) {
+        wx.navigateTo({
+          url: `../roomWaiting/roomWaiting?storeId=${code}&saleId=${salesId}&type=sessionIn&sessionCode=${session.code}`
+        })
+       } else {
+        this.setData({
+          showDialog: false
+        })
+        const that = this
+         wx.showModal({
+           title: '通话已结束',
+           showCancel: false,
+           success() {
+            clearSessionAsync()
+            that.triggerEvent('handleCancel', true)
+           }
+         })
+       }
+      } catch (err) {
+
+      }
+      // wx.navigateTo({
+      //   url: `../roomWaiting/roomWaiting?storeId=${code}&saleId=${salesId}&type=sessionIn&sessionCode=${session.code}`
+      // })
     },
     async handleDialogCancel() {
       const session = wx.getStorageSync<sessionDesign.session>('session')
