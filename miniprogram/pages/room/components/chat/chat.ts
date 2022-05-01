@@ -11,6 +11,8 @@ import { clearAckTimeout, quitGroup, resetTimerAndSeq, sendAck, sendCustomMessag
 import CustomMessageTypes from '../../../../libs/tim/custom_message_types'
 import { userProfile } from '../../../../libs/user/user'
 import storeModule from '../../../../http/module/store'
+import displayProductModule from '../../../../http/module/displayProduct'
+import { IMAGEPATHS, IMAGEBASEURL } from '../../../../http/index'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -35,6 +37,12 @@ interface _SystemMessage {
   nickName: string
 }
 
+interface _DisplayProductItem extends displayProductDesign.displayProductItem {
+  name: string
+  desc: string
+  path: string
+}
+
 Component({
   /**
    * 组件的属性列表
@@ -46,7 +54,8 @@ Component({
     groupId: String,
     saleId: String,
     isReconnect: Boolean,
-    isGuest: Boolean
+    isGuest: Boolean,
+    isLive: Boolean
   },
 
   /**
@@ -97,7 +106,8 @@ Component({
     qrcode: '',
     showMoreAddress: false,
     hasGetTime: false,
-    showQrcode: false,
+    showQrcode: false, // 支付弹框
+    showDisplayProductPopup: false, // 商品弹框
     hasPaid: false,
     canLeave: true,
     payDialogBtnDisabled: false,
@@ -115,7 +125,8 @@ Component({
     canSendTextMsg: true,
     showChangRoomDialog: false,
     changRoomDiloagCommitText: '',
-    roomId: ''
+    roomId: '',
+    displayProductList: [] as _DisplayProductItem[]
   },
 
   lifetimes: {
@@ -403,6 +414,29 @@ Component({
       this.setData({
         showChangRoomDialog: false
       })
+    },
+
+    async queryDisplayProduct(code: string) {
+      try {
+        const res = await displayProductModule.queryDisplayProduct(code)
+        const list = res.data['hydra:member']
+        this.setData({
+          displayProductList: list.map((e, index) => {
+            let name = index.toString()
+            let desc = ''
+            if (!Array.isArray(e.translations)) {
+              desc = e.translations.zh_CN.description
+            }
+            return {
+              name,
+              desc,
+              ...e,
+              path: IMAGEBASEURL + IMAGEPATHS.displayProductMainNormal1x + e.image.path
+            }
+          })
+        })
+        console.log(this.data.groupId)
+      } catch(err) {}
     },
     handleDialogCancel() {
       this.triggerEvent('changeRoom', this.data.roomId)
@@ -701,6 +735,20 @@ Component({
     formatImageEle(url: string, id: string, flow: TIMMEssageFlow) {
       return { url, id, flow }
     },
+    _displayProductPopCancel() {
+        this.setData({
+            showDisplayProductPopup: false,
+        })
+    },
+
+    showDisplayProducts() {
+      const code = this.data.groupId.split('agogify-activity-')[1]
+      this.queryDisplayProduct(code)
+        this.setData({
+            showDisplayProductPopup: true,
+        })
+    },
+
     // 取消付款
     async _popupCancel() {
       if (this.data.showQrcode) {

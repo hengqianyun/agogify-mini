@@ -1,3 +1,4 @@
+import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
 
 // pages/activities/activities.ts
@@ -7,7 +8,7 @@ interface _activity {
   img: string
   brand: string
   artist: string
-  id: string
+  code: string
 }
 Page({
 
@@ -15,7 +16,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    acList: [] as _activity[]
+    acList: [] as _activity[],
+    serverData: [] as reserveDesign.eventItem[]
   },
 
   onLoad() {
@@ -23,35 +25,38 @@ Page({
   },
 
   async queryAcs() {
-      try {
-        const res = await reserveModule.queryEvents({
-            state: 'available',
-            type: 'event',
-            "startTime[after]": (new Date()).toISOString()
-        })
-        console.log(res)
-        // const list = res.data['hydra:member']
-        // this.setData({
-        //     acList: list.map(e => {
-        //         return {
-        //             date
-        //         }
-        //     })
-        // })
-      } catch (err) {}
-    this.setData({
-      acList: [
-        {
-          date: '04月22日 15：10', title: '这里放活动名称，可以单行也可以双行', img: 'https://rss1.agogify.cn/media/cache/resolve/avatar_thumbnail_normal_1x/2f/25/5b7999e590aca4fcfdd48e161ed7/tmp_9b45dfe20f18d417b9b3cd4af094d754a9a505b4dc605b52.jpg', brand: 'brand1', artist: 'Smith Mary', id: '1'
-        },
-        {
-          date: '04月23日 15：10', title: '这里放活动名称', img: 'https://rss1.agogify.cn/media/cache/resolve/avatar_thumbnail_normal_1x/2f/25/5b7999e590aca4fcfdd48e161ed7/tmp_9b45dfe20f18d417b9b3cd4af094d754a9a505b4dc605b52.jpg', brand: 'brand1', artist: 'Smith Mary', id: '2'
-        },
-      ]
-    })
+    try {
+      const res = await reserveModule.queryEvents({
+        state: 'available',
+        type: 'event',
+        "startTime[after]": (new Date()).toISOString()
+      })
+      console.log(res)
+
+      const list = res.data["hydra:member"]
+      const acList = list.map(e => {
+        debugger
+        return {
+          date: '字段缺失',
+          title: e.translations.zh_CN.name,
+          img: IMAGEBASEURL + IMAGEPATHS.bookingMainNormal1x + e.image.path,
+          brand: '字段缺失',
+          artist: '字段缺失',
+          code: '字段缺失'
+        }
+      })
+      console.log(acList)
+      this.setData({
+        acList,
+        serverData: list
+      })
+    } catch (err) { }
   },
 
-  handleTap() {
+  handleTap(event: WechatMiniprogram.TouchEvent) {
+    const {index} = event.currentTarget.dataset as {index: number}
+    const item = this.data.serverData[index]
+    wx.setStorageSync<reserveDesign.eventItem>('eventItem', item)
     wx.navigateTo({
       url: '../activityDetail/activityDetail'
     })

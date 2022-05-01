@@ -1,5 +1,5 @@
 <view class="controllers-page" bind:longpress="handleRecording" bind:touchend="handleTouchEnd">
-  <!-- <view class="page-body" wx:if="{{!isWaiting}}"> -->
+  <!-- 语音反馈 -->
   <view wx:if="{{isRecording}}" class="record-area">
     <view class="recore-icon-area">
       <image class="record-icon" src="../../../../assets/record.png"></image>
@@ -8,6 +8,7 @@
       正在录制，松开后输入结果
     </view>
   </view>
+  <!-- 顶部按钮 -->
   <view class="top-container">
     <view class="shop-info">
       <view class="store-avatar-box">
@@ -22,10 +23,8 @@
       </view>
     </view>
   </view>
-  <!-- <view class="recording-tips" hover-class="none" hover-stop-propagation="false">
-      正在录音
-    </view> -->
   <view class="bottom-container" wx:if="{{!isWaiting}}">
+    <!-- 聊天框 -->
     <scroll-view class="chat-content" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}">
       <block wx:for="{{chatHistory}}" wx:key="id">
         <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
@@ -61,6 +60,7 @@
 
       </block>
     </scroll-view>
+    <!-- 底部按钮 -->
     <view class="bottom-controllers">
       <view class="icons border-radius-8" bind:tap="handleChangeMic">
         <iconfont name="{{enabledMic ? 'zhibojian_yuyin_bai' : 'maikefengguanbizhuangtai'}}" size="{{40}}" id="record"></iconfont>
@@ -80,17 +80,22 @@
       <view class="icons border-radius-8" bind:tap="chooseImage">
         <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
       </view>
-      <button wx:if="{{!isGuest}}" class="share-button" open-type="share">
+      <!-- 分享按钮 -->
+      <button wx:if="{{isLive}}" class="share-button">
+        <view class="icons border-radius-8" bind:tap="showDisplayProducts">
+          <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+        </view>
+        <!-- <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload=""></image> -->
+      </button>
+      <button wx:elif="{{!isGuest}}" class="share-button" open-type="share">
         <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload="">
 
         </image>
       </button>
     </view>
   </view>
-  <!-- </view> -->
+  <!-- 订单弹窗 -->
   <view wx:if="{{showPopup}}" class="pay-popup">
-
-
     <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
       <view class="popup-title">确认订单</view>
       <view class="popup-container">
@@ -153,20 +158,6 @@
             <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
             <view class="detail-number">€{{itemsTotal}}</view>
           </view>
-          <!-- <view class="detail">
-            <view class="detail-label">返税</view>
-            <view class="detail-number">€{{counts.taxBack}}</view>
-            <view class="detail-number">TODO：字段缺失</view>
-          </view> -->
-          <!-- <view class="detail">
-            <view class="detail-label">平台服务费</view>
-            <view class="detail-number">€{{counts.service}}</view>
-            <view class="detail-number">TODO：字段缺失</view>
-          </view> -->
-          <!-- <view class="detail">
-            <view class="detail-label">海关关税</view>
-            <view class="detail-number">€{{orderInfo.taxTotal / 100}}</view>
-          </view> -->
           <view class="detail">
             <view class="detail-label">运费</view>
             <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
@@ -182,7 +173,6 @@
           </view>
           <view class="detail sum">
             <view class="detail-label">合计</view>
-            <!-- <view class="detail-number">€{{orderInfo.total / 100}}</view> -->
             <view class="detail-number">€{{total}}</view>
           </view>
         </view>
@@ -213,8 +203,29 @@
         <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
       </view>
     </van-popup>
-    <!-- <RssDialog wx:if="{{showChangRoomDialog}}" title="" commitText="{{changRoomDiloagCommitText}}" cancelText="立刻前往" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
-      <view class="dialog-content">您有一条通话记录未正常结束，是否继续前往？</view>
-    </RssDialog> -->
+  </view>
+  <!-- 直播商品列表 -->
+  <view wx:if="{{showDisplayProductPopup}}" class="pay-popup display-product-popup">
+    <van-popup show="{{showDisplayProductPopup}}" bind:close="_displayProductPopCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
+      <view class="popup-title">商品列表</view>
+      <view class="popup-desc">
+        点击"去下单"后将跳转至销售直播间完成下单
+      </view>
+      <block wx:for="{{displayProductList}}" wx:key="index">
+
+        <view class="display-product-item">
+          <view class="display-product-image">
+            <image class="display-product-image-item" src="{{item.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+          </view>
+          <view class="display-product-info">
+            <view class="display-product-name">{{item.name}}</view>
+            <view class="display-product-desc">{{item.desc}}</view>
+          </view>
+          <view class="display-product-btn {{item.inventory === 0 ? 'display-product-btn-disable' : ''}}">
+            {{item.inventory === 0 ? '已售罄' : '去下单'}}
+          </view>
+        </view>
+      </block>
+    </van-popup>
   </view>
 </view>

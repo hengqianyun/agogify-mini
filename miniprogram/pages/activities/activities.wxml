@@ -1,7 +1,7 @@
 <view class="activity-page">
     <!-- <button bindtap="enterRoom">enter room</button> -->
     <block wx:for="{{acList}}" wx:key="{{item.id}}">
-        <view class="activity" bindtap="handleTap">
+        <view class="activity" data-index="{{index}}" bindtap="handleTap">
             <view class="activity-main">
                 <view class="activity-main-left">
                     <view class="activity-date">{{item.date}}</view>

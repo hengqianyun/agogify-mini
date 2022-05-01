@@ -187,7 +187,7 @@ Page({
         if (reserveItem.type === 'event') {
             wx.navigateTo({
 
-                url: `../room/room?roomId=agogify-activity-${bookingCode}&storeGroupId=${'agogify'}&avGroupId=agogify-activity-${bookingCode}&storeId=${'IRERI'}&saleId=${saleId}`
+                url: `../room/room?roomId=agogify-activity-${bookingCode}&storeGroupId=${'agogify'}&avGroupId=agogify-activity-${bookingCode}&storeId=${'IRERI'}&saleId=${saleId}&isLive=1`
             })
         } else {
 

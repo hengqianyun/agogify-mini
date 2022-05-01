@@ -28,7 +28,13 @@ export const IMAGEPATHS = {
   productThumbnail2x: 'product_thumbnail_normal_2x/',
   productMain2x: 'product_main_normal_2x/',
   productThumbnail1x: 'product_thumbnail_normal_1x/',
-  productMain1x: 'product_main_normal_1x/',
+  productMain1x: 'booking_main_normal_2x/',
+  bookingMainNormal1x: 'booking_main_normal_1x/',
+  bookingMainNormal2x: 'product_main_normal_1x/',
+  displayProductThumbnailNormal2x: 'display_product_thumbnail_normal_2x/',
+  displayProductMainNormal2x: 'display_product_main_normal_2x/',
+  displayProductThumbnailNormal1x: 'display_product_thumbnail_normal_1x/',
+  displayProductMainNormal1x: 'display_product_main_normal_1x/',
 }
 
 enum SUCCESS_STATUS_CODE_DEF { OK = 200, Created = 201, Accepted = 202, no_content = 204 }

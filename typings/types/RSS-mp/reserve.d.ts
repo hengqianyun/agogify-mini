@@ -14,7 +14,8 @@ declare namespace reserveDesign {
   }
 
   interface eventItem extends swaggerI.requestSimpleBase {
-
+    image: {path: string}
+    translations: {zh_CN: {description: string, name: string}}
   }
 
   interface salesReserveItem extends swaggerI.requestSimpleBase {
@@ -59,5 +60,7 @@ declare namespace reserveDesign {
   }
 
   interface querySalesTimeSlotsRes extends swaggerI.requsetListBase<salesReserveItem> {}
+
+  interface queryEventRes extends swaggerI.requsetListBase<eventItem> {}
 
 }
