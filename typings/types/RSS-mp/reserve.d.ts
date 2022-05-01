@@ -1,5 +1,6 @@
 declare namespace reserveDesign {
   type reserveTypes = 'available' | 'booked'
+  type eventTypes = 'available' | ''
 
   interface Reserve {
     storeName: string
@@ -12,13 +13,18 @@ declare namespace reserveDesign {
     id: string
   }
 
+  interface eventItem extends swaggerI.requestSimpleBase {
+
+  }
+
   interface salesReserveItem extends swaggerI.requestSimpleBase {
     startTime: string
     endTime: string
     state: reserveTypes
     booking: booking
     version: number
-    customer: string
+    customer: swaggerI.requestBase
+    type: string
     code: string
     sales: storeDesign.saleWithStore
     guests: string[]
@@ -40,6 +46,12 @@ declare namespace reserveDesign {
     'customer.id': number
     'endTime[before]'?: string
     'order[startTime]': string
+  }
+
+  interface queryEventParams {
+    'startTime[after]'?: string
+    'state': eventTypes
+    'type': string
   }
 
   interface bookTimeSlotParams {

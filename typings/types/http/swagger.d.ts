@@ -119,6 +119,8 @@ declare namespace swaggerI {
 
   type reserveListResult = RequestType<reserveDesign.Reserve[]>
 
+  type eventListResult = RequestType<reserveDesign.eventItem[]>
+
   type querySalesTimeSlotsResult = reserveDesign.querySalesTimeSlotsRes
 
   type querySalesResult = storeDesign.QuerySalesRes

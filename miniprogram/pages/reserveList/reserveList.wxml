@@ -1,66 +1,84 @@
 <view class="reserve-list-page border-top">
-  <view class="switch-bar">
-    <van-tabs active="{{ active }}" bind:change="onChange">
-      <block wx:for="{{tabList}}" wx:key="status">
-        <van-tab title="{{item.label}}">
-          <view class="list-container">
-            <block wx:for="{{reserveLists[index]}}" wx:for-item="reserve" wx:for-index="index2" wx:key="id">
-              <view class="reserve-item">
-                <view class="item-top">
-                  <view class="i-t-left">
-                    <view class="reserve-date" hover-class="none" hover-stop-propagation="false">
-                      {{reserve.date}}
-                    </view>
-                    <view class="reserve-duration"> {{reserve.duration}}</view>
-                  </view>
-                  <view class="i-t-right">{{reserve.isOwner ? '预约' : '顾问'}}</view>
-                </view>
-                <view class="item-content">
-                  <view class="content-left">
-                    <image class="store-avatar" src="{{reserve.sales.store.logo.path}}" lazy-load="false" binderror="" bindload=""></image>
-                  </view>
-                  <view class="content-right">
-                    <view class="store-name">{{reserve.sales.store.name}}</view>
-                    <view class="saler-name text-ellipsis">预约店员：{{reserve.sales.nickname}}</view>
-                    <view class="store-address">
-                      <iconfont name="dingwei_g" size="{{24}}"></iconfont>
-                      <view class="store-address-text text-ellipsis">
-                        {{reserve.address}}
-                      </view>
-                    </view>
-                  </view>
+    <view class="switch-bar">
+        <van-tabs active="{{ active }}" bind:change="onChange">
+            <block wx:for="{{tabList}}" wx:key="status">
+                <van-tab title="{{item.label}}">
+                    <view class="list-container">
+                        <block wx:for="{{reserveLists[index]}}" wx:for-item="reserve" wx:for-index="index2" wx:key="id">
+                            <view class="reserve-item ">
+                                <view class="item-top {{ reserve.isEvent ? 'item-top-event' : ''}}">
+                                    <view class="i-t-left">
+                                        <view class="reserve-date" hover-class="none" hover-stop-propagation="false">
+                                            {{reserve.date}}
+                                        </view>
+                                        <view class="reserve-duration"> {{reserve.duration}}</view>
+                                    </view>
+                                    <view class="i-t-right">{{reserve.isEvent ? '专场' : reserve.isOwner ? '预约' : '顾问'}}</view>
+                                </view>
+                                <view class="item-content">
+                                    <block wx:if="{{reserve.isEvent}}">
+                                        <view class="content-left-event">
+                                            <image class="store-avatar" src="{{reserve.sales.store.logo.path}}" lazy-load="false" binderror="" bindload=""></image>
+                                        </view>
+                                        <view class="content-right-event">
+                                            <view class="artist-name">{{reserve.artist.nickname}}</view>
+                                            <view class="event-desc text-ellipsis-2">{{reserve.translations.zh_CN.description}}</view>
+                                            <view class="event-brand">接口返回格式异常</view>
+                                        </view>
+                                    </block>
+                                    <block wx:else>
+                                        <view class="content-left">
+                                            <image class="store-avatar" src="{{reserve.sales.store.logo.path}}" lazy-load="false" binderror="" bindload=""></image>
+                                        </view>
+                                        <view class="content-right">
+                                            <view class="store-name">{{reserve.sales.store.name}}</view>
+                                            <view class="saler-name text-ellipsis">预约店员：{{reserve.sales.nickname}}</view>
+                                            <view class="store-address">
+                                                <iconfont name="dingwei_g" size="{{24}}"></iconfont>
+                                                <view class="store-address-text text-ellipsis">
+                                                    {{reserve.address}}
+                                                </view>
+                                            </view>
+                                        </view>
+                                    </block>
+                                </view>
+                                <view wx:if="{{reserve.isOwner && reserve.count > 0}}" class="user-count">
+                                    {{reserve.count}}位好友已接受邀请
+                                </view>
+                                <view class="item-controller-container">
+                                    <view wx:if="{{!reserve.isOwner}}" class="controller-text">
+                                        来自好友的邀请
+                                    </view>
+                                    <view wx:else></view>
+                                    <view wx:if="{{!reserve.isFinish}}" class="item-controller">
+                                        <block wx:if="{{reserve.isEvent}}">
+                                            <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="handleCall">
+                                                进入直播
+                                            </view>
+                                            <button data-index="{{index2}}" class="controller-btn light-btn" open-type="share">
+                                                分享
+                                            </button>
+                                            <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="addFavorateItem">
+                                                + 意向商品
+                                            </view>
+                                        </block>
+                                        <block wx:else>
+                                            <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="handleCall">
+                                                进入房间
+                                            </view>
+                                            <button wx:if="{{reserve.isOwner}}" data-index="{{index2}}" class="controller-btn light-btn" open-type="share">
+                                                邀请好友顾问
+                                            </button>
+                                        </block>
 
-                  <!-- <view class="content-controller">
-                    <iconfont wx:if="{{reserve.tag === '待进行'}}" name="store_hujiao" data-index="{{index}}" size="{{40}}" bind:tap="handleCall"></iconfont>
-                    <view wx:else></view>
-                    <iconfont name="collection_g" size="{{40}}"></iconfont>
-                    <iconfont name="share" size="{{40}}"></iconfont>
-                  </view> -->
-                </view>
-                <!-- <view class="item-controller" wx:if="{{reserve.tag === '待进行'}}"> -->
-                <view wx:if="{{reserve.isOwner && reserve.count > 0}}" class="user-count">
-                  {{reserve.count}}位好友已接受邀请
-                </view>
-                <view class="item-controller-container">
-                  <view wx:if="{{!reserve.isOwner}}" class="controller-text">
-                    来自好友的邀请
-                  </view>
-                  <view wx:else></view>
-                  <view wx:if="{{!reserve.isFinish}}" class="item-controller">
-                    <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="handleCall">
-                      进入房间
-                    </view>
-                    <button  wx:if="{{reserve.isOwner}}" data-index="{{index2}}" class="controller-btn light-btn" open-type="share">
-                      邀请好友顾问
-                    </button>
-                  </view>
-                </view>
+                                    </view>
+                                </view>
 
-              </view>
+                            </view>
+                        </block>
+                    </view>
+                </van-tab>
             </block>
-          </view>
-        </van-tab>
-      </block>
-    </van-tabs>
-  </view>
+        </van-tabs>
+    </view>
 </view>
