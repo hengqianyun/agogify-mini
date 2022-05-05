@@ -27,6 +27,34 @@
     </view>
   </view>
   <view class="bottom-container" wx:if="{{!isWaiting}}">
+    <!-- 新商品 -->
+    <view class="new-display-product" wx:if="{{showNewDP}}">
+      <view class="ndp-left">
+        <image class="ndp-left-image" src="{{currentDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+      </view>
+      <view class="ndp-right">
+        <view class="ndp-top">
+          <view class="npd-name">
+            <view>{{currentDisplayProduct.name}}</view>
+            <view class="new-tap">new</view>
+          </view>
+          <view wx:if="{{currentDisplayProduct.price !== 0}}" class="npd-price">
+            € {{currentDisplayProduct.stringPrice}}
+          </view>
+          <view wx:else class="npd-price">
+            暂无价格
+          </view>
+        </view>
+        <view class="ndp-bottom">
+          <view class="ndp-btn-text" bindtap="hideNewDisplayProduct">
+            收起
+          </view>
+          <view class="ndp-btn-text ndp-btn" bindtap="handleNewDisplayProductQueue">
+            去下单
+          </view>
+        </view>
+      </view>
+    </view>
     <!-- 聊天框 -->
     <scroll-view class="chat-content" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}">
       <block wx:for="{{chatHistory}}" wx:key="id">

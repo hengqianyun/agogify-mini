@@ -56,4 +56,7 @@ export default class CustomMessageTypes {
   static RESERVE = 'RESERVE';
   static CUSTOMER_IN = 'CUSTOMER_IN';
   static CUSTOMER_OUT = 'CUSTOMER_OUT';
+
+  static CHANGE_VIDEO_ROOM = 'CHANGE_VIDEO_ROOM'
+  static NEW_DISPLAY_PRODUCT = 'NEW_DISPLAY_PRODUCT'
 }

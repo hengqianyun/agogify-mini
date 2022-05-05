@@ -129,6 +129,9 @@ Component({
     changRoomDiloagCommitText: '',
     roomId: '',
     displayProductList: [] as _DisplayProductItem[],
+    currentDisplayProduct: {} as _DisplayProductItem,
+    showNewDP: false,
+    ndpBtnDisable: false,
     isAssistantRoom: false,
   },
 
@@ -148,7 +151,7 @@ Component({
           // 判断消息是否发给自己
           if (payloadData.to === userProfile.pathId) {
             switch (payloadData.type) {
-              case 'changeVideoRoom':
+              case CustomMessageTypes.CHANGE_VIDEO_ROOM:
                 this.setData({
                   showChangRoomDialog: true,
                   roomId: payloadData.roomId,
@@ -191,6 +194,7 @@ Component({
                 })
                 console.log(this.data.showChangRoomDialog)
                 break
+              
               case CustomMessageTypes.PAY:
 
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
@@ -242,6 +246,13 @@ Component({
             if (payloadData.type !== 'ack' && payloadData.type !== CustomMessageTypes.TIMELEFT_CHECK) {
 
               sendAck({ data: 'ack', description: "succesee" }, this.data.groupId, this.properties.saleId, data.time.toString())
+            }
+          } else if (payloadData.to === 'all') {
+            switch (payloadData.type) {
+              case CustomMessageTypes.NEW_DISPLAY_PRODUCT:
+                const code = this.data.groupId.split('agogify-activity-')[1]
+                this.queryDisplayProduct(code)
+                break
             }
           } else {
             if (payloadData.type === CustomMessageTypes.CUSTOMER_IN) {
@@ -462,24 +473,57 @@ Component({
       try {
         const res = await displayProductModule.queryDisplayProduct(code)
         const list = res.data['hydra:member']
+        const tempList = list.map((e, index) => {
+          let name = (index + 1).toString()
+          let desc = ''
+          if (!Array.isArray(e.translations)) {
+            desc = e.translations.zh_CN.description
+          }
+          return {
+            name,
+            desc,
+            ...e,
+            path: IMAGEBASEURL + IMAGEPATHS.displayProductThumbnailSmaill2x + e.image.path,
+            canTap: true,
+            stringPrice: e.price.toFixed(2)
+          }
+        })
+        let item = tempList[tempList.length - 1]
+        let flag = item.id === this.data.currentDisplayProduct.id
         this.setData({
-          displayProductList: list.map((e, index) => {
-            let name = (index + 1).toString()
-            let desc = ''
-            if (!Array.isArray(e.translations)) {
-              desc = e.translations.zh_CN.description
-            }
-            return {
-              name,
-              desc,
-              ...e,
-              path: IMAGEBASEURL + IMAGEPATHS.displayProductMainNormal1x + e.image.path,
-              canTap: true
-            }
-          })
+          displayProductList: tempList,
+          currentDisplayProduct: item,
+          showNewDP: !flag
         })
         console.log(this.data.groupId)
       } catch (err) { }
+    },
+    hideNewDisplayProduct() {
+      this.setData({
+        showNewDP: false
+      })
+    },
+    async handleNewDisplayProductQueue() {
+      try {
+        if (this.data.ndpBtnDisable) return
+        this.setData({
+          ndpBtnDisable: true
+        })
+        await this.queue(this.data.currentDisplayProduct['@id'])
+        this.setData({
+          ndpBtnDisable: false,
+          showNewDP: false,
+        })
+      } catch (err) {
+        wx.showToast({
+          title: '下单失败，请重试',
+          icon: 'error',
+          duration: 2000
+        })
+        this.setData({
+          ndpBtnDisable: false
+        })
+      }
     },
     async handleQueue(event: WechatMiniprogram.TouchEvent) {
       if (this.data.isAssistantRoom) return
@@ -489,27 +533,33 @@ Component({
         return
       }
       try {
-        wx.showLoading({
-          title: '加载中'
-        })
         item.canTap = false
         this.setData({
           displayProductList: this.data.displayProductList
         })
-        await queueTicketModule.queue(item['@id'])
+        await this.queue(item['@id'])
         item.canTap = true
         this.setData({
           displayProductList: this.data.displayProductList
         })
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async queue(pathId: string) {
+      try {
+        wx.showLoading({
+          title: '加载中'
+        })
+        await queueTicketModule.queue(pathId)
+        wx.hideLoading()
         wx.showToast({
-          title: '成功取号，请等待助手通知',
+          title: '成功取号',
           icon: 'success',
           duration: 2000
         })
       } catch (err) {
-        console.log(err)
-      } finally {
-        wx.hideLoading()
+        throw err;
       }
     },
     handleDialogCancel() {

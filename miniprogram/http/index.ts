@@ -32,9 +32,9 @@ export const IMAGEPATHS = {
   bookingMainNormal1x: 'booking_main_normal_1x/',
   bookingMainNormal2x: 'product_main_normal_1x/',
   displayProductThumbnailNormal2x: 'display_product_thumbnail_normal_2x/',
-  displayProductMainNormal2x: 'display_product_main_normal_2x/',
+  displayProductThumbnailSmaill2x: 'display_product_thumbnail_small_2x/',
   displayProductThumbnailNormal1x: 'display_product_thumbnail_normal_1x/',
-  displayProductMainNormal1x: 'display_product_main_normal_1x/',
+  displayProductThumbnailSmaill1x: 'display_product_thumbnail_small_1x/',
 }
 
 enum SUCCESS_STATUS_CODE_DEF { OK = 200, Created = 201, Accepted = 202, no_content = 204 }
