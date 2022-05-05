@@ -21,6 +21,8 @@ Page({
     },
     groupId: '',
     roomId: null as unknown as string,
+    preRoomId: '', // 原始房间
+    preSalesId: '', // artist
     pusher: null as any,
     playerList: [] as PlayerListItem[],
     // store
@@ -99,10 +101,24 @@ Page({
   changeRoom(e: any) {
     const detail = e.detail
     console.log(detail)
+    let preRoomId = this.data.roomId
+    let preSalesId = this.data.saleId
     this.setData({
       roomId: detail.roomId,
+      preRoomId,
+      preSalesId,
       saleId: detail.saleId
     })
+    trtcClient.exitRoom()
+    this.enterRoom({ roomID: this.data.roomId })
+  },
+
+  backRoom() {
+    this.setData({
+      roomId: this.data.preRoomId,
+      saleId: this.data.preSalesId
+    })
+    trtcClient.exitRoom()
     this.enterRoom({ roomID: this.data.roomId })
   },
 
@@ -161,8 +177,8 @@ Page({
   },
 
   enterRoom({ roomID }: { roomID: string }) {
+    console.debug('enter room');
     console.log('roomID', roomID)
-    console.log(trtcClient.getPusherInstance())
     const trtcConfig = { ...this.data._rtcConfig, strRoomID: roomID } as EnterRoomParams
     this.setData({
       pusher: trtcClient.enterRoom(trtcConfig),

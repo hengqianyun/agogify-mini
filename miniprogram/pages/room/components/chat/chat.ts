@@ -13,6 +13,7 @@ import { userProfile } from '../../../../libs/user/user'
 import storeModule from '../../../../http/module/store'
 import displayProductModule from '../../../../http/module/displayProduct'
 import { IMAGEPATHS, IMAGEBASEURL } from '../../../../http/index'
+import queueTicketModule from '../../../../http/module/queueTicket'
 
 const recorderManager = wx.getRecorderManager()
 const recordOptions: WechatMiniprogram.RecorderManagerStartOption = {
@@ -41,6 +42,7 @@ interface _DisplayProductItem extends displayProductDesign.displayProductItem {
   name: string
   desc: string
   path: string
+  canTap: boolean
 }
 
 Component({
@@ -126,7 +128,8 @@ Component({
     showChangRoomDialog: false,
     changRoomDiloagCommitText: '',
     roomId: '',
-    displayProductList: [] as _DisplayProductItem[]
+    displayProductList: [] as _DisplayProductItem[],
+    isAssistantRoom: false,
   },
 
   lifetimes: {
@@ -149,26 +152,47 @@ Component({
                 this.setData({
                   showChangRoomDialog: true,
                   roomId: payloadData.roomId,
-                  
                 })
-                // const that = this
                 wx.showModal({
                   title: '收到销售助理的购买服务请求，是否前往?',
                   confirmText: '立即前往',
                   cancelText: '再等一会',
-                  success(res) {
+                  async success(res) {
                     if (res.confirm) {
-                      that.triggerEvent('changeRoom', {
-                        roomId: payloadData.roomId,
-                        saleId: payloadData.saleId
-                      })
+
+                      await sendCustomMessage({ data: CustomMessageTypes.JOIN_ASSISTANT_ROOM }, that.data.groupId, payloadData.saleId, {
+                        success: () => {
+                          that.triggerEvent('changeRoom', {
+                            roomId: payloadData.roomId,
+                            saleId: payloadData.saleId
+                          })
+                          that.setData({
+                            isAssistantRoom: true
+                          })
+                        },
+                        failed: () => {
+                          wx.showModal({
+                            title: '切换房间失败，是否重试？',
+                            success(res) {
+                              if (res.confirm) {
+                                // 重试
+                              } else {
+                                // 通知销售以后再去
+                              }
+                            }
+
+                          })
+                        }
+                      }, {})
+                    } else {
+                      // 通知销售以后再去
                     }
                   }
                 })
                 console.log(this.data.showChangRoomDialog)
                 break
               case CustomMessageTypes.PAY:
-                
+
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
                 that.setData({
                   payDialogLabel: '确认订单',
@@ -415,14 +439,32 @@ Component({
         showChangRoomDialog: false
       })
     },
+    handleBackRoom() {
+      const that = this
+      wx.showModal({
+        title: '是否返回搭配师的直播间？',
+        success(res) {
+          if (res.confirm) {
+            that.triggerEvent('backRoom')
+            that.setData({
+              isAssistantRoom: false
+            })
+          }
+        }
+      })
 
+    },
+    /**
+     * 查询display product
+     * @param code 
+     */
     async queryDisplayProduct(code: string) {
       try {
         const res = await displayProductModule.queryDisplayProduct(code)
         const list = res.data['hydra:member']
         this.setData({
           displayProductList: list.map((e, index) => {
-            let name = index.toString()
+            let name = (index + 1).toString()
             let desc = ''
             if (!Array.isArray(e.translations)) {
               desc = e.translations.zh_CN.description
@@ -431,12 +473,44 @@ Component({
               name,
               desc,
               ...e,
-              path: IMAGEBASEURL + IMAGEPATHS.displayProductMainNormal1x + e.image.path
+              path: IMAGEBASEURL + IMAGEPATHS.displayProductMainNormal1x + e.image.path,
+              canTap: true
             }
           })
         })
         console.log(this.data.groupId)
-      } catch(err) {}
+      } catch (err) { }
+    },
+    async handleQueue(event: WechatMiniprogram.TouchEvent) {
+      if (this.data.isAssistantRoom) return
+      const { index } = event.currentTarget.dataset as { index: number }
+      const item = this.data.displayProductList[index]
+      if (!item.canTap) {
+        return
+      }
+      try {
+        wx.showLoading({
+          title: '加载中'
+        })
+        item.canTap = false
+        this.setData({
+          displayProductList: this.data.displayProductList
+        })
+        await queueTicketModule.queue(item['@id'])
+        item.canTap = true
+        this.setData({
+          displayProductList: this.data.displayProductList
+        })
+        wx.showToast({
+          title: '成功取号，请等待助手通知',
+          icon: 'success',
+          duration: 2000
+        })
+      } catch (err) {
+        console.log(err)
+      } finally {
+        wx.hideLoading()
+      }
     },
     handleDialogCancel() {
       this.triggerEvent('changeRoom', this.data.roomId)
@@ -736,17 +810,17 @@ Component({
       return { url, id, flow }
     },
     _displayProductPopCancel() {
-        this.setData({
-            showDisplayProductPopup: false,
-        })
+      this.setData({
+        showDisplayProductPopup: false,
+      })
     },
 
     showDisplayProducts() {
       const code = this.data.groupId.split('agogify-activity-')[1]
       this.queryDisplayProduct(code)
-        this.setData({
-            showDisplayProductPopup: true,
-        })
+      this.setData({
+        showDisplayProductPopup: true,
+      })
     },
 
     // 取消付款

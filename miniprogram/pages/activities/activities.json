@@ -1,4 +1,5 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "设计师直播"
+  "navigationBarTitleText": "设计师直播",
+  "enablePullDownRefresh": true
 }

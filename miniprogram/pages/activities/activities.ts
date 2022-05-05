@@ -1,5 +1,6 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
+import { localMonth, timeFormat } from "../../utils/util"
 
 // pages/activities/activities.ts
 interface _activity {
@@ -24,6 +25,10 @@ Page({
     this.queryAcs()
   },
 
+  onPullDownRefresh() {
+    this.queryAcs()
+  },
+
   async queryAcs() {
     try {
       const res = await reserveModule.queryEvents({
@@ -35,14 +40,14 @@ Page({
 
       const list = res.data["hydra:member"]
       const acList = list.map(e => {
-        debugger
+        let startTime =  new Date(e.startTime.split('GMT')[0])
         return {
-          date: '字段缺失',
+          date: localMonth(startTime) + ' ' + timeFormat(startTime, 'hh:mm'),
           title: e.translations.zh_CN.name,
           img: IMAGEBASEURL + IMAGEPATHS.bookingMainNormal1x + e.image.path,
-          brand: '字段缺失',
-          artist: '字段缺失',
-          code: '字段缺失'
+          brand: e.brands.map(e => e.name).join('/'),
+          artist: e.artist.nickname,
+          code: e.code
         }
       })
       console.log(acList)

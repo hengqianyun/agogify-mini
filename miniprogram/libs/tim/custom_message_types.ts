@@ -7,6 +7,9 @@ export default class CustomMessageTypes {
   /// 客户通知销售支付已完成
   static PAY_FINISHED = 'PAY_FINISHED';
 
+  /// 客户通知assistant进入房间
+  static JOIN_ASSISTANT_ROOM = 'JOIN_ASSISTANT_ROOM'
+
   /// 客户通知销售订单确认完毕
   static ORDER_COMPLETE = 'ORDER_COMPLETE'
 

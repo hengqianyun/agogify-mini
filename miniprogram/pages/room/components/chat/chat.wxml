@@ -17,7 +17,10 @@
       <view class="store-name">{{storeName}}</view>
     </view>
     <view class="time-and-exit">
-      <view class="time-left border-radius-8"></view>
+      <view wx:if="{{isAssistantRoom}}" class="exit-icon border-radius-8" bind:tap="handleBackRoom">
+        <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
+      </view>
+      <view wx:else class="time-left border-radius-8"></view>
       <view class="exit-icon border-radius-8" bind:tap="handleExitTab">
         <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
       </view>
@@ -221,7 +224,7 @@
             <view class="display-product-name">{{item.name}}</view>
             <view class="display-product-desc">{{item.desc}}</view>
           </view>
-          <view class="display-product-btn {{item.inventory === 0 ? 'display-product-btn-disable' : ''}}">
+          <view class="display-product-btn {{item.inventory === 0 || isAssistantRoom ? 'display-product-btn-disable' : ''}}" data-index="{{index}}" bindtap="handleQueue">
             {{item.inventory === 0 ? '已售罄' : '去下单'}}
           </view>
         </view>

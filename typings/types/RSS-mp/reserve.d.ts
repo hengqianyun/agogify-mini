@@ -16,6 +16,10 @@ declare namespace reserveDesign {
   interface eventItem extends swaggerI.requestSimpleBase {
     image: {path: string}
     translations: {zh_CN: {description: string, name: string}}
+    brands: {name: string}[]
+    artist: {avatar: string | null, nickname: string}
+    code: string
+    startTime: string
   }
 
   interface salesReserveItem extends swaggerI.requestSimpleBase {
@@ -29,6 +33,9 @@ declare namespace reserveDesign {
     code: string
     sales: storeDesign.saleWithStore
     guests: string[]
+    brands:  swaggerI.requestSimpleBase[]
+    image: {path: string}
+    artist: swaggerI.requestSimpleBase
   }
 
   interface booking extends swaggerI.requestBase {

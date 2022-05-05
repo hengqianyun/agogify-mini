@@ -22,8 +22,8 @@
                                         </view>
                                         <view class="content-right-event">
                                             <view class="artist-name">{{reserve.artist.nickname}}</view>
-                                            <view class="event-desc text-ellipsis-2">{{reserve.translations.zh_CN.description}}</view>
-                                            <view class="event-brand">接口返回格式异常</view>
+                                            <view class="event-desc text-ellipsis-2">{{reserve.translations.zh_CN.name}}</view>
+                                            <view class="event-brand">{{reserve.brand}}</view>
                                         </view>
                                     </block>
                                     <block wx:else>
@@ -46,7 +46,7 @@
                                     {{reserve.count}}位好友已接受邀请
                                 </view>
                                 <view class="item-controller-container">
-                                    <view wx:if="{{!reserve.isOwner}}" class="controller-text">
+                                    <view wx:if="{{!reserve.isOwner && !reserve.isEvent}}" class="controller-text">
                                         来自好友的邀请
                                     </view>
                                     <view wx:else></view>
@@ -58,7 +58,7 @@
                                             <button data-index="{{index2}}" class="controller-btn light-btn" open-type="share">
                                                 分享
                                             </button>
-                                            <view class="controller-btn deep-btn" data-index="{{index2}}" bind:tap="addFavorateItem">
+                                            <view class="controller-btn light-btn" data-index="{{index2}}" bind:tap="addFavorateItem">
                                                 + 意向商品
                                             </view>
                                         </block>
