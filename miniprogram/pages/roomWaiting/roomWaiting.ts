@@ -20,22 +20,35 @@ Page({
     storeId: '',
     bookingCode: '',
     waitingText: '',
-    isGuest: false
+    isGuest: false,
+    isLive: false,
+    roomId: '',
+    avGroupId: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    const { storeId, saleId, type, bookingCode } = this.options as { storeId: string, saleId: string, type: string, bookingCode: string }
+    const { storeId, saleId, type, bookingCode, isLive } = this.options as { storeId: string, saleId: string, type: string, bookingCode: string, isLive?: string }
     this.setData({
       storeGroupId: `${storeId}_Meeting`,
       type,
       storeId,
       saleId,
       bookingCode,
-      waitingText: type === 'reserveIn' ? '等待销售开启视频' : '正在呼叫中……'
+      waitingText: type === 'reserveIn' ? '等待销售开启视频' : '正在呼叫中……',
+      isLive: !!isLive
     })
+    if (this.data.isLive) {
+      const {roomId, storeGroupId, avGroupId } = this.options as {roomId: string, storeGroupId: string, avGroupId: string}
+      this.setData({
+        roomId,
+        storeGroupId,
+        avGroupId,
+      })
+
+    }
     wx.setNavigationBarTitle({ title: type === 'reserveIn' ? '预约' : '通话' })
 
     /**
@@ -119,10 +132,17 @@ Page({
    * 注意事项弹框确认,开始初始化
    */
   handleDialogCommit() {
-    this.setData({
-      showDialog: false,
-    })
-    this.init()
+    if (this.data.isLive) {
+      const {roomId, storeGroupId, avGroupId, saleId, storeId} = this.data
+      wx.redirectTo({
+        url: `../room/room?roomId=${roomId}&storeGroupId=${'agogify'}&avGroupId=${avGroupId}&storeId=${'IRERI'}&saleId=${saleId}&isLive=1`
+      })
+    } else {
+      this.setData({
+        showDialog: false,
+      })
+      this.init()
+    }
   },
   /**
    * 在用户接受弹框条款后的初始化，主要为消息模块

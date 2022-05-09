@@ -1,58 +1,71 @@
 @import url(../../style/global.less);
 
 .activity-page {
-    padding: 34rpx 40rpx;
-    .activity {
-        width: 670rpx;
-        height: 302rpx;
-        padding: 32rpx;
-        box-sizing: border-box;
+  padding: 34rpx 40rpx;
 
-        &-main {
-            display: flex;
-            height: 188rpx;
-            justify-content: space-between;
+  .activity {
+    width: 670rpx;
+    height: 302rpx;
+    padding: 32rpx;
+    box-sizing: border-box;
 
-            &-left {
-                width: 310rpx;
-            }
+    &-main {
+      display: flex;
+      height: 188rpx;
+      justify-content: space-between;
 
-            &-right {
-                width: 252rpx;
-            }
-        }
+      &-left {
+        width: 310rpx;
+      }
 
-        &-date {
-            font-size: 24rpx;
-            color: @defaultColor2;
-        }
-
-        &-title {
-            font-size: 32rpx;
-            color: @defaultColor;
-            margin-top: 4rpx;
-            height: 110rpx;
-        }
-
-        &-brand {
-            font-size: 24rpx;
-            color: @defaultColor2;
-        }
-
-        &-img {
-            width: 100%;
-            height: 100%;
-
-            &-item {
-                width: 100%;
-                height: 100%;
-            }
-        }
-
-        &-bottom {
-            font-size: 24rpx;
-            color: @defaultColor2;
-            line-height: 60rpx;
-        }
+      &-right {
+        width: 252rpx;
+      }
     }
+
+    &-full-tag {
+      width: 106rpx;
+      height: 32rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: @defaultColor;
+      color: #fff;
+      font-size: 22rpx;
+      border-radius: 4rpx;
+    }
+
+    &-date {
+      font-size: 24rpx;
+      color: @defaultColor2;
+    }
+
+    &-title {
+      font-size: 32rpx;
+      color: @defaultColor;
+      margin-top: 4rpx;
+      height: 110rpx;
+    }
+
+    &-brand {
+      font-size: 24rpx;
+      color: @defaultColor2;
+    }
+
+    &-img {
+      width: 100%;
+      height: 100%;
+
+      &-item {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &-bottom {
+      font-size: 24rpx;
+      color: @defaultColor2;
+      line-height: 60rpx;
+    }
+  }
 }

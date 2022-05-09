@@ -1,34 +1,34 @@
 <view class="activity-detaile-page">
-    <view class="avtivity-info">
-        <view class="avtivity-info-title">{{title}}</view>
-        <view class="avtivity-info-brand">
-            <view class="avtivity-info-brand-icon">品牌</view>
-            <view class="avtivity-info-brand-text">{{brand}}</view>
-        </view>
-        <view class="avtivity-info-artist">
-            <view class="avtivity-info-artist-top">
-                <view class="avtivity-info-artist-avatar">
-                    <image class="avtivity-info-artist-avatar-item" src="{{artist.avatar}}" mode="aspectFit"></image>
-                </view>
-                <view class="avtivity-info-artist-right">
-                    <view class="avtivity-info-artist-label">特邀搭配师</view>
-                    <view class="avtivity-info-artist-name">{{artist.name}}</view>
-                </view>
-            </view>
-            <view class="avtivity-info-artist-desc">{{artist.desc}}</view>
-        </view>
-        <view class="avtivity-info-date">{{date}}</view>
+  <view class="avtivity-info">
+    <view class="avtivity-info-title">{{title}}</view>
+    <view class="avtivity-info-brand">
+      <view class="avtivity-info-brand-icon">品牌</view>
+      <view class="avtivity-info-brand-text">{{brand}}</view>
     </view>
-    <view class="activity-desc">
-        <view class="activity-desc-title">
-            <view class="activity-desc-title-text">活动介绍</view>
+    <view class="avtivity-info-artist">
+      <view class="avtivity-info-artist-top">
+        <view class="avtivity-info-artist-avatar">
+          <image class="avtivity-info-artist-avatar-item" src="{{artist.avatar}}" mode="aspectFit"></image>
         </view>
-        <view class="activity-desc-banner">
-            <image class="activity-desc-banner-item" mode="widthFix" src="{{img}}"></image>
+        <view class="avtivity-info-artist-right">
+          <view class="avtivity-info-artist-label">特邀搭配师</view>
+          <view class="avtivity-info-artist-name">{{artist.name}}</view>
         </view>
-        <view class="activity-desc-desc">{{desc}}</view>
+      </view>
+      <view class="avtivity-info-artist-desc">{{artist.desc}}</view>
     </view>
-    <view class="controller">
-        <rss-button className="fill-btn" backgroundImage="linear-gradient(270deg, #EF9C83 0%, #F57376 100%)" fontColor="#fff" width="{{670}}" height="{{80}}" borderRadius="{{40}}" label="立即报名" bind:onTap="handleTap"></rss-button>
+    <view class="avtivity-info-date">{{date}}</view>
+  </view>
+  <view class="activity-desc">
+    <view class="activity-desc-title">
+      <view class="activity-desc-title-text">活动介绍</view>
     </view>
+    <view class="activity-desc-banner">
+      <image class="activity-desc-banner-item" mode="widthFix" src="{{img}}"></image>
+    </view>
+    <view class="activity-desc-desc">{{desc}}</view>
+  </view>
+  <view class="controller">
+    <rss-button className="fill-btn" disabled="{{isFull}}" backgroundImage="linear-gradient(270deg, #EF9C83 0%, #F57376 100%)" fontColor="#fff" width="{{670}}" height="{{80}}" borderRadius="{{40}}" label="立即报名" bind:onTap="handleTap"></rss-button>
+  </view>
 </view>

@@ -20,6 +20,8 @@ declare namespace reserveDesign {
     artist: {avatar: string | null, nickname: string}
     code: string
     startTime: string
+    tickets: number
+    seats: number
   }
 
   interface salesReserveItem extends swaggerI.requestSimpleBase {
@@ -54,6 +56,7 @@ declare namespace reserveDesign {
     'customer.id': number
     'endTime[before]'?: string
     'order[startTime]': string
+    'state'?: eventTypes
   }
 
   interface queryEventParams {

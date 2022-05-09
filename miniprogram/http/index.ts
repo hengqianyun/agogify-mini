@@ -2,10 +2,10 @@ import http from "../libs/http";
 
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://api.agogify.com/api/v2/' : 'https://192.168.20.188:8000/api/v2/'
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://api.agogify.com/api/v2/' : 'https://api.agogify.com/api/v2/'
-export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss1.agogify.cn/api/v2/'
+export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss.agogify.cn/api/v2/'
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss.agogify.cn/api/v2/'
 
-export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss1.agogify.cn/media/cache/resolve/' 
+export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss.agogify.cn/media/cache/resolve/' 
 // export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss.agogify.cn/media/cache/resolve/' 
 
 export const IMAGEPATHS = {
@@ -29,8 +29,12 @@ export const IMAGEPATHS = {
   productMain2x: 'product_main_normal_2x/',
   productThumbnail1x: 'product_thumbnail_normal_1x/',
   productMain1x: 'booking_main_normal_2x/',
-  bookingMainNormal1x: 'booking_main_normal_1x/',
-  bookingMainNormal2x: 'product_main_normal_1x/',
+  bookingthumbnailNormal2x: 'booking_thumbnail_normal_2x/',
+  bookingthumbnailNormal1x: 'booking_thumbnail_normal_1x/',
+  bookingthumbnailMedium2x: 'booking_thumbnail_medium_2x/',
+  bookingthumbnailMedium1x: 'booking_thumbnail_medium_1x/',
+  bookingthumbnailSmall2x: 'booking_thumbnail_small_2x/',
+  bookingthumbnailSmall1x: 'booking_thumbnail_small_1x/',
   displayProductThumbnailNormal2x: 'display_product_thumbnail_normal_2x/',
   displayProductThumbnailSmaill2x: 'display_product_thumbnail_small_2x/',
   displayProductThumbnailNormal1x: 'display_product_thumbnail_normal_1x/',

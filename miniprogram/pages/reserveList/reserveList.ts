@@ -122,6 +122,7 @@ Page({
       "endTime[after]": (new Date()).toISOString(),
       "order[startTime]": 'asc',
       "customer.id": userProfile.id,
+      'state': 'available'
     })
 
     const { "hydra:member": reserveList } = res.data
@@ -222,7 +223,8 @@ Page({
       let salesId = reserveItem.artist['@id']
       wx.navigateTo({
 
-        url: `../room/room?roomId=agogify-activity-${bookingCode}&storeGroupId=${'agogify'}&avGroupId=agogify-activity-${bookingCode}&storeId=${'IRERI'}&saleId=${salesId}&isLive=1`
+        // url: `../room/room?roomId=agogify-activity-${bookingCode}&storeGroupId=${'agogify'}&avGroupId=agogify-activity-${bookingCode}&storeId=${'IRERI'}&saleId=${salesId}&isLive=1`,
+        url: `../roomWaiting/roomWaiting?roomId=agogify-activity-${bookingCode}&storeGroupId=${'agogify'}&avGroupId=agogify-activity-${bookingCode}&storeId=${'IRERI'}&saleId=${salesId}&isLive=1`
       })
     } else {
 

@@ -20,7 +20,8 @@ Page({
         img: '',
         desc: '',
         code: '',
-        btnDisable: false
+        btnDisable: false,
+        isFull: false
     },
 
     /**
@@ -48,14 +49,16 @@ Page({
                 desc: '字段缺失',
             },
             date: timeFormat(startTime, 'yyyy.MM.dd') + ' ' + timeFormat(startTime, 'hh:mm') + '开启活动',
-            img: IMAGEBASEURL + IMAGEPATHS.bookingMainNormal1x + item.image.path,
+            img: IMAGEBASEURL + IMAGEPATHS.bookingthumbnailNormal2x + item.image.path,
             desc: item.translations.zh_CN.description,
-            code: item.code
+            code: item.code,
+            isFull: item.seats === item.tickets
         })
     },
 
     async handleTap() {
       if (this.data.btnDisable) return
+      if (this.data.isFull) return
       wx.showLoading({
         title: '请稍等'
       })

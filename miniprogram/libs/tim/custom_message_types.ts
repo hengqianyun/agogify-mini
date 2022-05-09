@@ -10,6 +10,11 @@ export default class CustomMessageTypes {
   /// 客户通知assistant进入房间
   static JOIN_ASSISTANT_ROOM = 'JOIN_ASSISTANT_ROOM'
 
+  /// 客户通知assistant稍后进入房间
+  static NOT_JOIN_ASSISTANT_ROOM = 'NOT_JOIN_ASSISTANT_ROOM'
+
+  static LEAVE_ASSISTANT_ROOM = 'LEAVE_ASSISTANT_ROOM'
+
   /// 客户通知销售订单确认完毕
   static ORDER_COMPLETE = 'ORDER_COMPLETE'
 

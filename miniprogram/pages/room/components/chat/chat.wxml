@@ -246,14 +246,18 @@
 
         <view class="display-product-item">
           <view class="display-product-image">
-            <image class="display-product-image-item" src="{{item.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+            <image class="display-product-image-item" bind:tap="previewImage" src="{{item.path}}" data-src="{{item.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
           </view>
           <view class="display-product-info">
             <view class="display-product-name">{{item.name}}</view>
             <view class="display-product-desc">{{item.desc}}</view>
           </view>
+          <view>
+          <view wx:if="{{item.price != 0}}" class="display-product-price">€ {{item.stringPrice}}</view>
+          <view wx:else class="display-product-price">暂无价格</view>
           <view class="display-product-btn {{item.inventory === 0 || isAssistantRoom ? 'display-product-btn-disable' : ''}}" data-index="{{index}}" bindtap="handleQueue">
             {{item.inventory === 0 ? '已售罄' : '去下单'}}
+          </view>
           </view>
         </view>
       </block>

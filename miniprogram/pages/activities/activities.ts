@@ -44,10 +44,11 @@ Page({
         return {
           date: localMonth(startTime) + ' ' + timeFormat(startTime, 'hh:mm'),
           title: e.translations.zh_CN.name,
-          img: IMAGEBASEURL + IMAGEPATHS.bookingMainNormal1x + e.image.path,
+          img: IMAGEBASEURL + IMAGEPATHS.bookingthumbnailNormal1x + e.image.path,
           brand: e.brands.map(e => e.name).join('/'),
           artist: e.artist.nickname,
-          code: e.code
+          code: e.code,
+          isFull: e.tickets === e.seats
         }
       })
       console.log(acList)

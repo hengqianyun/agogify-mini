@@ -189,10 +189,19 @@ Component({
                       }, {})
                     } else {
                       // 通知销售以后再去
+                      await sendCustomMessage({ data: CustomMessageTypes.NOT_JOIN_ASSISTANT_ROOM }, that.data.groupId, payloadData.saleId, {
+                        success: () => {
+                        },
+                        failed: () => {
+                        }
+                      }, {})
                     }
                   }
                 })
                 console.log(this.data.showChangRoomDialog)
+                break
+              case CustomMessageTypes.LEAVE_ASSISTANT_ROOM:
+                this.handleBackRoom(true)
                 break
               
               case CustomMessageTypes.PAY:
@@ -450,16 +459,37 @@ Component({
         showChangRoomDialog: false
       })
     },
-    handleBackRoom() {
+    handleBackRoom(active = false) {
       const that = this
-      wx.showModal({
-        title: '是否返回搭配师的直播间？',
-        success(res) {
-          if (res.confirm) {
+      if (active) {
+        wx.showToast({
+          title: '当前服务已结束',
+          icon: 'none',
+          duration: 2000,
+          success() {
             that.triggerEvent('backRoom')
             that.setData({
               isAssistantRoom: false
             })
+          }
+        })
+        return
+      } 
+      wx.showModal({
+        title: '是否返回搭配师的直播间？',
+        async success(res) {
+          if (res.confirm) {
+            await sendCustomMessage({ data: CustomMessageTypes.LEAVE_ASSISTANT_ROOM }, that.data.groupId, that.properties.saleId, {
+              success: () => {
+              },
+              failed: () => {
+              }
+            }, {})
+            that.triggerEvent('backRoom')
+            that.setData({
+              isAssistantRoom: false
+            })
+            
           }
         }
       })
