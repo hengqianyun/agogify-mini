@@ -64,4 +64,6 @@ export default class CustomMessageTypes {
 
   static CHANGE_VIDEO_ROOM = 'CHANGE_VIDEO_ROOM'
   static NEW_DISPLAY_PRODUCT = 'NEW_DISPLAY_PRODUCT'
+
+  static NEW_QUEUE_MSG = 'NEW_QUEUE_MSG'
 }

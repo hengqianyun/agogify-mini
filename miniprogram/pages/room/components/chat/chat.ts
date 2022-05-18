@@ -65,7 +65,9 @@ Component({
    */
   data: {
     messageView: '',
+    artistTransMessageView: '',
     chatHistory: [] as Array<TIMMessage | _SystemMessage>,
+    artistTranslateList: [] as Array<TIMMessage | _SystemMessage>,
     inputValue: '',
     conversationID: '',
     canSend: false,
@@ -130,7 +132,7 @@ Component({
     roomId: '',
     displayProductList: [] as _DisplayProductItem[],
     currentDisplayProduct: {} as _DisplayProductItem,
-    showNewDP: false,
+    showNewDP: true,
     ndpBtnDisable: false,
     isAssistantRoom: false,
   },
@@ -203,7 +205,7 @@ Component({
               case CustomMessageTypes.LEAVE_ASSISTANT_ROOM:
                 this.handleBackRoom(true)
                 break
-              
+
               case CustomMessageTypes.PAY:
 
                 const { tokenValue, productName, paymentId, shipmentId, productBrand, productCategory1, productCategory2, productCategory3, size, productCategory1CnName, productCategory2CnName, productCategory3CnName } = payloadData
@@ -321,21 +323,31 @@ Component({
             } else {
               const message = this.encodeMessage(data)
               try {
-                if (message && message.payload.text.indexOf("///:") < 0) {
+                if (message && message.payload.text.indexOf("artist_translate///:") === 0) {
+                  const text = message.payload.text
+                  const str = text.split('artist_translate///:')[1]
+                  message.payload.text = str
                   this.setData({
-                    chatHistory: this.data.chatHistory.concat([message])
+                    artistTranslateList: this.data.artistTranslateList.concat([message]),
+                    artistTransMessageView: message.ID
                   })
-                  this.setData({
-                    messageView: message.ID
-                  })
-                }
+                } else
+                  if (message && message.payload.text.indexOf("sysMsg///:") < 0) {
+                    
+                    this.setData({
+                      chatHistory: this.data.chatHistory.concat([message])
+                    })
+                    this.setData({
+                      messageView: message.ID
+                    })
+                  }
               } catch {
-                this.setData({
-                  chatHistory: this.data.chatHistory.concat([message!])
-                })
-                this.setData({
-                  messageView: message!.ID
-                })
+                // this.setData({
+                //   chatHistory: this.data.chatHistory.concat([message!])
+                // })
+                // this.setData({
+                //   messageView: message!.ID
+                // })
               }
             }
 
@@ -474,7 +486,7 @@ Component({
           }
         })
         return
-      } 
+      }
       wx.showModal({
         title: '是否返回搭配师的直播间？',
         async success(res) {
@@ -489,7 +501,7 @@ Component({
             that.setData({
               isAssistantRoom: false
             })
-            
+
           }
         }
       })
@@ -588,6 +600,17 @@ Component({
           icon: 'success',
           duration: 2000
         })
+        sendCustomMessage({ data: CustomMessageTypes.NEW_QUEUE_MSG }, this.data.groupId, this.properties.saleId, {
+          send: () => {
+            wx.showLoading({ title: '' })
+          },
+          success: () => {
+            wx.hideLoading()
+          },
+          failed: () => {
+            wx.hideLoading()
+          }
+        }, {})
       } catch (err) {
         throw err;
       }
@@ -921,7 +944,6 @@ Component({
           wx.showLoading({ title: '' })
         },
         success: () => {
-
           wx.hideLoading()
           this.setData({
             showPopup: false,

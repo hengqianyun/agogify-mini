@@ -28,7 +28,7 @@
   </view>
   <view class="bottom-container" wx:if="{{!isWaiting}}">
     <!-- 新商品 -->
-    <view class="new-display-product" wx:if="{{showNewDP}}">
+    <!-- <view class="new-display-product" wx:if="{{showNewDP}}">
       <view class="ndp-left">
         <image class="ndp-left-image" src="{{currentDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
       </view>
@@ -54,9 +54,16 @@
           </view>
         </view>
       </view>
-    </view>
+    </view> -->
     <!-- 聊天框 -->
-    <scroll-view class="chat-content" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}">
+    <scroll-view wx:if="{{isLive}}" class="stream-translate-content" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}">
+      <block wx:for="{{artistTranslateList}}" wx:key="id">
+        <view class="stream-translate-item" id="{{item.ID}}">
+          {{item.payload.text}}
+        </view>
+      </block>
+    </scroll-view>
+    <scroll-view class="chat-content {{isLive ? 'chat-content-live' : ''}}" scroll-y="{{true}}" scroll-into-view="{{artistTransMessageView}}" scroll-with-animation="{{true}}">
       <block wx:for="{{chatHistory}}" wx:key="id">
         <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
           <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
@@ -91,6 +98,7 @@
 
       </block>
     </scroll-view>
+
     <!-- 底部按钮 -->
     <view class="bottom-controllers">
       <view class="icons border-radius-8" bind:tap="handleChangeMic">
@@ -112,10 +120,11 @@
         <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
       </view>
       <!-- 分享按钮 -->
-      <button wx:if="{{isLive}}" class="share-button">
+      <button wx:if="{{isLive}}" class="share-button product-btn">
         <view class="icons border-radius-8" bind:tap="showDisplayProducts">
           <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
         </view>
+        <view class="product-btn-text">全部商品</view>
         <!-- <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload=""></image> -->
       </button>
       <button wx:elif="{{!isGuest}}" class="share-button" open-type="share">
@@ -123,6 +132,11 @@
 
         </image>
       </button>
+      <view wx:if="{{showNewDP}}" class="share-button product-btn queue-btn">
+        <image class="queue-product" src="{{currentDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+        <view>当前商品</view>
+        <view class="go-order-btn" bindtap="handleNewDisplayProductQueue">去下单</view>
+      </view>
     </view>
   </view>
   <!-- 订单弹窗 -->
@@ -253,11 +267,11 @@
             <view class="display-product-desc">{{item.desc}}</view>
           </view>
           <view>
-          <view wx:if="{{item.price != 0}}" class="display-product-price">€ {{item.stringPrice}}</view>
-          <view wx:else class="display-product-price">暂无价格</view>
-          <view class="display-product-btn {{item.inventory === 0 || isAssistantRoom ? 'display-product-btn-disable' : ''}}" data-index="{{index}}" bindtap="handleQueue">
-            {{item.inventory === 0 ? '已售罄' : '去下单'}}
-          </view>
+            <view wx:if="{{item.price != 0}}" class="display-product-price">€ {{item.stringPrice}}</view>
+            <view wx:else class="display-product-price">暂无价格</view>
+            <view class="display-product-btn {{item.inventory === 0 || isAssistantRoom ? 'display-product-btn-disable' : ''}}" data-index="{{index}}" bindtap="handleQueue">
+              {{item.inventory === 0 ? '已售罄' : '去下单'}}
+            </view>
           </view>
         </view>
       </block>

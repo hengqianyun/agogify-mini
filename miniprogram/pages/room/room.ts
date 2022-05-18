@@ -33,7 +33,7 @@ Page({
     enableAlertBeforeUnloadMsg: '',
     isGuest: false, // 是否为被邀请用户
     isLive: false, // 是否为直播类型
-    enabledMic: true,
+    enabledMic: false,
     isFirstIn: true
   },
 
@@ -164,6 +164,11 @@ Page({
       minBitrate: 600, // 
       beautyLevel: 0, // 美颜 0-9 0关闭
       whitenessLevel: 0, // 美白 0-9 0关闭
+    }
+    if (this.data.isLive) {
+      wx.createLivePusherContext().setMICVolume({
+        volume: Number(this.data.enabledMic)
+      })
     }
     const pusher = trtcClient.createPusher(pusherConfig)
     this.setData({

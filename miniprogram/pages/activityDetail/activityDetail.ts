@@ -1,4 +1,5 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
+import reserveModule from "../../http/module/reserve"
 import sessionModule from "../../http/module/session"
 import { formatTime, timeFormat } from "../../utils/util"
 
@@ -52,17 +53,32 @@ Page({
             img: IMAGEBASEURL + IMAGEPATHS.bookingthumbnailNormal2x + item.image.path,
             desc: item.translations.zh_CN.description,
             code: item.code,
-            isFull: item.seats === item.tickets
+            isFull: item.tickets === 0
         })
     },
 
     async handleTap() {
+      console.log(this.data.btnDisable)
+      console.log(this.data.isFull)
       if (this.data.btnDisable) return
       if (this.data.isFull) return
       wx.showLoading({
         title: '请稍等'
       })
       try {
+        const res = await reserveModule.queryEvents({
+          code: this.data.code,
+          state: 'available'
+        })
+        const item = res.data["hydra:member"][0]
+        if (!item) {
+          wx.hideLoading()
+          wx.showModal({
+            title: '报名失败，当前活动已关闭',
+            showCancel: false,
+          })
+          return
+        }
         await sessionModule.bookingGusetCheckIn(this.data.code);
         wx.hideLoading()
         wx.showToast({

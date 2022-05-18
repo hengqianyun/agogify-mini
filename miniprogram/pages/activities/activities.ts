@@ -25,6 +25,10 @@ Page({
     this.queryAcs()
   },
 
+  onShow() {
+    this.queryAcs()
+  },
+
   onPullDownRefresh() {
     this.queryAcs()
   },
