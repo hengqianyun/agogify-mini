@@ -58,6 +58,12 @@ Page({
         url: 'languageSetting/languageSetting',
         size: 58
       },
+      {
+        label: '消息',
+        icon: 'my_jifen',
+        url: 'messageList/messageList',
+        size: 58
+      },
 
       // {
       //   label: '客服',

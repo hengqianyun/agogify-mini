@@ -1,0 +1,28 @@
+<view class="message-list-page">
+  <view class="message-list-box">
+    <scroll-view scroll-y="{{true}}">
+      <block wx:for="{{messageList}}" wx:key="id">
+        <view class="message-item">
+          <view class="sales-avatar-box">
+            <image class="sales-avatar" src="{{item.avatar}}"></image>
+          </view>
+          <view class="message-info">
+            <view class="store-name">{{item.storeName}}</view>
+            <view class="info-detail">
+              <view class="sales-name">
+                店员：{{item.salesName}}
+              </view>
+              <view class="state-icon state-{{item.state}}"></view>
+              <view class="state-text">{{item.stateCN}}</view>
+            </view>
+          </view>
+          <view class="message-date">
+            <view class="message-date-detail">{{item.date}}</view>
+            <view wx:if="{{item.count > 0}}" class="message-count">{{item.count}}</view>
+            <view wx:else class="message-empty"></view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+</view>

@@ -1,0 +1,102 @@
+@import url(../../style/global.less);
+
+.message-list-page {
+  .message-list-box {
+    padding: 0 40rpx;
+    box-sizing: border-box;
+
+    .message-item {
+      padding: 24rpx 0;
+      display: flex;
+      justify-content: space-between;
+      box-sizing: border-box;
+      height: 136rpx;
+
+      .sales-avatar-box {
+        width: 88rpx;
+        height: 88rpx;
+
+        .sales-avatar {
+          width: 88rpx;
+          height: 88rpx;
+          border-radius: 50%;
+        }
+      }
+
+      .message-info {
+        width: calc(750rpx - 80rpx - 88rpx - 32rpx - 110rpx);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+
+        .store-name {
+          color: #000;
+          font-size: 34rpx;
+        }
+
+        .info-detail {
+          display: flex;
+          align-items: center;
+
+          .sales-name {
+            color: @defaultColor;
+            font-size: 24rpx;
+          }
+
+          .state-icon {
+            width: 8rpx;
+            height: 8rpx;
+            margin: 0 16rpx;
+            border-radius: 50%;
+          }
+
+          .state-offline {
+            background: @defaultColor;
+          }
+
+          .state-busy {
+            background: #FFBC68;
+          }
+
+          .state-online {
+            background: #69E192;
+          }
+
+          .state-text {
+            font-size: 24rpx;
+            color: @defaultColor3;
+          }
+        }
+      }
+
+      .message-date {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-end;
+
+        .message-date-detail {
+          color: @defaultColor2;
+          font-size: 24rpx;
+        }
+
+        .message-count,
+        .message-empty {
+          width: 28rpx;
+          height: 28rpx;
+          border-radius: 50%;
+          background-color: #F57376;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          font-size: 22rpx;
+          justify-content: center;
+        }
+
+        .message-empty {
+          background-color: #fff
+        }
+      }
+    }
+  }
+}
