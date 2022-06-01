@@ -24,6 +24,7 @@ Page({
     verifyCode: '' as unknown as number,
     userInfo: {userName: '', avatarUrl: ''},
     commitBtnDisabled: false,
+    mobileNumber: ''
   },
 
 
@@ -33,6 +34,7 @@ Page({
   onLoad() {
     console.log(this.options)
     const { type, userName, avatarUrl } = this.options as { type: queryType, userName: string, avatarUrl: string }
+    let mobileNumber = userProfile.mobileNumber
     this.setData({
       type: type
     })
@@ -56,7 +58,8 @@ Page({
         wx.setNavigationBarTitle({ title: '绑定手机号' })
         this.setData({
           title: '绑定手机号',
-          btnText: "绑定"
+          btnText: "绑定",
+          mobileNumber: mobileNumber.substring(0, 3) + '*****' + mobileNumber.substring(8)
         })
         break;
       default:

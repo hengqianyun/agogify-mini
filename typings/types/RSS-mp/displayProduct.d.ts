@@ -1,4 +1,6 @@
 declare namespace displayProductDesign {
+  type displayProductCategoryType = 'RTW' | 'Shoes' | 'Rings'
+
   interface displayProductItem extends swaggerI.requestSimpleBase {
     artist: string
     bookint: string
@@ -7,6 +9,7 @@ declare namespace displayProductDesign {
     inventory: number
     price: number
     translations: [] | {zh_CN: {description: string}}
+    category: displayProductCategoryType
   }
 
   interface queryDisplayProductRes extends swaggerI.requsetListBase<displayProductItem> {}

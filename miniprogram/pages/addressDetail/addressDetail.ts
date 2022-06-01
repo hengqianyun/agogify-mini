@@ -1,8 +1,6 @@
 import addressModule from "../../http/module/address";
 import { userProfile } from "../../libs/user/user";
 
-const chooseLocation = requirePlugin('chooseLocation');
-
 type inputKeyType = 'name' | 'phone' | 'region' | 'address'
 
 // pages/addressDetail/addressDetail.ts
@@ -67,16 +65,16 @@ Page({
         flag: false
       })
     } else {
-      const location: RSSDesign.txMapLocation = chooseLocation.getLocation();
-      console.log(location)
-      if (location) {
-        const { province, city, district, name } = location
-        this.setData({
-          region: [province, city, district],
-          'form.region.value': province + city + district,
-          'form.address.value': name
-        })
-      }
+      // const location: RSSDesign.txMapLocation = chooseLocation.getLocation();
+      // console.log(location)
+      // if (location) {
+      //   const { province, city, district, name } = location
+      //   this.setData({
+      //     region: [province, city, district],
+      //     'form.region.value': province + city + district,
+      //     'form.address.value': name
+      //   })
+      // }
     }
 
   },
@@ -112,24 +110,24 @@ Page({
     })
   },
 
-  handleShowMap() {
-    wx.getLocation({
-      type: 'wgs84',
-      success(res) {
-        const key = '66MBZ-3PZWF-OCGJC-NXKSG-DUQ3O-WVFZL'; //使用在腾讯位置服务申请的key
-        const referer = 'agogify'; //调用插件的app的名称
-        const location = JSON.stringify({
-          latitude: res.latitude,
-          longitude: res.longitude
-        });
-        const category = '生活服务,娱乐休闲';
+  // handleShowMap() {
+  //   wx.getLocation({
+  //     type: 'wgs84',
+  //     success(res) {
+  //       const key = '66MBZ-3PZWF-OCGJC-NXKSG-DUQ3O-WVFZL'; //使用在腾讯位置服务申请的key
+  //       const referer = 'agogify'; //调用插件的app的名称
+  //       const location = JSON.stringify({
+  //         latitude: res.latitude,
+  //         longitude: res.longitude
+  //       });
+  //       const category = '生活服务,娱乐休闲';
 
-        wx.navigateTo({
-          url: 'plugin://chooseLocation/index?key=' + key + '&referer=' + referer + '&location=' + location + '&category=' + category
-        });
-      }
-    })
-  },
+  //       wx.navigateTo({
+  //         url: 'plugin://chooseLocation/index?key=' + key + '&referer=' + referer + '&location=' + location + '&category=' + category
+  //       });
+  //     }
+  //   })
+  // },
 
   async handleSubmit() {
     const { name, phone, address, region, postcode } = this.data.form

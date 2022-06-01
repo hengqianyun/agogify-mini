@@ -310,8 +310,6 @@ const messageReceived = (event: TIMEvent<TIMMessage>) => {
   try {
     payloadData = JSON.parse(data.payload.data)
   } catch (err) { }
-  console.log('msg --->', data)
-  console.log('payload --->', data.payload)
   if (payloadData) {
     $emit({
       name: 'onCustomMessageRecvEvent',

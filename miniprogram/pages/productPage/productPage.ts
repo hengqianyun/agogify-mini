@@ -109,7 +109,7 @@ Page({
       name: detail.translations?.zh_Hans_CN.name,
       id: detail.id,
       category: detail.mainTaxon?.name,
-      desc: detail.description,
+      desc: detail.description ?? '暂无描述',
       price: String.fromCharCode(8364) + ' ' + price,
     })
   }

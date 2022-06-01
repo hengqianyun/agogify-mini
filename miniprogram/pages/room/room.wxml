@@ -1,4 +1,4 @@
-<view class="video-room-page">
+<view class="video-room-page" id="videoRoomPage">
   <view class="video-content">
     <!-- <view wx:if="{{isWaiting}}" class="waiting-comp"></view> -->
     <live-pusher class="pusher" url="{{pusher.url}}" mode="{{pusher.mode}}" autopush="{{pusher.autopush}}" enable-camera="{{pusher.enableCamera}}" enable-mic="{{pusher.enableMic}}" muted="{{!pusher.enableMic}}" enable-agc="{{pusher.enableAgc}}" enable-ans="{{pusher.enableAns}}" enable-ear-monitor="{{pusher.enableEarMonitor}}" auto-focus="{{pusher.enableAutoFocus}}" zoom="{{pusher.enableZoom}}" min-bitrate="{{pusher.minBitrate}}" max-bitrate="{{pusher.maxBitrate}}" video-width="{{pusher.videoWidth}}" video-height="{{pusher.videoHeight}}" beauty="{{pusher.beautyLevel}}" whiteness="{{pusher.whitenessLevel}}" orientation="{{pusher.videoOrientation}}" aspect="{{pusher.videoAspect}}" device-position="{{pusher.frontCamera}}" remote-mirror="{{pusher.enableRemoteMirror}}" local-mirror="{{pusher.localMirror}}" background-mute="{{pusher.enableBackgroundMute}}" audio-quality="{{pusher.audioQuality}}" audio-volume-type="{{pusher.audioVolumeType}}" audio-reverb-type="{{pusher.audioReverbType}}" waiting-image="{{pusher.waitingImage}}" debug="{{debug}}" beauty-style="{{pusher.beautyStyle}}" filter="{{pusher.filter}}" bindstatechange="_pusherStateChangeHandler" bindnetstatus="_pusherNetStatusHandler" binderror="_pusherErrorHandler" bindbgmstart="_pusherBGMStartHandler" bindbgmprogress="_pusherBGMProgressHandler" bindbgmcomplete="_pusherBGMCompleteHandler" bindaudiovolumenotify="_pusherAudioVolumeNotify" />
@@ -13,7 +13,7 @@
       </live-player>
     </view> -->
     <waiting wx:if="{{isWaiting}}"></waiting>
-    <chat bind:changeMic="setMicStatus" isLive="{{isLive}}" isGuest='{{isGuest}}' isReconnect="{{isReconnect}}" storeName="{{store.name}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" groupId="{{groupId}}" saleId="{{saleId}}" bind:changeRoom="changeRoom" bind:backRoom="backRoom"></chat>
+    <chat id="chatComponent" bind:changeMic="setMicStatus" isLive="{{isLive}}" isGuest='{{isGuest}}' isReconnect="{{isReconnect}}" storeName="{{store.name}}" storeAvatar="{{store.avatar}}" storeId="{{store.id}}" groupId="{{groupId}}" saleId="{{saleId}}" bind:changeRoom="changeRoom" bind:backRoom="backRoom"></chat>
   </view>
   <wxs module="hasUser">
     module.exports = {

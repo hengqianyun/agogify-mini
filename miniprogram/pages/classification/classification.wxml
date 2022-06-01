@@ -48,9 +48,6 @@
     </view>
     <view class="right-container">
       <view class="shop-container">
-        <!-- <cover-view wx:if="{{loading}}" class="loading">
-          <van-loading>加载中...</van-loading>
-        </cover-view> -->
         <block wx:for="{{shopList}}" wx:key="id">
           <view class="store-item">
             <CheckboxStoreItem status="{{item.status}}" name="{{item.name}}" code="{{item.code}}" address="{{item.address}}" desc="{{item.desc}}" image="{{item.logo.path}}" data-index="{{index}}" bind:onTap="handleCheckboxChange" />

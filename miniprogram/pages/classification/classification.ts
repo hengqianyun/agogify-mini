@@ -68,15 +68,20 @@ Page({
     if (type === 1) {
       params.page = 1
     }
+    let str = `page=${this.data.pageInfo.page}&itemsPerPage=${this.data.pageInfo.itemsPerPage}`
     if (this.data.location !== 'all') {
-      params['billingData.city.code'] = this.data.location
+      str += '&billingData.city.code=' + this.data.location
     }
     if (this.data.shopClassification !== 'all') {
-      params["storeTaxons.taxon.code"] = this.data.shopClassification
+      str += '&storeTaxons.taxon.code=' + this.data.shopClassification
+    } else {
+      const vals = ['specialty_store', 'department_store', 'buyer_store', 'vintage_store']
+      str += '&' + vals.map(e => e = 'type[]=' + e).join('&')
     }
     if (this.data.brandActiveKey !== 0) {
-      params["brands.translations.name"] = this.data.brandList[this.data.brandActiveKey].name
+      str += '&brands.translations.name=' + this.data.brandList[this.data.brandActiveKey].name
     }
+    // params['type'] = ''
     let strParamsList = []
     if (this.data.classification !== '全部') {
       if (this.data.classificationChild !== '全部') {
@@ -86,14 +91,14 @@ Page({
         const category = this.data.classificationList.find(e => e.name === this.data.classification)
         strParamsList.push(category?.code.toString())
       }
-      return strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
+      return str + '&' + strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
     } else if (this.data.classificationChild !== '全部') {
       strParamsList.push(this.data.classificationList[0].code.toString())
       const child = this.data.classificationChildList.find(e => e.name === this.data.classificationChild)
       strParamsList.push(child?.code.toString())
       return strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
     } else {
-      return params
+      return str
     }
   },
 

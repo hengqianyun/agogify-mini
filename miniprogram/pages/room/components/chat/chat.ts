@@ -135,6 +135,20 @@ Component({
     showNewDP: true,
     ndpBtnDisable: false,
     isAssistantRoom: false,
+    showTrans: true,
+    showQueueStatus: false,
+    isSecured: false,
+    queueMessage: '',
+    currentOrderDisplayProduct: {} as _DisplayProductItem,
+    showOrderDisplayProductPopup: false,
+    account: [] as { value: number | string, label: number | string }[],
+    accountsIndex1: 0,
+    accountsIndex2: 0,
+    orderProductDesc: '',
+    orderProductBtnDisabled: false,
+    queueList: [],
+    showQueueList: false,
+    canGoAssistant: true
   },
 
   lifetimes: {
@@ -158,12 +172,25 @@ Component({
                   showChangRoomDialog: true,
                   roomId: payloadData.roomId,
                 })
+                let timer = setTimeout(() => {
+                  this.setData({
+                    canGoAssistant: false
+                  })
+                }, 15000)
                 wx.showModal({
                   title: '收到销售助理的购买服务请求，是否前往?',
                   confirmText: '立即前往',
                   cancelText: '再等一会',
                   async success(res) {
                     if (res.confirm) {
+                      if (!that.data.canGoAssistant) {
+                        wx.showToast({title: '超时', icon: 'error', duration: 2000})
+                        that.setData({
+                          canGoAssistant: true
+                        })
+                        clearTimeout(timer)
+                        return
+                      }
 
                       await sendCustomMessage({ data: CustomMessageTypes.JOIN_ASSISTANT_ROOM }, that.data.groupId, payloadData.saleId, {
                         success: () => {
@@ -204,6 +231,30 @@ Component({
                 break
               case CustomMessageTypes.LEAVE_ASSISTANT_ROOM:
                 this.handleBackRoom(true)
+                break
+              case CustomMessageTypes.PRODUCT_OUT_OF_STOCK:
+                this.setData({
+                  showQueueStatus: true,
+                  isSecured: false,
+                  queueMessage: `抱歉，${payloadData.name}商品/尺码已售完，可选其他商品`
+                })
+                setTimeout(() => {
+                  this.setData({
+                    showQueueStatus: false,
+                  })
+                }, 10000)
+                break
+              case CustomMessageTypes.PRODUCT_SECURED:
+                this.setData({
+                  showQueueStatus: true,
+                  isSecured: true,
+                  queueMessage: `您下单的${payloadData.name}号商品已备货，请等待订单服务`
+                })
+                setTimeout(() => {
+                  this.setData({
+                    showQueueStatus: false,
+                  })
+                }, 10000)
                 break
 
               case CustomMessageTypes.PAY:
@@ -333,7 +384,7 @@ Component({
                   })
                 } else
                   if (message && message.payload.text.indexOf("sysMsg///:") < 0) {
-                    
+                    message.ID = 's' + message.ID.split(this.data.groupId + '-')[1]
                     this.setData({
                       chatHistory: this.data.chatHistory.concat([message])
                     })
@@ -436,10 +487,14 @@ Component({
 
       sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, { avatar: userProfile.avatar, nickName: userProfile.nickName }, false)
       this.data.onlineTimer = setInterval(() => {
-        console.log(userProfile.avatar)
         sendCustomMessage({ data: CustomMessageTypes.CHECK_ONLINE, description: userProfile.avatar }, this.data.groupId, this.properties.saleId, {}, { avatar: userProfile.avatar, nickName: userProfile.nickName }, false)
       }, 5000)
       this.checkSalesLanuage()
+      if (this.data.isLive) {
+        const code = this.data.groupId.split('agogify-activity-')[1]
+        await this.queryDisplayProduct(code)
+        this.queryQueueList()
+      }
     },
 
     detached() {
@@ -465,6 +520,27 @@ Component({
    * 组件的方法列表
    */
   methods: {
+    async handleShowQueueList() {
+      await this.queryQueueList();
+      this.setData({
+        showQueueList: !this.data.showQueueList,
+      })
+    },
+    async queryQueueList() {
+      const code = this.data.groupId.split('agogify-activity-')[1]
+      const res = await queueTicketModule.getQueue(code)
+      const list = res.data['hydra:member']
+      console.log(list)
+      const displayProductList = this.data.displayProductList
+      for (let item of list) {
+        item.notes = JSON.parse(item.notes)
+        const product = displayProductList.find(e => e['@id'] === item.displayProduct)
+        item.product = product
+      }
+      this.setData({
+        queueList: list
+      })
+    },
     handleDialogCommit() {
 
       this.setData({
@@ -491,12 +567,12 @@ Component({
         title: '是否返回搭配师的直播间？',
         async success(res) {
           if (res.confirm) {
-            await sendCustomMessage({ data: CustomMessageTypes.LEAVE_ASSISTANT_ROOM }, that.data.groupId, that.properties.saleId, {
-              success: () => {
-              },
-              failed: () => {
-              }
-            }, {})
+            // await sendCustomMessage({ data: CustomMessageTypes.LEAVE_ASSISTANT_ROOM }, that.data.groupId, that.properties.saleId, {
+            //   success: () => {
+            //   },
+            //   failed: () => {
+            //   }
+            // }, {})
             that.triggerEvent('backRoom')
             that.setData({
               isAssistantRoom: false
@@ -527,7 +603,7 @@ Component({
             ...e,
             path: IMAGEBASEURL + IMAGEPATHS.displayProductThumbnailSmaill2x + e.image.path,
             canTap: true,
-            stringPrice: e.price.toFixed(2)
+            stringPrice: (e.price / 100).toFixed(2)
           }
         })
         let item = tempList[tempList.length - 1]
@@ -567,6 +643,66 @@ Component({
         })
       }
     },
+    async goQueue() {
+      const item = this.data.currentOrderDisplayProduct
+      try {
+        // item.canTap = false
+        this.setData({
+          displayProductList: this.data.displayProductList
+        })
+        
+        await this.queue(item['@id'])
+        item.canTap = true
+        this.setData({
+          displayProductList: this.data.displayProductList
+        })
+        this.queryQueueList()
+      } catch (err) {
+        console.log(err)
+        const that = this
+        
+      }
+    },
+    async handleGOQueue() {
+      await this.queue(this.data.currentOrderDisplayProduct['@id'])
+      wx.hideLoading()
+      this.setData({
+        showOrderDisplayProductPopup: false,
+        currentOrderDisplayProduct: {} as _DisplayProductItem,
+        orderProductDesc: '',
+        accountsIndex1: 0,
+        accountsIndex2: 1,
+      })
+    },
+    async queueDetail(item: _DisplayProductItem) {
+
+      let account = []
+      if (item.category === 'RTW') {
+        account = [
+          { value: 'XXS', label: 'XXS' },
+          { value: 'XS', label: 'XS' },
+          { value: 'S', label: 'S' },
+          { value: 'M', label: 'M' },
+          { value: 'L', label: 'L' },
+          { value: 'XL', label: 'XL' },
+          { value: 'XXL', label: 'XXL' },
+        ]
+      } else if (item.category === 'Rings') {
+        for (let i = 45; i <= 60; i++) {
+          account.push({ value: i.toString(), label: i.toString() })
+        }
+      } else {
+        for (let i = 34; i <= 42; i += 0.5) {
+          account.push({ value: i.toString(), label: i.toString() })
+        }
+      }
+      this.setData({
+        showDisplayProductPopup: false,
+        showOrderDisplayProductPopup: true,
+        currentOrderDisplayProduct: item,
+        account: account
+      })
+    },
     async handleQueue(event: WechatMiniprogram.TouchEvent) {
       if (this.data.isAssistantRoom) return
       const { index } = event.currentTarget.dataset as { index: number }
@@ -574,33 +710,39 @@ Component({
       if (!item.canTap) {
         return
       }
-      try {
-        item.canTap = false
-        this.setData({
-          displayProductList: this.data.displayProductList
-        })
-        await this.queue(item['@id'])
-        item.canTap = true
-        this.setData({
-          displayProductList: this.data.displayProductList
-        })
-      } catch (err) {
-        console.log(err)
-      }
+      this.queueDetail(item);
+
     },
     async queue(pathId: string) {
       try {
         wx.showLoading({
           title: '加载中'
         })
-        await queueTicketModule.queue(pathId)
+
+        
+
+        await queueTicketModule.queue(pathId, JSON.stringify({
+          mainSize: this.data.account[this.data.accountsIndex1].value,
+          alternativeSize: this.data.account[this.data.accountsIndex2].value,
+          desc: this.data.orderProductDesc,
+          state: null,
+          trans: null,
+          customer: {
+            name: userProfile.nickName,
+            path: userProfile.pathId,
+            avatar: userProfile.avatar,
+            id: userProfile.id
+          }
+        }))
+        console.log('succ')
         wx.hideLoading()
         wx.showToast({
           title: '成功取号',
           icon: 'success',
           duration: 2000
         })
-        sendCustomMessage({ data: CustomMessageTypes.NEW_QUEUE_MSG }, this.data.groupId, this.properties.saleId, {
+        await this.queryQueueList()
+        sendCustomMessage({ data: CustomMessageTypes.NEW_QUEUE_MSG }, this.data.groupId, 'all', {
           send: () => {
             wx.showLoading({ title: '' })
           },
@@ -610,9 +752,18 @@ Component({
           failed: () => {
             wx.hideLoading()
           }
-        }, {})
+        }, {}, false)
       } catch (err) {
-        throw err;
+        wx.hideLoading()
+        console.log('err 了，怎么没catch')
+        console.log(err)
+        wx.showModal({
+          title: err.data.message,
+          success() {
+            // item.canTap = true
+          }
+        })
+        throw new Error(err.data.message);
       }
     },
     handleDialogCancel() {
@@ -668,6 +819,12 @@ Component({
       this.triggerEvent('changeMic')
     },
 
+    handleChangeTrans() {
+      this.setData({
+        showTrans: !this.data.showTrans
+      })
+    },
+
     handleChoose({ currentTarget }: WechatMiniprogram.TouchEvent) {
       const { index } = currentTarget.dataset as { index: number }
       const item = this.data.addressList[index]
@@ -696,6 +853,11 @@ Component({
 
         const item = this.encodeMessage(res.data.message)
         if (item && item.status === 'success') {
+          if (this.data.isAssistantRoom) {
+            item.payload.text = item.payload.text.split('///:')[1]
+          }
+          console.log(item)
+          item.ID = 's' + item.ID.split(this.data.groupId + '-')[1]
           this.setData({
             chatHistory: [...this.data.chatHistory, item],
           })
@@ -743,13 +905,15 @@ Component({
         inputValue: '',
         canSendTextMsg: true
       })
+      if (this.data.isAssistantRoom) {
+        msg = 'assistant_chat///:' + msg
+      }
       this.sendTextMessage(msg + (this.data.needTrans ? `(${targetMsg})` : ''))
 
     },
 
     handleInput(event: WechatMiniprogram.TouchEvent) {
       const { value } = event.detail as { value: string }
-      console.log(event)
       this.setData({
         inputValue: value
       })
@@ -836,7 +1000,7 @@ Component({
             const recordeFile = wx.getFileSystemManager().readFileSync(res.tempFilePath, 'base64')
             const reqData = await videoModule.translateSpeech(recordeFile)
             const { data } = reqData
-            this.sendTextMessage(data.SourceText + (this.data.needTrans ? `(${data.TargetText})` : ''))
+            this.sendTextMessage((this.data.isAssistantRoom ? 'assistant_chat///:' : '') + data.SourceText + (this.data.needTrans ? `(${data.TargetText})` : ''))
           }
         }
       })
@@ -867,18 +1031,30 @@ Component({
         sourceType: ['album'],
         count: 1,
         success: async function (res) {
-          const message = await sendImageMessage(self.properties.groupId, 'GROUP', res, (percent: number) => {
-            self.data.percent = percent
-          }, () => {
-            self.data.percent = 0
-          })
-          self.setData({
-            chatHistory: [...self.data.chatHistory, message],
-            inputValue: ''
-          })
-          self.setData({
-            messageView: message.ID
-          })
+          let tempPath = res.tempFilePaths[0];
+          var base64 = await wx.getFileSystemManager().readFileSync(tempPath);
+          if (self.data.isAssistantRoom) {
+            await sendCustomMessage({ data: CustomMessageTypes.ASSISTANT_ROOM_IMAGE }, self.data.groupId, self.data.saleId, {
+              success: () => {
+              },
+              failed: () => {
+              }
+            }, {
+              'file': base64
+            })
+          } else {
+            const message = await sendImageMessage(self.properties.groupId, 'GROUP', res, (percent: number) => {
+              self.data.percent = percent
+            }, () => {
+              self.data.percent = 0
+            })
+            message.ID = 's' + message.ID.split(self.data.groupId + '-')[1]
+            self.setData({
+              chatHistory: [...self.data.chatHistory, message],
+              inputValue: '',
+              messageView: message.ID
+            })
+          }
         }
       })
     },
@@ -912,9 +1088,28 @@ Component({
     formatImageEle(url: string, id: string, flow: TIMMEssageFlow) {
       return { url, id, flow }
     },
+    handleSizeChange1(e: WechatMiniprogram.TouchEvent) {
+      this.setData({
+        accountsIndex1: e.detail.value
+      })
+    },
+    handleSizeChange2(e: WechatMiniprogram.TouchEvent) {
+      this.setData({
+        accountsIndex2: e.detail.value
+      })
+      console.log(this.data.accountsIndex1)
+      console.log(this.data.accountsIndex2)
+    },
+    handleOrderProcutDescInput(event: WechatMiniprogram.TouchEvent) {
+      const { value } = event.detail
+      this.setData({
+        orderProductDesc: value
+      })
+    },
     _displayProductPopCancel() {
       this.setData({
         showDisplayProductPopup: false,
+        showOrderDisplayProductPopup: false
       })
     },
 
@@ -925,6 +1120,7 @@ Component({
         showDisplayProductPopup: true,
       })
     },
+
 
     // 取消付款
     async _popupCancel() {

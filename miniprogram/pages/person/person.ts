@@ -1,5 +1,5 @@
 // pages/person/person.ts
-import { userProfile } from '../../libs/user/user'
+import { resetUserProfile, userProfile } from '../../libs/user/user'
 import { $on, $remove } from '../../utils/event'
 
 Page({
@@ -142,6 +142,7 @@ Page({
       userName: '',
       avatar: ''
     })
+    resetUserProfile()
   },
 
   navigateTo(event: WechatMiniprogram.TouchEvent) {

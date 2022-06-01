@@ -28,7 +28,8 @@
     <picker class="" mode="region" value="{{region}}" bindchange="handleRegionChange">
       <view class="input-area icon-input {{form.region.focus ? 'focus-area' : ''}} {{form.region.error ? 'error-area' : ''}}">
         <input class="input" type="text" disabled="{{true}}" value="{{form.region.value}}" data-key="region" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="省、市、区" placeholder-class="placeholder-class" />
-        <iconfont name="dingwei_g" size="{{24}}" catch:tap="handleShowMap"></iconfont>
+        <!-- <iconfont name="dingwei_g" size="{{24}}" catch:tap="handleShowMap"></iconfont> -->
+        <iconfont name="dingwei_g" size="{{24}}"></iconfont>
       <text class="error-msg" wx:if="{{form.region.error}}">{{form.region.errorMsg}}</text>
       </view>
     </picker>

@@ -1,4 +1,6 @@
 declare namespace storeDesign {
+  type storeType = 'virtual_store' | 'event_store' | 'specialty_store' | 'department_store' | 'buyer_store' | 'vintage_store'
+
   interface storeItem extends swaggerI.requestSimpleBase {
     code: string
     name: string
@@ -138,6 +140,7 @@ declare namespace storeDesign {
     'products.translations.name'?: string
     'storeTaxons.taxon.code'?: string
     'billingData.city.code'?: string
+    'type'?: storeType
   }
 
   interface queryBrandsParams extends swaggerI.pageRequestParams {

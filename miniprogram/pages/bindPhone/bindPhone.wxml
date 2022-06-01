@@ -4,6 +4,9 @@
     <view class="title">
       {{title}}
     </view>
+    <view wx:if="{{type === '2'}}" class="current-mobileNumber">
+      当前绑定手机号：{{mobileNumber}}
+    </view>
     <view class="form">
       <view class="phone-number input">
         <input class="native-input" value="{{phoneNumber}}" type="number" placeholder-class="placeholder-style" placeholder="请输入手机号" bindinput="handlePhoneNumberInput" />

@@ -111,6 +111,9 @@ Page({
     })
     trtcClient.exitRoom()
     this.enterRoom({ roomID: this.data.roomId })
+    wx.createLivePusherContext().setMICVolume({
+      volume: Number(!this.data.enabledMic)
+    })
   },
 
   backRoom() {
@@ -120,6 +123,9 @@ Page({
     })
     trtcClient.exitRoom()
     this.enterRoom({ roomID: this.data.roomId })
+    wx.createLivePusherContext().setMICVolume({
+      volume: Number(this.data.enabledMic)
+    })
   },
 
   onReady() {

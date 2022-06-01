@@ -43,9 +43,24 @@ export const userProfile = {
   firstName: '',
   lastName: '',
   identityNumber: '',
-  token: ''
+  token: '',
+  mobileNumber: ''
 }
 Object.seal(userProfile)
+
+export const resetUserProfile = () => {
+    userProfile.nickName = ''
+    userProfile.avatar = ''
+    userProfile.id = -1
+    userProfile.pathId = ''
+    userProfile.defaultAddressId = -1
+    userProfile.hasTheRealNameBeenCertified = false
+    userProfile.firstName = ''
+    userProfile.lastName = ''
+    userProfile.identityNumber = ''
+    userProfile.token = ''
+    userProfile.mobileNumber = ''
+}
 
 export const LoginKey = {
   oauthDataKey: 'oauth.data',
@@ -149,6 +164,7 @@ export const queryUserInfo = async (id: number) => {
       userProfile.firstName = res.data.firstName
       userProfile.lastName = res.data.lastName
       userProfile.identityNumber = res.data.identityNumber
+      userProfile.mobileNumber = res.data.mobileNumber
       setIfUserHasTheRealNameBeenCertified(true)
     }
 

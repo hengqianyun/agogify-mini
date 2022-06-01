@@ -74,7 +74,10 @@ Page({
       this.data.pageInfo.page = 1;
     }
 
-    const resData = await storeModule.queryStore(this.data.pageInfo);
+    let str = `page=${this.data.pageInfo.page}&itemsPerPage=${this.data.pageInfo.itemsPerPage}&`
+    const vals = ['specialty_store', 'department_store', 'buyer_store', 'vintage_store']
+    str += vals.map(e => e = 'type[]=' + e).join('&')
+    const resData = await storeModule.queryStoreWhitString(str);
     const newList = resData.data["hydra:member"]
     if (type === 1) {
       this.setData({

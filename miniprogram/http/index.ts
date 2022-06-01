@@ -3,6 +3,7 @@ import http from "../libs/http";
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://api.agogify.com/api/v2/' : 'https://192.168.20.188:8000/api/v2/'
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://api.agogify.com/api/v2/' : 'https://api.agogify.com/api/v2/'
 export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss1.agogify.cn/api/v2/'
+export const POST = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/' : 'https://rss1.agogify.cn/'
 // export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss.agogify.cn/api/v2/'
 
 export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss1.agogify.cn/media/cache/resolve/' 
@@ -28,7 +29,7 @@ export const IMAGEPATHS = {
   productThumbnail2x: 'product_thumbnail_normal_2x/',
   productMain2x: 'product_main_normal_2x/',
   productThumbnail1x: 'product_thumbnail_normal_1x/',
-  productMain1x: 'booking_main_normal_2x/',
+  productMain1x: 'product_main_normal_1x/',
   bookingthumbnailNormal2x: 'booking_thumbnail_normal_2x/',
   bookingthumbnailNormal1x: 'booking_thumbnail_normal_1x/',
   bookingthumbnailMedium2x: 'booking_thumbnail_medium_2x/',

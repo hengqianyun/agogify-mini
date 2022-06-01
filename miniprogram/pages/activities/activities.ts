@@ -34,6 +34,7 @@ Page({
   },
 
   async queryAcs() {
+    console.log((new Date()).toISOString());
     try {
       const res = await reserveModule.queryEvents({
         state: 'available',

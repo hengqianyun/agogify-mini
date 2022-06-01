@@ -1,4 +1,4 @@
-import { BASEURL } from "../../http/index"
+import { BASEURL, POST } from "../../http/index"
 import ocrModule from "../../http/module/ocr"
 import userModule from "../../http/module/user"
 import http from "../../libs/http"
@@ -98,7 +98,11 @@ Page({
         'form.firstName.value': userProfile.firstName,
         'form.identity.value': userProfile.identityNumber,
         'form.lastName.value': userProfile.lastName,
-        hasRealNameCertified: userProfile.hasTheRealNameBeenCertified
+        hasRealNameCertified: userProfile.hasTheRealNameBeenCertified,
+        identityBase64: '值',
+        identityPath: POST + '/assets/app/img/identity-mock-front.png',
+        passportBase64: '值',
+        passportPath: POST + '/assets/app/img/identity-mock-back.png'
       })
     } catch {
       wx.showToast({

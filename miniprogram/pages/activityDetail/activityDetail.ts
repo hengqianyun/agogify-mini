@@ -1,6 +1,7 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
 import sessionModule from "../../http/module/session"
+import { checkloginAndRealNameCertifiedAsync } from "../../utils/checkLogin"
 import { formatTime, timeFormat } from "../../utils/util"
 
 // pages/activityDetail/activityDetail.ts
@@ -60,6 +61,9 @@ Page({
     async handleTap() {
       console.log(this.data.btnDisable)
       console.log(this.data.isFull)
+      if (!checkloginAndRealNameCertifiedAsync()) {
+        return
+      }
       if (this.data.btnDisable) return
       if (this.data.isFull) return
       wx.showLoading({
