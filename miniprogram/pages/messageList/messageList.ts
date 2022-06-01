@@ -1,63 +1,58 @@
+import { getConversationList, getUserProfile } from "../../libs/tim/tim"
+import { formatTime, localMonth, timeFormat } from "../../utils/util"
+
 // pages/messageList/messageList.ts
+
+type UserState = 'online' | 'offline' | 'busy'
+
+interface MessageItem {
+  avatar: string
+  storeName: string
+  salesName: string
+  date: Date
+  dateCN: string
+  count: number
+  state: UserState
+  stateCN: string
+  id: string
+}
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    messageList: [
-      {
-        avatar: 'https://rss1.agogify.cn/media/cache/resolve/store_thumbnail_normal_1x/2d/f8/79fc6b0da2b1511f2b55f3ab959f.jpg',
-        storeName: 'IRERI',
-        salesName: 'salesName',
-        date: '晚上 7:30',
-        count: 1,
-        state: 'online',
-        stateCN: '空闲中',
-        id: 1
-      },
-      {
-        avatar: 'https://rss1.agogify.cn/media/cache/resolve/store_thumbnail_normal_1x/2d/f8/79fc6b0da2b1511f2b55f3ab959f.jpg',
-        storeName: 'IRERI',
-        salesName: 'salesName',
-        date: '昨天',
-        count: 0,
-        state: 'busy',
-        stateCN: '忙碌中',
-        id: 2
-      },
-      {
-        avatar: 'https://rss1.agogify.cn/media/cache/resolve/store_thumbnail_normal_1x/2d/f8/79fc6b0da2b1511f2b55f3ab959f.jpg',
-        storeName: 'IRERI',
-        salesName: 'salesName',
-        date: '五月29日',
-        count: 11,
-        state: 'offline',
-        stateCN: '离线',
-        id: 3
-      },
-    ]
+    messageList: [] as MessageItem[]
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
+  async onLoad() {
+    const res = await getConversationList()
+    console.log(res)
+    const c2cList = res.data.conversationList.filter(e => e.type === 'C2C')
+    const currentTime = Date.now()
+    const targetList: MessageItem[] = [];
+    for (let e of c2cList) {
+      const time = new Date(e.lastMessage.lastTime * 1000)
+      let dateCN = this.formatTime(e.lastMessage.lastTime * 1000, currentTime)
+      targetList.push({
+        avatar: !e.userProfile.avatar ? '../../assets/image/userAvator.png' : e.userProfile.avatar,
+        storeName: 'IRERI',
+        salesName: e.userProfile.nick,
+        date: time,
+        dateCN,
+        count: e.unreadCount,
+        state: 'offline',
+        stateCN: '空闲中',
+        id: e.conversationID
+      })
+    }
+    this.setData({
+      messageList: targetList
+    })
   },
 
   /**
@@ -87,11 +82,25 @@ Page({
   onReachBottom() {
 
   },
+  handleTap() {
+    wx.navigateTo({
+      url: '../chatPage/chatPage'
+    })
+  },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
+  formatTime(sourceTime: number, today: number) {
+    // 一天的秒数
+    const daySec = 24 * 60 * 60
+    const twoDaySec = daySec * 2
 
+    const diff = today - sourceTime
+
+    if (diff > twoDaySec) {
+      return localMonth(new Date(sourceTime))
+    } else if (diff > daySec) {
+      return '昨天'
+    } else {
+      return timeFormat(new Date(sourceTime), 'hh:mm')
+    }
   }
 })

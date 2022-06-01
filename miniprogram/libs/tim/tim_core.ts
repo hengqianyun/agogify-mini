@@ -70,6 +70,17 @@ export default class IMClient {
     this.tim.quitGroup(groupID)
   }
 
+  /**
+   * 发送文本私聊
+   * @param to 
+   * @param text 
+   */
+  public async sendC2CTextMessage(to: string, text: string) {
+    const msg = await this.createTextMessage(to, text, 'C2C')
+    const res = await this.tim.sendMessage(msg)
+    return res
+  }
+
   public async createCustomMessage(options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, excess?: Object) {
     return await this.tim.createCustomMessage({
       to: groupid,
@@ -78,10 +89,10 @@ export default class IMClient {
     })
   }
 
-  public async createTextMessage(groupId: string, text: string) {
+  public async createTextMessage(groupId: string, text: string, type: conversationType = 'GROUP') {
     return await this.tim.createTextMessage({
       to: groupId,
-      conversationType: "GROUP",
+      conversationType: type,
       payload: {
         text: text
       }
@@ -234,6 +245,14 @@ export default class IMClient {
     this.tim.sendMessage(message).then(sendCb)
     return message
   }
+
+  public async getConversationList(ids?: string[]) {
+    return !!ids ? await this.tim.getConversationList(ids) : await this.tim.getConversationList()
+   }
+
+   public async getUserProfile(ids: string[]) {
+     return await this.tim.getUserProfile({userIDList: ids})
+   }
 
 }
 

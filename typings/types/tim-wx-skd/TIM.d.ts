@@ -21,9 +21,11 @@ declare class TIMSKD {
 
   getMyProfile: () => Promise<TIMUserInfoRequestData>
 
+  getUserProfile: (options: {userIDList: string[]}) => Promise<TIMUserInfoRequestData[]>
+
   updateMyProfile: (options: {nick: string, avatar: string}) => Promise<any>
 
-  getConversationList: (conversationId: string[]) => Promise<any>
+  getConversationList: (conversationId?: string[]) => Promise<TIMConversationRes>
 
   createTextMessage: (options: TIMCreateTextMessageParams) => Promise<TIMMessage>
 
@@ -112,6 +114,35 @@ declare interface TIMSendMessageRes {
   data: {message: TIMMessage}
 }
 
+declare interface TIMConversationRes {
+  code: number
+  data: {conversationList: TIMConversation[]}
+}
+
+declare interface TIMConversation {
+  conversationID: string
+  groupAtInfoList: any[]
+  isPinned: boolean
+  lastMessage: TIMLastMessage // 最后新一条消息
+  peerReadTime: number
+  remark: string
+  type: conversationType
+  unreadCount: number // 未读消息数
+  userProfile: TIMUserInfo
+}
+
+declare interface TIMLastMessage {
+  cloudCustomData: string
+  fromAccount: string
+  isRevoked: string
+  lastSequence: number
+  lastTime: number
+  messageForShow: string // 显示的消息内容
+  onlineOnlyFlag: boolean
+  payload: {text: string}
+  type: TIMMessageType
+}
+
 declare interface TIMMessagePayload {
   text: string
   imageFormat: number
@@ -142,6 +173,7 @@ declare interface TIMMessage {
   clientSequence: number
   cloudCustomData: string // 消息自定义数据（云端保存，会发送到对端，程序卸载重装后还能拉取到，v2.10.2起支持）
   conversationSubType: string | undefined
+  isRead: boolean // 消息是否已读
 }
 
 declare type TIMHistory = {[key: string]: TIMMessage[]}

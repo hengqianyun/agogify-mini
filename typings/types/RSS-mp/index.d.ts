@@ -17,7 +17,8 @@ declare namespace RSSDesign {
       userInfo?: WechatMiniprogram.UserInfo
       hasLaunched: boolean,
       height: number,
-      position: WechatMiniprogram.Rect
+      position: WechatMiniprogram.Rect,
+      navHeight: number[]
     },
     tokenCallback?: () => void
   }

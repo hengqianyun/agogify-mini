@@ -27,4 +27,10 @@ export const resetTimerAndSeq = () => IMClient.getInstance().resetTimerAndSeq()
 export const sendImageMessage = async (groupID: string, conversationType: conversationType, file: WechatMiniprogram.ChooseImageSuccessCallbackResult, onProgress: (percent: number) => void, sendCb: () => void) => IMClient.getInstance().sendImageMessage(groupID, conversationType, file, onProgress, sendCb)
 
 export const updateProfile = () => IMClient.getInstance().updateProfile(userProfile.nickName, userProfile.avatar)
+
+export const sendC2CTextMessage = (to: string, text: string) => IMClient.getInstance().sendC2CTextMessage(to, text)
+
+export const getConversationList = (ids?: string[]) => IMClient.getInstance().getConversationList(ids)
+
+export const getUserProfile = (ids: string[]) => IMClient.getInstance().getUserProfile(ids)
 // export const clearAckTimeout = (seq: string) => IMClient.getInstance().

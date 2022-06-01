@@ -1,0 +1,26 @@
+<view class="chat-page">
+  <view class="nav" style="height: {{navBarHeight}}px;">
+    <view class="nav-main">
+      <view class="capsule-box" style="height: {{menuHeight}}px; min-height: {{menuHeight}}px; line-height: {{menuHeight}}px; bottom: {{menuBottom}}px;">
+        <view class="">hahaha</view>
+      </view>
+    </view>
+  </view>
+  <view class="chat-page-container" style="height: clac(100vh - {{navBarHeight}}px); margin-top: {{navBarHeight}}px;">
+    <view class="chat-container">
+      <scroll-view scroll-y="{{true}}">
+        
+      </scroll-view>
+    </view>
+    <view class="controllers"></view>
+    <view class="input-area">
+      <input type="text" class="text-input" bindinput="handleInput" value="{{text}}" placeholder="输入想询问的商品信息或其他内容吧"/>
+      <view wx:if="{{text === ''}}" class="icon" bind:tap="chooseImage">
+        <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+      </view>
+      <view wx:else class="send-btn">
+        <rss-btn label="发送" width="{{80}}" height="{{52}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleSend"></rss-btn>
+      </view>
+    </view>
+  </view>
+</view>

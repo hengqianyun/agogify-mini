@@ -2,7 +2,7 @@
   <view class="message-list-box">
     <scroll-view scroll-y="{{true}}">
       <block wx:for="{{messageList}}" wx:key="id">
-        <view class="message-item">
+        <view class="message-item" bindtap="handleTap">
           <view class="sales-avatar-box">
             <image class="sales-avatar" src="{{item.avatar}}"></image>
           </view>
@@ -17,7 +17,7 @@
             </view>
           </view>
           <view class="message-date">
-            <view class="message-date-detail">{{item.date}}</view>
+            <view class="message-date-detail">{{item.dateCN}}</view>
             <view wx:if="{{item.count > 0}}" class="message-count">{{item.count}}</view>
             <view wx:else class="message-empty"></view>
           </view>

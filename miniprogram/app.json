@@ -28,7 +28,8 @@
     "pages/portrait/portrait",
     "pages/roomWaiting/roomWaiting",
     "pages/activityDetail/activityDetail",
-    "pages/messageList/messageList"
+    "pages/messageList/messageList",
+    "pages/chatPage/chatPage"
   ],
   "window": {
     "backgroundTextStyle": "light",

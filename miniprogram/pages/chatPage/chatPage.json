@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "rss-btn": "../../components/RssButton/RssButton"
+  },
+  "navigationStyle": "custom"
+}
