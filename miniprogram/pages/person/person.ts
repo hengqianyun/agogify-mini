@@ -34,12 +34,12 @@ Page({
         url: 'addressPage/addressPage',
         size: 58
       },
-      {
-        label: '积分',
-        icon: 'my_jifen',
-        url: 'pointsPage/pointsPage',
-        size: 58
-      },
+      // {
+      //   label: '积分',
+      //   icon: 'my_jifen',
+      //   url: 'pointsPage/pointsPage',
+      //   size: 58
+      // },
       {
         label: '个人信息',
         icon: 'shimingrenzheng',
@@ -52,10 +52,16 @@ Page({
         url: 'bindPhone/bindPhone?type=2',
         size: 58
       },
+      // {
+      //   label: '语言偏好设置',
+      //   icon: 'my_jifen',
+      //   url: 'languageSetting/languageSetting',
+      //   size: 58
+      // },
       {
-        label: '语言偏好设置',
+        label: '优惠券',
         icon: 'my_jifen',
-        url: 'languageSetting/languageSetting',
+        url: 'coupons/coupons',
         size: 58
       },
       {

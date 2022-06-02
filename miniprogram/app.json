@@ -29,7 +29,8 @@
     "pages/roomWaiting/roomWaiting",
     "pages/activityDetail/activityDetail",
     "pages/messageList/messageList",
-    "pages/chatPage/chatPage"
+    "pages/chatPage/chatPage",
+    "pages/coupons/coupons"
   ],
   "window": {
     "backgroundTextStyle": "light",

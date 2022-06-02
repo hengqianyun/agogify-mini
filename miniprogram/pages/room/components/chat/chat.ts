@@ -148,7 +148,8 @@ Component({
     orderProductBtnDisabled: false,
     queueList: [],
     showQueueList: false,
-    canGoAssistant: true
+    canGoAssistant: true,
+    couponValue: '两张可用',
   },
 
   lifetimes: {
