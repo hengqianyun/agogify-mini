@@ -1,14 +1,28 @@
 <view class="coupon-list-page" hover-class="none" hover-stop-propagation="false">
-  <view class="cdk-area" hover-class="none" hover-stop-propagation="false">
-    <!-- <view class="convert-btn" hover-class="none" hover-stop-propagation="false">
-      兑换
-    </view> -->
-  </view>
-  <view class="coupons" hover-class="none" hover-stop-propagation="false">
-    <block wx:for="{{coupons}}" wx:key="code">
-      <view class="coupon" hover-class="none" hover-stop-propagation="false">
-        
-      </view>
-    </block>
-  </view>
+    <view class="cdk-area" hover-class="none" hover-stop-propagation="false">
+        <input class="input" type="text" value="{{cdk}}" data-key="lastName" bindinput="handleInput" placeholder="输入优惠券兑换码" placeholder-class="placeholder-class" />
+        <view class="convert-btn" hover-class="none" bindtap="handleCommit" hover-stop-propagation="false">
+            兑换
+        </view>
+    </view>
+    <view class="coupons" hover-class="none" hover-stop-propagation="false">
+        <block wx:for="{{coupons}}" wx:key="code">
+            <view class="coupon" hover-class="none" hover-stop-propagation="false">
+                <view class="coupon-top">
+                    <view wx:if="{{!item.isOff}}" class="coupon-price">
+                        <view class="coupon-index">€</view>
+                        <view class="coupon-count">{{item.off}}</view>
+                    </view>
+                    <view wx:else class="coupon-price">
+                        <view class="coupon-count">{{item.off}}</view>
+                        <view class="coupon-index">折</view>
+                    </view>
+                    <view class="coupon-tip">全场通用</view>
+                </view>
+                <view class="coupon-bottom">
+                    {{item.timeStr}}
+                </view>
+            </view>
+        </block>
+    </view>
 </view>

@@ -187,6 +187,10 @@
       </view> -->
     </view>
   </view>
+  <!-- 优惠券弹框 -->
+  <view wx:if="{{showCoupons}}" class="pay-popup">
+    <van-popup show="{{showCoupons}}" bind:close="couponCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}"></van-popup>
+  </view>
   <!-- 订单弹窗 -->
   <view wx:if="{{showPopup}}" class="pay-popup">
     <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
