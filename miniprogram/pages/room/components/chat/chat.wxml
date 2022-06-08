@@ -38,9 +38,9 @@
       </view>
     </view>
   </view>
-  <view class="bottom-container" wx:if="{{!isWaiting}}">
     <!-- 新商品 -->
-    <!-- <view class="new-display-product" wx:if="{{showNewDP}}">
+  <view class="bottom-container" wx:if="{{!isWaiting}}">
+     <view class="new-display-product" wx:if="{{showNewDP}}">
       <view class="ndp-left">
         <image class="ndp-left-image" src="{{currentDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
       </view>
@@ -66,7 +66,7 @@
           </view>
         </view>
       </view>
-    </view> -->
+    </view> 
     <!-- 聊天框 -->
     <scroll-view wx:if="{{isLive && showTrans}}" class="stream-translate-content" scroll-y="{{true}}" scroll-into-view="{{artistTransMessageView}}" scroll-with-animation="{{true}}" id="streamTranslateContent">
       <block wx:for="{{artistTranslateList}}" wx:key="id">
@@ -255,7 +255,7 @@
             <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
             <view class="detail-number">€{{itemsTotal}}</view>
           </view>
-          <view class="detail coupon">
+          <view wx:if="{{!isLive}}" class="detail coupon">
             <view class="detail-label">优惠券</view>
             <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
             <view class="detail-number coupon-value">{{couponValue}} <text class="coupon-icon">></text>

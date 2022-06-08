@@ -132,7 +132,7 @@ Component({
     roomId: '',
     displayProductList: [] as _DisplayProductItem[],
     currentDisplayProduct: {} as _DisplayProductItem,
-    showNewDP: true,
+    showNewDP: false,
     ndpBtnDisable: false,
     isAssistantRoom: false,
     showTrans: true,
@@ -238,6 +238,14 @@ Component({
                   showQueueStatus: true,
                   isSecured: false,
                   queueMessage: `抱歉，${payloadData.name}商品/尺码已售完，可选其他商品`
+                })
+                wx.showModal({
+                    title: `抱歉，${payloadData.name}商品/尺码已售完，可选其他商品`,
+                    showCancel: false,
+                    confirmText: 'OK',
+                    complete() {
+
+                    }
                 })
                 setTimeout(() => {
                   this.setData({
@@ -539,8 +547,10 @@ Component({
         item.product = product
       }
       this.setData({
-        queueList: list
-      })
+          queueList: list.filter((e: any) => e.notes.state !== 'outOfStock')
+        })
+        console.log(this.data.queueList)
+        console.log(list)
     },
     handleDialogCommit() {
 
