@@ -634,15 +634,16 @@ Component({
     },
     async handleNewDisplayProductQueue() {
       try {
-        if (this.data.ndpBtnDisable) return
-        this.setData({
-          ndpBtnDisable: true
-        })
-        await this.queue(this.data.currentDisplayProduct['@id'])
+        // if (this.data.ndpBtnDisable) return
+        // this.setData({
+        //   ndpBtnDisable: true
+        // })
+        // await this.queue(this.data.currentDisplayProduct['@id'])
         this.setData({
           ndpBtnDisable: false,
           showNewDP: false,
         })
+        this.queueDetail(this.data.currentDisplayProduct)
       } catch (err) {
         wx.showToast({
           title: '下单失败，请重试',
@@ -729,7 +730,6 @@ Component({
         wx.showLoading({
           title: '加载中'
         })
-
         
 
         await queueTicketModule.queue(pathId, JSON.stringify({
@@ -764,7 +764,7 @@ Component({
             wx.hideLoading()
           }
         }, {}, false)
-      } catch (err) {
+      } catch (err: any) {
         wx.hideLoading()
         console.log('err 了，怎么没catch')
         console.log(err)

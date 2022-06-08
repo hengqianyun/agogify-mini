@@ -74,7 +74,7 @@
         "pagePath": "pages/activities/activities",
         "iconPath": "assets/tabBarIcon/static/activities.png",
         "selectedIconPath": "assets/tabBarIcon/selected/activities.png",
-        "text": "专场服务"
+        "text": "私享"
       },
       {
         "pagePath": "pages/person/person",

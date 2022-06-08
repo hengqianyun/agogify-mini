@@ -2,7 +2,7 @@
   <view class="avtivity-info">
     <view class="avtivity-info-title">{{title}}</view>
     <view class="avtivity-info-brand">
-      <view class="avtivity-info-brand-icon">品牌</view>
+      <view class="avtivity-info-brand-icon">专柜</view>
       <view class="avtivity-info-brand-text">{{brand}}</view>
     </view>
     <view class="avtivity-info-artist">

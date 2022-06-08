@@ -17,12 +17,13 @@ declare namespace reserveDesign {
     image: {path: string}
     translations: {zh_CN: {description: string, name: string}}
     brands: {name: string}[]
-    artist: {avatar: string | null, nickname: string}
+    artist: {avatar: {path: string} | null, nickname: string}
     code: string
     startTime: string
     tickets: number
     seats: number
     state: eventTypes
+    eventStore: string
   }
 
   interface salesReserveItem extends swaggerI.requestSimpleBase {

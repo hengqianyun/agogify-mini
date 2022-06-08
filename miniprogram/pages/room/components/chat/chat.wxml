@@ -71,7 +71,7 @@
     <scroll-view wx:if="{{isLive && showTrans}}" class="stream-translate-content" scroll-y="{{true}}" scroll-into-view="{{artistTransMessageView}}" scroll-with-animation="{{true}}" id="streamTranslateContent">
       <block wx:for="{{artistTranslateList}}" wx:key="id">
         <view class="stream-translate-item" id="{{item.ID}}">
-          {{item.ID}}
+          {{item.payload.text}}
         </view>
       </block>
     </scroll-view>

@@ -13,7 +13,7 @@
                                         </view>
                                         <view class="reserve-duration"> {{reserve.duration}}</view>
                                     </view>
-                                    <view class="i-t-right">{{reserve.isEvent ? '专场' : reserve.isOwner ? '预约' : '顾问'}}</view>
+                                    <view class="i-t-right">{{reserve.isEvent ? '私享' : reserve.isOwner ? '预约' : '顾问'}}</view>
                                 </view>
                                 <view class="item-content">
                                     <block wx:if="{{reserve.isEvent}}">

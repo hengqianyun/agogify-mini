@@ -52,24 +52,24 @@ Page({
         url: 'bindPhone/bindPhone?type=2',
         size: 58
       },
-      // {
-      //   label: '语言偏好设置',
-      //   icon: 'my_jifen',
-      //   url: 'languageSetting/languageSetting',
-      //   size: 58
-      // },
+      {
+        label: '语言偏好设置',
+        icon: 'my_jifen',
+        url: 'languageSetting/languageSetting',
+        size: 58
+      },
       {
         label: '优惠券',
         icon: 'my_jifen',
         url: 'coupons/coupons',
         size: 58
       },
-      {
-        label: '消息',
-        icon: 'my_jifen',
-        url: 'messageList/messageList',
-        size: 58
-      },
+      // {
+      //   label: '消息',
+      //   icon: 'my_jifen',
+      //   url: 'messageList/messageList',
+      //   size: 58
+      // },
 
       // {
       //   label: '客服',

@@ -45,7 +45,8 @@ Page({
 
       const list = res.data["hydra:member"]
       const acList = list.map(e => {
-        let startTime =  new Date(e.startTime.split('GMT')[0])
+        let num1 = Date.parse(e.startTime.split('GMT')[0])
+        let startTime =  new Date(num1 + 8 * 1000 * 60 * 60)
         return {
           date: localMonth(startTime) + ' ' + timeFormat(startTime, 'hh:mm'),
           title: e.translations.zh_CN.name,
