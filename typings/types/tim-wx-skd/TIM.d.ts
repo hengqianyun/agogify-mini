@@ -9,6 +9,10 @@ declare class TIMSKD {
 
   logout: () => Promise<void>
 
+  getMessageList: (option: {conversationID: string, count: number, nextReqMessageID?: string}) => Promise<any>
+
+  setMessageRead: (option: {conversationID: string}) => Promise<void>
+
   on: <T>(eventName: String, handle: (event: TIMEvent<T>) => void, context?: TIMSKD) => void
 
   off: <T>(eventName: String, handle: (event: TIMEvent<T>) => void, context?: TIMSKD) => void

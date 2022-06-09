@@ -15,6 +15,7 @@ interface MessageItem {
   state: UserState
   stateCN: string
   id: string
+  saleId: string
 }
 
 Page({
@@ -42,6 +43,7 @@ Page({
         avatar: !e.userProfile.avatar ? '../../assets/image/userAvator.png' : e.userProfile.avatar,
         storeName: 'IRERI',
         salesName: e.userProfile.nick,
+        saleId: e.userProfile.userID,
         date: time,
         dateCN,
         count: e.unreadCount,
@@ -82,9 +84,11 @@ Page({
   onReachBottom() {
 
   },
-  handleTap() {
+  handleTap(event: WechatMiniprogram.TouchEvent) {
+    const {index} = event.currentTarget.dataset as {index: number}
+    const item = this.data.messageList[index]
     wx.navigateTo({
-      url: '../chatPage/chatPage'
+      url: `../chatPage/chatPage?storeName=${item.storeName}&salesName=${item.salesName}&salesId=${item.saleId}&conversationID=${item.id}&salesAvatar=${item.avatar}`
     })
   },
 

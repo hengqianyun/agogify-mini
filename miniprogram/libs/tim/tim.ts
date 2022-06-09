@@ -33,4 +33,8 @@ export const sendC2CTextMessage = (to: string, text: string) => IMClient.getInst
 export const getConversationList = (ids?: string[]) => IMClient.getInstance().getConversationList(ids)
 
 export const getUserProfile = (ids: string[]) => IMClient.getInstance().getUserProfile(ids)
+
+export const setMsgRead = (conversationID: string) => IMClient.getInstance().setMessageRead(conversationID)
+
+export const getMessageList = (conversationID: string, count: number, nextReqMessageID?: string) => IMClient.getInstance().getMessageList(conversationID, count, nextReqMessageID)
 // export const clearAckTimeout = (seq: string) => IMClient.getInstance().

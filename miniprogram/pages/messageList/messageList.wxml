@@ -2,7 +2,7 @@
   <view class="message-list-box">
     <scroll-view scroll-y="{{true}}">
       <block wx:for="{{messageList}}" wx:key="id">
-        <view class="message-item" bindtap="handleTap">
+        <view class="message-item" bindtap="handleTap" data-index="{{index}}">
           <view class="sales-avatar-box">
             <image class="sales-avatar" src="{{item.avatar}}"></image>
           </view>

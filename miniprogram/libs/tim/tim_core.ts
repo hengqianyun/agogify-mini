@@ -254,6 +254,14 @@ export default class IMClient {
      return await this.tim.getUserProfile({userIDList: ids})
    }
 
+   public async setMessageRead(conversationID: string) {
+       return await this.tim.setMessageRead({conversationID})
+   }
+
+   public async getMessageList(conversationID: string, count: number, nextReqMessageID?: string) {
+       return await this.tim.getMessageList({conversationID, count, nextReqMessageID})
+   }
+
 }
 
 
@@ -326,6 +334,7 @@ const messageReceived = (event: TIMEvent<TIMMessage>) => {
   // 分发至视频页面
   const data = event.data[0]
   let payloadData: any;
+  debugger
   try {
     payloadData = JSON.parse(data.payload.data)
   } catch (err) { }

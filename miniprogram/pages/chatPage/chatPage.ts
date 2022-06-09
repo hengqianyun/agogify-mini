@@ -1,4 +1,4 @@
-import { getConversationList, sendC2CTextMessage } from "../../libs/tim/tim"
+import { getConversationList, getMessageList, sendC2CTextMessage, setMsgRead } from "../../libs/tim/tim"
 
 // pages/chatPage/chatPage.ts
 const app = getApp()
@@ -13,14 +13,28 @@ Page({
     menuRight: app.globalData.navHeight[2],
     menuHeight: app.globalData.navHeight[3],
     text: '',
-    to: '/api/v2/public/sales/10',
+    to: '/api/v2/public/sales/14',
+    salesName: '',
+    storeName: '',
+    conversationID: '',
+    nextReqMessageID: '',
+    messageList: [] as TIMMessage[],
+    scrollIntoView: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    
+    const {salesId, salesName, storeName, conversationID, salesAvatar} = this.options as {salesAvatar: string, salesId: string, salesName: string, storeName: string, conversationID: string}
+    this.setData({
+        to: salesId,
+        salesName: salesName,
+        storeName: 'IRERI',
+        conversationID,
+    })
+    await setMsgRead(conversationID)
+    await this.getMessageList()
   },
 
   /**
@@ -72,6 +86,20 @@ Page({
 
   },
 
+  async getMessageList() {
+      const res = await getMessageList(this.data.conversationID, 20)
+      const {messageList, nextReqMessageID} = res.data as {messageList: TIMMessage[], nextReqMessageID: string}
+      this.setData({
+          messageList,
+          nextReqMessageID,
+          scrollIntoView: 'id' + messageList[messageList.length - 1].time.toString()
+      })
+  },
+
+  handleBack() {
+      wx.navigateBack()
+  },
+
   handleInput(event: WechatMiniprogram.TouchEvent) {
     const { value } = event.detail as { value: string }
     this.setData({
@@ -108,6 +136,12 @@ Page({
       const res = await sendC2CTextMessage(this.data.to, this.data.text);
       console.log(res)
       const {message} = res.data
+      this.data.messageList.push(message)
+      this.setData({
+          messageList: this.data.messageList,
+          scrollIntoView: 'id' + message.time,
+          text:''
+      })
       // const {flow, isRead} = message
     } catch(err) {
       console.log(err)
