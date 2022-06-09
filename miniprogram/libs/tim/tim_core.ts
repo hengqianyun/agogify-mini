@@ -331,10 +331,18 @@ const onError = () => { }
  * @param event 
  */
 const messageReceived = (event: TIMEvent<TIMMessage>) => {
+  console.log(event)
   // 分发至视频页面
   const data = event.data[0]
   let payloadData: any;
-  debugger
+  // debugger
+  if (data.conversationType === 'C2C') {
+    $emit({
+      name: 'C2CmessageReceive',
+      data: event
+    })
+    return
+  }
   try {
     payloadData = JSON.parse(data.payload.data)
   } catch (err) { }

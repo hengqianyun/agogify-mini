@@ -255,7 +255,7 @@
             <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
             <view class="detail-number">€{{itemsTotal}}</view>
           </view>
-          <view wx:if="{{!isLive}}" class="detail coupon">
+          <view wx:if="{{!isLive && false}}" class="detail coupon">
             <view class="detail-label">优惠券</view>
             <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
             <view class="detail-number coupon-value">{{couponValue}} <text class="coupon-icon">></text>

@@ -81,6 +81,14 @@ Page({
 
   },
 
+  handleChat({ currentTarget }: WechatMiniprogram.TouchEvent) {
+    const { id, status, index, salesname } = currentTarget.dataset as { salesname: string, id: string, status: string, index: number }
+    const currentStore = this.data.stores[this.data.currentStoreIndex]
+    wx.navigateTo({
+      url: `../chatPage/chatPage?storeName=${currentStore.name}&salesId=${id}&salesName=${salesname}&type=needService`
+    })
+  },
+
   async handleCall({ currentTarget }: WechatMiniprogram.TouchEvent) {
     const { id, status, index } = currentTarget.dataset as { id: string, status: string, index: number }
     if (status !== 'online') {

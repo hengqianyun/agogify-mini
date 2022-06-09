@@ -1,4 +1,7 @@
+import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
+import storeModule from "../../http/module/store"
 import { getConversationList, getMessageList, sendC2CTextMessage, setMsgRead } from "../../libs/tim/tim"
+import { $on, $remove } from "../../utils/event"
 
 // pages/chatPage/chatPage.ts
 const app = getApp()
@@ -19,7 +22,24 @@ Page({
     conversationID: '',
     nextReqMessageID: '',
     messageList: [] as TIMMessage[],
-    scrollIntoView: ''
+    scrollIntoView: '',
+    btns: [
+      {
+        label: '呼叫',
+        icon: 'a-call2',
+        size: 32,
+        class: 'line-btn',
+        color: "#353535",
+        event: 'handleCall',
+      }, {
+        label: "预约",
+        icon: "my_reserve",
+        size: 32,
+        class: 'fill-btn',
+        color: "#353535",
+        event: 'handleReserve',
+      }],
+      details: {}
   },
 
   /**
@@ -33,8 +53,25 @@ Page({
         storeName: 'IRERI',
         conversationID,
     })
-    await setMsgRead(conversationID)
-    await this.getMessageList()
+    if (!!conversationID) {
+      await setMsgRead(conversationID)
+      await this.getMessageList()
+    }
+    await this.queryDetails()
+    const that = this
+    $on({
+      name: "C2CmessageReceive",
+      tg: this,
+      success: (res: TIMMessageReceive) => {
+        console.log(res)
+        const data = res.data[0]
+        that.setData({
+          messageList: [...this.data.messageList, data],
+          scrollIntoView: 'id' + data.time,
+          conversationID: data.conversationID,
+        })
+        setMsgRead(data.conversationID)
+      }})
   },
 
   /**
@@ -62,7 +99,10 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-
+    $remove({
+      name: "C2CmessageReceive",
+      tg: this,
+    })
   },
 
   /**
@@ -84,6 +124,39 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+
+  handleCall() {
+    wx.navigateTo({
+      url: `../roomWaiting/roomWaiting?storeId=IRERI&saleId=${this.data.to}&type=needService`
+    })
+  },
+
+  handleReserve() {
+    wx.setStorageSync('reserveStores', [this.data.details]);
+    wx.navigateTo({ url: '../reservePage/reservePage' })
+  },
+
+  async queryDetails() {
+    const resData = await storeModule.queryStoreDetails('IRERI')
+    if (resData.data.logo)
+      resData.data.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal2x + resData.data?.logo?.path
+    if (resData.data.images.length > 0) {
+      resData.data.images[0].path = IMAGEBASEURL + IMAGEPATHS.storeMain1x + resData.data.images[0].path
+    }
+    const { country, city } = resData.data.billingData
+    const address = `${country?.name} ${city?.name}`
+    this.setData({
+      details: { ...resData.data, address }
+    })
+  },
+
+
+
+  handleIconButtonTap(ev: WechatMiniprogram.TouchEvent) {
+    console.log(ev)
+    const { event } = ev.currentTarget.dataset as { event: keyof WechatMiniprogram.Page.Constructor }
+      ; (this[event] as Function)()
   },
 
   async getMessageList() {
@@ -133,6 +206,9 @@ Page({
 
   async handleSend() {
     try {
+      if (this.data.text === '') {
+        return
+      }
       const res = await sendC2CTextMessage(this.data.to, this.data.text);
       console.log(res)
       const {message} = res.data

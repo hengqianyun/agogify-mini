@@ -22,14 +22,6 @@ Page({
     products: [] as PageProduct[],
     storeId: '',
     btns: [
-      //   {
-      //   label: '已收藏',
-      //   icon: 'store_yishoucang',
-      //   size: 32,
-      //   class: 'line-btn',
-      //   color: "#353535",
-      //   event: 'handleCollect'
-      // },
       {
         label: '呼叫',
         icon: 'a-call2',

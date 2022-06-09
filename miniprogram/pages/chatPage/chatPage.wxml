@@ -2,7 +2,7 @@
     <view class="nav" style="height: {{navBarHeight}}px;">
         <view class="nav-main">
             <view class="capsule-box" style="height: {{menuHeight}}px; min-height: {{menuHeight}}px; line-height: {{menuHeight}}px; bottom: {{menuBottom}}px;">
-                <view class="back-icon" bindtap="handleBack">{{'<'}}</view>
+                <view class="back-icon" bindtap="handleBack"> {{"<"}} </view>
                         <view class="sales-info">
                             <view class="store-name">{{storeName}}</view>
                             <view class="sales-name">{{salesName}}</view>
@@ -30,13 +30,23 @@
                     </block>
                 </scroll-view>
             </view>
-            <view class="controllers"></view>
+            <view class="controllers">
+                <block wx:for="{{btns}}" wx:key="label">
+                    <view class="btn-box" bind:tap="handleIconButtonTap" data-event="{{item.event}}">
+                        <iconfont name="{{item.icon}}" size="{{item.size}}" color="{{item.color}}" />
+                        <view>{{item.label}}</view>
+                    </view>
+                </block>
+            </view>
             <view class="input-area">
                 <input type="text" class="text-input" bindinput="handleInput" value="{{text}}" placeholder="输入想询问的商品信息或其他内容吧" />
-                <view wx:if="{{text === ''}}" class="icon" bind:tap="chooseImage">
+                <!-- <view wx:if="{{text === ''}}" class="icon" bind:tap="chooseImage">
                     <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
                 </view>
                 <view wx:else class="send-btn">
+                    <rss-btn label="发送" width="{{80}}" height="{{52}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleSend"></rss-btn>
+                </view> -->
+                <view class="send-btn">
                     <rss-btn label="发送" width="{{80}}" height="{{52}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleSend"></rss-btn>
                 </view>
             </view>
