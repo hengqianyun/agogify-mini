@@ -66,7 +66,7 @@ Page({
       },
       {
         label: '消息',
-        icon: 'my_jifen',
+        icon: 'tishi',
         url: 'messageList/messageList',
         size: 58
       },

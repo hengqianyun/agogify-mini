@@ -939,12 +939,12 @@ Component({
         success: (res) => {
           let auth = res.authSetting['scope.record']
           if (auth === true) { // 用户已经同意授权
+            this.startRecording()
             this.setData({
               recordTitle: '正在录音',
               isRecording: true,
               canSend: true
             })
-            this.startRecording()
           }
           // else if (auth === false) { // 首次发起授权
           //   this.toSettingPage({
