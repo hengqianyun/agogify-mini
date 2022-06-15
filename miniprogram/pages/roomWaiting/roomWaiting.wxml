@@ -29,8 +29,8 @@
         <view class="dialog-title-left">{{isLive ? '3' : '2'}})</view>
         <view class="dialog-title-right">通过本平台在实体专柜远程购物仅限您本人自用，且每天仅限购一件商品，否则您将承担由此产生的额外费用{{isLive ? ';' : '。'}}</view>
       </view>
-      <view wx:if="{{isLive}}" class="dialog-item flex">
-        <view class="dialog-title-left">4)</view>
+      <view class="dialog-item flex">
+        <view class="dialog-title-left">{{isLive ? '4' : '3'}})</view>
         <view class="dialog-title-right">本人同意授权本平台在本次专场服务中作为本人的支付委托代理。</view>
       </view>
     </view>
