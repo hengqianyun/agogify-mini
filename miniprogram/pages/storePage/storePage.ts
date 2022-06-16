@@ -22,6 +22,14 @@ Page({
     products: [] as PageProduct[],
     storeId: '',
     btns: [
+        {
+            label: '私聊',
+            icon: 'a-call2',
+            size: 32,
+            class: 'line-btn',
+            color: "#353535",
+            event: 'handleChat',
+          },
       {
         label: '呼叫',
         icon: 'a-call2',
@@ -121,7 +129,14 @@ Page({
       return
     }
     wx.setStorageSync('reserveStores', [this.data.details]);
-    wx.navigateTo({ url: '../salesChoose/salesChoose' })
+    wx.navigateTo({ url: '../salesChoose/salesChoose?type=call' })
+  },
+  handleChat() {
+    if (!checkloginAndRealNameCertifiedAsync()) {
+        return
+      }
+      wx.setStorageSync('reserveStores', [this.data.details]);
+      wx.navigateTo({ url: '../salesChoose/salesChoose?type=chat' })
   },
   handleReserve() {
     if (!checkloginAndRealNameCertifiedAsync()) {

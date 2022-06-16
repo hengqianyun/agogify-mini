@@ -14,6 +14,7 @@ Page({
     currentStoreIndex: 0,
     sales: [] as storeDesign.sale[],
     showDialog: false,
+    type: ''
   },
 
   /**
@@ -25,7 +26,10 @@ Page({
     //   stores,
     // })
     // this.querySales()
-
+    const {type} = this.options as {type: string}
+    this.setData({
+        type,
+    })
   },
 
   /**
