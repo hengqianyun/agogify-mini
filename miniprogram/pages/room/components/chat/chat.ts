@@ -383,7 +383,16 @@ Component({
             } else {
               const message = this.encodeMessage(data)
               try {
-                if (message && message.payload.text.indexOf("artist_translate///:") === 0) {
+                console.log(message.type === 'TIMImageElem')
+                if (message && message.type === "TIMImageElem") {
+                  message.ID = 's' + message.ID.split(this.data.groupId + '-')[1]
+                  this.setData({
+                    chatHistory: this.data.chatHistory.concat([message])
+                  })
+                  this.setData({
+                    messageView: message.ID
+                  })
+                } else if (message && message.payload.text.indexOf("artist_translate///:") === 0) {
                   const text = message.payload.text
                   const str = text.split('artist_translate///:')[1]
                   message.payload.text = str
