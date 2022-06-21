@@ -1,5 +1,6 @@
 declare namespace storeDesign {
   type storeType = 'virtual_store' | 'event_store' | 'specialty_store' | 'department_store' | 'buyer_store' | 'vintage_store'
+  type saleOnlineStatus = 'online' | 'offline' | 'busy'
 
   interface storeItem extends swaggerI.requestSimpleBase {
     code: string
@@ -115,6 +116,7 @@ declare namespace storeDesign {
     lastName: string
     languages: languageTypes[]
     avatar?: { path: string }
+    status: saleOnlineStatus
   }
 
   interface saleWithStore extends sale {

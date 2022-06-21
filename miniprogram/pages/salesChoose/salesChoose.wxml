@@ -6,7 +6,7 @@
     </view>
     <view wx:else></view>
     <view class="store-info">
-      <image class="store-avatar" src="{{stores[currentStoreIndex].src}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" />
+      <image class="store-avatar" src="{{stores[currentStoreIndex].images[0].path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" />
       <view>{{stores[currentStoreIndex].name}}</view>
     </view>
     <view class="store-controller {{currentStoreIndex === stores.length - 1 ? 'store-controller-disable' : ''}}" wx:if="{{stores.length > 1}}" bind:tap="handleNextStore">
@@ -16,28 +16,33 @@
     <view wx:else></view>
   </view>
   <view class="sales-container">
-    <block wx:for="{{sales}}" wx:key="code">
-      <block wx:if="{{item.status !== 'offline'}}">
-        <view class="sales-item">
-          <view class="left-box">
-            <image class="sales-avatar" src="{{item.avatar.path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" />
-            <view class="sales-state {{item.status === 'online' ? 'sales-state-free' : 'sales-state-busy'}}">
-              {{item.status === 'online' ? '空闲中' : '忙碌中'}}
+    <block wx:if="{{isEmpty}}">
+      <view class="default">店员正在忙碌，请稍后尝试~</view>
+    </block>
+    <block wx:else>
+      <block wx:for="{{sales}}" wx:key="code">
+        <block wx:if="{{item.status !== 'offline'}}">
+          <view class="sales-item">
+            <view class="left-box">
+              <image class="sales-avatar" src="{{item.avatar.path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" />
+              <view class="sales-state {{item.status === 'online' ? 'sales-state-free' : 'sales-state-busy'}}">
+                {{item.status === 'online' ? '空闲中' : '忙碌中'}}
+              </view>
+            </view>
+            <view class="center-box">
+              <view class="sales-name">{{item.firstName + " " + item.lastName}}</view>
+              <view class="sales-language">
+                <block wx:for="{{item.languages}}" wx:for-item="lang" wx:key="*this">
+                  <text>{{lang === 'english' ? '英语' : '中文'}}</text>
+                </block>
+              </view>
+            </view>
+            <view class="right-box">
+              <rss-button data-index="{{index}}" data-salesname="{{item.nickname}}" data-id="{{item['@id']}}" data-status="{{item.status}}" disabled="{{item.status === 'offline'}}" width="{{120}}" height="{{56}}" backgroundColor="{{item.status === 'busy' ? '#C5C5C5' : '' }}" label="私聊" className="line-btn" fontSize="{{28}}" bind:onTap="handleChat"></rss-button>
+              <rss-button data-index="{{index}}" data-id="{{item['@id']}}" data-status="{{item.status}}" disabled="{{item.status === 'offline'}}" width="{{120}}" height="{{56}}" backgroundColor="{{item.status === 'busy' ? '#C5C5C5' : '' }}" label="呼叫" className="fill-btn" fontSize="{{28}}" bind:onTap="handleCall"></rss-button>
             </view>
           </view>
-          <view class="center-box">
-            <view class="sales-name">{{item.firstName + " " + item.lastName}}</view>
-            <view class="sales-language">
-              <block wx:for="{{item.languages}}" wx:for-item="lang" wx:key="*this">
-                <text>{{lang === 'english' ? '英语' : '中文'}}</text>
-              </block>
-            </view>
-          </view>
-          <view class="right-box">
-            <rss-button data-index="{{index}}" data-salesname="{{item.nickname}}" data-id="{{item['@id']}}" data-status="{{item.status}}" disabled="{{item.status === 'offline'}}" width="{{120}}" height="{{56}}" backgroundColor="{{item.status === 'busy' ? '#C5C5C5' : '' }}" label="私聊" className="line-btn" fontSize="{{28}}" bind:onTap="handleChat"></rss-button>
-            <rss-button data-index="{{index}}" data-id="{{item['@id']}}" data-status="{{item.status}}" disabled="{{item.status === 'offline'}}" width="{{120}}" height="{{56}}" backgroundColor="{{item.status === 'busy' ? '#C5C5C5' : '' }}" label="呼叫" className="fill-btn" fontSize="{{28}}" bind:onTap="handleCall"></rss-button>
-          </view>
-        </view>
+        </block>
       </block>
     </block>
   </view>
