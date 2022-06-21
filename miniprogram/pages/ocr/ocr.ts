@@ -286,10 +286,16 @@ Page({
       
     } catch (err: any) {
       console.log('err ---->', err)
-
+      const msg = err.data.message as string
       if (!!err && err.statusCode === 400) {
         wx.showModal({
           title: '识别失败',
+          showCancel: false,
+          confirmText: "我知道了"
+        })
+      } else if (msg.includes('sylius_customer.UNIQ')) {
+        wx.showModal({
+          title: "身份证已被绑定",
           showCancel: false,
           confirmText: "我知道了"
         })

@@ -39,6 +39,7 @@ Page({
     for (let e of c2cList) {
       const time = new Date(e.lastMessage.lastTime * 1000)
       let dateCN = this.formatTime(e.lastMessage.lastTime * 1000, currentTime)
+    //   TODO sales的IM增加store信息
       targetList.push({
         avatar: !e.userProfile.avatar ? '../../assets/image/userAvator.png' : e.userProfile.avatar,
         storeName: 'IRERI',
@@ -47,7 +48,7 @@ Page({
         date: time,
         dateCN,
         count: e.unreadCount,
-        state: 'offline',
+        state: 'online',
         stateCN: '空闲中',
         id: e.conversationID
       })

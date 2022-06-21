@@ -33,7 +33,7 @@ Page({
     enableAlertBeforeUnloadMsg: '',
     isGuest: false, // 是否为被邀请用户
     isLive: false, // 是否为直播类型
-    enabledMic: false,
+    enabledMic: true,
     isFirstIn: true
   },
 

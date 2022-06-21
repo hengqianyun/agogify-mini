@@ -160,7 +160,7 @@ Page({
           failed: () => {
             clearTimeout(this.data.callTimer)
             wx.showModal({
-              title: '销售未回应，请重试',
+              title: '呼叫失败，请重试',
               showCancel: false,
               success: async () => {
                 sendCustomMessage({ data: CustomMessageTypes.HANG_UP, description: userProfile.avatar }, this.data.storeGroupId, this.data.saleId, {}, {} , false)

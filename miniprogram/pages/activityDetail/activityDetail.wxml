@@ -21,13 +21,18 @@
   </view>
   <view class="activity-desc">
     <view class="activity-desc-title">
-      <view class="activity-desc-title-text">活动介绍</view>
+      <view class="activity-desc-title-text">简介</view>
     </view>
     <view class="activity-desc-banner">
       <image class="activity-desc-banner-item" mode="widthFix" src="{{img}}"></image>
     </view>
     <view class="activity-desc-desc">{{desc}}</view>
   </view>
+  <!-- <view class="activity-product">
+    <view class="activity-desc-title">
+      <view class="activity-desc-title-text">商品</view>
+    </view>
+  </view> -->
   <view class="controller">
     <rss-button className="fill-btn" disabled="{{isFull}}" backgroundImage="linear-gradient(270deg, #EF9C83 0%, #F57376 100%)" fontColor="#fff" width="{{670}}" height="{{80}}" borderRadius="{{40}}" label="立即报名" bind:onTap="handleTap"></rss-button>
   </view>

@@ -14,7 +14,8 @@ Page({
     currentStoreIndex: 0,
     sales: [] as storeDesign.sale[],
     showDialog: false,
-    type: ''
+    type: '',
+    isEmpty: true,
   },
 
   /**
@@ -158,6 +159,11 @@ Page({
         list[i].avatar = { path: IMAGEBASEURL + IMAGEPATHS.avatarNormal1x + list[i].avatar?.path }
       } catch {
         list[i].avatar = { path: IMAGEBASEURL }
+      }
+      if (list[i].status === 'online' && !this.data.isEmpty) {
+        this.setData({
+          isEmpty: false
+        })
       }
     }
     this.setData({

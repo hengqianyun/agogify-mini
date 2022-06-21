@@ -1,285 +1,288 @@
 <view id="controllersPage" class="controllers-page" bind:longpress="handleRecording" bind:touchend="handleTouchEnd">
-  <!-- 语音反馈 -->
-  <view wx:if="{{isRecording}}" class="record-area">
-    <view class="recore-icon-area">
-      <image class="record-icon" src="../../../../assets/record.png"></image>
-    </view>
-    <view class="recorde-text">
-      正在录制，松开后输入结果
-    </view>
-  </view>
-  <!-- 顶部按钮 -->
-  <view class="top-container">
-    <view wx:if="{{!isLive}}" class="shop-info">
-      <view class="store-avatar-box">
-        <image class="store-avatar" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
-      </view>
-      <view class="store-name">{{storeName}}</view>
-    </view>
-    <view wx:elif="{{isLive && !isAssistantRoom}}" class="shop-info">
-      <view class="store-avatar-box">
-        <image class="store-avatar" src="{{artistAvatar}}" lazy-load="false" binderror="" bindload=""></image>
-      </view>
-      <view class="store-name">{{artistName}}</view>
-    </view>
-    <view wx:else class="shop-info">
-      <view class="store-avatar-box">
-        <image class="store-avatar" src="{{assistantAvatar}}" lazy-load="false" binderror="" bindload=""></image>
-      </view>
-      <view class="store-name">{{assistantName}}</view>
-    </view>
-    <view class="time-and-exit">
-      <view wx:if="{{isAssistantRoom}}" class="exit-icon border-radius-8" bind:tap="handleBackRoom">
-        <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
-      </view>
-      <view wx:else class="time-left border-radius-8"></view>
-      <view class="exit-icon border-radius-8" bind:tap="handleExitTab">
-        <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
-      </view>
-    </view>
-  </view>
-    <!-- 新商品 -->
-  <view class="bottom-container" wx:if="{{!isWaiting}}">
-     <view class="new-display-product" wx:if="{{showNewDP}}">
-      <view class="ndp-left">
-        <image class="ndp-left-image" src="{{currentDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
-      </view>
-      <view class="ndp-right">
-        <view class="ndp-top">
-          <view class="npd-name">
-            <view>{{currentDisplayProduct.name}}</view>
-            <view class="new-tap">new</view>
-          </view>
-          <view wx:if="{{currentDisplayProduct.price !== 0}}" class="npd-price">
-            € {{currentDisplayProduct.stringPrice}}
-          </view>
-          <view wx:else class="npd-price">
-            暂无价格
-          </view>
+    <!-- 语音反馈 -->
+    <view wx:if="{{isRecording}}" class="record-area">
+        <view class="recore-icon-area">
+            <image class="record-icon" src="../../../../assets/record.png"></image>
         </view>
-        <view class="ndp-bottom">
-          <view class="ndp-btn-text" bindtap="hideNewDisplayProduct">
-            收起
-          </view>
-          <view class="ndp-btn-text ndp-btn" bindtap="handleNewDisplayProductQueue">
-            去下单
-          </view>
+        <view class="recorde-text">
+            正在录制，松开后输入结果
         </view>
-      </view>
-    </view> 
-    <!-- 聊天框 -->
-    <scroll-view wx:if="{{isLive && showTrans}}" class="stream-translate-content" scroll-y="{{true}}" scroll-into-view="{{artistTransMessageView}}" scroll-with-animation="{{true}}" id="streamTranslateContent">
-      <block wx:for="{{artistTranslateList}}" wx:key="id">
-        <view class="stream-translate-item" id="{{item.ID}}">
-          {{item.payload.text}}
-        </view>
-      </block>
-    </scroll-view>
-    <scroll-view class="chat-content {{isLive ? 'chat-content-live' : ''}}" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}" id="chatContent">
-      <block wx:for="{{chatHistory}}" wx:key="id">
-        <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
-          <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
-            {{item.nick}}: {{item.payload.text}}
-          </view>
-          <view wx:else class="message image-message-box border-radius-8">
-            <view class="message-nick" hover-class="none" hover-stop-propagation="false">
-              {{item.nick}}:
+    </view>
+    <!-- 顶部按钮 -->
+    <view class="top-container">
+        <view wx:if="{{!isLive}}" class="shop-info">
+            <view class="store-avatar-box">
+                <image class="store-avatar" src="{{storeAvatar}}" lazy-load="false" binderror="" bindload=""></image>
             </view>
-            <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
-          </view>
+            <view class="store-name">{{storeName}}</view>
         </view>
-        <view wx:elif="{{item.type === 'enter'}}" class="sys-message-box">
-          <view class="sys-message">
-            {{item.nickName}} 进入房间
-          </view>
+        <view wx:elif="{{isLive && !isAssistantRoom}}" class="shop-info">
+            <view class="store-avatar-box">
+                <image class="store-avatar" src="{{artistAvatar}}" lazy-load="false" binderror="" bindload=""></image>
+            </view>
+            <view class="store-name">{{artistName}}</view>
         </view>
-        <view wx:elif="{{item.type === 'leave'}}" class="sys-message-box">
-          <view class="sys-message">
-            {{item.nickName}} 离开房间
-          </view>
+        <view wx:else class="shop-info">
+            <view class="store-avatar-box">
+                <image class="store-avatar" src="{{assistantAvatar}}" lazy-load="false" binderror="" bindload=""></image>
+            </view>
+            <view class="store-name">{{assistantName}}</view>
         </view>
-        <view wx:else class="right-message" id="{{item.ID}}">
-          <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
-            {{item.payload.text}}
-          </view>
-          <view wx:else class="message image-message-box border-radius-8">
-            <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
-          </view>
+        <view class="time-and-exit">
+            <view wx:if="{{isAssistantRoom}}" class="exit-icon border-radius-8" bind:tap="handleBackRoom">
+                <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
+            </view>
+            <view wx:else class="time-left border-radius-8"></view>
+            <view class="exit-icon border-radius-8" bind:tap="handleExitTab">
+                <iconfont name="zhibojian_tuichu" size="{{40}}"></iconfont>
+            </view>
         </view>
-      </block>
-    </scroll-view>
-    <view wx:if="{{showQueueStatus}}" class="queue-state {{isSecured ? '' : 'queue-state-err'}}">
-      <icon type="{{isSecured ? 'success' : 'info'}}" color="rgb(255,255,255)" size="30rpx"></icon>
-      <view>
-        {{queueMessage}}
-      </view>
     </view>
-
     <!-- 底部按钮 -->
-    <view class="bottom-controllers">
-      <view wx:if="{{(isLive && isAssistantRoom) || !isLive}}" class="icons border-radius-8" bind:tap="handleChangeMic">
-        <iconfont name="{{enabledMic ? 'zhibojian_yuyin_bai' : 'maikefengguanbizhuangtai'}}" size="{{40}}" id="record"></iconfont>
-      </view>
-      <view wx:else class="icons border-radius-8" bind:tap="handleChangeTrans">
-        译
-        <icon wx:if="{{!showTrans}}" class="trans-icon" type="cancel" size="20rpx"></icon>
-      </view>
-      <view class="input-area border-radius-8">
-        <iconfont name="zhibojian_shurukuangicon" size="{{40}}"></iconfont>
-        <input type="text" bindconfirm="handleSendMessage" value="{{inputValue}}" confirm-type="发送" bindinput="handleInput" class="live-input" placeholder="询问想了解的" placeholder-class="input-placeholder" />
-        <view class="send-btn" bind:tap="handleSendMessage" hover-class="none" hover-stop-propagation="false">
-          发送
+    <view class="bottom-container" wx:if="{{!isWaiting}}">
+        <!-- 新商品 -->
+        <view class="new-display-product" wx:if="{{showNewDP}}">
+            <view class="ndp-left">
+                <image class="ndp-left-image" src="{{currentDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+            </view>
+            <view class="ndp-right">
+                <view class="ndp-top">
+                    <view class="npd-name">
+                        <view>{{currentDisplayProduct.name}}</view>
+                        <view class="new-tap">new</view>
+                    </view>
+                    <view wx:if="{{currentDisplayProduct.price !== 0}}" class="npd-price">
+                        € {{currentDisplayProduct.stringPrice}}
+                    </view>
+                    <view wx:else class="npd-price">
+                        暂无价格
+                    </view>
+                </view>
+                <view class="ndp-bottom">
+                    <view class="ndp-btn-text" bindtap="hideNewDisplayProduct">
+                        收起
+                    </view>
+                    <view class="ndp-btn-text ndp-btn" bindtap="handleNewDisplayProductQueue">
+                        去下单
+                    </view>
+                </view>
+            </view>
         </view>
-      </view>
-      <!-- <view class="icons border-radius-8 send-btn-box" >
-        </view> -->
-      <view class="icons border-radius-8">
-        <iconfont name="yuyin2" size="{{40}}" id="record"></iconfont>
-      </view>
-      <view class="icons border-radius-8" bind:tap="chooseImage">
-        <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
-      </view>
-      <!-- 分享按钮 -->
-      <button wx:if="{{isLive}}" class="share-button product-btn">
-        <view class="icons border-radius-8" bind:tap="showDisplayProducts">
-          <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+        <!-- 翻译框 -->
+        <scroll-view wx:if="{{isLive && showTrans}}" class="stream-translate-content" scroll-y="{{true}}" scroll-into-view="{{artistTransMessageView}}" scroll-with-animation="{{true}}" id="streamTranslateContent">
+            <block wx:for="{{artistTranslateList}}" wx:key="id">
+                <view class="stream-translate-item" id="{{item.ID}}">
+                    {{item.payload.text}}
+                </view>
+            </block>
+        </scroll-view>
+        <!-- 聊天框 -->
+        <scroll-view class="chat-content {{isLive ? 'chat-content-live' : ''}}" scroll-y="{{true}}" scroll-into-view="{{messageView}}" scroll-with-animation="{{true}}" id="chatContent">
+            <block wx:for="{{chatHistory}}" wx:key="id">
+                <view wx:if="{{item.flow === 'in'}}" class="left-message" id="{{item.ID}}">
+                    <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
+                        {{item.nick}}: {{item.payload.text}}
+                    </view>
+                    <view wx:else class="message image-message-box border-radius-8">
+                        <view class="message-nick" hover-class="none" hover-stop-propagation="false">
+                            {{item.nick}}:
+                        </view>
+                        <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
+                    </view>
+                </view>
+                <view wx:elif="{{item.type === 'enter'}}" class="sys-message-box">
+                    <view class="sys-message">
+                        {{item.nickName}} 进入房间
+                    </view>
+                </view>
+                <view wx:elif="{{item.type === 'leave'}}" class="sys-message-box">
+                    <view class="sys-message">
+                        {{item.nickName}} 离开房间
+                    </view>
+                </view>
+                <view wx:else class="right-message" id="{{item.ID}}">
+                    <view wx:if="{{item.type === 'TIMTextElem'}}" class="message border-radius-8">
+                        {{item.payload.text}}
+                    </view>
+                    <view wx:else class="message image-message-box border-radius-8">
+                        <image class="image-message" data-src="{{item.payload.imageInfoArray[1].url}}" bind:tap="previewImage" src="{{item.payload.imageInfoArray[1].url}}" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
+                    </view>
+                </view>
+            </block>
+        </scroll-view>
+        <!-- 排队info -->
+        <view wx:if="{{showQueueStatus}}" class="queue-state {{isSecured ? '' : 'queue-state-err'}}">
+            <icon type="{{isSecured ? 'success' : 'info'}}" color="rgb(255,255,255)" size="30rpx"></icon>
+            <view>
+                {{queueMessage}}
+            </view>
         </view>
-        <view class="product-btn-text">全部商品</view>
-        <!-- <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload=""></image> -->
-      </button>
-      <button wx:elif="{{!isGuest}}" class="share-button" open-type="share">
-        <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload="">
 
-        </image>
-      </button>
-      <view wx:if="{{isLive && queueList.length > 0}}" class="icons border-radius-8 queue-list-icon" bindtap="handleShowQueueList">
-        <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
-      </view>
-      <view wx:if="{{showQueueList}}" class="queue-list">
-        <block wx:for="{{queueList}}">
-          <view class="ticket-item">
-            <view class="item-top">
-              <view class="item-image">
-                <image class="item-image-content" src="{{item.product.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
-              </view>
-              <view class="item-info">
-                <view class="top-info">
-                  <view class="item-name">商品编号：{{item.product.name}}</view>
-                  <view class="item-price">€ {{item.product.stringPrice}}</view>
-                </view>
-                <view class="bottom-info">
-                  <view class="item-size1">尺码：{{item.notes.mainSize}}</view>
-                  <view wx:if="{{!!item.notes.alternativeSize}}" class="item-size1">尺码：{{item.notes.alternativeSize}}</view>
-                </view>
-              </view>
+        <!-- 底部按钮 -->
+        <view class="bottom-controllers">
+            <view wx:if="{{(isLive && isAssistantRoom) || !isLive}}" class="icons border-radius-8" bind:tap="handleChangeMic">
+                <iconfont name="{{enabledMic ? 'zhibojian_yuyin_bai' : 'maikefengguanbizhuangtai'}}" size="{{40}}" id="record"></iconfont>
             </view>
-            <view class="item-state">
-              {{!!item.notes.state ? '已备货' : '正在备货...'}}
+            <view wx:else class="icons border-radius-8" bind:tap="handleChangeTrans">
+                译
+                <icon wx:if="{{!showTrans}}" class="trans-icon" type="cancel" size="20rpx"></icon>
             </view>
-            <view class="item-static-info">排队中，请等待订单服务</view>
-          </view>
-        </block>
-      </view>
-      <!-- <view wx:if="{{showNewDP}}" class="share-button product-btn queue-btn">
+            <view class="input-area border-radius-8">
+                <iconfont name="zhibojian_shurukuangicon" size="{{40}}"></iconfont>
+                <input type="text" bindconfirm="handleSendMessage" value="{{inputValue}}" confirm-type="发送" bindinput="handleInput" class="live-input" placeholder="询问想了解的" placeholder-class="input-placeholder" />
+                <view class="send-btn" bind:tap="handleSendMessage" hover-class="none" hover-stop-propagation="false">
+                    发送
+                </view>
+            </view>
+            <!-- <view class="icons border-radius-8 send-btn-box" >
+        </view> -->
+            <view class="icons border-radius-8">
+                <iconfont name="yuyin2" size="{{40}}" id="record"></iconfont>
+            </view>
+            <view class="icons border-radius-8" bind:tap="chooseImage">
+                <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+            </view>
+            <!-- 分享按钮 -->
+            <button wx:if="{{isLive}}" class="share-button product-btn">
+                <view class="icons border-radius-8" bind:tap="showDisplayProducts">
+                    <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+                </view>
+                <view class="product-btn-text">全部商品</view>
+                <!-- <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload=""></image> -->
+            </button>
+            <button wx:elif="{{!isGuest}}" class="share-button" open-type="share">
+                <image class="share-image" src="../../../../assets/invite.png" mode="widthFix" lazy-load="false" binderror="" bindload="">
+
+                </image>
+            </button>
+            <view wx:if="{{isLive && queueList.length > 0}}" class="icons border-radius-8 queue-list-icon" bindtap="handleShowQueueList">
+                <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
+            </view>
+            <view wx:if="{{showQueueList}}" class="queue-list">
+                <block wx:for="{{queueList}}">
+                    <view class="ticket-item">
+                        <view class="item-top">
+                            <view class="item-image">
+                                <image class="item-image-content" src="{{item.product.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+                            </view>
+                            <view class="item-info">
+                                <view class="top-info">
+                                    <view class="item-name">商品编号：{{item.product.name}}</view>
+                                    <view class="item-price">€ {{item.product.stringPrice}}</view>
+                                </view>
+                                <view class="bottom-info">
+                                    <view class="item-size1">尺码：{{item.notes.mainSize}}</view>
+                                    <view wx:if="{{!!item.notes.alternativeSize}}" class="item-size1">尺码：{{item.notes.alternativeSize}}</view>
+                                </view>
+                            </view>
+                        </view>
+                        <view class="item-state">
+                            {{!!item.notes.state ? '已备货' : '正在备货...'}}
+                        </view>
+                        <view class="item-static-info">排队中，请等待订单服务</view>
+                    </view>
+                </block>
+            </view>
+            <!-- <view wx:if="{{showNewDP}}" class="share-button product-btn queue-btn">
         <image class="queue-product" src="{{currentDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
         <view>当前商品</view>
         <view class="go-order-btn" bindtap="handleNewDisplayProductQueue">去下单</view>
       </view> -->
+        </view>
     </view>
-  </view>
-  <!-- 优惠券弹框 -->
-  <view wx:if="{{showCoupons}}" class="pay-popup">
-    <van-popup show="{{showCoupons}}" bind:close="couponCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}"></van-popup>
-  </view>
-  <!-- 订单弹窗 -->
-  <view wx:if="{{showPopup}}" class="pay-popup">
-    <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
-      <view class="popup-title">确认订单</view>
-      <view class="popup-container">
-        <view class="address-item" bind:tap="handleShowMoreAddress">
-          <view class="left-box">
-            <view class="icon-box">
-              <iconfont name="my_dizhibu" size="{{36}}"></iconfont>
-            </view>
-            <view class="message-box">
-              <view class="user-info">
-                <view class="user-name text-ellipsis">
-                  {{address.lastName + address.firstName}}
+    <!-- 优惠券弹框 -->
+    <view wx:if="{{showCoupons}}" class="pay-popup">
+        <van-popup show="{{showCoupons}}" bind:close="couponCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}"></van-popup>
+    </view>
+    <!-- 订单弹窗 -->
+    <view wx:if="{{showPopup}}" class="pay-popup">
+        <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
+            <view class="popup-title">确认订单</view>
+            <view class="popup-container">
+                <view class="address-item" bind:tap="handleShowMoreAddress">
+                    <view class="left-box">
+                        <view class="icon-box">
+                            <iconfont name="my_dizhibu" size="{{36}}"></iconfont>
+                        </view>
+                        <view class="message-box">
+                            <view class="user-info">
+                                <view class="user-name text-ellipsis">
+                                    {{address.lastName + address.firstName}}
+                                </view>
+                                <view class="user-phone">{{address.phoneNumber}}</view>
+                            </view>
+                            <view class="address-detail text-ellipsis-2">
+                                {{address.provinceName + ' ' + address.city + ' ' + address.street}}
+                            </view>
+                        </view>
+                    </view>
+                    <view class="right-box">
+                        <iconfont wx:if="{{!showMoreAddress}}" name="xia" size="{{40}}"></iconfont>
+                        <iconfont wx:else name="shang" size="{{40}}"></iconfont>
+                    </view>
+                    <scroll-view scroll-y="{{true}}" wx:if="{{showMoreAddress}}" class="more-address" id="moreAddress">
+                        <block wx:for="{{addressList}}" wx:key="id" wx:for-item="address">
+                            <view class="message-box" data-index="{{index}}" bind:tap="handleChoose">
+                                <view class="user-info">
+                                    <view class="user-name text-ellipsis">
+                                        {{address.lastName + address.firstName}}
+                                    </view>
+                                    <view class="user-phone">{{address.mobileNumber}}</view>
+                                </view>
+                                <view class="address-detail text-ellipsis-2">
+                                    {{address.provinceName + ' ' + address.city + ' ' + address.street}}
+                                </view>
+                            </view>
+                        </block>
+                    </scroll-view>
                 </view>
-                <view class="user-phone">{{address.phoneNumber}}</view>
-              </view>
-              <view class="address-detail text-ellipsis-2">
-                {{address.provinceName + ' ' + address.city + ' ' + address.street}}
-              </view>
-            </view>
-          </view>
-          <view class="right-box">
-            <iconfont wx:if="{{!showMoreAddress}}" name="xia" size="{{40}}"></iconfont>
-            <iconfont wx:else name="shang" size="{{40}}"></iconfont>
-          </view>
-          <scroll-view scroll-y="{{true}}" wx:if="{{showMoreAddress}}" class="more-address" id="moreAddress">
-            <block wx:for="{{addressList}}" wx:key="id" wx:for-item="address">
-              <view class="message-box" data-index="{{index}}" bind:tap="handleChoose">
-                <view class="user-info">
-                  <view class="user-name text-ellipsis">
-                    {{address.lastName + address.firstName}}
-                  </view>
-                  <view class="user-phone">{{address.mobileNumber}}</view>
+                <view class="product-item">
+                    <view class="product-title">
+                        <iconfont name="my_order" size="{{36}}"></iconfont>
+                        <text>商品信息</text>
+                    </view>
+                    <view class="product-card">
+                        <!-- <view class="product-name">{{orderInfo.items[0].productName}}</view> -->
+                        <view class="product-info">
+                            <view class="product-info-item text-ellipsis-2">类别：{{productCategory1CnName + ' ' + productCategory2CnName + ' ' + productCategory3CnName}}</view>
+                            <view class="product-info-item text-ellipsis-2">名称：{{productBrand + ' ' + productName}}</view>
+                            <view class="product-info-item text-ellipsis-2">尺寸：{{productSize}}</view>
+                            <!-- <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view> -->
+                            <view class="product-info-item">金额：€{{itemsTotal}}</view>
+                        </view>
+                    </view>
                 </view>
-                <view class="address-detail text-ellipsis-2">
-                  {{address.provinceName + ' ' + address.city + ' ' + address.street}}
+                <view class="order-details">
+                    <view class="detail">
+                        <view class="detail-label">商品含关税价</view>
+                        <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
+                        <view class="detail-number">€{{itemsTotal}}</view>
+                    </view>
+                    <view wx:if="{{!isLive && false}}" class="detail coupon">
+                        <view class="detail-label">优惠券</view>
+                        <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
+                        <view class="detail-number coupon-value">{{couponValue}} <text class="coupon-icon">></text>
+                        </view>
+                    </view>
+                    <view class="detail">
+                        <view class="detail-label">运费</view>
+                        <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
+                        <view class="detail-number">{{shippingTotal}}</view>
+                    </view>
+                    <view class="detail">
+                        <view class="detail-label">运营服务费（限时免费）</view>
+                        <view class="detail-number">0</view>
+                    </view>
+                    <view class="detail">
+                        <view class="detail-label">订单id</view>
+                        <view class="detail-number" bind:tap="_copy">{{tokenValue}}</view>
+                    </view>
+                    <view class="detail sum">
+                        <view class="detail-label">合计</view>
+                        <view class="detail-number">€{{total}}</view>
+                    </view>
                 </view>
-              </view>
-            </block>
-          </scroll-view>
-        </view>
-        <view class="product-item">
-          <view class="product-title">
-            <iconfont name="my_order" size="{{36}}"></iconfont>
-            <text>商品信息</text>
-          </view>
-          <view class="product-card">
-            <!-- <view class="product-name">{{orderInfo.items[0].productName}}</view> -->
-            <view class="product-info">
-              <view class="product-info-item text-ellipsis-2">类别：{{productCategory1CnName + ' ' + productCategory2CnName + ' ' + productCategory3CnName}}</view>
-              <view class="product-info-item text-ellipsis-2">名称：{{productBrand + ' ' + productName}}</view>
-              <view class="product-info-item text-ellipsis-2">尺寸：{{productSize}}</view>
-              <!-- <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view> -->
-              <view class="product-info-item">金额：€{{itemsTotal}}</view>
-            </view>
-          </view>
-        </view>
-        <view class="order-details">
-          <view class="detail">
-            <view class="detail-label">商品含关税价</view>
-            <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
-            <view class="detail-number">€{{itemsTotal}}</view>
-          </view>
-          <view wx:if="{{!isLive && false}}" class="detail coupon">
-            <view class="detail-label">优惠券</view>
-            <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
-            <view class="detail-number coupon-value">{{couponValue}} <text class="coupon-icon">></text>
-              </view>
-          </view>
-          <view class="detail">
-            <view class="detail-label">运费</view>
-            <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
-            <view class="detail-number">{{shippingTotal}}</view>
-          </view>
-          <view class="detail">
-            <view class="detail-label">运营服务费（限时免费）</view>
-            <view class="detail-number">0</view>
-          </view>
-          <view class="detail">
-            <view class="detail-label">订单id</view>
-            <view class="detail-number" bind:tap="_copy">{{tokenValue}}</view>
-          </view>
-          <view class="detail sum">
-            <view class="detail-label">合计</view>
-            <view class="detail-number">€{{total}}</view>
-          </view>
-        </view>
-        <!-- <view class="qr-code" wx:if="{{showQrcode}}">
+                <!-- <view class="qr-code" wx:if="{{showQrcode}}">
           <view class="canvas">
             <canvas type="2d" style="width: 150px; height: 150px;" id="union-pay-qrcode"></canvas>
           </view>
@@ -301,78 +304,78 @@
             </view>
           </view>
         </view> -->
-      </view>
-      <view class="btn-area">
-        <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
-      </view>
-    </van-popup>
-  </view>
-  <!-- 直播商品列表 -->
-  <view wx:if="{{showDisplayProductPopup}}" class="pay-popup display-product-popup">
-    <van-popup show="{{showDisplayProductPopup}}" bind:close="_displayProductPopCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
-      <view class="popup-title">商品列表</view>
-      <view class="popup-desc">
-        点击"去下单"后将跳转至销售直播间完成下单
-      </view>
-      <block wx:for="{{displayProductList}}" wx:key="index">
-
-        <view class="display-product-item">
-          <view class="display-product-image">
-            <image class="display-product-image-item" bind:tap="previewImage" src="{{item.path}}" data-src="{{item.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
-          </view>
-          <view class="display-product-info">
-            <view class="display-product-name">{{item.name}}</view>
-            <view class="display-product-desc">{{item.desc}}</view>
-          </view>
-          <view>
-            <view wx:if="{{item.price != 0}}" class="display-product-price">€ {{item.stringPrice}}</view>
-            <view wx:else class="display-product-price">暂无价格</view>
-            <view class="display-product-btn {{item.inventory === 0 || isAssistantRoom ? 'display-product-btn-disable' : ''}}" data-index="{{index}}" bindtap="handleQueue">
-              {{item.inventory === 0 ? '已售罄' : '去下单'}}
             </view>
-          </view>
-        </view>
-      </block>
-    </van-popup>
-  </view>
-  <view wx:if="{{showOrderDisplayProductPopup}}" class="pay-popup display-product-popup order-display-product-popup">
-    <van-popup show="{{showOrderDisplayProductPopup}}" bind:close="_displayProductPopCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
+            <view class="btn-area">
+                <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
+            </view>
+        </van-popup>
+    </view>
+    <!-- 直播商品列表 -->
+    <view wx:if="{{showDisplayProductPopup}}" class="pay-popup display-product-popup">
+        <van-popup show="{{showDisplayProductPopup}}" bind:close="_displayProductPopCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
+            <view class="popup-title">商品列表</view>
+            <view class="popup-desc">
+                点击"去下单"后将跳转至销售直播间完成下单
+            </view>
+            <block wx:for="{{displayProductList}}" wx:key="index">
+
+                <view class="display-product-item">
+                    <view class="display-product-image">
+                        <image class="display-product-image-item" bind:tap="previewImage" src="{{item.path}}" data-src="{{item.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+                    </view>
+                    <view class="display-product-info">
+                        <view class="display-product-name">{{item.name}}</view>
+                        <view class="display-product-desc">{{item.desc}}</view>
+                    </view>
+                    <view>
+                        <view wx:if="{{item.price != 0}}" class="display-product-price">€ {{item.stringPrice}}</view>
+                        <view wx:else class="display-product-price">暂无价格</view>
+                        <view class="display-product-btn {{item.inventory === 0 || isAssistantRoom ? 'display-product-btn-disable' : ''}}" data-index="{{index}}" bindtap="handleQueue">
+                            {{item.inventory === 0 ? '已售罄' : '去下单'}}
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </van-popup>
+    </view>
+    <view wx:if="{{showOrderDisplayProductPopup}}" class="pay-popup display-product-popup order-display-product-popup">
+        <van-popup show="{{showOrderDisplayProductPopup}}" bind:close="_displayProductPopCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
 
 
-      <view class="display-product-item">
-        <view class="display-product-image">
-          <image class="display-product-image-item" bind:tap="previewImage" src="{{currentOrderDisplayProduct.path}}" data-src="{{currentOrderDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
-        </view>
-        <view class="display-product-info">
-          <view class="display-product-name">{{currentOrderDisplayProduct.name}}</view>
-          <view class="display-product-desc">{{currentOrderDisplayProduct.desc}}</view>
-        </view>
-        <view>
-          <view wx:if="{{currentOrderDisplayProduct.price != 0}}" class="display-product-price">€ {{currentOrderDisplayProduct.stringPrice}}</view>
-          <view wx:else class="display-product-price">暂无价格</view>
-        </view>
-      </view>
-      <view class="size1">
-        <view class="size1-text">
-          尺码
-        </view>
-        <picker class="size-picker" mode="selector" bindchange="handleSizeChange1" value="{{accountsIndex1}}" range-key="label" range="{{account}}">
-          {{account[accountsIndex1].label}}
-        </picker>
-      </view>
-      <view class="size2">
-        <view class="size2-text">备选尺码</view>
-        <picker class="size-picker" mode="selector" bindchange="handleSizeChange2" value="{{accountsIndex2}}" range-key="label" range="{{account}}">
-          {{account[accountsIndex2].label}}
-        </picker>
-      </view>
-      <view class="desc">
-        <view class="order-product-desc-text">备注</view>
-        <textarea class="desc-input" name="" id="" value="{{orderProductDesc}}" bindinput="handleOrderProcutDescInput" maxlength="{{50}}"></textarea>
-      </view>
-      <view class="btn-area">
-        <rss-btn label="去下单" backgroundColor="#F57376" disabled="{{orderProductBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="handleGOQueue"></rss-btn>
-      </view>
-    </van-popup>
-  </view>
+            <view class="display-product-item">
+                <view class="display-product-image">
+                    <image class="display-product-image-item" bind:tap="previewImage" src="{{currentOrderDisplayProduct.path}}" data-src="{{currentOrderDisplayProduct.path}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+                </view>
+                <view class="display-product-info">
+                    <view class="display-product-name">{{currentOrderDisplayProduct.name}}</view>
+                    <view class="display-product-desc">{{currentOrderDisplayProduct.desc}}</view>
+                </view>
+                <view>
+                    <view wx:if="{{currentOrderDisplayProduct.price != 0}}" class="display-product-price">€ {{currentOrderDisplayProduct.stringPrice}}</view>
+                    <view wx:else class="display-product-price">暂无价格</view>
+                </view>
+            </view>
+            <view class="size1">
+                <view class="size1-text">
+                    尺码
+                </view>
+                <picker class="size-picker" mode="selector" bindchange="handleSizeChange1" value="{{accountsIndex1}}" range-key="label" range="{{account}}">
+                    {{account[accountsIndex1].label}}
+                </picker>
+            </view>
+            <view class="size2">
+                <view class="size2-text">备选尺码</view>
+                <picker class="size-picker" mode="selector" bindchange="handleSizeChange2" value="{{accountsIndex2}}" range-key="label" range="{{account}}">
+                    {{account[accountsIndex2].label}}
+                </picker>
+            </view>
+            <view class="desc">
+                <view class="order-product-desc-text">备注</view>
+                <textarea class="desc-input" name="" id="" value="{{orderProductDesc}}" bindinput="handleOrderProcutDescInput" maxlength="{{50}}"></textarea>
+            </view>
+            <view class="btn-area">
+                <rss-btn label="去下单" backgroundColor="#F57376" disabled="{{orderProductBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="handleGOQueue"></rss-btn>
+            </view>
+        </van-popup>
+    </view>
 </view>
