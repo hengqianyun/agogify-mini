@@ -278,7 +278,7 @@ Page({
           const today = new Date()
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
-          const i = (Date.parse(`${year}-${month + 1}-${date}`) - Date.parse(`${todayYear}-${todayMonth + 1}-${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
+          const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
           // TODO 9 变为 12
           const j = (hour - 16) * 4 + min / 15
           if (!!this.data.tableItems[i] && !!this.data.tableItems[i][j]) {
