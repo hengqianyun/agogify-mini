@@ -1011,6 +1011,9 @@ Component({
             const recordeFile = wx.getFileSystemManager().readFileSync(res.tempFilePath, 'base64')
             const reqData = await videoModule.translateSpeech(recordeFile)
             const { data } = reqData
+            if (data.TargetText.trim() === '') {
+              return
+            }
             this.sendTextMessage((this.data.isAssistantRoom ? 'assistant_chat///:' : '') + data.SourceText + (this.data.needTrans ? `(${data.TargetText})` : ''))
           }
         }
