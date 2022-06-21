@@ -274,7 +274,8 @@ Page({
         const { state } = slot
         if (state === 'available') {
           const { startTime, version, '@id': id } = slot
-          const curDate = new Date(startTime.split('GMT')[0])
+
+          const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
           const today = new Date()
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
@@ -295,10 +296,28 @@ Page({
         const { state } = slot
         if (state === 'available') {
           const { startTime, version, '@id': id } = slot
-          const curDate = new Date(startTime.split('GMT')[0].replace('T', ' '))
+          const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
           const today = new Date()
           const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
           const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
+          try {
+            const time = Date.parse(`${year}/${month + 1}/${date}`)
+            wx.showToast({title: time.toString(), duration: 2000, success() {
+
+            }})
+            setTimeout(() => {
+              
+              wx.showToast({title: `${year}/${month + 1}/${date}`, duration: 5000})
+            }, 3000)
+          } catch(err) {
+            wx.showModal( {
+              title: JSON.stringify(err),
+              showCancel: false,
+              
+            }
+              
+            )
+          }
           const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
           let tempHour = hour >= 24 ? hour - 24 : hour
           if (tempHour < earliest || earliest < 0) earliest = tempHour
