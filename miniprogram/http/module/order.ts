@@ -10,7 +10,7 @@ const orderModule = {
   putPayment: async (tokenValue: string, paymentId: string, params: orderDesign.putPaymentParams) => await put<swaggerI.orderListResult, orderDesign.putPaymentParams>('store/carts/' + tokenValue + '/payments/' + paymentId + '/payment-method', params),
   orderComplete: async (tokenValue: string, params: orderDesign.orderCompleteParams) => await put<swaggerI.orderCompleteBasic, orderDesign.orderCompleteParams>('store/carts/' + tokenValue + '/complete', params),
   getPaymentState: async (tokenValue: string) => await get<swaggerI.orderPaymentStateResult, swaggerI.pageRequestParams>('private/carts/or/orders/' + tokenValue + '/payments', {page: 1, itemsPerPage: 1}),
-  unionPayPayment: async (unipayParams: orderDesign.unionPayParams) =>  await post<swaggerI.inionPayRes, orderDesign.unionPayParams>('store/union-pay/payments', unipayParams),
+  unionPayPayment: async (unipayParams: orderDesign.unionPayParams) =>  await post<swaggerI.inionPayRes, orderDesign.unionPayParams>('store/yaband-pay/union-pay/payments', unipayParams),
   pay: async(params: payment.paymentReqParams) => await post<swaggerI.paymentRes, payment.paymentReqParams>('https://mapi.yabandpay.com/Payments', params),
   queryOrderList: async (params: orderDesign.queryOrderListParams) => get<swaggerI.queryOrderListRes, orderDesign.queryOrderListParams>('store/orders', params),
 }

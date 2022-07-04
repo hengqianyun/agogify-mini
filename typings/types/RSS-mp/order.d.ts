@@ -157,7 +157,7 @@ declare namespace orderDesign {
 
   interface unionPayParams {
     orderId: string
-    user: 'info@yabandmedia.com'
+    // user: 'info@yabandmedia.com'
     amount?: string
     currency?: payment.Currency
     description: string

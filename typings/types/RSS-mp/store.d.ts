@@ -117,6 +117,8 @@ declare namespace storeDesign {
     languages: languageTypes[]
     avatar?: { path: string }
     status: saleOnlineStatus
+    roles: string[]
+    email: string
   }
 
   interface saleWithStore extends sale {

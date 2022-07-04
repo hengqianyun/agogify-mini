@@ -24,3 +24,10 @@ export const shareBooking = (userName: string, bookingCode: string, page: string
     path: `${page}?userName=${userName}&type=bookingVideo&bookingCode=${bookingCode}&salesId=${salesId}&storeId=${storeId}`
   }
 }
+
+export const shareInvite = (page: string, code: string) => {
+    return {
+        title: 'Agogify爱购季好友邀请',
+        path: `${page}?code=${code}`
+      }
+}

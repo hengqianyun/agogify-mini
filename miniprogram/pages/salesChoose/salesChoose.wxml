@@ -29,19 +29,18 @@
                 {{item.status === 'online' ? '空闲中' : '忙碌中'}}
               </view>
             </view>
-            <view class="center-box">
+            <!-- <view class="center-box">
               <view class="sales-name">{{item.firstName + " " + item.lastName}}</view>
               <view class="sales-language">
                 <block wx:for="{{item.languages}}" wx:for-item="lang" wx:key="*this">
                   <text>{{lang === 'english' ? '英语' : '中文'}}</text>
                 </block>
               </view>
-            </view>
-            <view class="right-box">
+            </view> -->
+            <!-- <view class="right-box">
               <rss-button data-index="{{index}}" data-salesname="{{item.nickname}}" data-id="{{item['@id']}}" data-status="{{item.status}}" disabled="{{item.status === 'offline'}}" width="{{120}}" height="{{56}}" backgroundColor="{{item.status === 'busy' ? '#C5C5C5' : '' }}" label="私聊" className="line-btn" fontSize="{{28}}" bind:onTap="handleChat"></rss-button>
               <rss-button data-index="{{index}}" data-id="{{item['@id']}}" data-status="{{item.status}}" disabled="{{item.status === 'offline'}}" width="{{120}}" height="{{56}}" backgroundColor="{{item.status === 'busy' ? '#C5C5C5' : '' }}" label="呼叫" className="fill-btn" fontSize="{{28}}" bind:onTap="handleCall"></rss-button>
-              <!-- </view> -->
-            </view>
+            </view> -->
             <view class="center-box">
               <view class="sales-name">{{item.firstName + " " + item.lastName}}</view>
               <view class="sales-language">

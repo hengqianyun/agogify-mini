@@ -10,7 +10,7 @@
       </view>
     </view>
     <view wx:if="{{!!userName && !!avatar}}" class="user-controller" data-url="portrait/portrait" bind:tap="navigateTo" hover-class="none" hover-stop-propagation="false">
-      个人肖像   >
+      个人肖像 >
     </view>
   </view>
   <view class="btn-container" hover-class="none" hover-stop-propagation="false">
@@ -29,9 +29,11 @@
       </view>
     </block>
   </view> -->
-  <!-- <view class="invite-banner">
-    <image class="invite-image" src="../../assets/image/invite.png" lazy-load="false" binderror="" bindload=""></image>
-  </view> -->
+  <button open-type="share">
+    <view class="invite-banner">
+      <image class="invite-image" src="../../assets/image/userAvator.png" lazy-load="false" binderror="" bindload=""></image>
+    </view>
+  </button>
   <view class="person-center-container">
     <view class="p-c-title">个人中心</view>
     <view class="p-c-tools tools-container">

@@ -118,12 +118,16 @@ Page({
   },
 
   async queryReserveList() {
+    //   const endTime = 
     const res = await reserveModule.queryMyReserveList({
       "endTime[after]": (new Date()).toISOString(),
       "order[startTime]": 'asc',
       "customer.id": userProfile.id,
-      'state': 'available'
+      'state': 'booked'
+    // 'state': 'available'
     })
+    // const r = await reserveModule.createIndividual();
+    const re = await reserveModule.getIndividual();
 
     const { "hydra:member": reserveList } = res.data
 

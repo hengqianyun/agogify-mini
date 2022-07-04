@@ -1287,7 +1287,7 @@ Component({
         // }
 
 
-        // let qrcodeUrl: string
+        let qrcodeUrl: string
         this.setData({
           addressSelectDisabled: true,
         })
@@ -1367,8 +1367,8 @@ Component({
 
           console.debug(putAddressRes, putShipmentRes, putPaymentRes, completeRes)
           // TODO 暂时取消支付码获取
-          // qrcodeUrl = await this.queryQrcode()
-          // this.showQrcode(qrcodeUrl)
+          qrcodeUrl = await this.queryQrcode()
+          this.showQrcode(qrcodeUrl)
 
           await sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.saleId, {
             // send: () => {
@@ -1487,7 +1487,8 @@ Component({
       try {
         const res = await orderModule.unionPayPayment({
           orderId: this.data.tokenValue,
-          user: "info@yabandmedia.com",
+        //   orderId: this.data.tokenValue + this.data.shippingTotal,
+        //   user: "info@yabandmedia.com",
           // amount: (this.data.orderInfo.items[0].total / 100).toString(),
           // currency: "EUR",
           description: "YabandPay / UnionPay / test",

@@ -1,4 +1,5 @@
 // pages/person/person.ts
+import { shareInvite } from '../../libs/share'
 import { resetUserProfile, userProfile } from '../../libs/user/user'
 import { $on, $remove } from '../../utils/event'
 
@@ -137,8 +138,11 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() {
-
+  onShareAppMessage(option) {
+    const { from } = option
+    if (from === 'button') {
+        return shareInvite('/pages/share/share', 'code')
+    }
   },
   showProtocol() {
     wx.navigateTo({ url: '../protocol/protocol' })

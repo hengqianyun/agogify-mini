@@ -1,5 +1,6 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index";
 import loginModule from "../../http/module/login";
+import reserveModule from "../../http/module/reserve";
 import userModule from "../../http/module/user";
 import http from "../../libs/http";
 import { querySessionAsync } from "../../utils/querySession";
@@ -32,6 +33,8 @@ const _userProfile = {
   identityNumber: '',
   token: ''
 }
+
+let inviteCode = "rUn1kVF320HcOAR5"
 
 export const userProfile = {
   nickName: '',
@@ -72,6 +75,15 @@ export const LoginKey = {
     wechat_mini_program: 'wxLogin' as LoginType,
     mobile: 'mobileLogin' as LoginType
   } as OauthProviderPaths
+}
+
+export const getInviteCode =  async () => {
+    if (inviteCode === '') {
+        const res = await reserveModule.createIndividual();
+        console.log(res);
+        const code = (res.data as any).code
+        inviteCode = code
+    }
 }
 
 // const 
@@ -127,6 +139,8 @@ export const login = async ({
       throw err
     }
     imLogin(userProfile.pathId)
+
+    getInviteCode()
     // await getServiceAvatar()
     await querySessionAsync()
     // return loginRes

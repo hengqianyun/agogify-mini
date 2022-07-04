@@ -160,7 +160,7 @@ Page({
       } catch {
         list[i].avatar = { path: IMAGEBASEURL }
       }
-      if (list[i].status === 'online' && !this.data.isEmpty) {
+      if (list[i].status === 'online' && this.data.isEmpty) {
         this.setData({
           isEmpty: false
         })

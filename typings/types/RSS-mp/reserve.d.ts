@@ -1,6 +1,6 @@
 declare namespace reserveDesign {
   type reserveTypes = 'available' | 'booked'
-  type eventTypes = 'available' | 'event_started'
+  type eventTypes = 'available' | 'event_started' | 'booked'
 
   interface Reserve {
     storeName: string

@@ -25,6 +25,7 @@ interface SimpleTableItem {
   text?: string
   paramsId?: number
   paramsVersion?: number
+  booked: false
 }
 
 type WeekNum = 1 | 2 | 3 | 4 | 5 | 6 | 0
@@ -167,7 +168,9 @@ Page({
       const res = await storeModule.querySales(params)
       const { "hydra:member": list } = res.data
       // sales[stores[currentStoreIndex].code] = list.reverse()
-      sales[stores[currentStoreIndex].code] = list
+      sales[stores[currentStoreIndex].code] = list.map(e => { 
+        return e.roles.includes('ROLE_STORE_SHOPPER_ACCESS') ? { ...e, lastName: e.lastName + '(顾问)' } : e
+       })
       this.setData({
         sales: this.data.sales,
         saleLanguage: list[0].languages.map(e => {
@@ -213,7 +216,7 @@ Page({
     for (let i = 0; i < weekLength; i++) {
       tableItems.push([] as SimpleTableItem[])
       for (let j = 0; j < durationCount; j++) {
-        tableItems[i].push({ checked: false, x: i, y: j, id: `${i}${j}`, disabled: true, startTime: this.getTime(i, j, true), endTime: this.getTime(i, j, false), })
+        tableItems[i].push({ checked: false, x: i, y: j, id: `${i}${j}`, disabled: true, startTime: this.getTime(i, j, true), endTime: this.getTime(i, j, false), booked: false })
       }
     }
     this.setData({
@@ -250,12 +253,21 @@ Page({
       //   }
       // }, 200)
       // this.initTimeSlots()
-      const code = this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"]
-      const res = await reserveModule.querySalesTimeSlots({
-        'sales.id': getIdFromString(code),
+      const sales = this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]
+      const code = sales["@id"]
+      const params: any = {
+        // 'sales.id': getIdFromString(code),
         'startTime[after]': this.data.startTime,
         'endTime[before]': this.data.endTime,
-      })
+      }
+      if (sales.roles.includes('ROLE_STORE_SHOPPER_API_ACCESS')) {
+        const i = sales.email.indexOf('.')
+        params['sales.email'] = sales.email.substr(i + 1)
+      } else {
+        params['sales.id'] = getIdFromString(code)
+      }
+
+      const res = await reserveModule.querySalesTimeSlots(params)
       const { "hydra:member": list } = res.data
       if (list.length === 0) {
         this.setData({
@@ -270,68 +282,50 @@ Page({
        * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
        */
       const timeZone = -(new Date().getTimezoneOffset()) / 60;
-      for (const slot of list) {
-        const { state } = slot
-        if (state === 'available') {
-          const { startTime, version, '@id': id } = slot
+      //   for (const slot of list) {
+      //     const { state } = slot
+      //     if (state === 'available') {
 
-          const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
-          const today = new Date()
-          const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
-          const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
-          const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-          // TODO 9 变为 12
-          const j = (hour - 16) * 4 + min / 15
-          if (!!this.data.tableItems[i] && !!this.data.tableItems[i][j]) {
+      //       const { startTime, version, '@id': id } = slot
 
-            this.data.tableItems[i][j].disabled = false
-            this.data.tableItems[i][j].paramsVersion = version
-            this.data.tableItems[i][j].paramsId = getIdFromString(id)
-          }
-        }
-      }
+      //       const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
+      //       const today = new Date()
+      //       const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
+      //       const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
+      //       const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
+      //       // TODO 9 变为 12
+      //       const j = (hour - 16) * 4 + min / 15
+      //       if (!!this.data.tableItems[i] && !!this.data.tableItems[i][j]) {
+      //         this.data.tableItems[i][j].disabled = false
+      //         this.data.tableItems[i][j].paramsVersion = version
+      //         this.data.tableItems[i][j].paramsId = getIdFromString(id)
+      //       }
+      //     }
+      //   }
       const timeList: number[][][] = [[], [], [], [], [], [], []]
       let latest = 0, earliest = -1
       for (const slot of list) {
         const { state } = slot
-        if (state === 'available') {
-          const { startTime, version, '@id': id } = slot
-          const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
-          const today = new Date()
-          const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
-          const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
+        // if (state === 'available') {
+        const { startTime, version, '@id': id } = slot
+        const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
+        const today = new Date()
+        const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
+        const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
+        const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
+        let tempHour = hour >= 24 ? hour - 24 : hour
+        if (tempHour < earliest || earliest < 0) earliest = tempHour
+
+        if (tempHour > latest) latest = tempHour
+        if (tempHour === 0) latest = 24
+        if (hour >= 24) {
           try {
-            const time = Date.parse(`${year}/${month + 1}/${date}`)
-            wx.showToast({title: time.toString(), duration: 2000, success() {
-
-            }})
-            setTimeout(() => {
-              
-              wx.showToast({title: `${year}/${month + 1}/${date}`, duration: 5000})
-            }, 3000)
-          } catch(err) {
-            wx.showModal( {
-              title: JSON.stringify(err),
-              showCancel: false,
-              
-            }
-              
-            )
-          }
-          const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-          let tempHour = hour >= 24 ? hour - 24 : hour
-          if (tempHour < earliest || earliest < 0) earliest = tempHour
-
-          if (tempHour > latest) latest = tempHour
-          if (tempHour === 0) latest = 24
-          if (hour >= 24) {
-            try {
-              timeList[i + 1].push([tempHour, min, version, getIdFromString(id)])
-            } catch {}
-          } else {
-            timeList[i].push([tempHour, min, version, getIdFromString(id)])
-          }
+            timeList[i + 1].push([tempHour, min, version, getIdFromString(id)])
+          } catch { }
+        } else {
+          timeList[i].push([tempHour, min, version, getIdFromString(id)])
         }
+        // }
       }
       earliest = earliest === -1 ? 0 : earliest
       const length = (latest - earliest + 1) * 4
@@ -339,7 +333,7 @@ Page({
       const tableItems: SimpleTableItem[][] = [[], [], [], [], [], [], []]
       for (let i = 0; i < tableItems.length; i++) {
         for (let j = 0; j < length; j++) {
-          tableItems[i].push({ checked: false, x: i, y: j, id: `${i}${j}`, disabled: true, startTime: this.getTime(i, j, true), endTime: this.getTime(i, j, false), })
+          tableItems[i].push({ checked: false, x: i, y: j, id: `${i}${j}`, disabled: true, startTime: this.getTime(i, j, true), endTime: this.getTime(i, j, false), booked: false })
         }
       }
       console.log('timeList -->', timeList)
@@ -349,10 +343,13 @@ Page({
           const [hour, min, version, id] = timeList[i][j]
           const index = (hour - earliest) * 4 + min / 15
           console.debug(`index等于${index}`)
-          if (!!tableItems[i][index]) {
+          if (!!tableItems[i][index] && tableItems[i][index].paramsVersion !== 2) {
             tableItems[i][index].disabled = false
             tableItems[i][index].paramsVersion = version
             tableItems[i][index].paramsId = id
+            if (version === 2) {
+              tableItems[i][index].disabled = true
+            }
           }
         }
       }
@@ -463,12 +460,12 @@ Page({
       })
       try {
         await joinStoreGroup(`${this.data.stores[0].code}_Meeting`);
-        await sendCustomMessage({ data: CustomMessageTypes.RESERVE, description: "succesee" },`${this.data.stores[0].code}_Meeting`, this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"], {}, {})
+        await sendCustomMessage({ data: CustomMessageTypes.RESERVE, description: "succesee" }, `${this.data.stores[0].code}_Meeting`, this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"], {}, {})
         await quitGroup(`${this.data.stores[0].code}_Meeting`)
       } catch (err) {
         console.log(err)
       }
-      
+
       setTimeout(() => {
         wx.navigateBack()
       }, 1000)

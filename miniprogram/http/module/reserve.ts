@@ -13,6 +13,8 @@ const reserveModule = {
 
   bookTimeSlot: async (params: reserveDesign.bookTimeSlotParams) => typePost<any, reserveDesign.bookTimeSlotParams>('store/video-session/bookings/book-time-slots', params),
   queryEvents: async (params: reserveDesign.queryEventParams) => await publicGet<swaggerI.eventListResult, reserveDesign.queryEventParams>('public/video-session/bookings', params),
+  createIndividual: async () => await post('store/invitation-codes', {expiryTime: '2022-07-01T09:20:00GMT+08:00'}),
+  getIndividual: async () => await get('store/invitation-codes'),
 }
 
 export default reserveModule
