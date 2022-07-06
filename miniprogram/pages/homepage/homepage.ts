@@ -34,7 +34,8 @@ Page({
       }
     await this.queryNewStore(1)
     this.setData({
-      bannerList: BANNERS
+      bannerList: BANNERS,
+      showIcon: true
     })
   },
 

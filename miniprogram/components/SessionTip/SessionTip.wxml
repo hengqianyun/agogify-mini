@@ -1,9 +1,12 @@
-<view class="session-tip">
+<view class="session-tip" bind:tap="handleShow">
   <view class="tip-button" bind:tap="handleShow">
-    <iconfont class="btn-icon" name="tishi" size="{{40}}"></iconfont>
-    <view class="red-icon">
+    <iconfont class="btn-icon" name="tishi" size="{{40}}" color="#fff"></iconfont>
+    <!-- <view class="red-icon">
       
-    </view>
+    </view> -->
+  </view>
+  <view class="tip-text">
+    返回通话
   </view>
 
   <RssDialog wx:if="{{showDialog}}" title="请注意" commitText="前往" cancelText="结束" bind:handleCommit="handleDialogCommit" bind:handleCancel="handleDialogCancel">
