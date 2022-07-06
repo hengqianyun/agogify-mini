@@ -39,7 +39,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    this.queryReadyList()
+    this.queryReadyList(true)
   },
 
   /**
@@ -74,7 +74,11 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh() {
-
+    if (this.data.active == 0) {
+        this.queryReadyList(true)
+      } else {
+        this.queryShipedList(true)
+      }
   },
 
   /**
@@ -82,9 +86,9 @@ Page({
    */
   onReachBottom() {
     if (this.data.active == 0) {
-      this.queryReadyList()
+      this.queryReadyList(false)
     } else {
-      this.queryShipedList()
+      this.queryShipedList(false)
     }
   },
 
@@ -102,7 +106,7 @@ Page({
     })
   },
 
-  async queryReadyList() {
+  async queryReadyList(isRefresh: boolean) {
     wx.showLoading({
       title: '加载中...'
     })
@@ -122,6 +126,9 @@ Page({
           readyList.push({ ...item, jsonNotes: JSON.parse(item.notes) })
         }
       }
+      if (!isRefresh) {
+        readyList.unshift(...this.data.orderLists[0])
+      }
       this.setData({
         'orderLists[0]': readyList,
         'pageInfo1.page': this.data.pageInfo1.page + 1,
@@ -138,7 +145,7 @@ Page({
 
   },
 
-  async queryShipedList() {
+  async queryShipedList(isRefresh: boolean) {
     wx.showLoading({
       title: '加载中...'
     })
@@ -152,6 +159,9 @@ Page({
         }
         item.updatedAt = formatTime(new Date(Date.parse(item.updatedAt)))
         shipedList.push({ ...item, jsonNotes: JSON.parse(item.notes)[item.items[0].id] })
+      }
+      if (!isRefresh) {
+        shipedList.unshift(...this.data.orderLists[1])
       }
       this.setData({
         'orderLists[1]': shipedList,
@@ -172,7 +182,7 @@ Page({
   onChange({ detail }: WechatMiniprogram.TouchEvent) {
     const { index } = detail as unknown as { index: number}
     if (index == 1 && this.data.orderLists.length == 1) {
-      this.queryShipedList()
+      this.queryShipedList(true)
     }
     this.data.active = index
     console.log(detail)

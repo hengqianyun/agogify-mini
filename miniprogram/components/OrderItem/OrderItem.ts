@@ -1,7 +1,7 @@
 // components/OrderItem/OrderItem.ts
 type stateType = 0 | 1 | 2
 const stateMap: Map<stateType, string[]> = new Map([
-  [0, ['已完成', 'disable-btn']], [1, ['待发货', 'fill-btn']], [2, ['待收货', 'line-btn']]
+  [0, ['已完成', 'disable-btn']], [1, ['已发货', 'fill-btn']], [2, ['待发货', 'line-btn']]
 ])
 
 
