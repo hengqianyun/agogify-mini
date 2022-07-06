@@ -29,11 +29,11 @@
       </view>
     </block>
   </view> -->
-  <button open-type="share">
+  <!-- <button open-type="share">
     <view class="invite-banner">
       <image class="invite-image" src="../../assets/image/userAvator.png" lazy-load="false" binderror="" bindload=""></image>
     </view>
-  </button>
+  </button> -->
   <view class="person-center-container">
     <view class="p-c-title">个人中心</view>
     <view class="p-c-tools tools-container">

@@ -1,6 +1,6 @@
 import loginModule from "../../http/module/login"
 import { updateProfile } from "../../libs/tim/tim"
-import { login, userProfile } from "../../libs/user/user"
+import { getReceivedInviteCode, login, userProfile } from "../../libs/user/user"
 import { querySessionAsync } from "../../utils/querySession"
 
 // pages/bindPhone/bindPhone.ts
@@ -149,12 +149,22 @@ Page({
       // wx.navigateTo({url: '../person/person'})
       try {
         wx.showLoading({title: '正在登陆'})
+        const ric = getReceivedInviteCode()
+        const param = {
+            mobileNumber: this.data.phoneNumber,
+            verificationCode: this.data.verifyCode,
+            isMobileNumberRequired: true,
+            provider: 'mobile'
+          }
+        if (!!ric) {
+
+        }
          await login({
-          mobileNumber: this.data.phoneNumber,
-          verificationCode: this.data.verifyCode,
-          isMobileNumberRequired: true,
-          provider: 'mobile'
-        })
+            mobileNumber: this.data.phoneNumber,
+            verificationCode: this.data.verifyCode,
+            isMobileNumberRequired: true,
+            provider: 'mobile'
+          })
         userProfile.avatar = this.data.userInfo.avatarUrl
         userProfile.nickName = this.data.userInfo.userName
         updateProfile()

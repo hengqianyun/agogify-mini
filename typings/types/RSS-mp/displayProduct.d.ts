@@ -1,5 +1,5 @@
 declare namespace displayProductDesign {
-  type displayProductCategoryType = 'RTW' | 'Shoes' | 'Rings'
+  type displayProductCategoryType = 'RTW' | 'Shoes' | 'Rings' | 'Belt'
 
   interface displayProductItem extends swaggerI.requestSimpleBase {
     artist: string

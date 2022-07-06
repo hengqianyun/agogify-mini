@@ -712,6 +712,10 @@ Component({
         for (let i = 45; i <= 60; i++) {
           account.push({ value: i.toString(), label: i.toString() })
         }
+      } else if (item.category === 'Belt') {
+        for (let i = 70; i <= 125; i += 5) {
+            account.push({ value: i.toString(), label: i.toString() })
+          }
       } else {
         for (let i = 34; i <= 42; i += 0.5) {
           account.push({ value: i.toString(), label: i.toString() })

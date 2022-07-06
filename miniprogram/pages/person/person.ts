@@ -1,6 +1,6 @@
 // pages/person/person.ts
 import { shareInvite } from '../../libs/share'
-import { resetUserProfile, userProfile } from '../../libs/user/user'
+import { getInviteCode, resetUserProfile, setReceivedInviteCode, userProfile } from '../../libs/user/user'
 import { $on, $remove } from '../../utils/event'
 
 Page({
@@ -116,6 +116,10 @@ Page({
         avatar: userProfile.avatar
       })
     }
+    const {inviteCode} = this.options
+    if(!!inviteCode) {
+        setReceivedInviteCode(inviteCode)
+    }
   },
 
   /**
@@ -141,7 +145,9 @@ Page({
   onShareAppMessage(option) {
     const { from } = option
     if (from === 'button') {
-        return shareInvite('/pages/share/share', 'code')
+        const opt = shareInvite('/pages/person/person', getInviteCode())
+        console.log(opt)
+        return opt
     }
   },
   showProtocol() {

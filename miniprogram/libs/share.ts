@@ -28,6 +28,6 @@ export const shareBooking = (userName: string, bookingCode: string, page: string
 export const shareInvite = (page: string, code: string) => {
     return {
         title: 'Agogify爱购季好友邀请',
-        path: `${page}?code=${code}`
+        path: `${page}?inviteCode=${code}`
       }
 }

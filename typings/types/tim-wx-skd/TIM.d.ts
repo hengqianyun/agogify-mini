@@ -17,7 +17,7 @@ declare class TIMSKD {
 
   off: <T>(eventName: String, handle: (event: TIMEvent<T>) => void, context?: TIMSKD) => void
 
-  destroy: () => void
+  destroy: () => Promise<void>
 
   joinGroup: (option: {groupID: string, applyMessage?: string, type: TIMGroupTypes}) => Promise<any>
 
@@ -36,6 +36,8 @@ declare class TIMSKD {
   createImageMessage: (options: TIMCreateImageMessageParams) => Promise<TIMMessage>
 
   createCustomMessage: (options: TIMCreateCustomMessageParams) => Promise<TIMMessage>
+
+  getGroupList: () => Promise<any>
 
   sendMessage: (message: TIMMessage, option?: {onlineUserOnly?: boolean, offlinePushInfo?: {disablePush?: boolean, title?: string, description?: string}}) => Promise<TIMSendMessageRes>
 }

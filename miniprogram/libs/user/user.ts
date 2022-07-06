@@ -36,6 +36,8 @@ const _userProfile = {
 
 let inviteCode = "rUn1kVF320HcOAR5"
 
+let receivedInviteCode = ''
+
 export const userProfile = {
   nickName: '',
   avatar: '',
@@ -51,18 +53,20 @@ export const userProfile = {
 }
 Object.seal(userProfile)
 
+
+
 export const resetUserProfile = () => {
-    userProfile.nickName = ''
-    userProfile.avatar = ''
-    userProfile.id = -1
-    userProfile.pathId = ''
-    userProfile.defaultAddressId = -1
-    userProfile.hasTheRealNameBeenCertified = false
-    userProfile.firstName = ''
-    userProfile.lastName = ''
-    userProfile.identityNumber = ''
-    userProfile.token = ''
-    userProfile.mobileNumber = ''
+  userProfile.nickName = ''
+  userProfile.avatar = ''
+  userProfile.id = -1
+  userProfile.pathId = ''
+  userProfile.defaultAddressId = -1
+  userProfile.hasTheRealNameBeenCertified = false
+  userProfile.firstName = ''
+  userProfile.lastName = ''
+  userProfile.identityNumber = ''
+  userProfile.token = ''
+  userProfile.mobileNumber = ''
 }
 
 export const LoginKey = {
@@ -77,14 +81,36 @@ export const LoginKey = {
   } as OauthProviderPaths
 }
 
-export const getInviteCode =  async () => {
-    if (inviteCode === '') {
-        const res = await reserveModule.createIndividual();
-        console.log(res);
-        const code = (res.data as any).code
-        inviteCode = code
-    }
+export const setReceivedInviteCode = (value: string) => {
+  if (!!value) {
+    receivedInviteCode = value
+    console.debug('received invite code is ', value)
+  } else {
+    throw Error('链接错误，请重新尝试')
+  }
 }
+
+export const getReceivedInviteCode = () => receivedInviteCode
+
+export const getInviteCode = () => {
+  // setTimeout(() => creatInviteCode(), 0)
+  return inviteCode
+}
+
+export const creatInviteCode = async () => {
+  /**
+   * every time we login, we will reset the code in static env and try to get a invite code form service
+   * if wo do have the invite code, we just return the code
+   * every time we logout we will clear the code in static env
+   */
+  inviteCode = ''
+  const res = await reserveModule.createIndividual();
+  console.log(res);
+  const code = (res.data as any).code
+  inviteCode = code
+}
+
+
 
 // const 
 
@@ -135,12 +161,12 @@ export const login = async ({
     await queryUserInfo(userProfile.id);
     try {
       await getWxProfile()
-    } catch(err) {
+    } catch (err) {
       throw err
     }
     imLogin(userProfile.pathId)
 
-    getInviteCode()
+    // creatInviteCode()
     // await getServiceAvatar()
     await querySessionAsync()
     // return loginRes
@@ -196,7 +222,7 @@ const getWxProfile = async () => {
     userProfile.nickName = userInfo.nickName
     if (!userProfile.avatar)
       userProfile.avatar = userInfo.avatarUrl
-  } catch(err) {
+  } catch (err) {
     throw err
   }
 }
