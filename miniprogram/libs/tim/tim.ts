@@ -10,11 +10,23 @@ export const sendCustomMessage = (options: TIMCreateCustomMessageParamsPayload, 
 
 export const sendTextMessage = (groupID: string, text: string) => IMClient.getInstance().sendGroupTextMessage(groupID, text)
 
-export const joinStoreGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, { type: 'ChatRoom' })
+export const joinStoreGroup = async (groupID: string) => await IMClient.getInstance().joinGroup(groupID, { type: 'ChatRoom' })
 
-export const joinSessionGroup = (groupID: string) => IMClient.getInstance().joinGroup(groupID, { type: 'AVChatRoom' })
+export const joinSessionGroup = async (groupID: string, flag = false) => {
+  try {
+    return await IMClient.getInstance().joinGroup(groupID, { type: 'AVChatRoom' })
+  } catch (err) {
+    if (!flag) {
 
-export const quitGroup = (groupId: string) => IMClient.getInstance().quitGroup(groupId)
+      await IMClient.getInstance().quitGroup(groupID)
+      await joinSessionGroup(groupID, !flag);
+    } else {
+      throw err
+    }
+  }
+}
+
+export const quitGroup = async (groupId: string) => await IMClient.getInstance().quitGroup(groupId)
 
 export const sendAck = (options: TIMCreateCustomMessageParamsPayload, groupid: string, saleId: string, seq: string) => IMClient.getInstance().sendAck(options, groupid, saleId, seq)
 

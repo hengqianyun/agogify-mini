@@ -66,8 +66,8 @@ export default class IMClient {
     })
   }
 
-  public quitGroup(groupID: string) {
-    this.tim.quitGroup(groupID)
+  public async quitGroup(groupID: string) {
+    return await this.tim.quitGroup(groupID)
   }
 
   /**
@@ -220,7 +220,8 @@ export default class IMClient {
    */
   public async joinGroup(groupID: string, options: { type: TIMGroupTypes }) {
     try {
-      await this.tim.joinGroup({ groupID, type: options.type })
+      let res = await this.tim.joinGroup({ groupID, type: options.type })
+      return res
     } catch {
       // 加入异常处理
       console.debug('加入群聊失败')

@@ -3,6 +3,7 @@ import { clearAckTimeout, joinStoreGroup, quitGroup, sendAck, sendAckAsync, send
 import { userProfile } from "../../libs/user/user"
 import { $on, $remove } from '../../utils/event'
 import { clearSessionAsync } from "../../utils/querySession"
+import { getIdFromString } from "../../utils/util"
 
 // pages/roomWaiting/roomWaiting.ts
 Page({
@@ -149,7 +150,9 @@ Page({
    */
   async init() {
     const {sessionCode} = this.options
-    const roomId = this.data.storeGroupId + '-' + sessionCode
+    // const roomId = this.data.storeGroupId + '-' + sessionCode
+    const roomId = this.data.storeGroupId + '-' + getIdFromString(this.data.saleId)
+    
     await joinStoreGroup(this.data.storeGroupId)
     switch (this.data.type) {
       case 'needService':
