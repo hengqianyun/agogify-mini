@@ -149,6 +149,14 @@ declare namespace orderDesign {
   interface shipments extends swaggerI.requestBase { 
     id: number
     shippedAt: string | null
+    notes: {
+        requets: {}
+        response: {
+            dhlResponse: {
+                dispatchConfirmationNumber: string
+            }
+        }
+    }
   }
 
   interface orderCompleteParams {

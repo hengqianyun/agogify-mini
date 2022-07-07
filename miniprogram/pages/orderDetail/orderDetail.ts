@@ -29,18 +29,21 @@ Page({
     textInfo: [
       { label: '订单号', value: '' },
       { label: '流水号', value: '' },
+      { label: 'DHL单号', value: '' },
       { label: '创建时间', value: '' },
       { label: '发货时间', value: '' },
     ],
     tokenValue: '',
     category: '',
+    trackingCode: '',
+    showTracking: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    const { token } = this.options as { token: string }
+    const { token, trackingCode } = this.options as { token: string, trackingCode: string }
 
     this.setData({
       // storeAvatar: "http://dummyimage.com/200x200/50B347/FFF&text=avatar",
@@ -51,7 +54,9 @@ Page({
       // productDesc: "productDesc",
       // productPrice: '20',
       // productId: "productId",
-      tokenValue: token
+      tokenValue: token,
+      showTracking: !!trackingCode,
+      trackingCode: trackingCode ?? ''
     })
 
     this.queryOrderDetail()
@@ -123,6 +128,7 @@ Page({
       const textInfo = [
         { label: '订单号', value: data.tokenValue },
         { label: '流水号', value: data.items[0].units[0].serialNumber! },
+        { label: 'DHL单号', value: this.data.trackingCode },
         { label: '创建时间', value: formatTime(new Date(Date.parse(data.createdAt))) },
         { label: '发货时间', value: shippedAt ? formatTime(new Date(Date.parse(shippedAt))) : '' },
       ]

@@ -101,9 +101,17 @@ Page({
 
   handleOrderTap({ currentTarget }: WechatMiniprogram.TouchEvent) {
     const { token } = currentTarget.dataset as { token: string }
-    wx.navigateTo({
-      url: '../orderDetail/orderDetail?token=' + token
-    })
+    if (this.data.active === 1) {
+        const item = this.data.orderLists[this.data.active].find(e => e.tokenValue === token)
+        wx.navigateTo({
+            url: '../orderDetail/orderDetail?token=' + token + '&trackingCode=' + item?.shipments[0].notes.response.dhlResponse.dispatchConfirmationNumber
+          })
+    } else {
+
+        wx.navigateTo({
+          url: '../orderDetail/orderDetail?token=' + token
+        })
+    }
   },
 
   async queryReadyList(isRefresh: boolean) {
