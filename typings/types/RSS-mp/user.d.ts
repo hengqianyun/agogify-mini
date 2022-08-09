@@ -47,7 +47,8 @@ declare namespace userDesign {
     "identityNumber"?: string,
     "defaultAddress"?: string,
     "firstName"?: string,
-    "lastName"?: string
+    "lastName"?: string,
+    email?: string
   }
 
 

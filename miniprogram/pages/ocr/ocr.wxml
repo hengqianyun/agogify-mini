@@ -32,6 +32,15 @@
         <text class="error-msg" wx:if="{{form.identity.error}}">{{form.identity.errorMsg}}</text>
       </view>
     </view>
+    <view class="input-box">
+      <view class="input-label">邮箱账号</view>
+      <view class="input-area icon-input {{form.email.focus ? 'focus-area' : ''}} {{form.email.error ? 'error-area' : ''}}">
+        <input class="input" type="text" value="{{form.email.value}}" data-key="email" bindinput="handleInput" bindfocus="handleFocus" bindblur="handleBlur" placeholder="输入18位身份证号" placeholder-class="placeholder-class" />
+        <!-- <iconfont wx:if="{{showClear}}" name="shanchuwenzineirongicon" size="{{32}}" />
+      <iconfont wx:else /> -->
+        <text class="error-msg" wx:if="{{form.email.error}}">{{form.email.errorMsg}}</text>
+      </view>
+    </view>
     <view class="step">
       <view class="step-icon">1</view>
       <view class="step-text">上传身份证正面照片</view>

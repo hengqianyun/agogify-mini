@@ -29,6 +29,7 @@ Page({
       firstName: { focus: false, error: false, value: '', errorMsg: '请输入正确的姓氏' },
       lastName: { focus: false, error: false, value: '', errorMsg: '请输入正确的名字' },
       identity: { focus: false, error: false, value: '', errorMsg: '请输入正确的身份证号' },
+      email: { focus: false, error: false, value: '', errorMsg: '请输入正确的邮箱账号' },
       // firstName: { focus: false, error: false, value: '磊', errorMsg: '请输入正确的姓氏' },
       // lastName: { focus: false, error: false, value: '衡', errorMsg: '请输入正确的名字' },
       // identity: { focus: false, error: false, value: '510922199606248173', errorMsg: '请输入正确的身份证号' },
@@ -204,7 +205,7 @@ Page({
   },
 
   async handleCommit() {
-    const { firstName, lastName, identity } = this.data.form
+    const { firstName, lastName, identity, email } = this.data.form
     if (firstName.value.trim() == '' || firstName.value.length > 2) {
       this.setData({
         'form.firstName.error': true
@@ -235,6 +236,17 @@ Page({
         'form.identity.error': false
       })
     }
+    const reg = new RegExp(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ )
+    if (!reg.test(email.value)) {
+      this.setData({
+        'form.email.error': true
+      })
+      return
+    } else {
+      this.setData({
+        'form.email.error': false
+      })
+    }
     if (!this.data.identityPath) {
       wx.showToast({ title: "上传证件正面照", icon: "error", duration: 2000, })
       return
@@ -246,7 +258,6 @@ Page({
     this.setData({
       commitBtnDisabled: true
     })
-
     wx.showLoading({ title: '正在提交...' })
     try {
       await this.uploadImage(this.data.identityPath, 'identity-front')
@@ -367,7 +378,7 @@ Page({
   },
 
   async putUserInfo() {
-    const { firstName, lastName, identity } = this.data.form
+    const { firstName, lastName, identity, email } = this.data.form
     try {
       await userModule.putCustomerInfo({
         lastName: lastName.value,
@@ -377,6 +388,7 @@ Page({
         identityType: 'identity',
         // identityNumber: this.data.userNumber.toString(),
         identityNumber: identity.value,
+        email: email.value
       }, userProfile.id)
     } catch (err) {
       throw err;
