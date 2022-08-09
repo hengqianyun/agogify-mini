@@ -14,7 +14,7 @@ export const IMAGEPATHS = {
   avatarNormal1x: 'avatar_thumbnail_normal_1x/',
   storeSmall2x: 'store_thumbnail_small_1x/',
   storeMedium2x: 'store_thumbnail_medium_1x/',
-  storeNormal2x: 'store_thumbnail_normal_1x/',
+  storeNormal2x: 'store_thumbnail_normal_2x/',
   storeTiny2x: 'store_thumbnail_tiny_1x/',
   storeMain2x: 'store_main_normal_2x/',
   storeSmall1x: 'store_thumbnail_small_1x/',

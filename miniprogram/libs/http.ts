@@ -4,7 +4,7 @@ const wxrequest = <T>(option: RSSHTTPModule.requestOption, interceptor: RSSHTTPM
     if (interceptor.request) {
       try {
         _option = interceptor.request.do(option)
-      } catch(err) {
+      } catch (err) {
         interceptor.request.error(err)
         console.log('catch')
         reject()
@@ -18,7 +18,7 @@ const wxrequest = <T>(option: RSSHTTPModule.requestOption, interceptor: RSSHTTPM
         if (interceptor.response) {
           try {
             data = await interceptor.response.success(res)
-          } catch(err) {
+          } catch (err) {
             console.log('接口报错')
             reject(err)
           }
@@ -26,11 +26,19 @@ const wxrequest = <T>(option: RSSHTTPModule.requestOption, interceptor: RSSHTTPM
         resolve(data)
       },
       fail: async (res) => {
+        // wx.showToast({
+        //   title: '发送请求失败'
+        // })
         console.log('发送请求失败')
         let data = res
         if (interceptor.response) {
           data = await interceptor.response.error(res)
         }
+        // wx.showToast({
+        //   title: 'reject data',
+        //   icon: 'error',
+        //   duration: 2000
+        // })
         reject(data)
       }
     })
@@ -73,7 +81,7 @@ class RSSHTTP {
   }
 
   setTimeout(time: number) {
-    this.defaultConfig = {...this.defaultConfig, timeout: time}
+    this.defaultConfig = { ...this.defaultConfig, timeout: time }
     return this
   }
 
@@ -84,42 +92,60 @@ class RSSHTTP {
   }
 
   async post<T>(url: string, params?: any, option = {}) {
-    return await wxrequest<T>({
-      url,
-      data: params,
-      method: 'POST',
-      ...this.defaultConfig,
-      ...option
-    }, this.interceptor)
+    try {
+      return await wxrequest<T>({
+        url,
+        data: params,
+        method: 'POST',
+        ...this.defaultConfig,
+        ...option
+      }, this.interceptor)
+    } catch (err) {
+      throw err
+    }
   }
 
   async typePost<T>(url: string, params?: any, option = {}) {
-    return await wxrequest<T>({
-      url,
-      data: params,
-      method: 'POST',
-      ...this.diffConfig,
-      ...option
-    }, this.interceptor)
+    try {
+      return await wxrequest<T>({
+        url,
+        data: params,
+        method: 'POST',
+        ...this.diffConfig,
+        ...option
+      }, this.interceptor)
+    } catch (err) {
+      throw err
+    }
   }
 
   async get<T>(url: string, params?: any, option = {}) {
-    return await wxrequest<T>({
-      url,
-      data: params,
-      method: 'GET',
-      ...this.defaultConfig,
-      ...option
-    }, this.interceptor)
+    try {
+      return await wxrequest<T>({
+        url,
+        data: params,
+        method: 'GET',
+        ...this.defaultConfig,
+        ...option
+      }, this.interceptor)
+    } catch (err) {
+      throw err
+    }
+
   }
   async publicGet<T>(url: string, params?: any, option = {}) {
-    return await wxrequest<T>({
-      url,
-      data: params,
-      method: 'GET',
-      ...this.publicReqConfig,
-      ...option
-    }, this.interceptor)
+    try {
+      return await wxrequest<T>({
+        url,
+        data: params,
+        method: 'GET',
+        ...this.publicReqConfig,
+        ...option
+      }, this.interceptor)
+    } catch (err) {
+      throw err
+    }
+
   }
 
   async put<T>(url: string, params?: any, option = {}) {
@@ -136,19 +162,24 @@ class RSSHTTP {
       console.log(err)
       throw err
     }
-    
+
   }
 
   async delete<T>(url: string, params?: any, option = {
-    
+
   }) {
-    return await wxrequest<T>({
-      url,
-      data: params,
-      method: 'DELETE',
-      ...this.defaultConfig,
-      ...option
-    }, this.interceptor)
+    try {
+      return await wxrequest<T>({
+        url,
+        data: params,
+        method: 'DELETE',
+        ...this.defaultConfig,
+        ...option
+      }, this.interceptor)
+    } catch (err) {
+      throw err
+    }
+
   }
 }
 

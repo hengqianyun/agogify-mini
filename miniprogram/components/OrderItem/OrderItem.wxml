@@ -13,11 +13,11 @@
       </view>
         
     </view>
-    <view class="controller">
+    <!-- <view class="controller">
       <iconfont wx:if="{{collected}}" name="collection_g" size="{{40}}"></iconfont>
       <iconfont wx:else name="collection" size="{{40}}"></iconfont>
       <iconfont name="share" size="{{40}}"></iconfont>
-    </view>
+    </view> -->
   </view>
   <view class="bottom-container">
     <!-- <view class="avatar-box">

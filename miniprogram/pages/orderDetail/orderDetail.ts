@@ -46,19 +46,10 @@ Page({
     const { token, trackingCode } = this.options as { token: string, trackingCode: string }
 
     this.setData({
-      // storeAvatar: "http://dummyimage.com/200x200/50B347/FFF&text=avatar",
-      // storeName: "storeName",
-      // storeId: "storeId",
-      // productAvatar: "http://dummyimage.com/200x200/F00/FFF&text=Product",
-      // productName: "productName",
-      // productDesc: "productDesc",
-      // productPrice: '20',
-      // productId: "productId",
       tokenValue: token,
       showTracking: !!trackingCode,
       trackingCode: trackingCode ?? ''
     })
-
     this.queryOrderDetail()
   },
 
@@ -111,8 +102,6 @@ Page({
           duration: 2000,
         })
         return
-      } finally {
-        wx.hideLoading()
       }
       const coasts = [
         { label: '商品金额', value: (data.items[0].unitPrice / 100).toFixed(2) },
@@ -144,7 +133,14 @@ Page({
         category: `${notes.zh_Hans_CN.category1} - ${notes.zh_Hans_CN.category2} - ${notes.zh_Hans_CN.category3}`
       })
     } catch (err) {
+        wx.showToast({
+          'title': 'error',
+          icon: 'error',
+          duration: 2000
+        })
       throw err
+    } finally {
+        wx.hideLoading()
     }
 
 

@@ -153,7 +153,7 @@ declare namespace orderDesign {
         requets: {}
         response: {
             dhlResponse: {
-                dispatchConfirmationNumber: string
+                shipmentTrackingNumber: string
             }
         }
     }

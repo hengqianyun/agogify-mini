@@ -185,7 +185,7 @@ Component({
                   async success(res) {
                     if (res.confirm) {
                       if (!that.data.canGoAssistant) {
-                        wx.showToast({title: '超时', icon: 'error', duration: 2000})
+                        wx.showToast({ title: '超时', icon: 'error', duration: 2000 })
                         that.setData({
                           canGoAssistant: true
                         })
@@ -240,12 +240,12 @@ Component({
                   queueMessage: `抱歉，${payloadData.name}商品/尺码已售完，可选其他商品`
                 })
                 wx.showModal({
-                    title: `抱歉，${payloadData.name}商品/尺码已售完，可选其他商品`,
-                    showCancel: false,
-                    confirmText: 'OK',
-                    complete() {
+                  title: `抱歉，${payloadData.name}商品/尺码已售完，可选其他商品`,
+                  showCancel: false,
+                  confirmText: 'OK',
+                  complete() {
 
-                    }
+                  }
                 })
                 setTimeout(() => {
                   this.setData({
@@ -556,10 +556,10 @@ Component({
         item.product = product
       }
       this.setData({
-          queueList: list.filter((e: any) => e.notes.state !== 'outOfStock')
-        })
-        console.log(this.data.queueList)
-        console.log(list)
+        queueList: list.filter((e: any) => e.notes.state !== 'outOfStock')
+      })
+      console.log(this.data.queueList)
+      console.log(list)
     },
     handleDialogCommit() {
 
@@ -671,7 +671,7 @@ Component({
         this.setData({
           displayProductList: this.data.displayProductList
         })
-        
+
         await this.queue(item['@id'])
         item.canTap = true
         this.setData({
@@ -681,7 +681,7 @@ Component({
       } catch (err) {
         console.log(err)
         const that = this
-        
+
       }
     },
     async handleGOQueue() {
@@ -714,8 +714,8 @@ Component({
         }
       } else if (item.category === 'Belt') {
         for (let i = 70; i <= 125; i += 5) {
-            account.push({ value: i.toString(), label: i.toString() })
-          }
+          account.push({ value: i.toString(), label: i.toString() })
+        }
       } else {
         for (let i = 34; i <= 42; i += 0.5) {
           account.push({ value: i.toString(), label: i.toString() })
@@ -743,7 +743,7 @@ Component({
         wx.showLoading({
           title: '加载中'
         })
-        
+
 
         await queueTicketModule.queue(pathId, JSON.stringify({
           mainSize: this.data.account[this.data.accountsIndex1].value,
@@ -1025,7 +1025,7 @@ Component({
             const reqData = await videoModule.translateSpeech(recordeFile)
             const { data } = reqData
             if (data.SourceText.trim() === '') {
-                return
+              return
             }
             this.sendTextMessage((this.data.isAssistantRoom ? 'assistant_chat///:' : '') + data.SourceText + (this.data.needTrans ? `(${data.TargetText})` : ''))
           }
@@ -1371,7 +1371,16 @@ Component({
 
           console.debug(putAddressRes, putShipmentRes, putPaymentRes, completeRes)
           // TODO 暂时取消支付码获取
-          qrcodeUrl = await this.queryQrcode()
+          try {
+            qrcodeUrl = await this.queryQrcode()
+          } catch (err) {
+            wx.showModal({
+              title: '错误',
+              content: '请求错误，请重试.',
+              showCancel: false,
+            })
+            throw err
+          }
           this.showQrcode(qrcodeUrl)
 
           await sendCustomMessage({ data: CustomMessageTypes.ORDER_COMPLETE }, this.data.groupId, this.properties.saleId, {
@@ -1491,8 +1500,8 @@ Component({
       try {
         const res = await orderModule.unionPayPayment({
           orderId: this.data.tokenValue,
-        //   orderId: this.data.tokenValue + this.data.shippingTotal,
-        //   user: "info@yabandmedia.com",
+          //   orderId: this.data.tokenValue + this.data.shippingTotal,
+          //   user: "info@yabandmedia.com",
           // amount: (this.data.orderInfo.items[0].total / 100).toString(),
           // currency: "EUR",
           description: "YabandPay / UnionPay / test",

@@ -34,7 +34,8 @@ Page({
     isGuest: false, // 是否为被邀请用户
     isLive: false, // 是否为直播类型
     enabledMic: true,
-    isFirstIn: true
+    isFirstIn: true,
+    sessionCode: ''
   },
 
   /**
@@ -42,7 +43,7 @@ Page({
    */
   onLoad() {
 
-    const { roomId, saleId, storeId, avGroupId, storeGroupId, sessionCode, share, isLive } = this.options as { roomId: string, storeId: string, saleId: string, avGroupId: string, storeGroupId: string, sessionCode?: string, share?: string, isLive?: string }
+    const { roomId, saleId, storeId, avGroupId, storeGroupId, sessionCode, share, isLive } = this.options as { roomId: string, storeId: string, saleId: string, avGroupId: string, storeGroupId: string, sessionCode: string, share?: string, isLive?: string }
     joinSessionGroup(avGroupId)
     // 查询店铺信息
     this.queryStore(storeId)
@@ -59,7 +60,8 @@ Page({
       strRoomID: roomId,
       isReconnect: !!sessionCode && !share,
       isGuest: !!share,
-      isLive: !!isLive
+      isLive: !!isLive,
+      sessionCode
     })
     const { userSig, sdkAppID } = genTestUserSig(userProfile.pathId)
     trtcClient = new TRTC(this)
@@ -142,7 +144,7 @@ Page({
   onShareAppMessage(option) {
     const { from } = option
     if (from === 'button') {
-      return shareVideo(userProfile.nickName!, this.data.groupId.split('Meeting-')[1], '/pages/share/share', this.data.groupId, { salesId: this.data.saleId, storeId: this.data.storeId })
+      return shareVideo(userProfile.nickName!, this.data.sessionCode, '/pages/share/share', this.data.groupId, { salesId: this.data.saleId, storeId: this.data.storeId })
     }
   },
 
@@ -218,7 +220,7 @@ Page({
       pusher: result.pusher,
       playerList: result.playerList,
     })
-    const code = this.data.groupId.split('Meeting-')[1]
+    const code = this.data.sessionCode
     sessionModule.putSession({
       droppedByCustomer: true
     }, code)

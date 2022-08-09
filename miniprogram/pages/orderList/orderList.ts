@@ -104,7 +104,7 @@ Page({
     if (this.data.active === 1) {
         const item = this.data.orderLists[this.data.active].find(e => e.tokenValue === token)
         wx.navigateTo({
-            url: '../orderDetail/orderDetail?token=' + token + '&trackingCode=' + item?.shipments[0].notes.response.dhlResponse.dispatchConfirmationNumber
+            url: '../orderDetail/orderDetail?token=' + token + '&trackingCode=' + item?.shipments[0].notes.response.dhlResponse.shipmentTrackingNumber
           })
     } else {
 
@@ -118,6 +118,9 @@ Page({
     wx.showLoading({
       title: '加载中...'
     })
+    if (isRefresh) {
+        this.data.pageInfo1.page = 1
+    }
     try {
       const resData = await orderModule.queryOrderList(this.data.pageInfo1)
       const { "hydra:member": list } = resData.data
@@ -157,6 +160,9 @@ Page({
     wx.showLoading({
       title: '加载中...'
     })
+    if (isRefresh) {
+        this.data.pageInfo2.page = 1
+    }
     try {
       const resData = await orderModule.queryOrderList(this.data.pageInfo2)
       const { "hydra:member": list } = resData.data
