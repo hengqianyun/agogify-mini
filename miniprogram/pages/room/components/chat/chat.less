@@ -402,8 +402,8 @@
       box-sizing: border-box;
       border-radius: 4rpx;
       right: 0;
-      
-      
+
+
 
       .ticket-item {
         height: 172rpx;
@@ -436,6 +436,7 @@
             flex-direction: column;
             justify-content: space-around;
             width: 338rpx;
+
             .top-info {
               display: flex;
               justify-content: space-around;
@@ -537,7 +538,7 @@
       justify-content: space-between;
       align-items: center;
       height: 184rpx;
-      padding: 46rpx 0;
+      // margin: 46rpx 0;
       border-bottom: 1rpx solid @borderColor;
 
       .left-box {
@@ -567,7 +568,7 @@
 
     .more-address {
       position: absolute;
-      top: 290rpx;
+      top: 168rpx;
       height: 552rpx;
       z-index: 100;
       background: #fff;
@@ -599,7 +600,7 @@
     }
 
     .product-item {
-      padding: 30rpx 0;
+      // margin: 30rpx 0;
 
       .product-title {
         font-size: 36rpx;
@@ -621,8 +622,8 @@
           flex-direction: column;
           justify-content: space-around;
           align-self: start;
-          height: 122rpx;
-          padding-left: 52rpx;
+          height: 168rpx;
+          padding-left: 42rpx;
           box-sizing: border-box;
 
           .product-info-item {
@@ -634,13 +635,27 @@
     }
 
     .order-details {
-      padding: 32rpx 0;
+      padding: 32rpx 0 0 36rpx;
 
       .detail {
         display: flex;
         justify-content: space-between;
         font-size: 24rpx;
         color: @defaultColor;
+        margin: 16rpx 0;
+      }
+
+      .price-detail {
+        font-size: 22rpx;
+
+        .invoice-price {
+          font-weight: bold;
+        }
+
+        .detail-label {
+          padding-left: 33rpx;
+          box-sizing: border-box;
+        }
       }
 
       .coupon {
@@ -673,6 +688,15 @@
 
     }
   }
+
+  .order-tips {
+    width: 100%;
+    margin: 32rpx 0 16rpx;
+    color: #676767;
+    font-size: 22rpx;
+    text-align: center;
+  }
+  
 
   .display-product-popup {
     .popup-title {
@@ -812,6 +836,8 @@
         height: 160rpx;
       }
     }
+
+    
 
     .btn-area {
       margin-top: 190rpx;
