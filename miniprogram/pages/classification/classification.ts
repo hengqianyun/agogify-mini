@@ -59,6 +59,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
+    // await Promise.all([this.queryBrand(), this.queryCities(), this.queryCategory()])
+    // await this.queryStore(1)
+  },
+
+  async onShow() {
     await Promise.all([this.queryBrand(), this.queryCities(), this.queryCategory()])
     await this.queryStore(1)
   },
@@ -132,14 +137,25 @@ Page({
       classificationChildList: childList,
       classificationChild: childList[0].name
     })
+    if (title !== '全部') {
+      wx.setStorageSync('sex', this.data.classificationList[index].code.join('/'))
+    } else {
+      wx.removeStorageSync('sex')
+    }
+    wx.removeStorageSync('taxon')
     this.queryStore(1)
   },
 
   handleChildCategoryChange({ target }: WechatMiniprogram.TouchEvent) {
-    const { name } = target.dataset as unknown as { index: number, name: string }
+    const { name, index } = target.dataset as unknown as { index: number, name: string }
     this.setData({
       classificationChild: name
     })
+    if (name !== '全部') {
+      wx.setStorageSync('taxon', this.data.classificationChildList[index].code[0].split('-')[1])
+    } else {
+      wx.removeStorageSync('taxon')
+    }
     this.queryStore(1)
   },
 
@@ -148,6 +164,11 @@ Page({
     this.setData({
       brandActiveKey: index
     })
+    if (index > 0) {
+      wx.setStorageSync('brand', this.data.brandList[index].code)
+    } else {
+      wx.removeStorageSync('brand')
+    }
     this.queryStore(1)
   },
 
@@ -293,6 +314,9 @@ Page({
       })
       wx.setStorageSync('category', resList)
       this.queryCategoryChild()
+      wx.removeStorageSync('brand')
+      wx.removeStorageSync('taxon')
+      wx.removeStorageSync('sex')
     }
   },
   async queryCategoryChild() {

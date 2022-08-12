@@ -40,6 +40,7 @@ Component({
    */
   methods: {
     handleClick() {
+
       wx.navigateTo({
         url: `/pages/storePage/storePage?storeId=${this.properties.store.code}&storeName=${this.properties.store.name}`,
       })

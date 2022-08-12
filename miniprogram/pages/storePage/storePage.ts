@@ -50,68 +50,111 @@ Page({
       itemsPerPage: 10,
     },
     reachBottomSearch: true,
+    brandOptions: [
+      { value: 'all', text: '品牌' }
+    ],
+    brand: 'all',
+    sexOptions: [
+      { value: 'all', text: '适用性别' },
+      { value: 'men', text: '男士' },
+      { value: 'women', text: '女士' },
+      { value: 'baby/Boy/Girl', text: '儿童' },
+    ],
+    sex: 'all',
+    taxonOptions: [
+      { value: 'all', text: '品类' }
+    ],
+    taxon: 'all',
+    hasParams: false,
+    showAllBtn: {
+      label: '显示全部',
+      class: 'line-btn',
+      color: "#353535",
+      event: 'handleShowAll',
+    }
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   async onLoad(options) {
-    const { storeId, storeName, brandCode, taxon, sex } = options;
+    const { storeId, storeName, brand, taxon, sex } = options;
+    await this.queryTaxon()
     this.setData({
-      storeId: storeId
+      storeId: storeId,
     })
     wx.setNavigationBarTitle({ title: storeName! })
     console.log(options)
     await this.queryDetails()
+    this.setData({
+      brand: brand || 'all',
+      sex: sex || 'all',
+      taxon: taxon || 'all',
+    })
     await this.queryProducts(0)
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
   },
 
   onReachBottom() {
     if (this.data.reachBottomSearch) {
       this.queryProducts(1)
     }
+  },
+
+  async queryBrand() {
+    this.setData({
+      brandOptions: [
+        { value: 'all', text: '品牌' },
+        { value: 'IRERI', text: 'IRERI' },
+      ]
+    })
+  },
+  async queryTaxon() {
+    this.setData({
+      taxonOptions: [
+        { value: 'all', text: '品类' },
+        { value: 'clothing', text: '服饰' },
+        { value: 'shoes', text: '鞋履' },
+        { value: 'bags', text: '包袋' },
+        { value: 'accessories', text: '配饰' },
+      ]
+    })
+  },
+
+  async handleBrandChange({ detail }: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      brand: detail as unknown as string
+    })
+    this.changeShowAll()
+    await this.queryProducts(0)
+  },
+  async handleSexChange({ detail }: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      sex: detail as unknown as string
+    })
+    this.changeShowAll()
+    await this.queryProducts(0)
+  },
+  async handleTaxonChange({ detail }: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      taxon: detail as unknown as string
+    })
+    this.changeShowAll()
+    await this.queryProducts(0)
+  },
+  changeShowAll() {
+    const { brand, sex, taxon } = this.data
+    this.setData({
+      hasParams: brand !== 'all' || sex !== 'all' || taxon !== 'all'
+    })
+  },
+  async handleShowAll() {
+    this.setData({
+      taxon: 'all',
+      brand: 'all',
+      sex: 'all',
+      hasParams: false
+    })
+    await this.queryProducts(0)
   },
 
   handleIconButtonTap(ev: WechatMiniprogram.TouchEvent) {
@@ -165,13 +208,47 @@ Page({
     const { country, city } = resData.data.billingData
     const address = `${country?.name} ${city?.name}`
     this.setData({
-      details: { ...resData.data, address }
+      details: { ...resData.data, address },
+      brandOptions: [...this.data.brandOptions, ...resData.data.brands.map(e => { return { text: e.name, value: e.code } })]
     })
   },
 
   async queryProducts(type: number) {
     if (type === 1 && !this.data.reachBottomSearch) return
-    const resData = await storeModule.queryProducts({ ...this.data.pageInfo, 'store.code': this.data.storeId })
+    const { page, itemsPerPage } = this.data.pageInfo
+    const { storeId, brand, taxon, sex } = this.data
+    let params = `page=${page}&itemsPerPage=${itemsPerPage}&store.code=${storeId}`
+    if (brand !== 'all') {
+      params += `&brand.code=${brand}`
+    }
+    if (sex === 'baby/Boy/Girl') {
+      let sexs = sex.split('/')
+      if (taxon !== 'all') {
+        params += sexs.map(e => `&productTaxons.taxon.code[]=${e}-${taxon}`).join('')
+      } else {
+        params += sexs.map(e => [this.data.taxonOptions.map(t => t.value === 'all' ? '' : `&productTaxons.taxon.code[]=${e}-${t.value}`).join('')]).join('')
+      }
+    } else if (sex !== 'all') {
+      if (taxon !== 'all') {
+        params += `&productTaxons.taxon.code[]=${sex}-${taxon}`
+      } else {
+        params += this.data.taxonOptions.map(e => e.value === 'all' ? '' : `&productTaxons.taxon.code[]=${sex}-${e.value}`).join('')
+      }
+    } else {
+      if (taxon !== 'all') {
+        params += this.data.sexOptions.map(e => {
+          if (e.value === 'baby/Boy/Girl') {
+            let sexs = e.value.split('/')
+            return sexs.map(e => `&productTaxons.taxon.code[]=${e}-${taxon}`).join('')
+          } else {
+            return `&productTaxons.taxon.code[]=${e.value}-${taxon}`
+          }
+        }).join('')
+      }
+    }
+    console.log(params)
+    // const resData = await storeModule.queryProducts({ ...this.data.pageInfo, 'store.code': this.data.storeId })
+    const resData = await storeModule.queryProductsWithStringParams(params)
     const { 'hydra:member': list } = resData.data
     // list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path))
     const temp: PageProduct[] = list.map(e => {

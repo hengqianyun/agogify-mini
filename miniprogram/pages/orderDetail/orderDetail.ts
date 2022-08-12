@@ -94,6 +94,14 @@ Page({
       try {
         wx.showLoading({ title: '加载中...' })
         res = await orderModule.queryOrderDetail(this.data.tokenValue)
+        if (res === undefined) {
+          wx.showToast({
+            title: '网络错误',
+            icon: 'error',
+            duration: 2000,
+          })
+          return
+        }
         data = res.data
       } catch {
         wx.showToast({
@@ -130,20 +138,20 @@ Page({
         textInfo,
         productName: notes.zh_Hans_CN.productName,
         productPrice: (data.items[0].unitPrice / 100).toLocaleString(),
-        storeAvatar: IMAGEBASEURL+ IMAGEPATHS.storeNormal1x + data.store.logo.path,
+        storeAvatar: IMAGEBASEURL + IMAGEPATHS.storeNormal1x + data.store.logo.path,
         storeName: data.store.name,
         productDesc: notes.zh_Hans_CN.size,
         category: `${notes.zh_Hans_CN.category1} - ${notes.zh_Hans_CN.category2} - ${notes.zh_Hans_CN.category3}`
       })
+      wx.hideLoading()
     } catch (err) {
-        wx.showToast({
-          'title': 'error',
-          icon: 'error',
-          duration: 2000
-        })
+      wx.showToast({
+        'title': 'error',
+        icon: 'error',
+        duration: 2000
+      })
+      wx.hideLoading()
       throw err
-    } finally {
-        wx.hideLoading()
     }
 
 

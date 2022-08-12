@@ -40,8 +40,11 @@ Component({
       this.triggerEvent('onTap', detail)
     },
     handleClick() {
+      let brand = wx.getStorageSync('brand')
+      let taxon = wx.getStorageSync('taxon')
+      let sex = wx.getStorageSync('sex')
       wx.navigateTo({
-        url: `/pages/storePage/storePage?storeId=${this.properties.code}&storeName=${this.properties.name}`,
+        url: `/pages/storePage/storePage?storeId=${this.properties.code}&storeName=${this.properties.name}&taxon=${taxon}&brand=${brand}&sex=${sex}`,
       })
     },
   }

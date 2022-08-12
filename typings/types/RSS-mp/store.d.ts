@@ -8,6 +8,7 @@ declare namespace storeDesign {
     desc?: string
     billingData: storeBillingData
     logo: Logo
+    brands: {name: string, code: string, id: number}[]
   }
 
   interface addressSimpleData extends swaggerI.requestSimpleBase {
@@ -188,7 +189,7 @@ declare namespace storeDesign {
   interface QueryCategorys extends swaggerI.requsetListBase<category> { }
 
   interface QueryStoreDetailRes extends storeItem, swaggerI.requestBase {
-    brands: BrandItemSimple[]
+    brands: {name: string, code: string, id: number}[]
     logo: Logo
     slug: string
     products: product[]

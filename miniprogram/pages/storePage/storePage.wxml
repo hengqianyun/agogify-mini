@@ -5,7 +5,7 @@
       <view class="store-avatar">
         <image class="avatar" src="{{details.logo.path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="imageError" bindload=""></image>
       </view>
-        
+
     </view>
     <view class="text-info">
       <view class="store-name">{{details.name}}</view>
@@ -14,29 +14,29 @@
         <view class="store-address-icon">
           <iconfont name="dingwei_g" size="{{24}}" />
         </view>
-          <view class="store-address-text text-ellipsis">
-            <!-- TODO 店铺地址 -->
-            <!-- {{details.address}} -->
-            {{details.address}}
-          </view>
+        <view class="store-address-text text-ellipsis">
+          <!-- TODO 店铺地址 -->
+          <!-- {{details.address}} -->
+          {{details.address}}
+        </view>
       </view>
     </view>
-      
+
   </view>
   <view class="controller">
     <block wx:for="{{btns}}" wx:key="label">
       <view class="btn-box">
-        
+
         <RssButton data-event="{{item.event}}" label="{{item.label}}" className="{{item.class}}" width="{{196}}" height="{{76}}" borderRadius="{{2}}" fontWeight="{{300}}" icon="{{item.icon}}" color="{{item.color}}" iconSize="{{item.size}}" bind:tap="handleIconButtonTap"></RssButton>
       </view>
-        
-      
+
+
       <!-- <view class="btn {{item.class}}" data-event="{{item.event}}" bind:tap="handleIconButtonTap">
         <iconfont name="{{item.icon}}" size="{{item.size}}" color="{{item.color}}" />
         <text>{{item.label}}</text>
       </view> -->
     </block>
-      
+
   </view>
   <view class='store-container'>
     <view class="s-c-title">
@@ -45,6 +45,19 @@
         <!-- <view class="text-small">New Store</view> -->
       </view>
     </view>
+  </view>
+  <view class="products-controller">
+    <van-dropdown-menu custom-class="dropdown-box">
+      <van-dropdown-item value="{{ brand }}" options="{{ brandOptions }}" bind:change="handleBrandChange" />
+    </van-dropdown-menu>
+    <van-dropdown-menu custom-class="dropdown-box">
+      <van-dropdown-item value="{{ sex }}" options="{{ sexOptions }}" bind:change="handleSexChange" />
+    </van-dropdown-menu>
+    <van-dropdown-menu custom-class="dropdown-box">
+      <van-dropdown-item value="{{ taxon }}" options="{{ taxonOptions }}" bind:change="handleTaxonChange" />
+    </van-dropdown-menu>
+    <RssButton wx:if="{{hasParams}}" data-event="{{showAllBtn.event}}" fontSize="{{24}}" label="{{showAllBtn.label}}" className="{{showAllBtn.class}}" width="{{128}}" height="{{52}}" borderRadius="{{2}}" fontWeight="{{300}}" color="{{showAllBtn.color}}" bind:tap="handleIconButtonTap"></RssButton>
+    <view wx:else class="all-btn">已显示全部</view>
   </view>
   <view class="product-container">
     <block wx:for="{{products}}" wx:key="id">
@@ -55,14 +68,16 @@
         <!-- <view class="product-category text-ellipsis">指导价:{{item.enabledVariants[0].price}}</view> -->
         <!-- <view class="product-category text-ellipsis">参考价:€ {{item.localPrice}}</view> -->
         <view class="product-category text-ellipsis">
-        <text>参考价：€ {{item.localPrice}}</text>
-        <block wx:if="{{item.off}}">
+          <text>参考价：€ {{item.localPrice}}</text>
+          <block wx:if="{{item.off}}">
             <text class="original-price"> € {{item.originalPrice}}</text>
-        </block>
-    </view>
+          </block>
+        </view>
       </view>
-        
+
     </block>
   </view>
+  <view wx:if="{{!reachBottomSearch || products.length === 0}}" class="product-default-msg">
+    此处仅显示专柜展示商品，请通过私聊获取更多商品及尺码信息
+  </view>
 </view>
-  
