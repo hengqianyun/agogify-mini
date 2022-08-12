@@ -160,7 +160,7 @@ Page({
     if (resData.data.logo)
       resData.data.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal2x + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
-      resData.data.images[0].path = IMAGEBASEURL + IMAGEPATHS.storeMain1x + resData.data.images[0].path
+      resData.data.images[0].path = IMAGEBASEURL + IMAGEPATHS.storeMain2x + resData.data.images[0].path
     }
     const { country, city } = resData.data.billingData
     const address = `${country?.name} ${city?.name}`
