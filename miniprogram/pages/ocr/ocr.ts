@@ -99,7 +99,7 @@ Page({
         'form.firstName.value': userProfile.firstName,
         'form.identity.value': userProfile.identityNumber,
         'form.lastName.value': userProfile.lastName,
-        'form.email.value': userProfile.email,
+        'form.email.value': userProfile.hasTheRealNameBeenCertified ? userProfile.email : '',
         hasRealNameCertified: userProfile.hasTheRealNameBeenCertified,
         identityBase64: '值',
         identityPath: POST + '/assets/app/img/identity-mock-front.png',
@@ -248,11 +248,11 @@ Page({
         'form.email.error': false
       })
     }
-    if (!this.data.identityPath) {
+    if (!this.data.identityBase64 || this.data.identityPath.includes('agogify.cn')) {
       wx.showToast({ title: "上传证件正面照", icon: "error", duration: 2000, })
       return
     }
-    if (!this.data.passportBase64) {
+    if (!this.data.passportBase64 || this.data.passportPath.includes('agogify.cn')) {
       wx.showToast({ title: "上传证件背面照", icon: "error", duration: 2000, })
       return
     }
