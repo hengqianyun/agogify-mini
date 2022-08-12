@@ -102,7 +102,7 @@ Page({
   async queryProductDetail(code: string) {
     const resData = await storeModule.queryProductDetails(code)
     const { data: detail } = resData
-    detail.images.forEach(e => e.path = IMAGEBASEURL+ IMAGEPATHS.productMain1x + e.path)
+    detail.images.forEach(e => e.path = IMAGEBASEURL+ IMAGEPATHS.productMain2x + e.path)
     let price = (detail.enabledVariants[0].price / 100).toLocaleString()
     if (!price.includes('.')) {
       price += '.00'

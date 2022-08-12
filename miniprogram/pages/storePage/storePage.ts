@@ -185,7 +185,7 @@ Page({
       }
       return {
         ...e,
-        images: e.images.map(im => { im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path; return im }),
+        images: e.images.map(im => { im.path = IMAGEBASEURL + IMAGEPATHS.productMain2x + im?.path; return im }),
         localPrice: price,
         originalPrice: originalPrice,
         off: e.enabledVariants[0].originalPrice > e.enabledVariants[0].price
