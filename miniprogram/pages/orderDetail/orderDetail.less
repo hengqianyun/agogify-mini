@@ -85,12 +85,14 @@
         .product-replenish-box {
           
           margin-top: 20rpx;
+          margin-bottom: 40rpx;
           padding: 10rpx 0;
           border-bottom: 1rpx solid #f5f5f5;
 
           .product-replenish {
             font-size: 24rpx;
             color: @defaultColor;
+            padding: 8rpx 0;
           }
         }
       }
@@ -101,8 +103,12 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 8rpx;
+        padding: 8rpx 8rpx;
         box-sizing: border-box;
+
+        &-child {
+            padding: 8rpx 26rpx;
+        }
 
         .coast-label, .coast-count {
           font-size: 24rpx;

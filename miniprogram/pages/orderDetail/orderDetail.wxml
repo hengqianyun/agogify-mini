@@ -14,7 +14,8 @@
         <!-- <view class="product-name">{{productName}}</view> -->
         <view class="product-desc-box">
           <view class="product-desc">{{productName}}</view>
-          <view class="product-price">€ {{productPrice}}</view>
+          <!-- <view class="product-price">€ {{productPrice}}</view> -->
+          <view class="product-price"></view>
         </view>
         <view class="product-replenish-box">
           
@@ -31,7 +32,7 @@
     </view>
       <view class="coast-details">
         <block wx:for="{{coasts}}" wx:key="label">
-          <view class="coast-item">
+          <view class="coast-item {{item.child ? 'coast-item-child' : ''}}">
             <view class="coast-label">{{item.label}}</view>
             <view class="coast-count">{{item.value}}</view>
           </view>

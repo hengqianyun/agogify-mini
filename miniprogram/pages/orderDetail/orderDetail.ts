@@ -104,12 +104,15 @@ Page({
         return
       }
       const coasts = [
-        { label: '商品金额', value: (data.items[0].unitPrice / 100).toFixed(2) },
+        { label: '销售价格', value: (data.items[0].unitPrice / 100).toFixed(2) },
+        { label: '退税价（发票价格）', value: ((data.items[0].unitPrice - data.taxTotal) / 100).toFixed(2), child: true },
+        { label: '关税及报关费（限时优惠)', value: (data.taxTotal / 100).toFixed(2), child: true },
         // {label: '返税', value: Number(567).toLocaleString()},
         // {label: '退税服务费', value: Number(567).toLocaleString()},
         // { label: '海关关税', value: (data.taxTotal / 100).toLocaleString() },
-        { label: '海关关税', value: '0.00' },
+        // { label: '海关关税', value: '0.00' },
         { label: '运费', value: (data.shippingTotal / 100).toFixed(2) },
+        { label: '运营服务费（限时免费）', value: '0.00' },
         // {label: '积分抵扣', value: Number(123).toLocaleString()},
         { label: '合计', value: '€' + (data.total / 100).toFixed(2) },
       ]
