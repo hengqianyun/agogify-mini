@@ -117,6 +117,7 @@ Component({
     payDialogBtnDisabled: false,
     enabledMic: true,
     itemsTotal: '',
+    taxTotal: '',
     shippingTotal: '',
     total: '',
     hangupText: '确认挂断通话？',
@@ -1537,6 +1538,7 @@ Component({
           showPopup: true,
           payDialogBtnDisabled: false,
           itemsTotal: (orderItem.itemsTotal / 100).toFixed(2),
+          taxTotal: (orderItem.taxTotal / 100).toFixed(2),
           shippingTotal: (orderItem.shippingTotal / 100).toFixed(2),
           total: (orderItem.total / 100).toFixed(2),
         })
@@ -1564,6 +1566,7 @@ Component({
           showPopup: true,
           payDialogBtnDisabled: false,
           itemsTotal: (orderItem.items[0].unitPrice / 100).toFixed(2),
+          taxTotal: (orderItem.taxTotal / 100).toFixed(2),
           shippingTotal: (orderItem.shippingTotal / 100).toFixed(2),
           total: (orderItem.total / 100).toFixed(2),
         })

@@ -36,6 +36,7 @@ declare namespace userDesign {
       verifiedAt?: string
     }
     mobileNumber: string
+    email: string
   }
 
   interface userAvatarRes extends swaggerI.requestSimpleBase {

@@ -1,8 +1,9 @@
 @import url(../../style/global.less);
+
 .store-page {
   .info-container {
     width: 100%;
-    
+
     .position-container {
       height: 638rpx;
       position: relative;
@@ -112,6 +113,7 @@
       height: 95rpx;
       display: flex;
       justify-content: center;
+
       .s-c-bar {
         border-bottom: 6rpx solid @defaultColor ;
         text-align: center;
@@ -143,7 +145,7 @@
     .product-card {
       margin: 14rpx 0;
       width: 312rpx;
-      height: 388rpx;
+      height: 412rpx;
     }
 
     .product-image {
@@ -160,9 +162,15 @@
 
     .product-category {
       font-size: 24rpx;
-      color: @defaultColor2;
+      color: @defaultColor;
       font-weight: 400;
       text-align: center;
+
+      .original-price {
+        text-decoration: line-through;
+        font-size: 18rpx;
+        color: @defaultColor2;
+      }
     }
   }
 }

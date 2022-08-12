@@ -22,14 +22,14 @@ Page({
     products: [] as PageProduct[],
     storeId: '',
     btns: [
-        {
-            label: '私聊',
-            icon: 'a-call2',
-            size: 32,
-            class: 'line-btn',
-            color: "#353535",
-            event: 'handleChat',
-          },
+      {
+        label: '私聊',
+        icon: 'a-call2',
+        size: 32,
+        class: 'line-btn',
+        color: "#353535",
+        event: 'handleChat',
+      },
       {
         label: '呼叫',
         icon: 'a-call2',
@@ -56,7 +56,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad(options) {
-    const { storeId, storeName } = options;
+    const { storeId, storeName, brandCode, taxon, sex } = options;
     this.setData({
       storeId: storeId
     })
@@ -133,10 +133,10 @@ Page({
   },
   handleChat() {
     if (!checkloginAndRealNameCertifiedAsync()) {
-        return
-      }
-      wx.setStorageSync('reserveStores', [this.data.details]);
-      wx.navigateTo({ url: '../salesChoose/salesChoose?type=chat' })
+      return
+    }
+    wx.setStorageSync('reserveStores', [this.data.details]);
+    wx.navigateTo({ url: '../salesChoose/salesChoose?type=chat' })
   },
   handleReserve() {
     if (!checkloginAndRealNameCertifiedAsync()) {
@@ -179,7 +179,18 @@ Page({
       if (!price.includes('.')) {
         price += '.00'
       }
-      return { ...e, images: e.images.map(im => { im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path; return im }), localPrice: price }
+      let originalPrice = (e.enabledVariants[0].originalPrice / 100).toLocaleString()
+      if (!originalPrice.includes('.')) {
+        originalPrice += '.00'
+      }
+      return {
+        ...e,
+        images: e.images.map(im => { im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path; return im }),
+        localPrice: price,
+        originalPrice: originalPrice,
+        off: e.enabledVariants[0].originalPrice > e.enabledVariants[0].price
+        // off: true
+      }
     })
     if (type === 0) {
       this.setData({

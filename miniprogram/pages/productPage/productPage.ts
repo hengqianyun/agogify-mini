@@ -30,6 +30,9 @@ Page({
     category: '',
     desc: '',
     price: '',
+    originalPrice: '',
+    off: false,
+    brand: ''
   },
 
   /**
@@ -104,13 +107,23 @@ Page({
     if (!price.includes('.')) {
       price += '.00'
     }
+
+    let originalPrice = (detail.enabledVariants[0].originalPrice / 100).toLocaleString()
+    if (!originalPrice.includes('.')) {
+        originalPrice += '.00'
+      }
     this.setData({
       imageList: detail.images,
       name: detail.translations?.zh_Hans_CN.name,
       id: detail.id,
       category: detail.mainTaxon?.name,
+      brand: detail.brand.name,
       desc: detail.description ?? '',
-      price: String.fromCharCode(8364) + ' ' + price,
+    //   price: String.fromCharCode(8364) + ' ' + price,
+      price: price,
+      originalPrice: originalPrice,
+      off: detail.enabledVariants[0].originalPrice > detail.enabledVariants[0].price
+    //   off: true
     })
   }
 })

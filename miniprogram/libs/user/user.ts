@@ -49,7 +49,8 @@ export const userProfile = {
   lastName: '',
   identityNumber: '',
   token: '',
-  mobileNumber: ''
+  mobileNumber: '',
+  email: '',
 }
 Object.seal(userProfile)
 
@@ -205,6 +206,7 @@ export const queryUserInfo = async (id: number) => {
       userProfile.lastName = res.data.lastName
       userProfile.identityNumber = res.data.identityNumber
       userProfile.mobileNumber = res.data.mobileNumber
+      userProfile.email = res.data.email
       setIfUserHasTheRealNameBeenCertified(true)
     }
 

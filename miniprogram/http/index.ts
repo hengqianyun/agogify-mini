@@ -1,9 +1,9 @@
 import http from "../libs/http";
 
-export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss1.agogify.cn/api/v2/'
-export const POST = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/' : 'https://rss1.agogify.cn/'
+export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss.agogify.cn/api/v2/'
+export const POST = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/' : 'https://rss.agogify.cn/'
 
-export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss1.agogify.cn/media/cache/resolve/' 
+export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss.agogify.cn/media/cache/resolve/' 
 
 export const IMAGEPATHS = {
   avatarSmall2x: 'avatar_thumbnail_small_2x/',

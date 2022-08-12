@@ -99,6 +99,7 @@ Page({
         'form.firstName.value': userProfile.firstName,
         'form.identity.value': userProfile.identityNumber,
         'form.lastName.value': userProfile.lastName,
+        'form.email.value': userProfile.email,
         hasRealNameCertified: userProfile.hasTheRealNameBeenCertified,
         identityBase64: '值',
         identityPath: POST + '/assets/app/img/identity-mock-front.png',
