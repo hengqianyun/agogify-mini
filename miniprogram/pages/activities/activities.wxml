@@ -1,5 +1,21 @@
 <view class="activity-page">
   <!-- <button bindtap="enterRoom">enter room</button> -->
+  <view wx:if="{{acList.length > 0}}">
+    <view class="event-info">
+        私享是由专业搭配师搭配师定期主持的品牌商品小规模分享活动，期间会介绍时尚流行元素和搭配技巧，并据此推荐商品。
+    </view>
+  </view>
+  <view wx:else class="default">
+    <view class="default-image-box">
+        <image class="default-image" src="../../assets/image/eventDefault.png"></image>
+    </view>
+    <view class="default-title">
+        暂无私享活动
+    </view>
+    <view class="default-info">
+        私享是由专业搭配师搭配师定期主持的品牌商品小规模分享活动，期间会介绍时尚流行元素和搭配技巧，并据此推荐商品。
+    </view>
+  </view>
   <block wx:for="{{acList}}" wx:key="{{item.id}}">
     <view class="activity" data-index="{{index}}" bindtap="handleTap">
       <view class="activity-main">
