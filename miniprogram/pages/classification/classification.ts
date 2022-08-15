@@ -78,7 +78,7 @@ Page({
       str += '&billingData.city.code=' + this.data.location
     }
     if (this.data.shopClassification !== 'all') {
-      str += '&storeTaxons.taxon.code=' + this.data.shopClassification
+      str += '&type=' + this.data.shopClassification
     } else {
       const vals = ['multi_brand_store', 'department_store', 'monobrand_store', 'vintage_store']
       str += '&' + vals.map(e => e = 'type[]=' + e).join('&')
@@ -256,7 +256,7 @@ Page({
   },
 
   async queryBrand() {
-    const resData = await storeModule.queryBrand(this.data.brandAndCategoryPageInfo)
+    const resData = await storeModule.queryBrand({...this.data.brandAndCategoryPageInfo, 'order[code]': "asc"})
     const { 'hydra:member': list } = resData.data
     list.unshift({ name: '全部品牌', '@id': 'all', '@type': 'brand', 'code': 'all' })
     this.setData({

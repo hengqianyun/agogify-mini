@@ -152,6 +152,7 @@ declare namespace storeDesign {
 
   interface queryBrandsParams extends swaggerI.pageRequestParams {
     'translations.name'?: string
+    'order[code]'?: 'desc' | 'asc'
   }
 
   /**
