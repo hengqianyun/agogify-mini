@@ -56,8 +56,8 @@ Page({
     brand: 'all',
     sexOptions: [
       { value: 'all', text: '适用性别' },
-      { value: 'men', text: '男士' },
       { value: 'women', text: '女士' },
+      { value: 'men', text: '男士' },
       { value: 'baby/Boy/Girl', text: '儿童' },
     ],
     sex: 'all',

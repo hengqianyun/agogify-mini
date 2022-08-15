@@ -306,6 +306,8 @@ Page({
           kid.push(item)
         }
       }
+      /// 女士放置在前
+      resList.reverse()
 
       resList.unshift({ name: '全部', code: ['all'], id: -1 })
       resList.push({ name: '儿童', id: -2, code: kid.map(k => k.code[0]) })
