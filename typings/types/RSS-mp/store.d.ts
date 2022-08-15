@@ -1,5 +1,5 @@
 declare namespace storeDesign {
-  type storeType = 'virtual_store' | 'event_store' | 'specialty_store' | 'department_store' | 'buyer_store' | 'vintage_store'
+  type storeType = 'virtual_store' | 'event_store' | 'monobrand_store' | 'department_store' | 'multi_brand_store' | 'vintage_store'
   type saleOnlineStatus = 'online' | 'offline' | 'busy'
 
   interface storeItem extends swaggerI.requestSimpleBase {

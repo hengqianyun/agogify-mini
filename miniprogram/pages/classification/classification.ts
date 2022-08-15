@@ -24,9 +24,9 @@ Page({
     shopClassification: 'all',
     shopClassificationList: [
       { text: '店铺类型', value: 'all' },
-      { text: '专卖店', value: 'specialty_store' },
+      { text: '专卖店', value: 'monobrand_store' },
       { text: '百货商店', value: 'department_store' },
-      { text: '买手店', value: 'buyer_store' },
+      { text: '买手店', value: 'multi_brand_store' },
       { text: '中古店', value: 'vintage_store' },
     ],
     classification: '全部',
@@ -80,7 +80,7 @@ Page({
     if (this.data.shopClassification !== 'all') {
       str += '&storeTaxons.taxon.code=' + this.data.shopClassification
     } else {
-      const vals = ['specialty_store', 'department_store', 'buyer_store', 'vintage_store']
+      const vals = ['multi_brand_store', 'department_store', 'monobrand_store', 'vintage_store']
       str += '&' + vals.map(e => e = 'type[]=' + e).join('&')
     }
     if (this.data.brandActiveKey !== 0) {
