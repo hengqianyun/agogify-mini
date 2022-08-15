@@ -26,7 +26,7 @@ Page({
       { text: '店铺类型', value: 'all' },
       { text: '专卖店', value: 'monobrand_store' },
       { text: '百货商店', value: 'department_store' },
-      { text: '买手店', value: 'multi_brand_store' },
+      { text: '集合店', value: 'multi_brand_store' },
       { text: '中古店', value: 'vintage_store' },
     ],
     classification: '全部',
