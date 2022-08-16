@@ -19,7 +19,17 @@ declare namespace RSSDesign {
       height: number,
       position: WechatMiniprogram.Rect,
       navHeight: number[]
-    },
+    }
+    settings: {
+      apiPath: string
+      apiHosts: {
+        develop: string
+        trail: string
+        release: string
+      }
+      imageAliasPath: string
+    }
+
     tokenCallback?: () => void
   }
 
@@ -43,9 +53,9 @@ declare namespace RSSDesign {
     tg: WechatMiniprogram.Page.Instance<{}, {}> | WechatMiniprogram.Component.Instance<{}, {}, {}>
   }
   interface txMapLocation {
-    province: string 
-    city: string 
-    district: string 
+    province: string
+    city: string
+    district: string
     name: string
   }
 }

@@ -1,9 +1,19 @@
 import http from "../libs/http";
 
-export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss.agogify.cn/api/v2/'
-export const POST = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/' : 'https://rss.agogify.cn/'
+const settings = getApp().settings;
+const mode = wx.getAccountInfoSync().miniProgram.envVersion;
+const apiHost = settings.apiHosts[mode];
+const apiPath = settings.apiPath;
+const imageAliasPath = settings.imageAliasPath;
 
-export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss.agogify.cn/media/cache/resolve/' 
+export const BASEURL = `https://${apiHost}${apiPath}/`;
+export const POST = `https://${apiHost}/`;
+export const IMAGEBASEURL = `https://${apiHost}${imageAliasPath}/`;
+
+// export const BASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/api/v2/' : 'https://rss.agogify.cn/api/v2/'
+// export const POST = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/' : 'https://rss.agogify.cn/'
+
+// export const IMAGEBASEURL = wx.getAccountInfoSync().miniProgram.envVersion === 'release' ? 'https://rss.agogify.cn/media/cache/resolve/' : 'https://rss.agogify.cn/media/cache/resolve/' 
 
 export const IMAGEPATHS = {
   avatarSmall2x: 'avatar_thumbnail_small_2x/',
