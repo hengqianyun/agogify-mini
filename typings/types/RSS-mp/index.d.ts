@@ -24,7 +24,7 @@ declare namespace RSSDesign {
       apiPath: string
       apiHosts: {
         develop: string
-        trail: string
+        trial: string
         release: string
       }
       imageAliasPath: string

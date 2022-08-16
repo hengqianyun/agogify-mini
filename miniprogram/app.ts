@@ -30,7 +30,7 @@ App<RSSDesign.RSSAppOptions>({
     apiPath: '/api/v2',
     apiHosts: {
       develop: 'rss1.agogify.cn',
-      trail: 'rss.agogify.cn',
+      trial: 'rss.agogify.cn',
       release: 'rss.agogify.cn'
     },
     imageAliasPath: '/media/cache/resolve',

@@ -9,7 +9,7 @@ interface IAppOption {
     apiPath: string
     apiHosts: {
         develop: string
-        trail: string
+        trial: string
         release: string
     }
     imageAliasPath: string
