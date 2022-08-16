@@ -12,21 +12,39 @@ Component({
     name: String,
     code: String,
     desc: String,
-    address: String
+    address: String,
+    type: String
   },
 
   /**
    * 组件的初始数据
    */
   data: {
-    path: ''
+    path: '',
+    iconName: ''
   },
 
   lifetimes: {
     attached() {
       let path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + this.properties.image || DEFAULT_IMAGE;
+      let iconName = ''
+      switch(this.properties.type) {
+          case 'monobrand_store':
+            iconName = 'zhuanguichunse'
+            break
+          case 'department_store':
+            iconName = 'baihuoshangdianchunse'
+            break
+          case 'multi_brand_store':
+            iconName = 'jihedianchunse'
+            break
+          case 'vintage_store':
+            iconName = 'zhonggudianchunse'
+            break
+      }
       this.setData({
-        path
+        path,
+        iconName,
       })
     }
   },

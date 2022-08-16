@@ -31,14 +31,24 @@
   </view>
   <view class="content">
     <view class="left-container">
-      <van-sidebar custom-class="scroll-sidebar" active-key="{{ brandActiveKey }}" bind:change="handleBrandChange">
+      <!-- <van-sidebar custom-class="scroll-sidebar" active-key="{{ brandActiveKey }}" bind:change="handleBrandChange">
         <van-sidebar-item wx:for="{{brandList}}" id="{{item.name}}" wx:key="id" title="{{item.name}}" />
-      </van-sidebar>
+      </van-sidebar> -->
+      <scroll-view class="scroll-sidebar" scroll-y="{{true}}" scroll-into-view="{{scrollId}}">
+        <block wx:for="{{brandList}}" wx:key="name">
+          <view wx:if="{{item.items.length > 0}}" id="{{item.name}}">
+            <view class="brand-title" wx:if="{{item.name !== '全部品牌'}}">{{item.name}}</view>
+            <block wx:for="{{item.items}}" wx:for-item="brand" wx:key="code">
+              <view class="brand-name {{brand.code === brandActiveKey ? 'checked-brand-name' : ''}}" bindtap="handleBrandChange" data-name="{{brand.name}}" data-code="{{brand.code}}">{{brand.name}}</view>
+            </block>
+          </view>
+        </block>
+      </scroll-view>
       <view class="sort-container">
         <view class="sort-btn" bind:tap="handleSortBtnTap">{{sortList[sortValue]}}</view>
         <view class="sort-list" wx:if="{{showSort}}">
           <block wx:for="{{sortList}}" wx:key="*this">
-            <view class="sort-item {{index === sortValue ? 'sort-active' : ''}}" data-index="{{index}}" bind:tap="handleSortTap">
+            <view class="sort-item {{index === sortValue ? 'sort-active' : ''}}" data-name="{{item}}" data-index="{{index}}" bind:tap="handleSortTap">
               {{item}}
             </view>
           </block>
@@ -50,7 +60,7 @@
       <view class="shop-container">
         <block wx:for="{{shopList}}" wx:key="id">
           <view class="store-item">
-            <CheckboxStoreItem status="{{item.status}}" name="{{item.name}}" code="{{item.code}}" address="{{item.address}}" desc="{{item.desc}}" image="{{item.logo.path}}" data-index="{{index}}" bind:onTap="handleCheckboxChange" />
+            <CheckboxStoreItem status="{{item.status}}" name="{{item.name}}" code="{{item.code}}" address="{{item.address}}" desc="{{item.desc}}" image="{{item.logo.path}}" data-index="{{index}}" type="{{item.type}}" bind:onTap="handleCheckboxChange" />
           </view>
         </block>
       </view>

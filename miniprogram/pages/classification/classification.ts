@@ -33,15 +33,18 @@ Page({
     classificationList: [] as categoryInPage[],
     classificationChild: '全部',
     classificationChildList: [] as categoryInPage[],
-    brandActiveKey: 0,
-    brandList: [] as storeDesign.brand[],
+    brandActiveKey: 'all',
+    brandActiveName: 'all',
+    brandList: [] as {name: string, items: storeDesign.brand[]}[],
+    isCheckAllBrand: true,
     shopList: [] as storeDesign.checkboxStoreItem[],
     shopCheckStatusList: [] as number[],
     result: [] as number[],
     max: 5,
     loading: true,
     sortList: ['#', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-    sortValue: 0,
+    scrollId: 'A',
+    sortValue: 1,
     showSort: false,
     pageInfo: {
       page: 1,
@@ -83,11 +86,12 @@ Page({
       const vals = ['multi_brand_store', 'department_store', 'monobrand_store', 'vintage_store']
       str += '&' + vals.map(e => e = 'type[]=' + e).join('&')
     }
-    if (this.data.brandActiveKey !== 0) {
-      str += '&brands.translations.name=' + this.data.brandList[this.data.brandActiveKey].name
+    if (this.data.brandActiveKey !== 'all') {
+      str += '&brands.translations.name=' + this.data.brandActiveName
     }
     // params['type'] = ''
     let strParamsList = []
+    // debugger
     if (this.data.classification !== '全部') {
       if (this.data.classificationChild !== '全部') {
         const child = this.data.classificationChildList.find(e => e.name === this.data.classificationChild)
@@ -98,10 +102,10 @@ Page({
       }
       return str + '&' + strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
     } else if (this.data.classificationChild !== '全部') {
-      strParamsList.push(this.data.classificationList[0].code.toString())
+      // strParamsList.push(this.data.classificationList[0].code.toString())
       const child = this.data.classificationChildList.find(e => e.name === this.data.classificationChild)
       strParamsList.push(child?.code.toString())
-      return strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
+      return str + '&' + strParamsList.join().split(',').map(e => 'storeTaxons.taxon.code[]=' + e).join('&')
     } else {
       return str
     }
@@ -159,13 +163,14 @@ Page({
     this.queryStore(1)
   },
 
-  handleBrandChange({ detail }: WechatMiniprogram.TouchEvent) {
-    const index = detail as unknown as number
+  handleBrandChange({currentTarget}: WechatMiniprogram.TouchEvent) {
+    const {code, name} = currentTarget.dataset
     this.setData({
-      brandActiveKey: index
+      brandActiveKey: code,
+      brandActiveName: name
     })
-    if (index > 0) {
-      wx.setStorageSync('brand', this.data.brandList[index].code)
+    if (code !== 'all') {
+      wx.setStorageSync('brand', code)
     } else {
       wx.removeStorageSync('brand')
     }
@@ -249,18 +254,37 @@ Page({
 
   handleSortTap(event: WechatMiniprogram.TouchEvent) {
 
-    const { index } = event.currentTarget.dataset as { index: number }
+    const { index, name } = event.currentTarget.dataset as { index: number, name: string }
     this.setData({
       sortValue: index,
+      scrollId: name
     })
   },
 
   async queryBrand() {
-    const resData = await storeModule.queryBrand({...this.data.brandAndCategoryPageInfo, 'order[code]': "asc"})
+    const resData = await storeModule.queryBrand({ ...this.data.brandAndCategoryPageInfo, 'order[code]': "asc" })
     const { 'hydra:member': list } = resData.data
-    list.unshift({ name: '全部品牌', '@id': 'all', '@type': 'brand', 'code': 'all' })
+    let defaultSet = new Set(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'])
+    let brandList = this.data.sortList.map(e => {
+      return {
+        name: e,
+        items: [] as storeDesign.brand[]
+      }
+    })
+    for (let i = 0; i < list.length; i++) {
+      let firstLetter = list[i].name.substr(0, 1)
+      if (!defaultSet.has(firstLetter)) {
+        brandList[0].items.push(list[i])
+      } else {
+        let index = brandList.findIndex(e => e.name === firstLetter)
+        brandList[index].items.push(list[i])
+      }
+    }
+    console.log(brandList)
+    // list.unshift({ name: '全部品牌', '@id': 'all', '@type': 'brand', 'code': 'all' })
+    brandList.unshift({name: '全部品牌', items: [{ name: '全部品牌', '@id': 'all', '@type': 'brand', 'code': 'all' }]})
     this.setData({
-      brandList: list
+      brandList: brandList
     })
   },
 

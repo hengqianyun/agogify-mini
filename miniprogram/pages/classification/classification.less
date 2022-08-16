@@ -69,11 +69,43 @@
       .scroll-sidebar {
         overflow: scroll;
         height: 100%;
-        width: 192rpx;
+        width: 272rpx;
         border-right: 2rpx solid @borderColor;
-        padding-bottom: 100rpx;
+        // padding-bottom: 100rpx;
         box-sizing: border-box;
+
+        .brand-title {
+            height: 52rpx;
+            padding: 0 26rpx;
+            border-bottom: 1rpx solid #f5f5f5;
+            border-top: 1rpx solid #f5f5f5;
+            box-sizing: border-box;
+            color: @defaultColor2;
+            font-size: 28rpx;
+            padding-top: 16rpx;
+        }
         
+        .brand-name {
+            min-height: 44rpx;
+            margin: 8rpx 0;
+            padding: 0 20rpx;
+            color: @defaultColor2;
+            line-height: 44rpx;
+            font-size: 24rpx;
+            word-wrap: break-word;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        .checked-brand-name {
+            border-bottom: 6rpx solid @defaultColor;
+            min-height: 76rpx;
+            color: @defaultColor;
+            line-height: 76rpx;
+        }
+
         .van-sidebar-item {
           background: #fff;
           border: none;
@@ -97,7 +129,7 @@
 
       .sort-container {
         height: 88rpx;
-        width: 192rpx;
+        width: 88rpx;
         position: absolute;
         bottom: 0;
         display: flex;
@@ -116,8 +148,8 @@
           box-shadow: 16rpx 16rpx 40rpx 16rpx rgba(139, 174, 217, 0.27);
           z-index: 99999;
           position: absolute;
-          left: 52rpx;
-          bottom: 6rpx;
+          left: 144rpx;
+          bottom: 40rpx;
         }
 
         .sort-list {
@@ -128,8 +160,8 @@
           display: flex;
           justify-content: center;
           border-radius: 8rpx;
-          bottom: 50rpx;
-          left: 96rpx;
+          bottom: 84rpx;
+          left: 188rpx;
           flex-wrap: wrap;
           padding: 0 16rpx; 
           background: #fff;
@@ -169,7 +201,7 @@
 
     .right-container {
       height: 100%;
-      width: calc(100% - 192rpx);
+      width: calc(100% - 272rpx);
 
       .shop-container {
         height: calc(100% - 88rpx);
@@ -181,13 +213,13 @@
         }
 
         .store-item {
-          padding: 32rpx 0;
+        //   padding: 32rpx 0;
           border-bottom: 2rpx solid @borderColor;
           display: flex;
           align-items: center;
           // width: calc(100% - 92rpx);
           width: 100%;
-          height: 136rpx;
+          height: 108rpx;
         }
       }
 
