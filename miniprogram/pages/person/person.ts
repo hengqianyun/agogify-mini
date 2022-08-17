@@ -61,13 +61,13 @@ Page({
       },
       {
         label: '优惠券',
-        icon: 'my_jifen',
+        icon: 'my_youhuiquan',
         url: 'coupons/coupons',
         size: 58
       },
       {
         label: '消息',
-        icon: 'tishi',
+        icon: 'my_xiaoxi',
         url: 'messageList/messageList',
         size: 58
       },

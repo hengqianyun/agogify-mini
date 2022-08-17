@@ -10,7 +10,7 @@
       </image>
 
       <view class="icons" hover-class="none" hover-stop-propagation="false">
-        
+        <iconfont name="genghuantouxiang" size="{{40}}"  />
       </view>
     </view>
     <view class="text-tips" hover-class="none" hover-stop-propagation="false">

@@ -16,7 +16,7 @@ Page({
     menuRight: app.globalData.navHeight[2],
     menuHeight: app.globalData.navHeight[3],
     text: '',
-    to: '/api/v2/public/sales/14',
+    to: '',
     salesName: '',
     storeName: '',
     conversationID: '',
@@ -24,6 +24,14 @@ Page({
     messageList: [] as TIMMessage[],
     scrollIntoView: '',
     btns: [
+      {
+        label: '专柜',
+        icon: 'index',
+        size: 32,
+        class: 'line-btn',
+        color: "#353535",
+        event: 'handleJumpStore',
+      },
       {
         label: '呼叫',
         icon: 'a-call2',
@@ -39,19 +47,19 @@ Page({
         color: "#353535",
         event: 'handleReserve',
       }],
-      details: {}
+    details: {} as storeDesign.storeItem
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    const {salesId, salesName, storeName, conversationID, salesAvatar} = this.options as {salesAvatar: string, salesId: string, salesName: string, storeName: string, conversationID: string}
+    const { salesId, salesName, storeName, conversationID, salesAvatar } = this.options as { salesAvatar: string, salesId: string, salesName: string, storeName: string, conversationID: string }
     this.setData({
-        to: salesId,
-        salesName: salesName,
-        storeName: 'IRERI',
-        conversationID,
+      to: salesId,
+      salesName: salesName,
+      storeName: 'IRERI',
+      conversationID,
     })
     if (!!conversationID) {
       await setMsgRead(conversationID)
@@ -71,7 +79,8 @@ Page({
           conversationID: data.conversationID,
         })
         setMsgRead(data.conversationID)
-      }})
+      }
+    })
   },
 
   /**
@@ -126,6 +135,12 @@ Page({
 
   },
 
+  handleJumpStore() {
+    wx.navigateTo({
+      url: `/pages/storePage/storePage?storeId=${this.data.details.code}&storeName=${this.data.details.name}`,
+    })
+  },
+
   handleCall() {
     wx.navigateTo({
       url: `../roomWaiting/roomWaiting?storeId=IRERI&saleId=${this.data.to}&type=needService`
@@ -147,7 +162,8 @@ Page({
     const { country, city } = resData.data.billingData
     const address = `${country?.name} ${city?.name}`
     this.setData({
-      details: { ...resData.data, address }
+      // details: { ...resData.data, address }
+      details: { ...resData.data }
     })
   },
 
@@ -160,17 +176,17 @@ Page({
   },
 
   async getMessageList() {
-      const res = await getMessageList(this.data.conversationID, 20)
-      const {messageList, nextReqMessageID} = res.data as {messageList: TIMMessage[], nextReqMessageID: string}
-      this.setData({
-          messageList,
-          nextReqMessageID,
-          scrollIntoView: 'id' + messageList[messageList.length - 1].time.toString()
-      })
+    const res = await getMessageList(this.data.conversationID, 20)
+    const { messageList, nextReqMessageID } = res.data as { messageList: TIMMessage[], nextReqMessageID: string }
+    this.setData({
+      messageList,
+      nextReqMessageID,
+      scrollIntoView: 'id' + messageList[messageList.length - 1].time.toString()
+    })
   },
 
   handleBack() {
-      wx.navigateBack()
+    wx.navigateBack()
   },
 
   handleInput(event: WechatMiniprogram.TouchEvent) {
@@ -211,15 +227,15 @@ Page({
       }
       const res = await sendC2CTextMessage(this.data.to, this.data.text);
       console.log(res)
-      const {message} = res.data
+      const { message } = res.data
       this.data.messageList.push(message)
       this.setData({
-          messageList: this.data.messageList,
-          scrollIntoView: 'id' + message.time,
-          text:''
+        messageList: this.data.messageList,
+        scrollIntoView: 'id' + message.time,
+        text: ''
       })
       // const {flow, isRead} = message
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
   }

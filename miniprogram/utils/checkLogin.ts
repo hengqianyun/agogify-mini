@@ -12,7 +12,7 @@ export const checkloginAndRealNameCertifiedAsync = (): boolean => {
   if (!getIfUserHasTheRealNameBeenCertified()) {
     wx.showModal({
       title: '提示',
-      content: '通话或预约前需要先完善个人信息',
+      content: '在联系销售前请先完善个人信息',
       cancelText: '确定',
       confirmText: '立即前往',
       success(res) {

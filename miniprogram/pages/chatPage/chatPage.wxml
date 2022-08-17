@@ -4,7 +4,7 @@
             <view class="capsule-box" style="height: {{menuHeight}}px; min-height: {{menuHeight}}px; line-height: {{menuHeight}}px; bottom: {{menuBottom}}px;">
                 <view class="back-icon" bindtap="handleBack"> {{"<"}} </view>
                         <view class="sales-info">
-                            <view class="store-name">{{storeName}}</view>
+                            <view class="store-name">{{details.name}}</view>
                             <view class="sales-name">{{salesName}}</view>
                         </view>
                 </view>

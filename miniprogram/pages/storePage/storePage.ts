@@ -24,7 +24,7 @@ Page({
     btns: [
       {
         label: '私聊',
-        icon: 'a-call2',
+        icon: 'my_xiaoxi',
         size: 32,
         class: 'line-btn',
         color: "#353535",
