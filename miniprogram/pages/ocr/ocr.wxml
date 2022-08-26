@@ -82,7 +82,7 @@
     <view class="tips">1. 与您沟通的专柜在寄送货品给您时，需要您的身份证信息进行报关申请。</view>
     <view class="tips">2. 上传的身份证信息必须清晰可读，并且与您个人信息中的姓名一致，否则会导致清关延误或扣留。</view>
     <view class="btn">
-      <rss-button label="提交" bind:onTap="handleCommit" disabled="{{commitBtnDisabled}}" className="fill-btn" width="{{544}}" height="{{88}}" fontSize="{{34}}"></rss-button>
+      <rss-button label="提交" bind:onTap="handleCommit" disabled="{{commitBtnDisabled}}" className="fill-btn" width="{{654}}" height="{{88}}" fontSize="{{34}}"></rss-button>
     </view>
   </view>
 </view>

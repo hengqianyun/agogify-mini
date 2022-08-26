@@ -35,7 +35,7 @@ Page({
     classificationChildList: [] as categoryInPage[],
     brandActiveKey: 'all',
     brandActiveName: 'all',
-    brandList: [] as {name: string, items: storeDesign.brand[]}[],
+    brandList: [] as { name: string, items: storeDesign.brand[] }[],
     isCheckAllBrand: true,
     shopList: [] as storeDesign.checkboxStoreItem[],
     shopCheckStatusList: [] as number[],
@@ -55,7 +55,8 @@ Page({
       itemsPerPage: 1000,
     },
     showDialog: false,
-    categoryChildrenMap: {} as categoryChildrenMapInPage
+    categoryChildrenMap: {} as categoryChildrenMapInPage,
+    tabBarHeight: 0
   },
 
   /**
@@ -67,8 +68,25 @@ Page({
   },
 
   async onShow() {
+    if (typeof this.getTabBar === 'function' &&
+      this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 1    // 根据tab的索引值设置
+      })
+    }
+    this.setData({
+      result: []
+    })
     await Promise.all([this.queryBrand(), this.queryCities(), this.queryCategory()])
     await this.queryStore(1)
+  },
+
+  onReady() {
+    let height = wx.getStorageSync<number | string>('tabbarHeight')
+    height = !height ? 0 : height
+    this.setData({
+      tabBarHeight: height as number
+    })
   },
 
   formateParams(type: number) {
@@ -163,8 +181,8 @@ Page({
     this.queryStore(1)
   },
 
-  handleBrandChange({currentTarget}: WechatMiniprogram.TouchEvent) {
-    const {code, name} = currentTarget.dataset
+  handleBrandChange({ currentTarget }: WechatMiniprogram.TouchEvent) {
+    const { code, name } = currentTarget.dataset
     this.setData({
       brandActiveKey: code,
       brandActiveName: name
@@ -282,7 +300,7 @@ Page({
     }
     console.log(brandList)
     // list.unshift({ name: '全部品牌', '@id': 'all', '@type': 'brand', 'code': 'all' })
-    brandList.unshift({name: '全部品牌', items: [{ name: '全部品牌', '@id': 'all', '@type': 'brand', 'code': 'all' }]})
+    brandList.unshift({ name: '全部品牌', items: [{ name: '全部品牌', '@id': 'all', '@type': 'brand', 'code': 'all' }] })
     this.setData({
       brandList: brandList
     })

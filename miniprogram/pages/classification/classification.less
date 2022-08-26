@@ -36,10 +36,11 @@
     height: 84rpx;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    padding: 0 48rpx;
+    // justify-content: space-around;
 
     .category-child {
-      width: 118rpx;
+      width: 104rpx;
       height: 52rpx;
       border-radius: 8rpx;
       background-color: @backgroundColor;
@@ -48,6 +49,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-right: 33.5rpx;
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
 
     .category-child-actived {
@@ -58,7 +64,7 @@
 
   .content {
     display: flex;
-    height: calc(100vh - 274rpx);
+    height: calc(100% - 274rpx);
     border-bottom: 2rpx solid @borderColor;
 
     .left-container {
@@ -155,8 +161,8 @@
         .sort-list {
           position: absolute;
           z-index: 999;
-          width: 356rpx;
-          height: 192rpx;
+          width: 556rpx;
+          height: 328rpx;
           display: flex;
           justify-content: center;
           border-radius: 8rpx;
@@ -169,13 +175,13 @@
           box-shadow: 0 8rpx 14rpx 2rpx rgba(139, 174, 217, 0.32);
 
           .sort-item {
-            height: 28rpx;
-            width: 28rpx;
+            height: 52rpx;
+            width: 52rpx;
             display: flex;
             align-items: center;
             justify-content: center;
             color: @defaultColor;
-            font-size: 24rpx;
+            font-size: 36rpx;
             margin: 8rpx;
             border-radius: 4rpx;
             font-weight: 300;
@@ -230,26 +236,21 @@
         height: 88rpx;
         width: 100%;
         background: @borderColor;
+        justify-content: space-around;
 
         .btn {
-          height: 100%;
-          width: 50%;
-          display: flex;
-          align-items: center;
-          // text-align: center;
-          justify-content: center;
-          font-size: 28rpx;
-          font-weight: 300;
-          background: @defaultColor;
-          color: #fff;
-          box-sizing: border-box;
-        }
-
-        .call-btn {
-          border-right: 1rpx solid @borderColor;
-        }
-        .reserve-btn {
-          border-left: 1rpx solid @borderColor;
+          // height: 100%;
+          // width: 50%;
+          // display: flex;
+          // align-items: center;
+          // // text-align: center;
+          // justify-content: center;
+          // font-size: 28rpx;
+          // font-weight: 300;
+          // background: @defaultColor;
+          // color: #fff;
+          // box-sizing: border-box;
+          // margin: 0 8rpx;
         }
         
       }

@@ -44,7 +44,7 @@ Component({
     },
     borderRadius: {
       type: Number,
-      value: 8
+      value: 4
     },
     backgroundColor: {
       type: String,

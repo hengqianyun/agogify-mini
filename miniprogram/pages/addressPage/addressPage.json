@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "rss-button": "../../components/RssButton/RssButton"
+  },
   "navigationBarTitleText": "我的地址"
 }

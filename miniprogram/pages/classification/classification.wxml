@@ -1,5 +1,5 @@
 <!-- pages/classification/classification.wxml -->
-<view class="classification-page">
+<view class="classification-page" style="height: calc(100vh - {{tabBarHeight}}px) ;">
   <!-- select -->
   <van-row>
     <van-col span="12">
@@ -18,7 +18,7 @@
   <!-- scroll tab -->
   <!-- TODO scroll-tab 显示异常 -->
   <van-row custom-class="scroll-tab">
-    <van-tabs color="#353535" active="{{ classification }}" bind:change="handleClassifictionChange">
+    <van-tabs wx:if="{{classificationList.length > 1}}" color="#353535" active="{{ classification }}" bind:change="handleClassifictionChange">
       <van-tab wx:for="{{classificationList}}" wx:key="id" title="{{item.name}}" name="{{item.id}}" data-value="{{item.id}}"></van-tab>
     </van-tabs>
   </van-row>
@@ -65,8 +65,9 @@
         </block>
       </view>
       <view class="buttons">
-        <view class="call-btn btn" bind:tap="handleChatTap">立即通话</view>
-        <view class="reserve-btn btn" bind:tap="handleReserveTap">预约</view>
+        <rss-button label="立即通话" bind:onTap="handleChatTap" class="btn" className="line-btn" fontSize="{{28}}" height="{{88}}" width="{{228}}" fontWeight="{{400}}"></rss-button>
+        <rss-button label="预约" bind:onTap="handleReserveTap" class="btn" className="fill-btn" fontSize="{{28}}" height="{{88}}" width="{{228}}" fontWeight="{{400}}"></rss-button>
+        <!-- <rss-button class="reserve-btn btn" bind:tap="handleReserveTap">预约</rss-button> -->
       </view>
     </view>
   </view>

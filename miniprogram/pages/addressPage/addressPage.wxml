@@ -8,9 +8,9 @@
         </view>
         <view class="address-info">
           <view class="address-box text-ellipsis-2">{{item.provinceName + ' ' + item.city + '市 ' + item.street}}</view>
-          <view class="edit-icon-box" data-id="{{item.id}}" bind:tap="handleEditTap">
+          <!-- <view class="edit-icon-box" data-id="{{item.id}}" bind:tap="handleEditTap">
             <iconfont name="my_bianjiziliao" size="{{40}}"></iconfont>
-          </view>
+          </view> -->
         </view>
         <view class="controller">
           <view class="default-box" data-id="{{item.id}}" bind:tap="handleRadioTap">
@@ -26,14 +26,18 @@
             </view>
             <view>设为默认地址</view>
           </view>
-          <view class="delete-icon-box" data-index="{{index}}" catch:tap="handelDelete">
-            <text>删除</text>
+          <view class="delete-icon-box">
+            <view data-id="{{item.id}}" catch:tap="handleRadioTap">编辑</view>
+            <view>{{'  |  '}}</view>
+            <view data-index="{{index}}" catch:tap="handelDelete">删除</view>
           </view>
         </view>
       </view>
     </block>
   </view>
-  <view class="insert-btn" bind:tap="handleEditTap">新增收货地址</view>
+  <view class="insert-btn" >
+    <rss-button label="新增收货地址" bind:onTap="handleEditTap" className="fill-btn" fontSize="{{28}}" height="{{88}}" width="{{654}}" fontWeight="{{400}}"></rss-button>
+  </view>
   <view class="cover"></view>
     
 </view>

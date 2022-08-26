@@ -18,7 +18,8 @@ Page({
    */
   data: {
     acList: [] as _activity[],
-    serverData: [] as reserveDesign.eventItem[]
+    serverData: [] as reserveDesign.eventItem[],
+    tabBarHeight: 0
   },
 
   onLoad() {
@@ -26,7 +27,21 @@ Page({
   },
 
   onShow() {
+    if (typeof this.getTabBar === 'function' &&
+    this.getTabBar()) {
+    this.getTabBar().setData({
+      selected: 2    // 根据tab的索引值设置
+    })
+  }
     this.queryAcs()
+  },
+
+  onReady() {
+    let height = wx.getStorageSync<number | string>('tabbarHeight')
+    height = !height ? 0 : height
+    this.setData({
+      tabBarHeight: height as number
+    })
   },
 
   onPullDownRefresh() {

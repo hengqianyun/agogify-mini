@@ -58,7 +58,7 @@ Page({
     this.setData({
       to: salesId,
       salesName: salesName,
-      storeName: 'IRERI',
+      storeName: '',
       conversationID,
     })
     if (!!conversationID) {

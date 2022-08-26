@@ -22,16 +22,17 @@ Page({
     showIcon: false,
     timer: 0,
     resMessage: '',
+    tabBarHeight: 0,
   },
   async onLoad() {
     console.debug('homepage load')
     await autoLogin()
     const session = await checkSessionAsync()
-      if (session) {
-        this.setData({
-          showIcon: true
-        })
-      }
+    if (session) {
+      this.setData({
+        showIcon: true
+      })
+    }
     await this.queryNewStore(1)
     this.setData({
       bannerList: BANNERS
@@ -39,9 +40,23 @@ Page({
   },
 
   async onShow() {
+    if (typeof this.getTabBar === 'function' &&
+      this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 0    // 根据tab的索引值设置
+      })
+    }
     const session = await checkSessionAsync()
     this.setData({
       showIcon: !!session
+    })
+  },
+
+  onReady() {
+    let height = wx.getStorageSync<number | string>('tabbarHeight')
+    height = !height ? 0 : height
+    this.setData({
+      tabBarHeight: height as number
     })
   },
 
@@ -92,7 +107,7 @@ Page({
     }
   },
   handleDialogCancel(e: WechatMiniprogram.TouchEvent) {
-    const {detail} = e
+    const { detail } = e
     if (!!detail) {
       this.setData({
         showIcon: false

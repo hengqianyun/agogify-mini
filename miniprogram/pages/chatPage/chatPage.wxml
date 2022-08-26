@@ -1,54 +1,56 @@
 <view class="chat-page">
-    <view class="nav" style="height: {{navBarHeight}}px;">
-        <view class="nav-main">
-            <view class="capsule-box" style="height: {{menuHeight}}px; min-height: {{menuHeight}}px; line-height: {{menuHeight}}px; bottom: {{menuBottom}}px;">
-                <view class="back-icon" bindtap="handleBack"> {{"<"}} </view>
-                        <view class="sales-info">
-                            <view class="store-name">{{details.name}}</view>
-                            <view class="sales-name">{{salesName}}</view>
-                        </view>
-                </view>
-            </view>
+  <view class="nav" style="height: {{navBarHeight}}px;">
+    <view class="nav-main">
+      <view class="capsule-box" style="height: {{menuHeight}}px; min-height: {{menuHeight}}px; bottom: {{menuBottom}}px;">
+        <!-- <view class="capsule-box" style="height: {{menuHeight}}px; min-height: {{menuHeight}}px; line-height: {{menuHeight}}px; bottom: {{menuBottom}}px;"> -->
+        <view class="back-icon" bindtap="handleBack">
+          <iconfont name="weibiaoti--" size="{{34}}" color="{{item.color}}" /></view>
+          <view class="sales-info">
+            <view class="store-name">{{details.name}}</view>
+            <view class="sales-name">{{salesName}}</view>
+          </view>
         </view>
-        <view class="chat-page-container" style="height: calc(100vh - {{navBarHeight}}px); margin-top: {{navBarHeight}}px;">
-            <view class="chat-container">
-                <scroll-view class="scroll" scroll-y="{{true}}" scroll-into-view="{{scrollIntoView}}">
-                    <block wx:for="{{messageList}}" wx:key="ID">
-                        <!-- 收到的消息 -->
-                        <view wx:if="{{item.flow === 'in'}}" class="message-item" id="{{'id' + item.time}}">
-                            <view class="avatar-box">
-                                <image class="avatar" src="{{item.avatar}}"></image>
-                            </view>
-                            <view class="text-message">{{item.payload.text}}</view>
-                        </view>
-                        <view wx:else class="message-to-item message-item" id="{{'id' + item.time}}">
-                            <view class="avatar-box">
-                                <image class="avatar" src="{{item.avatar}}"></image>
-                            </view>
-                            <view class="text-message">{{item.payload.text}}</view>
-                        </view>
-                    </block>
-                </scroll-view>
+      </view>
+  </view>
+  <view class="chat-page-container" style="height: calc(100vh - {{navBarHeight}}px); margin-top: {{navBarHeight}}px;">
+    <view class="chat-container">
+      <scroll-view class="scroll" scroll-y="{{true}}" scroll-into-view="{{scrollIntoView}}">
+        <block wx:for="{{messageList}}" wx:key="ID">
+          <!-- 收到的消息 -->
+          <view wx:if="{{item.flow === 'in'}}" class="message-item" id="{{'id' + item.time}}">
+            <view class="avatar-box">
+              <image class="avatar" src="{{item.avatar}}"></image>
             </view>
-            <view class="controllers">
-                <block wx:for="{{btns}}" wx:key="label">
-                    <view class="btn-box" bind:tap="handleIconButtonTap" data-event="{{item.event}}">
-                        <iconfont name="{{item.icon}}" size="{{item.size}}" color="{{item.color}}" />
-                        <view>{{item.label}}</view>
-                    </view>
-                </block>
+            <view class="text-message">{{item.payload.text}}</view>
+          </view>
+          <view wx:else class="message-to-item message-item" id="{{'id' + item.time}}">
+            <view class="avatar-box">
+              <image class="avatar" src="{{item.avatar}}"></image>
             </view>
-            <view class="input-area">
-                <input type="text" class="text-input" bindinput="handleInput" value="{{text}}" placeholder="输入想询问的商品信息或其他内容吧" />
-                <!-- <view wx:if="{{text === ''}}" class="icon" bind:tap="chooseImage">
+            <view class="text-message">{{item.payload.text}}</view>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+    <view class="controllers">
+      <block wx:for="{{btns}}" wx:key="label">
+        <view class="btn-box" bind:tap="handleIconButtonTap" data-event="{{item.event}}">
+          <iconfont name="{{item.icon}}" size="{{item.size}}" color="{{item.color}}" />
+          <view>{{item.label}}</view>
+        </view>
+      </block>
+    </view>
+    <view class="input-area">
+      <input type="text" class="text-input" bindinput="handleInput" value="{{text}}" placeholder="输入想询问的商品信息或其他内容吧" />
+      <!-- <view wx:if="{{text === ''}}" class="icon" bind:tap="chooseImage">
                     <iconfont name="zhibojian_fasongtupianicon" size="{{40}}"></iconfont>
                 </view>
                 <view wx:else class="send-btn">
                     <rss-btn label="发送" width="{{80}}" height="{{52}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleSend"></rss-btn>
                 </view> -->
-                <view class="send-btn">
-                    <rss-btn label="发送" width="{{80}}" height="{{52}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleSend"></rss-btn>
-                </view>
-            </view>
-        </view>
+      <view class="send-btn">
+        <rss-btn label="发送" width="{{80}}" height="{{80}}" className="{{'fill-btn'}}" borderRadius="{{2}}" bind:onTap="handleSend"></rss-btn>
+      </view>
     </view>
+  </view>
+</view>

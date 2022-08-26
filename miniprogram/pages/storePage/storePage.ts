@@ -100,11 +100,16 @@ Page({
     }
   },
 
+  handleScreenMove() {
+    this.selectComponent('#brand').toggle(false);
+    this.selectComponent('#taxon').toggle(false);
+    this.selectComponent('#sex').toggle(false);
+  },
+
   async queryBrand() {
     this.setData({
       brandOptions: [
         { value: 'all', text: '品牌' },
-        { value: 'IRERI', text: 'IRERI' },
       ]
     })
   },
@@ -155,6 +160,7 @@ Page({
       hasParams: false
     })
     await this.queryProducts(0)
+    this.handleScreenMove()
   },
 
   handleIconButtonTap(ev: WechatMiniprogram.TouchEvent) {
@@ -182,9 +188,9 @@ Page({
     wx.navigateTo({ url: '../salesChoose/salesChoose?type=chat' })
   },
   handleReserve() {
-    if (!checkloginAndRealNameCertifiedAsync()) {
-      return
-    }
+    // if (!checkloginAndRealNameCertifiedAsync()) {
+    //   return
+    // }
     wx.setStorageSync('reserveStores', [this.data.details]);
     wx.navigateTo({ url: '../reservePage/reservePage' })
   },

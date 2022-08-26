@@ -42,7 +42,7 @@ Page({
     //   TODO sales的IM增加store信息
       targetList.push({
         avatar: !e.userProfile.avatar ? '../../assets/image/userAvator.png' : e.userProfile.avatar,
-        storeName: 'IRERI',
+        storeName: '',
         salesName: e.userProfile.nick,
         saleId: e.userProfile.userID,
         date: time,

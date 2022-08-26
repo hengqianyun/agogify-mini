@@ -39,7 +39,7 @@
       </view>
       <view class="line">
         <view class="product-order-date">
-          下单时间{{orderDate}}
+          下单时间: {{orderDate}}
         </view>
         <view wx:if="{{showMore}}" class="product-order-more">
           更多

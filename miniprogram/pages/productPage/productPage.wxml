@@ -33,7 +33,7 @@
   </view>
   <view class="controllers">
     <block wx:for="{{controllers}}" wx:key="label">
-      <rss-button data-event="{{item.event}}" bind:tap="handleIconButtonTap" class="product-btn" className="{{item.className}}" label="{{item.label}}" icon="{{item.icon}}" color="{{item.color}}"></rss-button>
+      <rss-button data-event="{{item.event}}" bind:tap="handleIconButtonTap" class="product-btn" className="{{item.className}}" label="{{item.label}}" color="{{item.color}}"></rss-button>
     </block>
   </view>
 </view>

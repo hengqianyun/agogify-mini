@@ -1,5 +1,5 @@
-<view class="store-page">
-  <view class="info-container">
+<view class="store-page" bindtouchmove="handleScreenMove">
+  <view class="info-container" bindtap="handleScreenMove">
     <view class="position-container">
       <image class="store-banner" src="{{details.images[0].path}}" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image>
       <view class="store-avatar">
@@ -23,7 +23,7 @@
     </view>
 
   </view>
-  <view class="controller">
+  <view class="controller" bindtap="handleScreenMove">
     <block wx:for="{{btns}}" wx:key="label">
       <view class="btn-box">
 
@@ -38,7 +38,7 @@
     </block>
 
   </view>
-  <view class='store-container'>
+  <view class='store-container' bindtap="handleScreenMove">
     <view class="s-c-title">
       <view class="s-c-bar">
         <view class="text-big">橱窗展示</view>
@@ -47,14 +47,14 @@
     </view>
   </view>
   <view class="products-controller">
-    <van-dropdown-menu custom-class="dropdown-box">
-      <van-dropdown-item value="{{ brand }}" options="{{ brandOptions }}" bind:change="handleBrandChange" />
+    <van-dropdown-menu custom-class="dropdown-box" close-on-click-outside="{{true}}">
+      <van-dropdown-item id="brand" value="{{ brand }}" options="{{ brandOptions }}" bind:change="handleBrandChange" />
     </van-dropdown-menu>
     <van-dropdown-menu custom-class="dropdown-box">
-      <van-dropdown-item value="{{ sex }}" options="{{ sexOptions }}" bind:change="handleSexChange" />
+      <van-dropdown-item id="sex" value="{{ sex }}" options="{{ sexOptions }}" bind:change="handleSexChange" />
     </van-dropdown-menu>
     <van-dropdown-menu custom-class="dropdown-box">
-      <van-dropdown-item value="{{ taxon }}" options="{{ taxonOptions }}" bind:change="handleTaxonChange" />
+      <van-dropdown-item id="taxon" value="{{ taxon }}" options="{{ taxonOptions }}" bind:change="handleTaxonChange" />
     </van-dropdown-menu>
     <RssButton wx:if="{{hasParams}}" data-event="{{showAllBtn.event}}" fontSize="{{24}}" label="{{showAllBtn.label}}" className="{{showAllBtn.class}}" width="{{128}}" height="{{52}}" borderRadius="{{2}}" fontWeight="{{300}}" color="{{showAllBtn.color}}" bind:tap="handleIconButtonTap"></RssButton>
     <view wx:else class="all-btn">已显示全部</view>
@@ -67,7 +67,7 @@
         <view class="product-category text-ellipsis">{{item.translations.zh_Hans_CN.name}}</view>
         <!-- <view class="product-category text-ellipsis">指导价:{{item.enabledVariants[0].price}}</view> -->
         <!-- <view class="product-category text-ellipsis">参考价:€ {{item.localPrice}}</view> -->
-        <view class="product-category text-ellipsis">
+        <view class="product-price text-ellipsis">
           <text>参考价：€ {{item.localPrice}}</text>
           <block wx:if="{{item.off}}">
             <text class="original-price"> € {{item.originalPrice}}</text>

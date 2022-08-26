@@ -1,4 +1,4 @@
-<view class="activity-page">
+<view class="activity-page" style="padding-bottom: {{tabBarHeight}}px;">
   <!-- <button bindtap="enterRoom">enter room</button> -->
   <view wx:if="{{acList.length > 0}}">
     <view class="event-info">

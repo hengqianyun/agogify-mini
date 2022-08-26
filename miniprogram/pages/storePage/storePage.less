@@ -167,9 +167,9 @@
     width: 100vw;
 
     .product-card {
-      margin: 14rpx 0;
+      margin: 14rpx 0 28rpx;
       width: 312rpx;
-      height: 412rpx;
+      // height: 412rpx;
     }
 
     .product-image {
@@ -184,7 +184,7 @@
       text-align: center;
     }
 
-    .product-category {
+    .product-category, .product-price{
       font-size: 24rpx;
       color: @defaultColor;
       font-weight: 400;
@@ -196,12 +196,16 @@
         color: @defaultColor2;
       }
     }
+
+    .product-category {
+      color: @defaultColor2;
+    }
   }
 
   .product-default-msg {
     font-size: 24rpx;
     color: @defaultColor2;
-    padding: 20rpx 40rpx 100rpx;
+    padding: 100rpx 40rpx 100rpx;
     text-align: center;
     box-sizing: border-box;
   }

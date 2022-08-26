@@ -16,8 +16,8 @@
       </view>
       <view wx:else></view>
     </view>
-    <view class="choose-tabs {{stores.length > 0 ? 'half-tabs' : ''}}">
-      <van-tabs color="#353535" custom-class="" active="{{ sale }}" swipeable="{{true}}" ellipsis="{{false}}" bind:change="handleSaleChange">
+    <view class="choose-tabs {{stores.length > 1 ? 'half-tabs' : ''}}">
+      <van-tabs wx:if="{{sales[stores[currentStoreIndex].code].length > 0}}" color="#353535" active="{{ sale }}" swipeable="{{true}}" ellipsis="{{true}}" bind:change="handleSaleChange">
         <van-tab wx:for="{{sales[stores[currentStoreIndex].code]}}" wx:key="@id" title="{{item.firstName + ' ' + item.lastName}}" name="{{item.username}}" data-value="{{item.username}}"></van-tab>
       </van-tabs>
     </view>
@@ -71,6 +71,6 @@
     </scroll-view>
   </view>
   <view class="btn-continer">
-    <rss-button label="预约" disabled="{{reserveBtnDisabled}}" className="fill-btn" width="{{750}}" height="{{88}}" borderRadius="{{0}}" fontWeight="{{300}}" bind:onTap="handleCommitReserve"></rss-button>
+    <rss-button label="预约" disabled="{{reserveBtnDisabled}}" className="fill-btn" width="{{654}}" height="{{88}}" borderRadius="{{4}}" fontWeight="{{300}}" bind:onTap="handleCommitReserve"></rss-button>
   </view>
 </view>

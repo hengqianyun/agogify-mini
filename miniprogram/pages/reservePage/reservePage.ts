@@ -94,6 +94,7 @@ Page({
       stores,
       startTime,
       endTime,
+      sale: 0
     })
     // this.initDurations()
     this.initTitle()
@@ -143,7 +144,7 @@ Page({
     const titleList = []
     const nowDate = new Date()
     let sec = nowDate.getTime(), aDaySec = 1000 * 60 * 60 * 24
-    for (let i = 0; i < weekLength; i++) {
+    for (let i = 1; i < weekLength + 1; i++) {
       const date = new Date(sec + aDaySec * i)
       const day = date.getDate(), month = date.getMonth(), week = date.getDay() as WeekNum
       titleList.push({

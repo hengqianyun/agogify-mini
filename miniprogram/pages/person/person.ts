@@ -81,6 +81,7 @@ Page({
     ],
     userName: '',
     avatar: '',
+    tabBarHeight: 0
   },
 
   /**
@@ -103,22 +104,32 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-
+    let height = wx.getStorageSync<number | string>('tabbarHeight')
+    height = !height ? 0 : height
+    this.setData({
+      tabBarHeight: height as number
+    })
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    if (typeof this.getTabBar === 'function' &&
+      this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 3    // 根据tab的索引值设置
+      })
+    }
     if (!!userProfile && !!userProfile.nickName && !!userProfile.avatar) {
       this.setData({
         userName: userProfile.nickName,
         avatar: userProfile.avatar
       })
     }
-    const {inviteCode} = this.options
-    if(!!inviteCode) {
-        setReceivedInviteCode(inviteCode)
+    const { inviteCode } = this.options
+    if (!!inviteCode) {
+      setReceivedInviteCode(inviteCode)
     }
   },
 
@@ -145,9 +156,9 @@ Page({
   onShareAppMessage(option) {
     const { from } = option
     if (from === 'button') {
-        const opt = shareInvite('/pages/person/person', getInviteCode())
-        console.log(opt)
-        return opt
+      const opt = shareInvite('/pages/person/person', getInviteCode())
+      console.log(opt)
+      return opt
     }
   },
   showProtocol() {
@@ -168,8 +179,8 @@ Page({
   },
 
   navigateTo(event: WechatMiniprogram.TouchEvent) {
-    const {url} = event.currentTarget.dataset
-    if(url === 'loginPage/loginPage' && this.data.userName !== '') {
+    const { url } = event.currentTarget.dataset
+    if (url === 'loginPage/loginPage' && this.data.userName !== '') {
       return
     }
     if (this.data.userName === '') {

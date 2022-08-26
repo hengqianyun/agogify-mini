@@ -1,5 +1,5 @@
 <!-- <view class="person-page" style="padding-top: {{height}}px"> -->
-<view class="person-page">
+<view class="person-page"  style="padding-bottom: {{tabBarHeight}}px;">
   <view class="user-container">
     <view class="user-info" hover-class="none" hover-stop-propagation="false">
       <view class="avatar-box">
@@ -10,14 +10,15 @@
       </view>
     </view>
     <view wx:if="{{!!userName && !!avatar}}" class="user-controller" data-url="portrait/portrait" bind:tap="navigateTo" hover-class="none" hover-stop-propagation="false">
-      个人肖像 >
+      <view>个人肖像</view>
+      <iconfont name="jiantou" size="28" color="#676767"></iconfont>
     </view>
   </view>
   <view class="btn-container" hover-class="none" hover-stop-propagation="false">
-    <rss-button data-url="reserveList/reserveList" bind:onTap="navigateTo" className="fill-btn" label="我的预约" height="{{108}}" width="{{312}}" icon="my_reserve" color="#fff" iconSize="{{32}}">
+    <rss-button data-url="orderList/orderList" bind:onTap="navigateTo" className="line-btn" label="我的订单" height="{{108}}" width="{{312}}" icon="my_order" color="#353535" iconSize="{{32}}">
       我的预约
     </rss-button>
-    <rss-button data-url="orderList/orderList" bind:onTap="navigateTo" className="line-btn" label="我的订单" height="{{108}}" width="{{312}}" icon="my_order" color="#353535" iconSize="{{32}}">
+    <rss-button data-url="reserveList/reserveList" bind:onTap="navigateTo" className="fill-btn" label="我的预约" height="{{108}}" width="{{312}}" icon="my_reserve" color="#fff" iconSize="{{32}}">
       我的预约
     </rss-button>
   </view>

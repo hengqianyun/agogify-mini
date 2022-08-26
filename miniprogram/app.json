@@ -57,6 +57,7 @@
     "selectedColor": "#353535",
     "backgroundColor": "#fff",
     "borderStyle": "white",
+    "custom": true,
     "list": [
       {
         "pagePath": "pages/homepage/homepage",

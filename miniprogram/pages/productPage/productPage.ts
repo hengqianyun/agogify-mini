@@ -11,14 +11,14 @@ Page({
   data: {
     controllers: [
       {
-        label: '呼叫'
-        , className: 'line-btn',
+        label: '呼叫', 
+        className: 'line-btn',
         icon: 'a-call2',
         event: 'handleCall'
       },
       {
-        label: '预约'
-        , className: 'fill-btn',
+        label: '预约',
+        className: 'fill-btn',
         icon: 'my_reserve',
         color: "#fff",
         event: 'handleReserve'
@@ -91,7 +91,7 @@ Page({
     }
     wx.navigateTo({ url: '../salesChoose/salesChoose' })
   },
-  
+
   handleReserve() {
     if (!checkloginAndRealNameCertifiedAsync()) {
       return
@@ -102,7 +102,7 @@ Page({
   async queryProductDetail(code: string) {
     const resData = await storeModule.queryProductDetails(code)
     const { data: detail } = resData
-    detail.images.forEach(e => e.path = IMAGEBASEURL+ IMAGEPATHS.productMain2x + e.path)
+    detail.images.forEach(e => e.path = IMAGEBASEURL + IMAGEPATHS.productMain2x + e.path)
     let price = (detail.enabledVariants[0].price / 100).toLocaleString()
     if (!price.includes('.')) {
       price += '.00'
@@ -110,8 +110,8 @@ Page({
 
     let originalPrice = (detail.enabledVariants[0].originalPrice / 100).toLocaleString()
     if (!originalPrice.includes('.')) {
-        originalPrice += '.00'
-      }
+      originalPrice += '.00'
+    }
     this.setData({
       imageList: detail.images,
       name: detail.translations?.zh_Hans_CN.name,
@@ -119,11 +119,11 @@ Page({
       category: detail.mainTaxon?.name,
       brand: detail.brand.name,
       desc: detail.description ?? '',
-    //   price: String.fromCharCode(8364) + ' ' + price,
+      //   price: String.fromCharCode(8364) + ' ' + price,
       price: price,
       originalPrice: originalPrice,
       off: detail.enabledVariants[0].originalPrice > detail.enabledVariants[0].price
-    //   off: true
+      //   off: true
     })
   }
 })
