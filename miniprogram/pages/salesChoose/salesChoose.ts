@@ -90,7 +90,7 @@ Page({
     const { id, status, index, salesname } = currentTarget.dataset as { salesname: string, id: string, status: string, index: number }
     const currentStore = this.data.stores[this.data.currentStoreIndex]
     wx.navigateTo({
-      url: `../chatPage/chatPage?storeName=${currentStore.name}&salesId=${id}&salesName=${salesname}&type=needService`
+      url: `../chatPage/chatPage?storeName=${currentStore.name}&salesId=${id}&salesName=${salesname}&storeCode=${currentStore.code}`
     })
   },
 
@@ -203,7 +203,6 @@ Page({
   async querySession() {
     try {
       const res = await sessionModule.querySession('droppedByCustomer=false&state[]=active&state[]=paused&itemsPerPage=1&page=1')
-      // const res = await sessionModule.querySession('droppedByCustomer=true&state[]=active&state[]=paused&customer.id=' + userProfile.id + '&itemsPerPage=1&page=1')
       const { "hydra:member": list } = res.data
       if (list.length > 0) {
         this.setData({

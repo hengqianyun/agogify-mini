@@ -9,6 +9,7 @@ declare namespace storeDesign {
     billingData: storeBillingData
     logo: Logo
     brands: {name: string, code: string, id: number}[]
+    id: number
   }
 
   interface addressSimpleData extends swaggerI.requestSimpleBase {

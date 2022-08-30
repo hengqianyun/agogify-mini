@@ -1,4 +1,4 @@
-<view class="chat-page">
+<view class="chat-page" bindtap="handleCancelMenu">
   <view class="nav" style="height: {{navBarHeight}}px;">
     <view class="nav-main">
       <view class="capsule-box" style="height: {{menuHeight}}px; min-height: {{menuHeight}}px; bottom: {{menuBottom}}px;">
@@ -20,14 +20,25 @@
           <view wx:if="{{item.flow === 'in'}}" class="message-item" id="{{'id' + item.time}}">
             <view class="avatar-box">
               <image class="avatar" src="{{item.avatar}}"></image>
+              
             </view>
-            <view class="text-message">{{item.payload.text}}</view>
+            <view class="text-message" data-id="{{item.ID}}" bindlongpress="handleShowMenu">
+              <view>{{item.payload.text}}</view>
+              <view wx:if="{{item.showMenu}}" bindtap="handleTrans" class="custom-menu">翻译</view>
+              <view wx:if="{{item.showMenu}}" class="custom-menu-triangle"></view>
+            </view>
           </view>
           <view wx:else class="message-to-item message-item" id="{{'id' + item.time}}">
             <view class="avatar-box">
               <image class="avatar" src="{{item.avatar}}"></image>
             </view>
             <view class="text-message">{{item.payload.text}}</view>
+          </view>
+          <view wx:if="{{!!item.trans}}" class="message-item">
+            <view class="avatar-box"></view>
+            <view class="text-message" data-id="{{item.ID}}" bindlongpress="handleShowMenu">
+            {{item.trans}}
+            </view>
           </view>
         </block>
       </scroll-view>
@@ -49,7 +60,8 @@
                     <rss-btn label="发送" width="{{80}}" height="{{52}}" className="{{'fill-btn'}}" borderRadius="{{8}}" bind:onTap="handleSend"></rss-btn>
                 </view> -->
       <view class="send-btn">
-        <rss-btn label="发送" width="{{80}}" height="{{80}}" className="{{'fill-btn'}}" borderRadius="{{2}}" bind:onTap="handleSend"></rss-btn>
+        <rss-btn wx:if="{{text !== ''}}" label="发送" width="{{80}}" height="{{80}}" className="{{'fill-btn'}}" borderRadius="{{4}}" bind:onTap="handleSend"></rss-btn>
+        <!-- <view wx:else class=""></view> -->
       </view>
     </view>
   </view>

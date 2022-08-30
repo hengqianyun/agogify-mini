@@ -3,6 +3,7 @@
 .dropdown-box {
   box-shadow: none;
 }
+
 .classification-page {
   .van-dropdown-menu {
     box-shadow: none;
@@ -26,6 +27,7 @@
       color: @defaultColor2;
       font-weight: 400;
     }
+
     .van-tab--active {
       color: @defaultColor;
       font-weight: bold;
@@ -70,7 +72,7 @@
     .left-container {
       height: 100%;
       position: relative;
-      
+
 
       .scroll-sidebar {
         overflow: scroll;
@@ -81,35 +83,48 @@
         box-sizing: border-box;
 
         .brand-title {
-            height: 52rpx;
-            padding: 0 26rpx;
-            border-bottom: 1rpx solid #f5f5f5;
-            border-top: 1rpx solid #f5f5f5;
-            box-sizing: border-box;
-            color: @defaultColor2;
-            font-size: 28rpx;
-            padding-top: 16rpx;
+          height: 52rpx;
+          padding: 0 26rpx;
+          border-bottom: 1rpx solid #f5f5f5;
+          border-top: 1rpx solid #f5f5f5;
+          box-sizing: border-box;
+          color: @defaultColor2;
+          font-size: 28rpx;
+          padding-top: 16rpx;
         }
-        
-        .brand-name {
-            min-height: 44rpx;
-            margin: 8rpx 0;
-            padding: 0 20rpx;
-            color: @defaultColor2;
-            line-height: 44rpx;
-            font-size: 24rpx;
-            word-wrap: break-word;
 
-            &:last-child {
-                margin-bottom: 0;
-            }
+        .brand-name {
+          min-height: 44rpx;
+          margin: 8rpx 0;
+          padding: 0 20rpx;
+          color: @defaultColor2;
+          line-height: 44rpx;
+          font-size: 24rpx;
+          word-wrap: break-word;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        .brand-name-all {
+          height: 80rpx;
+          line-height: 74rpx;
+          font-size: 28rpx;
+          color: @defaultColor2;
         }
 
         .checked-brand-name {
-            border-bottom: 6rpx solid @defaultColor;
-            min-height: 76rpx;
-            color: @defaultColor;
-            line-height: 76rpx;
+          color: #fff;
+          background-color: @defaultColor;
+        }
+
+        .checked-brand-all {
+          border-bottom: 6rpx solid @defaultColor;
+          min-height: 80rpx;
+          color: @defaultColor;
+          line-height: 74rpx;
+          box-sizing: border-box;
         }
 
         .van-sidebar-item {
@@ -126,7 +141,7 @@
           padding: 0;
           justify-content: center;
         }
-        
+
         .van-sidebar-item--selected {
           border-bottom: 6rpx solid @defaultColor;
           font-weight: bold;
@@ -169,7 +184,7 @@
           bottom: 84rpx;
           left: 188rpx;
           flex-wrap: wrap;
-          padding: 0 16rpx; 
+          padding: 0 16rpx;
           background: #fff;
           box-sizing: border-box;
           box-shadow: 0 8rpx 14rpx 2rpx rgba(139, 174, 217, 0.32);
@@ -219,7 +234,7 @@
         }
 
         .store-item {
-        //   padding: 32rpx 0;
+          //   padding: 32rpx 0;
           border-bottom: 2rpx solid @borderColor;
           display: flex;
           align-items: center;
@@ -252,7 +267,7 @@
           // box-sizing: border-box;
           // margin: 0 8rpx;
         }
-        
+
       }
     }
 

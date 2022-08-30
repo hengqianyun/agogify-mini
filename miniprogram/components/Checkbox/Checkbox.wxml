@@ -10,7 +10,8 @@
   bind:tap="handleCheck"
   style="height: {{length}}rpx; width: {{length}}rpx"
 >
-  <view class="checkbox-inside" style="height: {{length / 5 * 3}}rpx; width: {{length / 5 * 3}}rpx"></view>
+  <!-- <view class="checkbox-inside" style="height: {{length / 5 * 3}}rpx; width: {{length / 5 * 3}}rpx"></view> -->
+  <iconfont name="a-Frame3163" size="{{28}}" color="#fff"></iconfont>
 </view>
 <view 
   wx:elif="{{status === 2}}"

@@ -67,7 +67,7 @@ Page({
     chooseStore: 'store3',
     // sales: [] as storeDesign.sale[][],
     sales: {} as { [key: string]: storeDesign.sale[] },
-    sale: 0,
+    sale: 3,
     times: [] as string[],
     scrollTitles: [] as SimpleTitme[],
     tableItems: [[], [], [], [], [], [], []] as SimpleTableItem[][],
@@ -86,10 +86,11 @@ Page({
   async onLoad() {
     const today = new Date()
     const [year, month, date] = [today.getFullYear(), today.getMonth(), today.getDate()]
-    const newDay = new Date(year, month, date)
+    const newDay = new Date(year, month, date + 1)
     const startTime = this.getGMTTimerString(newDay)
     const endTime = this.getGMTTimerString(new Date(newDay.setDate(date + weekLength)))
     const stores = wx.getStorageSync<storeDesign.storeItem[]>('reserveStores')
+    const { salesId } = this.options as { salesId: string | undefined }
     this.setData({
       stores,
       startTime,
@@ -98,7 +99,7 @@ Page({
     })
     // this.initDurations()
     this.initTitle()
-    await this.querySales()
+    await this.querySales(salesId)
     // this.setData({
     //   'tableItems[0][2].disabled': true,
     //   'tableItems[0][3].disabled': true,
@@ -142,9 +143,11 @@ Page({
 
   initTitle() {
     const titleList = []
-    const nowDate = new Date()
+    const today = new Date()
+    const [year, month, date] = [today.getFullYear(), today.getMonth(), today.getDate()]
+    const nowDate = new Date(year, month, date + 1)
     let sec = nowDate.getTime(), aDaySec = 1000 * 60 * 60 * 24
-    for (let i = 1; i < weekLength + 1; i++) {
+    for (let i = 0; i < weekLength ; i++) {
       const date = new Date(sec + aDaySec * i)
       const day = date.getDate(), month = date.getMonth(), week = date.getDay() as WeekNum
       titleList.push({
@@ -157,7 +160,11 @@ Page({
     })
   },
 
-  async querySales() {
+  /**
+   * 
+   * @param salesId 目标销售
+   */
+  async querySales(salesId?: string) {
     const { currentStoreIndex, stores, sales } = this.data
     const params = {
       page: 1,
@@ -169,15 +176,22 @@ Page({
       const res = await storeModule.querySales(params)
       const { "hydra:member": list } = res.data
       // sales[stores[currentStoreIndex].code] = list.reverse()
-      sales[stores[currentStoreIndex].code] = list.map(e => { 
+      sales[stores[currentStoreIndex].code] = list.map(e => {
         return e.roles.includes('ROLE_STORE_SHOPPER_ACCESS') ? { ...e, lastName: e.lastName + '(顾问)' } : e
-       })
+      })
       this.setData({
         sales: this.data.sales,
         saleLanguage: list[0].languages.map(e => {
           return e === 'chinese' ? '中文' : '英语'
         }).join()
       })
+      const index = list.findIndex(e => e["@id"] === salesId)
+      if (!!salesId) {
+        this.setData({
+          sale: index > -1 ? index : 0,
+        })
+      }
+
       this.querySalesTimeSlots()
     } catch { }
   },
@@ -283,35 +297,14 @@ Page({
        * 服务器获取的时间异常，UTC八点，会format成0点+8，所以需要手动加上八小时
        */
       const timeZone = -(new Date().getTimezoneOffset()) / 60;
-      //   for (const slot of list) {
-      //     const { state } = slot
-      //     if (state === 'available') {
-
-      //       const { startTime, version, '@id': id } = slot
-
-      //       const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
-      //       const today = new Date()
-      //       const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
-      //       const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
-      //       const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-      //       // TODO 9 变为 12
-      //       const j = (hour - 16) * 4 + min / 15
-      //       if (!!this.data.tableItems[i] && !!this.data.tableItems[i][j]) {
-      //         this.data.tableItems[i][j].disabled = false
-      //         this.data.tableItems[i][j].paramsVersion = version
-      //         this.data.tableItems[i][j].paramsId = getIdFromString(id)
-      //       }
-      //     }
-      //   }
       const timeList: number[][][] = [[], [], [], [], [], [], []]
       let latest = 0, earliest = -1
       for (const slot of list) {
-        const { state } = slot
         // if (state === 'available') {
         const { startTime, version, '@id': id } = slot
         const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
-        const today = new Date()
         const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
+        let today = new Date(year, month, date)
         const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
         const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
         let tempHour = hour >= 24 ? hour - 24 : hour

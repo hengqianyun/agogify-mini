@@ -18,7 +18,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    btnDisabled: true,
+    btnDisabled: false,
     location: 'all',
     locationList: [] as storeDesign.dropdownOption[],
     shopClassification: 'all',
@@ -94,7 +94,7 @@ Page({
     if (type === 1) {
       params.page = 1
     }
-    let str = `page=${this.data.pageInfo.page}&itemsPerPage=${this.data.pageInfo.itemsPerPage}`
+    let str = `page=${this.data.pageInfo.page}&itemsPerPage=${this.data.pageInfo.itemsPerPage}&order[createdAt]=desc`
     if (this.data.location !== 'all') {
       str += '&billingData.city.code=' + this.data.location
     }
@@ -197,32 +197,33 @@ Page({
 
   handleCheckboxChange(e: WechatMiniprogram.TouchEvent) {
     const { detail } = e
-    const { index } = e.currentTarget.dataset as { index: number }
+    const { id } = e.currentTarget.dataset as { id: number }
     const status: storeDesign.checkBoxStatus = detail as unknown as storeDesign.checkBoxStatus
     if (status === 1 && this.data.result.length + 1 === this.data.max) {
-      let list = this.data.shopList.map((item, i) => {
+      let list = this.data.shopList.map((item) => {
         if (item.status === 0) item.status = 2
-        if (i === index) item.status = 1
+        if (item.id === id) item.status = 1
         return item
       })
       this.setData({
-        result: this.data.result.concat([index]),
+        result: this.data.result.concat([id]),
         shopList: list
       })
     } else if (status === 0 && this.data.result.length === this.data.max) {
-      let list = this.data.shopList.map((item, i) => {
+      let list = this.data.shopList.map((item) => {
         if (item.status === 2) item.status = 0
-        if (i === index) item.status = 0
+        if (item.id === id) item.status = 0
         return item
       })
-      let resList = this.data.result.filter(e => e !== index)
+      let resList = this.data.result.filter(e => e !== id)
       this.setData({
         result: resList,
         shopList: list
       })
     } else {
-      let resList = this.data.result.filter(e => e !== index)
-      if (resList.length === this.data.result.length) resList.push(index)
+      let resList = this.data.result.filter(e => e !== id)
+      if (resList.length === this.data.result.length) resList.push(id)
+      const index = this.data.shopList.findIndex(e => e.id === id)
       this.setData({
         result: resList,
         ['shopList[' + index + '].status']: status
@@ -443,7 +444,10 @@ Page({
       }
       const list = resData.data["hydra:member"]
       this.setData({
-        shopList: list.map(item => Object.assign(item, { status: 0 as storeDesign.checkBoxStatus, address: `${item.billingData.country?.name} ${item.billingData.city?.name}` })),
+        shopList: list.map(item => Object.assign(item, { 
+          status: this.data.result.includes(item.id) ? 1 : this.data.result.length === this.data.max ? 2 : 0 as storeDesign.checkBoxStatus, 
+          address: `${item.billingData.country?.name} ${item.billingData.city?.name}` 
+        })),
         shopCheckStatusList: (new Array(list.length)).fill(1),
         loading: false
       })

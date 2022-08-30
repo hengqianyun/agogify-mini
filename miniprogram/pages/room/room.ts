@@ -87,7 +87,7 @@ Page({
         //   }, code)
         //   clearSessionAsync()
         // }
-        // that.exitRoom()
+        that.exitRoom()
       }
     })
   },
@@ -138,7 +138,7 @@ Page({
   },
   onUnload() {
     console.debug('room unload')
-    this.exitRoom()
+    // this.exitRoom()
   },
 
   onShareAppMessage(option) {

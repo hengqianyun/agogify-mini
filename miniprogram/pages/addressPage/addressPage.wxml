@@ -27,7 +27,7 @@
             <view>设为默认地址</view>
           </view>
           <view class="delete-icon-box">
-            <view data-id="{{item.id}}" catch:tap="handleRadioTap">编辑</view>
+            <view data-id="{{item.id}}" catch:tap="handleEditTap">修改</view>
             <view>{{'  |  '}}</view>
             <view data-index="{{index}}" catch:tap="handelDelete">删除</view>
           </view>

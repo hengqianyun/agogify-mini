@@ -85,7 +85,7 @@ Page({
         }
         return {
           ...e,
-          timeStr,
+          timeStr: e.expiresAt === null ? null : timeStr,
           isOff,
           off
         }

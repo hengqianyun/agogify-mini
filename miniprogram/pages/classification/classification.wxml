@@ -39,7 +39,7 @@
           <view wx:if="{{item.items.length > 0}}" id="{{item.name}}">
             <view class="brand-title" wx:if="{{item.name !== '全部品牌'}}">{{item.name}}</view>
             <block wx:for="{{item.items}}" wx:for-item="brand" wx:key="code">
-              <view class="brand-name {{brand.code === brandActiveKey ? 'checked-brand-name' : ''}}" bindtap="handleBrandChange" data-name="{{brand.name}}" data-code="{{brand.code}}">{{brand.name}}</view>
+              <view class="brand-name {{brand.code === 'all' ? 'brand-name-all' : ''}} {{brand.code === brandActiveKey ? brandActiveKey === 'all' ? 'checked-brand-all' : 'checked-brand-name' : ''}}" bindtap="handleBrandChange" data-name="{{brand.name}}" data-code="{{brand.code}}">{{brand.name}}</view>
             </block>
           </view>
         </block>
@@ -60,13 +60,13 @@
       <view class="shop-container">
         <block wx:for="{{shopList}}" wx:key="id">
           <view class="store-item">
-            <CheckboxStoreItem status="{{item.status}}" name="{{item.name}}" code="{{item.code}}" address="{{item.address}}" desc="{{item.desc}}" image="{{item.logo.path}}" data-index="{{index}}" type="{{item.type}}" bind:onTap="handleCheckboxChange" />
+            <CheckboxStoreItem status="{{item.status}}" name="{{item.name}}" code="{{item.code}}" address="{{item.address}}" desc="{{item.desc}}" image="{{item.logo.path}}" data-id="{{item.id}}" type="{{item.type}}" bind:onTap="handleCheckboxChange" />
           </view>
         </block>
       </view>
       <view class="buttons">
-        <rss-button label="立即通话" bind:onTap="handleChatTap" class="btn" className="line-btn" fontSize="{{28}}" height="{{88}}" width="{{228}}" fontWeight="{{400}}"></rss-button>
-        <rss-button label="预约" bind:onTap="handleReserveTap" class="btn" className="fill-btn" fontSize="{{28}}" height="{{88}}" width="{{228}}" fontWeight="{{400}}"></rss-button>
+        <rss-button label="立即通话" disabled="{{result.length === 0}}" bind:onTap="handleChatTap" class="btn" className="line-btn" fontSize="{{28}}" height="{{88}}" width="{{228}}" fontWeight="{{400}}"></rss-button>
+        <rss-button label="预约" disabled="{{result.length === 0}}" bind:onTap="handleReserveTap" class="btn" className="fill-btn" fontSize="{{28}}" height="{{88}}" width="{{228}}" fontWeight="{{400}}"></rss-button>
         <!-- <rss-button class="reserve-btn btn" bind:tap="handleReserveTap">预约</rss-button> -->
       </view>
     </view>

@@ -21,6 +21,13 @@ const videoModule = {
     "target": "en",
     "sourceText": sourceText
   }),
+
+  translateTextToZh: (sourceText: string) => typePost<swaggerI.translateRes, { [key: string]: any }>('private/tmt/text-inputs', {
+    "region": "ap-shanghai",
+    "source": "en",
+    "target": "zh",
+    "sourceText": sourceText
+  }),
 }
 
 export default videoModule

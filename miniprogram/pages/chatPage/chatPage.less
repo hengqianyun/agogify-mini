@@ -42,7 +42,8 @@
 
   .chat-page-container {
     .chat-container {
-      height: calc(100% - 206rpx);
+      height: calc(100% - 224rpx);
+      background-color: #f5f5f5;
 
       .scroll {
         height: 100%;
@@ -52,6 +53,7 @@
         display: flex;
         margin-top: 32rpx;
         padding: 0 40rpx;
+        
 
         .avatar-box {
           height: 76rpx;
@@ -67,7 +69,37 @@
         .text-message {
           max-width: 454rpx;
           padding: 16rpx;
-          margin-left: 16rpx;
+          margin: 0 16rpx;
+          background-color: #fff;
+          border-radius: 8rpx;
+          position: relative;
+
+          .custom-menu {
+            position: absolute;
+            width: 112rpx;
+            height: 66rpx;
+            background-color: #353535;
+            color: #fff;
+            text-align: center;
+            line-height: 66rpx;
+            font-size: 24rpx;
+            border-radius: 8rpx;
+            top: -82rpx;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+
+          .custom-menu-triangle {
+            width: 0;
+            height: 0;
+            border: 16rpx solid transparent;
+            border-top-color: #353535;
+            position: absolute;
+            top: -17rpx;
+            left: 50%;
+            transform: translateX(-50%);
+            box-sizing: border-box;
+          }
         }
       }
 
@@ -77,7 +109,7 @@
 
         .text-message {
           background-color: #70AAF2;
-          border-radius: 8px 0px 8px 8px;
+          border-radius: 16rpx;
           color: #fff;
         }
       }
@@ -91,6 +123,7 @@
       display: flex;
       align-items: center;
       padding: 0 40rpx;
+      margin-bottom: 12rpx;
 
       .btn-box {
         width: 120rpx;

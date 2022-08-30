@@ -8,6 +8,9 @@
   <view class="coupons" hover-class="none" hover-stop-propagation="false">
     <block wx:for="{{coupons}}" wx:key="code">
       <view wx:if="{{item.valid}}" class="coupon" hover-class="none" hover-stop-propagation="false">
+        <view class="coupon-bg">
+          <image class="coupon-bg-image" src="https://rss.agogify.cn/assets/app/img/coupon-bg-corner.png"></image>
+        </view>
         <view class="coupon-top">
           <view wx:if="{{!item.isOff}}" class="coupon-price">
             <view class="coupon-index">€</view>
@@ -19,7 +22,7 @@
           </view>
           <view class="coupon-tip">全场通用</view>
         </view>
-        <view class="coupon-bottom">
+        <view class="coupon-bottom" wx:if="{{item.timeStr}}">
           {{item.timeStr}}
         </view>
       </view>

@@ -1,7 +1,13 @@
 import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import storeModule from "../../http/module/store"
+import videoModule from "../../http/module/video"
 import { getConversationList, getMessageList, sendC2CTextMessage, setMsgRead } from "../../libs/tim/tim"
 import { $on, $remove } from "../../utils/event"
+
+interface PageTIMMessage extends TIMMessage {
+  showMenu: boolean
+  trans?: string
+}
 
 // pages/chatPage/chatPage.ts
 const app = getApp()
@@ -18,10 +24,11 @@ Page({
     text: '',
     to: '',
     salesName: '',
-    storeName: '',
+    storeCode: '',
     conversationID: '',
     nextReqMessageID: '',
-    messageList: [] as TIMMessage[],
+    messageList: [] as PageTIMMessage[],
+    targetMenuIndex: -1,
     scrollIntoView: '',
     btns: [
       {
@@ -54,11 +61,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   async onLoad() {
-    const { salesId, salesName, storeName, conversationID, salesAvatar } = this.options as { salesAvatar: string, salesId: string, salesName: string, storeName: string, conversationID: string }
+    const { salesId, salesName, conversationID, storeCode } = this.options as { salesId: string, salesName: string, conversationID: string, storeCode: string }
     this.setData({
       to: salesId,
       salesName: salesName,
-      storeName: '',
+      storeCode,
       conversationID,
     })
     if (!!conversationID) {
@@ -74,7 +81,7 @@ Page({
         console.log(res)
         const data = res.data[0]
         that.setData({
-          messageList: [...this.data.messageList, data],
+          messageList: [...this.data.messageList, { ...data, showMenu: false }],
           scrollIntoView: 'id' + data.time,
           conversationID: data.conversationID,
         })
@@ -149,11 +156,11 @@ Page({
 
   handleReserve() {
     wx.setStorageSync('reserveStores', [this.data.details]);
-    wx.navigateTo({ url: '../reservePage/reservePage' })
+    wx.navigateTo({ url: `../reservePage/reservePage?salesId=${this.data.to}` })
   },
 
   async queryDetails() {
-    const resData = await storeModule.queryStoreDetails('IRERI')
+    const resData = await storeModule.queryStoreDetails(this.data.storeCode)
     if (resData.data.logo)
       resData.data.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal2x + resData.data?.logo?.path
     if (resData.data.images.length > 0) {
@@ -178,8 +185,23 @@ Page({
   async getMessageList() {
     const res = await getMessageList(this.data.conversationID, 20)
     const { messageList, nextReqMessageID } = res.data as { messageList: TIMMessage[], nextReqMessageID: string }
+    const transRes = wx.getStorageSync('transStorage')
+    let currentConversationTrans: {[key: string]: {text: string, date: string}} = {}
+    if (!!transRes) {
+      currentConversationTrans  = transRes[this.data.conversationID]
+    }
+    for (let key in currentConversationTrans) {
+      debugger
+      const currentMillsec = Date.parse((new Date()).toUTCString())
+      const targetMillsec = Date.parse(currentConversationTrans[key].date)
+      if (currentMillsec -  targetMillsec> 604800000) {
+        delete currentConversationTrans[key]
+      }
+    }
     this.setData({
-      messageList,
+      messageList: messageList.map(e => {
+        return { ...e, showMenu: false, trans: currentConversationTrans[e.ID]?.text }
+      }),
       nextReqMessageID,
       scrollIntoView: 'id' + messageList[messageList.length - 1].time.toString()
     })
@@ -228,7 +250,7 @@ Page({
       const res = await sendC2CTextMessage(this.data.to, this.data.text);
       console.log(res)
       const { message } = res.data
-      this.data.messageList.push(message)
+      this.data.messageList.push({ ...message, showMenu: false })
       this.setData({
         messageList: this.data.messageList,
         scrollIntoView: 'id' + message.time,
@@ -238,5 +260,78 @@ Page({
     } catch (err) {
       console.log(err)
     }
+  },
+
+  handleShowMenu({ currentTarget }: WechatMiniprogram.TouchEvent) {
+    const { id } = currentTarget.dataset as { id: string }
+    const index = this.data.messageList.findIndex(e => e.ID === id)
+    this.data.messageList[index].showMenu = !this.data.messageList[index].showMenu
+    this.setData({
+      messageList: this.data.messageList,
+      targetMenuIndex: index
+    })
+  },
+
+  handleCancelMenu() {
+    if (this.data.targetMenuIndex > -1) {
+      this.data.messageList[this.data.targetMenuIndex].showMenu = false
+      this.setData({
+        messageList: this.data.messageList
+      })
+    }
+  },
+
+  async handleTrans() {
+    const { targetMenuIndex, messageList } = this.data
+    const item = messageList[targetMenuIndex]
+    const { text } = item.payload
+    try {
+      wx.showLoading({
+        title: 'loading'
+      })
+      const res = await videoModule.translateTextToZh(text)
+      console.log(res)
+      const {TargetText} = res.data
+      item.trans = TargetText
+      let currentConversationTrans : {[key: string]: {text: string, date: Date} } | undefined
+      let transRes: {[key: string]: {[key: string]: {text: string, date: Date}}} | undefined = wx.getStorageSync('transStorage')
+      if (!!transRes) {
+        debugger
+        currentConversationTrans  = transRes[this.data.conversationID]
+        if (!currentConversationTrans) {
+          currentConversationTrans = {}
+        } 
+        currentConversationTrans[item.ID] = {text: TargetText, date: new Date()}
+        wx.setStorageSync('transStorage', transRes)
+      } else {
+        transRes = {}
+        const tempMap: {[key: string]: {text: string, date: Date}} = {}
+        tempMap[item.ID] =  {text: TargetText, date: new Date()}
+        transRes[this.data.conversationID] =  tempMap
+        try {
+          wx.setStorage({
+            key: 'transStorage',
+            data: transRes,
+            success(r) {
+              console.log(r)
+            },
+             fail(err) {
+               console.log(err)
+             }
+          })
+        }catch(err) {
+          console.log(err)
+        }
+      }
+    } catch(err) {
+
+    } finally {
+      wx.hideLoading()
+    }
+    item.showMenu = false
+    this.setData({
+      targetMenuIndex: -1,
+      messageList,
+    })
   }
 })

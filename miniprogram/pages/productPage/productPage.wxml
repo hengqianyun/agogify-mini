@@ -20,7 +20,7 @@
     </view>
   </view>
   <view class="product-info">
-    <view class="product-name text-ellipsis">{{name}}</view>
+    <view class="product-name">{{name}}</view>
     <view class="product-category text-ellipsis">{{brand}}</view>
     <view class="product-desc text-ellipsis-2">{{desc}}</view>
     <!-- TODO 取消指导价格 -->

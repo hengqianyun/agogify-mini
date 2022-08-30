@@ -197,32 +197,15 @@
   <!-- 订单弹窗 -->
   <view wx:if="{{showPopup}}" class="pay-popup">
     <van-popup show="{{showPopup}}" bind:close="_popupCancel" position="bottom" custom-style="height: 80%;" closeable close-on-click-overlay="{{false}}">
-      <view class="popup-title">确认订单</view>
-      <view class="popup-container">
-        <view class="address-item" bind:tap="handleShowMoreAddress">
-          <view class="left-box">
-            <view class="icon-box">
-              <iconfont name="my_dizhibu" size="{{36}}"></iconfont>
-            </view>
-            <view class="message-box">
-              <view class="user-info">
-                <view class="user-name text-ellipsis">
-                  {{address.lastName + address.firstName}}
-                </view>
-                <view class="user-phone">{{address.mobileNumber}}</view>
+      <view class="pay-popup-container">
+        <view class="popup-title">确认订单</view>
+        <view class="popup-container">
+          <view class="address-item" bind:tap="handleShowMoreAddress">
+            <view class="left-box">
+              <view class="icon-box">
+                <iconfont name="my_dizhibu" size="{{36}}"></iconfont>
               </view>
-              <view class="address-detail text-ellipsis-2">
-                {{address.provinceName + ' ' + address.city + ' ' + address.street}}
-              </view>
-            </view>
-          </view>
-          <view class="right-box">
-            <iconfont wx:if="{{!showMoreAddress}}" name="xia" size="{{40}}"></iconfont>
-            <iconfont wx:else name="shang" size="{{40}}"></iconfont>
-          </view>
-          <scroll-view scroll-y="{{true}}" wx:if="{{showMoreAddress}}" class="more-address" id="moreAddress">
-            <block wx:for="{{addressList}}" wx:key="id" wx:for-item="address">
-              <view class="message-box" data-index="{{index}}" bind:tap="handleChoose">
+              <view class="message-box">
                 <view class="user-info">
                   <view class="user-name text-ellipsis">
                     {{address.lastName + address.firstName}}
@@ -233,95 +216,114 @@
                   {{address.provinceName + ' ' + address.city + ' ' + address.street}}
                 </view>
               </view>
-            </block>
-          </scroll-view>
-        </view>
-        <view class="product-item">
-          <view class="product-title">
-            <iconfont name="my_order" size="{{36}}"></iconfont>
-            <text>商品信息</text>
-          </view>
-          <view class="product-card">
-            <!-- <view class="product-name">{{orderInfo.items[0].productName}}</view> -->
-            <view class="product-info">
-              <view class="product-info-item text-ellipsis-2">类别：{{productCategory1CnName + ' ' + productCategory2CnName + ' ' + productCategory3CnName}}</view>
-              <view class="product-info-item text-ellipsis-2">名称：{{productBrand + ' ' + productName}}</view>
-              <view class="product-info-item text-ellipsis-2">尺寸：{{productSize}}</view>
-              <!-- <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view> -->
-              <!-- <view class="product-info-item">金额：€{{itemsTotal}}</view> -->
             </view>
-          </view>
-        </view>
-        <view class="order-details">
-          <view wx:if="{{!isLive && false}}" class="detail coupon">
-            <view class="detail-label">优惠券</view>
-            <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
-            <view class="detail-number coupon-value">{{couponValue}} <text class="coupon-icon">></text>
+            <view class="right-box">
+              <iconfont wx:if="{{!showMoreAddress}}" name="xia" size="{{40}}"></iconfont>
+              <iconfont wx:else name="shang" size="{{40}}"></iconfont>
             </view>
-          </view>
-          <view class="detail">
-            <view class="detail-label">订单号</view>
-            <view class="detail-number" bind:tap="_copy">{{tokenValue}}</view>
-          </view>
-          <view class="detail">
-            <view class="detail-label">销售价格</view>
-            <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
-            <view class="detail-number">{{itemsTotal}}</view>
-          </view>
-          <view class="detail price-detail">
-            <view class="detail-label">
-              <text>退税价</text>
-              <text class="invoice-price">（发票价格）</text>
-            </view>
-            <view class="detail-number">{{itemsTotal}}</view>
-          </view>
-          <view class="detail price-detail">
-            <view class="detail-label">关税及报关费（限时优惠）</view>
-            <view class="detail-number">{{taxTotal}}</view>
-          </view>
-          <view class="detail">
-            <view class="detail-label">运费</view>
-            <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
-            <view class="detail-number">{{shippingTotal}}</view>
-          </view>
-          <view class="detail">
-            <view class="detail-label">运营服务费（限时免费）</view>
-            <view class="detail-number">0.00</view>
-          </view>
-
-          <view class="detail sum">
-            <view class="detail-label">合计</view>
-            <view class="detail-number">€{{total}}</view>
-          </view>
-        </view>
-        <view class="qr-code" wx:if="{{showQrcode}}">
-          <view class="canvas">
-            <canvas type="2d" style="width: 150px; height: 150px;" id="union-pay-qrcode"></canvas>
-          </view>
-          <view class="qr-info">
-            <view class="text-info">
-
-              <view class="yun-pay-icon"></view>
-              <view class="pay-tips">
-                <view class="pay-tips-1">
-                  使用云闪付app扫码付款
+            <scroll-view scroll-y="{{true}}" wx:if="{{showMoreAddress}}" class="more-address" id="moreAddress">
+              <block wx:for="{{addressList}}" wx:key="id" wx:for-item="address">
+                <view class="message-box" data-index="{{index}}" bind:tap="handleChoose">
+                  <view class="user-info">
+                    <view class="user-name text-ellipsis">
+                      {{address.lastName + address.firstName}}
+                    </view>
+                    <view class="user-phone">{{address.mobileNumber}}</view>
+                  </view>
+                  <view class="address-detail text-ellipsis-2">
+                    {{address.provinceName + ' ' + address.city + ' ' + address.street}}
+                  </view>
                 </view>
-                <view class="pay-tips-2">
-                  付款后点击"已付款"完成订单
-                </view>
+              </block>
+            </scroll-view>
+          </view>
+          <view class="product-item">
+            <view class="product-title">
+              <iconfont name="my_order" size="{{36}}"></iconfont>
+              <text>商品信息</text>
+            </view>
+            <view class="product-card">
+              <!-- <view class="product-name">{{orderInfo.items[0].productName}}</view> -->
+              <view class="product-info">
+                <view class="product-info-item text-ellipsis-2">类别：{{productCategory1CnName + ' ' + productCategory2CnName + ' ' + productCategory3CnName}}</view>
+                <view class="product-info-item text-ellipsis-2">名称：{{productBrand + ' ' + productName}}</view>
+                <view class="product-info-item text-ellipsis-2">尺寸：{{productSize}}</view>
+                <!-- <view class="product-info-item">金额：€{{orderInfo.itemsTotal / 100}}</view> -->
+                <!-- <view class="product-info-item">金额：€{{itemsTotal}}</view> -->
               </view>
             </view>
-            <view class="saveBtn">
-              <rss-btn label="保存我二维码到相册" width="{{346}}" height="{{72}}" className="{{'fill-btn'}}" borderRadius="{{44}}" bind:onTap="_handleSaveQrcode"></rss-btn>
+          </view>
+          <view class="order-details">
+
+            <view class="detail">
+              <view class="detail-label">订单号</view>
+              <view class="detail-number" bind:tap="_copy">{{tokenValue}}</view>
+            </view>
+            <view class="detail">
+              <view class="detail-label">销售价格</view>
+              <!-- <view class="detail-number">€{{orderInfo.itemsTotal / 100}}</view> -->
+              <view class="detail-number">{{itemsTotal}}</view>
+            </view>
+            <view class="detail price-detail">
+              <view class="detail-label">
+                <text>退税价</text>
+                <text class="invoice-price">（发票价格）</text>
+              </view>
+              <view class="detail-number">{{itemsTotal}}</view>
+            </view>
+            <view class="detail price-detail">
+              <view class="detail-label">关税及报关费（限时优惠）</view>
+              <view class="detail-number">{{taxTotal}}</view>
+            </view>
+            <!-- <view wx:if="{{!isLive && true}}" class="detail coupon">
+              <view class="detail-label">优惠券</view>
+              <view class="detail-number coupon-value">{{couponValue}} <text class="coupon-icon">></text>
+              </view>
+            </view> -->
+            <view class="detail">
+              <view class="detail-label">运费</view>
+              <!-- <view class="detail-number">{{orderInfo.shippingTotal / 100}}</view> -->
+              <view class="detail-number">{{shippingTotal}}</view>
+            </view>
+            <view class="detail">
+              <view class="detail-label">运营服务费（限时免费）</view>
+              <view class="detail-number">0.00</view>
+            </view>
+
+            <view class="detail sum">
+              <view class="detail-label">合计</view>
+              <view class="detail-number">€{{total}}</view>
+            </view>
+          </view>
+          <view class="qr-code" wx:if="{{showQrcode}}">
+            <view class="canvas">
+              <canvas type="2d" style="width: 150px; height: 150px;" id="union-pay-qrcode"></canvas>
+            </view>
+            <view class="qr-info">
+              <view class="text-info">
+
+                <view class="yun-pay-icon"></view>
+                <view class="pay-tips">
+                  <view class="pay-tips-1">
+                    使用云闪付app扫码付款
+                  </view>
+                  <view class="pay-tips-2">
+                    付款后点击"已付款"完成订单
+                  </view>
+                </view>
+              </view>
+              <view class="saveBtn">
+                <rss-btn label="保存我二维码到相册" width="{{346}}" height="{{72}}" className="{{'fill-btn'}}" borderRadius="{{44}}" bind:onTap="_handleSaveQrcode"></rss-btn>
+              </view>
             </view>
           </view>
         </view>
-      </view>
-      <view class="order-tips">
-        请仔细核对订单内容，若有误可以点击右上角
-      </view>
-      <view class="btn-area">
-        <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{750}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{0}}" bind:onTap="_handleCommit"></rss-btn>
+        <view class="order-tips">
+          请仔细核对订单内容，若有误可以点击右上角
+        </view>
+        <view class="btn-area">
+          <rss-btn label="{{payDialogLabel}}" disabled="{{payDialogBtnDisabled}}" width="{{654}}" height="{{88}}" className="{{'fill-btn'}}" borderRadius="{{4}}" bind:onTap="_handleCommit"></rss-btn>
+        </view>
       </view>
     </van-popup>
   </view>

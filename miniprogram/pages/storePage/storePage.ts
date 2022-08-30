@@ -188,9 +188,9 @@ Page({
     wx.navigateTo({ url: '../salesChoose/salesChoose?type=chat' })
   },
   handleReserve() {
-    // if (!checkloginAndRealNameCertifiedAsync()) {
-    //   return
-    // }
+    if (!checkloginAndRealNameCertifiedAsync()) {
+      return
+    }
     wx.setStorageSync('reserveStores', [this.data.details]);
     wx.navigateTo({ url: '../reservePage/reservePage' })
   },
@@ -221,6 +221,11 @@ Page({
 
   async queryProducts(type: number) {
     if (type === 1 && !this.data.reachBottomSearch) return
+    if (type === 0) {
+      this.setData({
+        pageInfo: {...this.data.pageInfo, page: 1}
+      })
+    }
     const { page, itemsPerPage } = this.data.pageInfo
     const { storeId, brand, taxon, sex } = this.data
     let params = `page=${page}&itemsPerPage=${itemsPerPage}&store.code=${storeId}`
@@ -252,11 +257,8 @@ Page({
         }).join('')
       }
     }
-    console.log(params)
-    // const resData = await storeModule.queryProducts({ ...this.data.pageInfo, 'store.code': this.data.storeId })
     const resData = await storeModule.queryProductsWithStringParams(params)
     const { 'hydra:member': list } = resData.data
-    // list.forEach(e => e.images.forEach(im => im.path = IMAGEBASEURL + IMAGEPATHS.productMain1x + im?.path))
     const temp: PageProduct[] = list.map(e => {
       let price = (e.enabledVariants[0].price / 100).toLocaleString()
       if (!price.includes('.')) {
@@ -275,9 +277,13 @@ Page({
         // off: true
       }
     })
+    this.setData({
+      pageInfo: {...this.data.pageInfo, page: this.data.pageInfo.page + 1}
+    })
     if (type === 0) {
       this.setData({
-        products: temp
+        products: temp,
+        reachBottomSearch: true
       })
     } else {
       if (list.length < this.data.pageInfo.itemsPerPage || list[list.length - 1].code === this.data.products[this.data.products.length - 1].code) {
@@ -287,7 +293,7 @@ Page({
         return
       }
       this.setData({
-        products: this.data.products.concat(temp)
+        products: this.data.products.concat(temp),
       })
     }
   },

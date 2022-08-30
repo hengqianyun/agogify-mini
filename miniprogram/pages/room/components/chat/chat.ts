@@ -854,10 +854,10 @@ Component({
       const { index } = currentTarget.dataset as { index: number }
       const item = this.data.addressList[index]
       this.data.addressList.push(this.data.address)
+      
       this.setData({
         address: item,
-        addressList: this.data.addressList.filter(e => e.id !== item.id),
-        showMoreAddress: false
+        addressList: this.data.addressList.filter(e => e.id !== item.id)
       })
     },
 
