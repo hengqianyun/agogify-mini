@@ -246,7 +246,8 @@ Page({
   },
 
   handleReserveTap() {
-    const ids = this.data.result.map(e => this.data.shopList[e])
+
+    const ids = this.data.result.map(e => this.data.shopList.find(shop => shop.id === e))
     if (ids.length === 0) {
       return
     }

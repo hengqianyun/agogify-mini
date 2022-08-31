@@ -29,7 +29,7 @@ App<RSSDesign.RSSAppOptions>({
   settings: {
     apiPath: '/api/v2',
     apiHosts: {
-      develop: 'rss1.agogify.cn',
+      develop: 'rss.agogify.cn',
       trial: 'rss.agogify.cn',
       release: 'rss.agogify.cn'
     },

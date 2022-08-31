@@ -1,3 +1,4 @@
+import { IMAGEBASEURL, IMAGEPATHS } from "../../http/index"
 import reserveModule from "../../http/module/reserve"
 import storeModule from "../../http/module/store"
 import CustomMessageTypes from "../../libs/tim/custom_message_types"
@@ -86,13 +87,16 @@ Page({
   async onLoad() {
     const today = new Date()
     const [year, month, date] = [today.getFullYear(), today.getMonth(), today.getDate()]
-    const newDay = new Date(year, month, date + 1)
+    const newDay = new Date(year, month, date + 1, 8)
     const startTime = this.getGMTTimerString(newDay)
     const endTime = this.getGMTTimerString(new Date(newDay.setDate(date + weekLength)))
     const stores = wx.getStorageSync<storeDesign.storeItem[]>('reserveStores')
     const { salesId } = this.options as { salesId: string | undefined }
     this.setData({
-      stores,
+      stores: stores.map(e => {
+        e.logo.path = IMAGEBASEURL + IMAGEPATHS.storeNormal1x + e.logo.path;
+        return e
+      }),
       startTime,
       endTime,
       sale: 0
@@ -170,7 +174,6 @@ Page({
       page: 1,
       itemsPerPage: 100,
       'store.code': stores[currentStoreIndex].code,
-      // roles: 'ROLE_STORE_SALES_ACCESS' as storeDesign.adminisstratorsTypes
     }
     try {
       const res = await storeModule.querySales(params)
@@ -200,14 +203,18 @@ Page({
    * 目前时间参照+01:00时区，从下午四点到晚上十一点半
    */
   initDurations(startHour: number, durationCount: number) {
-    // let startHour = startTime
     const timeList = []
     for (let i = 1; i <= durationCount; i++) {
       const num = i % durationPerHour
       let string = ''
       switch (num) {
         case 0:
-          string = `${startHour}:45-${++startHour}:00`
+          if (startHour === 23) {
+            string = `${startHour}:45-0:00`
+            startHour = 0
+          } else {
+            string = `${startHour}:45-${++startHour}:00`
+          }
           break
         case 1:
           string = `${startHour}:00-${startHour}:15`
@@ -257,21 +264,9 @@ Page({
   async querySalesTimeSlots() {
     wx.showLoading({ title: '加载中' })
     try {
-      // let timer = 0
-      // let count = 0, loading = true
-      // timer = setInterval(() => {
-      //   if (loading) {
-      //     count++
-      //   } else {
-      //     clearInterval(timer)
-      //     wx.showToast({ title: `加载了${count / 5}秒` })
-      //   }
-      // }, 200)
-      // this.initTimeSlots()
       const sales = this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]
       const code = sales["@id"]
       const params: any = {
-        // 'sales.id': getIdFromString(code),
         'startTime[after]': this.data.startTime,
         'endTime[before]': this.data.endTime,
       }
@@ -300,28 +295,31 @@ Page({
       const timeList: number[][][] = [[], [], [], [], [], [], []]
       let latest = 0, earliest = -1
       for (const slot of list) {
-        // if (state === 'available') {
         const { startTime, version, '@id': id } = slot
-        const curDate = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
-        const [min, hour, year, month, date] = [curDate.getMinutes(), curDate.getHours() + timeZone, curDate.getFullYear(), curDate.getMonth(), curDate.getDate()]
-        let today = new Date(year, month, date)
-        const [todayYear, todayMonth, todayDate] = [today.getFullYear(), today.getMonth(), today.getDate()]
-        const i = (Date.parse(`${year}/${month + 1}/${date}`) - Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)) / (1 * 24 * 60 * 60 * 1000)
-        let tempHour = hour >= 24 ? hour - 24 : hour
+        const targetDateTime = new Date(startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
+        const [targetMin, targetHour, targetyear, targetMonth, targetDay] = [targetDateTime.getMinutes(), targetDateTime.getHours() + timeZone, targetDateTime.getFullYear(), targetDateTime.getMonth(), targetDateTime.getDate()]
+        // let targetDate = new Date(targetyear, targetMonth, targetDay)
+        const todayDateTime = new Date(this.data.startTime.split('GMT')[0].replace('T', ' ').split('-').join('/'))
+        const [todayYear, todayMonth, todayDate] = [todayDateTime.getFullYear(), todayDateTime.getMonth(), todayDateTime.getDate()]
+        const targetMillsec = Date.parse(`${targetyear}/${targetMonth + 1}/${targetDay}`)
+        const todayMillsec = Date.parse(`${todayYear}/${todayMonth + 1}/${todayDate}`)
+        const i = (targetMillsec - todayMillsec) / (1 * 24 * 60 * 60 * 1000)
+        // let tempHour = targetHour >= 24 ? targetHour - 24 : targetHour
+        let tempHour = targetHour
         if (tempHour < earliest || earliest < 0) earliest = tempHour
 
         if (tempHour > latest) latest = tempHour
         if (tempHour === 0) latest = 24
-        if (hour >= 24) {
+        if (targetHour >= 24) {
           try {
-            timeList[i + 1].push([tempHour, min, version, getIdFromString(id)])
+            timeList[i + 1].push([tempHour, targetMin, version, getIdFromString(id)])
           } catch { }
         } else {
-          timeList[i].push([tempHour, min, version, getIdFromString(id)])
+          timeList[i].push([tempHour, targetMin, version, getIdFromString(id)])
         }
-        // }
       }
       earliest = earliest === -1 ? 0 : earliest
+      earliest = 14
       const length = (latest - earliest + 1) * 4
       this.initDurations(earliest, length)
       const tableItems: SimpleTableItem[][] = [[], [], [], [], [], [], []]

@@ -290,7 +290,6 @@ Page({
         this.setData({
           reachBottomSearch: false
         })
-        return
       }
       this.setData({
         products: this.data.products.concat(temp),

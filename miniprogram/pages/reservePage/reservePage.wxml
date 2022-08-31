@@ -7,7 +7,7 @@
       </view>
       <view wx:else></view>
       <view class="store-info">
-        <image class="store-avatar" src="{{stores[currentStoreIndex].src}}" mode="widthFix" lazy-load="false" binderror="" bindload="" />
+        <image class="store-avatar" src="{{stores[currentStoreIndex].logo.path}}" mode="widthFix" lazy-load="false" binderror="" bindload="" />
         <view>{{stores[currentStoreIndex].name}}</view>
       </view>
       <view class="store-controller {{currentStoreIndex === stores.length - 1 ? 'store-controller-disable' : ''}}" wx:if="{{stores.length > 1}}" bind:tap="handleNextStore">

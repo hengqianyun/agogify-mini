@@ -151,6 +151,7 @@ Component({
     showQueueList: false,
     canGoAssistant: true,
     couponValue: '两张可用',
+    showCoupons: false
   },
 
   lifetimes: {
@@ -539,6 +540,11 @@ Component({
    * 组件的方法列表
    */
   methods: {
+    handleShowCoupons() {
+      this.setData({
+        showCoupons: !this.data.showCoupons
+      })
+    },
     async handleShowQueueList() {
       await this.queryQueueList();
       this.setData({

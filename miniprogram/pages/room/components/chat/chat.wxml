@@ -277,7 +277,11 @@
             </view>
             <!-- <view wx:if="{{!isLive && true}}" class="detail coupon">
               <view class="detail-label">优惠券</view>
-              <view class="detail-number coupon-value">{{couponValue}} <text class="coupon-icon">></text>
+              <view class="detail-number coupon-value">
+                <view bindtap="handleShowCoupons">
+                  {{couponValue}}
+                </view>
+               <text class="coupon-icon">></text>
               </view>
             </view> -->
             <view class="detail">
