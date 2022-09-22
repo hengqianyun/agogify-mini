@@ -191,7 +191,7 @@ Page({
       currentConversationTrans  = transRes[this.data.conversationID]
     }
     for (let key in currentConversationTrans) {
-      debugger
+      // debugger
       const currentMillsec = Date.parse((new Date()).toUTCString())
       const targetMillsec = Date.parse(currentConversationTrans[key].date)
       if (currentMillsec -  targetMillsec> 604800000) {
@@ -296,7 +296,6 @@ Page({
       let currentConversationTrans : {[key: string]: {text: string, date: Date} } | undefined
       let transRes: {[key: string]: {[key: string]: {text: string, date: Date}}} | undefined = wx.getStorageSync('transStorage')
       if (!!transRes) {
-        debugger
         currentConversationTrans  = transRes[this.data.conversationID]
         if (!currentConversationTrans) {
           currentConversationTrans = {}

@@ -71,7 +71,8 @@ Page({
       class: 'line-btn',
       color: "#353535",
       event: 'handleShowAll',
-    }
+    },
+    showDropdow: false
   },
 
   /**
@@ -83,7 +84,7 @@ Page({
     this.setData({
       storeId: storeId,
     })
-    wx.setNavigationBarTitle({ title: storeName! })
+    wx.setNavigationBarTitle({ title: decodeURI(storeName!) })
     console.log(options)
     await this.queryDetails()
     this.setData({
@@ -104,6 +105,17 @@ Page({
     this.selectComponent('#brand').toggle(false);
     this.selectComponent('#taxon').toggle(false);
     this.selectComponent('#sex').toggle(false);
+  },
+
+  onShowDropDownMenu() {
+    this.setData({
+      showDropdow: true
+    })
+  },
+  onCloseDropDownMenu() {
+    this.setData({
+      showDropdow: false
+    })
   },
 
   async queryBrand() {

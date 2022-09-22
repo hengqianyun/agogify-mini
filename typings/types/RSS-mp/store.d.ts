@@ -123,6 +123,7 @@ declare namespace storeDesign {
     status: saleOnlineStatus
     roles: string[]
     email: string
+    id: number
   }
 
   interface saleWithStore extends sale {

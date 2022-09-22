@@ -1,6 +1,7 @@
 // pages/person/person.ts
 import { shareInvite } from '../../libs/share'
 import { getInviteCode, resetUserProfile, setReceivedInviteCode, userProfile } from '../../libs/user/user'
+import Dialog from '../../utils/dialog'
 import { $on, $remove } from '../../utils/event'
 
 Page({
@@ -161,6 +162,20 @@ Page({
       return opt
     }
   },
+  handleTest() {
+    Dialog.confirm({
+      message: 'asd',
+      selector: '#cus-dialog',
+      confirmCallback: async () => {
+        wx.showLoading({
+          title: 'loading'
+        })
+        console.log('确认啦');
+
+      }
+    })
+  },
+
   showProtocol() {
     wx.navigateTo({ url: '../protocol/protocol' })
   },

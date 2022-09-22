@@ -1,0 +1,55 @@
+<!--components/reserveProduct/reserveProduct.wxml-->
+<!-- 确认框 -->
+<!-- 遮罩层 -->
+<view class="dialog-overlay-view" style="width: {{ windowWidth }}px; height: {{ windowHeight }}px; display: {{ show ? 'block' : 'none' }};"></view>
+ 
+<view class="col-center" style="width: {{ windowWidth }}px; height: {{ windowHeight }}px; display: {{ show ? 'flex' : 'none' }};">
+  <view>
+    <view class="dialog-content-view">
+      <view class="context">
+        <view class="dialog-title">意向商品</view>
+        <view class="dialog-info">添加想咨询的商品，方便销售或导购了解您的需求</view>
+        <view class="image-area">
+          <view class="image-box" bindtap="handleChooseImage">
+            <image wx:if="{{productImage == ''}}" class="dialog-image"  src="../../assets/image/displayProduct.png"></image>
+            <image wx:else class="dialog-image" bindtap="handleChooseImage" src="{{productImage}}"></image>
+            <view class="dialog-icon">
+              <iconfont name="genghuantouxiang" size="{{40}}"  />
+            </view>
+          </view>
+          <!-- <view class="image-info">上传意向商品的照片（非必选）</view> -->
+        </view>
+        <view class="brand-area">
+          <view class="brand-text">品牌</view>
+          <picker class="brand-picker" mode="selector" bindchange="handleBrandChange" range-key="name" value="{{brandIndex}}" range="{{brands}}">
+            {{brands[brandIndex].name}}
+          </picker>
+        </view>
+        <view wx:if="{{showInput}}" class="brand-extra-area">
+          <view class="brand-extra-text"></view>
+          <input class="brand-extra-input" value="{{brandValue}}" bindinput="handleBrandExtraInput"></input>
+        </view>
+        <view class="note-area">
+          <view class="note-text">备注</view>
+          <textarea class="note-input" value="{{notes}}" bindinput="handleNoteInput" maxlength="{{40}}"></textarea>
+        </view>
+      </view>
+      <view class="controller">
+        <view class="btn" bindtouchend="onCancel">取消</view>
+        <view class="btn btn-comfirm" bindtouchend="onConfirm">预约</view>
+      </view>
+
+      <!-- <view>
+        <text class="dialog-content-text">{{ message }}</text>
+      </view>
+      <view class="operation-view">
+        <view class="operation-col-view" bindtouchend="onCancel">
+          <text class="cancel-text">{{ cancelButtonText }}</text>
+        </view>
+        <view class="operation-col-view" bindtouchend="onConfirm">
+          <text class="confirm-text">{{ confirmButtonText }}</text>
+        </view>
+      </view> -->
+    </view>
+  </view>
+</view>

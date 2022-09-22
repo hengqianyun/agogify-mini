@@ -41,7 +41,7 @@ Page({
   onLoad() {
     console.log(this.options)
     const { code, name } = this.options as { code: string, name: string }
-    wx.setNavigationBarTitle({ title: name })
+    wx.setNavigationBarTitle({ title: decodeURI(name) })
     this.queryProductDetail(code)
   },
 

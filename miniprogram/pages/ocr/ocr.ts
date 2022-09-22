@@ -237,7 +237,7 @@ Page({
         'form.identity.error': false
       })
     }
-    const reg = new RegExp(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/ )
+    const reg = new RegExp(/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/)
     if (!reg.test(email.value)) {
       this.setData({
         'form.email.error': true

@@ -51,10 +51,12 @@
     </view>
   </view>
   <view wx:if="{{!!userName}}" class="btn" bind:tap="handleLogout">退出登录</view>
+  <!-- <view class="btn" bind:tap="handleTest">test</view> -->
   <view wx:if="{{!!userName}}" class="regulations-text">
     已阅读并同意
     <text class="regulation-link" catch:tap="showProtocol">《用户服务协议》</text>
     、
     <text class="regulation-link" catch:tap="showPrivacy">《隐私政策》</text>
   </view>
+  <!-- <rss-reserve-dialog id="cus-dialog"></rss-reserve-dialog> -->
 </view>

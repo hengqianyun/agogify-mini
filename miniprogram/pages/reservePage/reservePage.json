@@ -1,7 +1,8 @@
 {
   "usingComponents": {
     "rss-button": "../../components/RssButton/RssButton",
-    "rss-checkbox": "../../components/Checkbox/Checkbox"
+    "rss-checkbox": "../../components/Checkbox/Checkbox",
+    "rss-reserve-dialog": "../../components/reserveProduct/reserveProduct"
   },
   "navigationBarTitleText": "预约时间"
 }

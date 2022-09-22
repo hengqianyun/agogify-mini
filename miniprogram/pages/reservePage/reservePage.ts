@@ -3,6 +3,7 @@ import reserveModule from "../../http/module/reserve"
 import storeModule from "../../http/module/store"
 import CustomMessageTypes from "../../libs/tim/custom_message_types"
 import { joinStoreGroup, quitGroup, sendCustomMessage } from "../../libs/tim/tim"
+import Dialog from "../../utils/dialog"
 import { getIdFromString, getStringCode } from "../../utils/util"
 
 interface SimpleTitme {
@@ -40,6 +41,8 @@ const weekMap: Map<WeekNum, string> = new Map([
   [6, '六'],
   [0, '日'],
 ])
+
+const timezone = -(new Date().getTimezoneOffset()) / 60
 
 type DurationType = 30 | 45
 
@@ -418,60 +421,89 @@ Page({
   },
 
   async handleCommitReserve() {
-    this.setData({
-      reserveBtnDisabled: true
-    })
-    const { x, y1, y2 } = this.data.reserveRes
-    const list = this.data.tableItems[x]
-    let timeSlots = []
-    for (let i = y1; i <= y2; i++) {
-      if (list[i].paramsVersion != undefined && list[i].paramsId != undefined) {
-        timeSlots.push({
-          version: list[i].paramsVersion,
-          id: list[i].paramsId
+    const that = this
+    Dialog.confirm({
+      message: 'asd',
+      selector: '#cus-dialog',
+      confirmCallback: async () => {
+        
+        wx.showLoading({
+          title: 'loading'
         })
+        this.setData({
+          reserveBtnDisabled: true
+        })
+        const { x, y1, y2 } = this.data.reserveRes
+        const list = this.data.tableItems[x]
+        let timeSlots = []
+        for (let i = y1; i <= y2; i++) {
+          if (list[i].paramsVersion != undefined && list[i].paramsId != undefined) {
+            timeSlots.push({
+              version: list[i].paramsVersion,
+              id: list[i].paramsId
+            })
+          }
+        }
+        if (timeSlots.length === 0) {
+          wx.showToast({
+            title: '请选择预约时间',
+            icon: 'error',
+            duration: 2000,
+          })
+          this.setData({
+            reserveBtnDisabled: false
+          })
+          return
+        }
+        try {
+          await reserveModule.bookTimeSlot({ timeSlots } as reserveDesign.bookTimeSlotParams)
+          
+          try {
+            await joinStoreGroup(`${this.data.stores[0].code}_Meeting`);
+            await sendCustomMessage({ data: CustomMessageTypes.RESERVE, description: "succesee" }, `${this.data.stores[0].code}_Meeting`, this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"], {}, {})
+            await quitGroup(`${this.data.stores[0].code}_Meeting`)
+          } catch (err) {
+            console.log(err)
+          }
+    
+          // setTimeout(() => {
+          //   wx.navigateBack()
+          // }, 1000)
+        } catch {
+          wx.showToast({
+            title: '请求异常，请刷新重试',
+            icon: 'error',
+            duration: 2000,
+          })
+        } finally {
+          this.setData({
+            reserveBtnDisabled: false
+          })
+        }
+        console.log('确认啦');
+        const res = await reserveModule.queryMyReserveList({
+          "endTime[after]": (new Date()).toISOString(),
+          "order[startTime]": 'asc',
+          "sales.id": that.data.sales[that.data.stores[that.data.currentStoreIndex].code][that.data.sale].id,
+          'state': 'booked'
+        // 'state': 'available'
+        })
+        const resList = res.data["hydra:member"]
+        const startItem = that.data.tableItems[x][y1]
+        console.log(startItem)
+        const item = resList.find(e => {
+          console.log(e)
+          console.log(e.startTime.split('GMT')[0])
+          console.log(startItem.startTime.split('.')[0])
+          return e.startTime.split('GMT')[0] === startItem.startTime.split('.')[0]
+        })
+        console.log(item)
+        return item?.["@id"]
+        
       }
-    }
-    if (timeSlots.length === 0) {
-      wx.showToast({
-        title: '请选择预约时间',
-        icon: 'error',
-        duration: 2000,
-      })
-      this.setData({
-        reserveBtnDisabled: false
-      })
-      return
-    }
-    try {
-      await reserveModule.bookTimeSlot({ timeSlots } as reserveDesign.bookTimeSlotParams)
-      wx.showToast({
-        title: '预约成功',
-        icon: 'success',
-        duration: 2000,
-      })
-      try {
-        await joinStoreGroup(`${this.data.stores[0].code}_Meeting`);
-        await sendCustomMessage({ data: CustomMessageTypes.RESERVE, description: "succesee" }, `${this.data.stores[0].code}_Meeting`, this.data.sales[this.data.stores[this.data.currentStoreIndex].code][this.data.sale]["@id"], {}, {})
-        await quitGroup(`${this.data.stores[0].code}_Meeting`)
-      } catch (err) {
-        console.log(err)
-      }
-
-      setTimeout(() => {
-        wx.navigateBack()
-      }, 1000)
-    } catch {
-      wx.showToast({
-        title: '请求异常，请刷新重试',
-        icon: 'error',
-        duration: 2000,
-      })
-    } finally {
-      this.setData({
-        reserveBtnDisabled: false
-      })
-    }
+    })
+    return
+    
   },
 
   handleCheckBoxChange(event: WechatMiniprogram.TouchEvent) {

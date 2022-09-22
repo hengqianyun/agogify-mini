@@ -76,9 +76,14 @@ Page({
     wx.enableAlertBeforeUnload({
       message: '是否离开房间？',
       success() {
-        // if (that.data.isFirstIn) {
-
-        // }
+        if (that.data.isFirstIn) {
+          that.setData({
+            isFirstIn: false
+          })
+        } else {
+          console.log('触发 enableAlertBeforeUnload')
+          that.exitRoom()
+        }
         // if (!that.data.isGuest) {
         //   sendCustomMessage({ data: CustomMessageTypes.LEAVED_ROOM }, that.data.groupId, that.data.saleId, {}, {})
         //   const code = that.data.groupId.split('Meeting-')[1]
@@ -87,7 +92,7 @@ Page({
         //   }, code)
         //   clearSessionAsync()
         // }
-        that.exitRoom()
+        
       }
     })
   },

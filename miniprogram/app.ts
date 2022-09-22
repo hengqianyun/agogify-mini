@@ -29,9 +29,9 @@ App<RSSDesign.RSSAppOptions>({
   settings: {
     apiPath: '/api/v2',
     apiHosts: {
-      develop: 'rss.agogify.cn',
-      trial: 'rss.agogify.cn',
-      release: 'rss.agogify.cn'
+      develop: 'rss2.agogify.cn',
+      trial: 'rss2.agogify.cn',
+      release: 'rss2.agogify.cn'
     },
     imageAliasPath: '/media/cache/resolve',
   },
